@@ -6,7 +6,7 @@
     "mangafire-en"
   ],
   "name": "MangaFire",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "contractVersion": 1,
   "minimumAppVersion": "1.0.0",
   "contentType": "pageImages",
@@ -40,7 +40,8 @@
     "*.mangafire.to",
     "mfcdn.nl",
     "*.mfcdn.nl",
-    "*.mfcdn1.xyz"
+    "*.mfcdn1.xyz",
+    "*.mfcdn3.xyz"
   ],
   "limits": {
     "timeoutMilliseconds": 30000,

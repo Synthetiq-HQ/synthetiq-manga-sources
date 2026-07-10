@@ -98,11 +98,13 @@ console.log(JSON.stringify({
     result: weebDetails.title,
     chapters: weebChapters.length,
     pages: weebImages.length,
+    firstPage: typeof weebImages[0] === "string" ? weebImages[0] : weebImages[0]?.url,
   },
   mangafire: {
     result: mangaFireDetails.title,
     chapters: mangaFireChapters.length,
     pages: mangaFireImages.length,
+    firstPage: typeof mangaFireImages[0] === "string" ? mangaFireImages[0] : mangaFireImages[0]?.url,
   },
   internetArchive: {
     result: archiveDetails.title,
