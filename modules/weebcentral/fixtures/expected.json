@@ -1,0 +1,83 @@
+{
+  "search": {
+    "items": [
+      {
+        "id": "https://weebcentral.com/series/01FIXTUREALPHA/Fixture-Alpha",
+        "href": "https://weebcentral.com/series/01FIXTUREALPHA/Fixture-Alpha",
+        "title": "Fixture Alpha",
+        "image": "https://temp.compsci88.com/cover/normal/01FIXTUREALPHA.webp"
+      },
+      {
+        "id": "https://weebcentral.com/series/01FIXTUREBETA/Fixture-Beta",
+        "href": "https://weebcentral.com/series/01FIXTUREBETA/Fixture-Beta",
+        "title": "Fixture Beta",
+        "image": "https://temp.compsci88.com/cover/normal/01FIXTUREBETA.webp"
+      }
+    ],
+    "hasMore": true
+  },
+  "details": {
+    "id": "https://weebcentral.com/series/01FIXTUREALPHA/Fixture-Alpha",
+    "href": "https://weebcentral.com/series/01FIXTUREALPHA/Fixture-Alpha",
+    "url": "https://weebcentral.com/series/01FIXTUREALPHA/Fixture-Alpha",
+    "title": "Fixture Alpha",
+    "description": "A deterministic fixture & parser test.",
+    "image": "https://temp.compsci88.com/cover/normal/01FIXTUREALPHA.webp",
+    "authors": ["Author One", "Author Two"],
+    "author": "Author One, Author Two",
+    "genres": ["Adventure", "Comedy"],
+    "status": "Ongoing"
+  },
+  "chapters": [
+    {
+      "id": "https://weebcentral.com/chapters/01CHAPTER125",
+      "href": "https://weebcentral.com/chapters/01CHAPTER125",
+      "url": "https://weebcentral.com/chapters/01CHAPTER125",
+      "title": "Chapter 12.5: A Decimal Chapter",
+      "number": 12.5,
+      "releaseDate": "2026-07-03T13:15:35.629Z",
+      "language": "en"
+    },
+    {
+      "id": "https://weebcentral.com/chapters/01CHAPTER12",
+      "href": "https://weebcentral.com/chapters/01CHAPTER12",
+      "url": "https://weebcentral.com/chapters/01CHAPTER12",
+      "title": "Chapter 12: The Previous Chapter",
+      "number": 12,
+      "releaseDate": "2026-06-26T12:12:45.378Z",
+      "language": "en"
+    },
+    {
+      "id": "https://weebcentral.com/chapters/01SPECIAL",
+      "href": "https://weebcentral.com/chapters/01SPECIAL",
+      "url": "https://weebcentral.com/chapters/01SPECIAL",
+      "title": "Special: Side Story",
+      "number": null,
+      "releaseDate": null,
+      "language": "en"
+    }
+  ],
+  "images": [
+    {
+      "url": "https://scans.planeptune.us/fixture/page-001.webp",
+      "headers": {
+        "Accept": "image/avif,image/webp,*/*",
+        "Referer": "https://weebcentral.com/"
+      }
+    },
+    {
+      "url": "https://scans.planeptune.us/fixture/page-002.webp",
+      "headers": {
+        "Accept": "image/avif,image/webp,*/*",
+        "Referer": "https://weebcentral.com/"
+      }
+    },
+    {
+      "url": "https://scans.planeptune.us/fixture/page-003.webp",
+      "headers": {
+        "Accept": "image/avif,image/webp,*/*",
+        "Referer": "https://weebcentral.com/"
+      }
+    }
+  ]
+}

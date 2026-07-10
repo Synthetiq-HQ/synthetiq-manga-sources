@@ -1,0 +1,21 @@
+{
+  "data": {
+    "id": 101,
+    "hid": "fixture",
+    "slug": "fixture-alpha",
+    "title": "Fixture Alpha",
+    "type": "manga",
+    "status": "releasing",
+    "poster": {
+      "small": "https://static.mfcdn.nl/fixture/alpha@100.jpg",
+      "medium": "https://static.mfcdn.nl/fixture/alpha@280.jpg",
+      "large": "https://static.mfcdn.nl/fixture/alpha.jpg"
+    },
+    "url": "/title/fixture-fixture-alpha",
+    "synopsisHtml": "A protected-flow fixture.<br><br><b>No live content.</b>",
+    "genres": [{ "id": 1, "title": "Action" }, { "id": 78, "title": "Adventure" }],
+    "themes": [{ "id": 5000, "title": "Found Family" }],
+    "demographics": [{ "id": 31, "title": "Shounen" }],
+    "authors": [{ "id": 2001, "title": "Fixture Author" }]
+  }
+}

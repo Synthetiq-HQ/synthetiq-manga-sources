@@ -1,0 +1,53 @@
+{
+  "id": "weebcentral-v2",
+  "familyID": "weebcentral-v2",
+  "legacyIDs": [
+    "weebcentral",
+    "weebcentral-en"
+  ],
+  "name": "WeebCentral",
+  "version": "4.0.0",
+  "contractVersion": 1,
+  "minimumAppVersion": "1.0.0",
+  "contentType": "pageImages",
+  "language": "en",
+  "contentRating": "suggestive",
+  "releaseTrack": "stable",
+  "status": "active",
+  "capabilities": [
+    "popular",
+    "latest",
+    "search",
+    "details",
+    "chapters",
+    "images",
+    "imageRequest",
+    "discovery"
+  ],
+  "baseURL": "https://weebcentral.com",
+  "universalLink": "https://synthetiq.uk/manga/modules/weebcentral-v2",
+  "entry": {
+    "path": "modules/weebcentral/index.js",
+    "sha256": "94ad485f7d278f04223cbb496b186f035031987239774236eea322c9904c9f06"
+  },
+  "icon": {
+    "path": "modules/weebcentral/icon.png",
+    "sha256": "2f18cbf3cfe2388c0f9c231e8d2c5bef9b857a46f0e173bf57a7f20ed27aabae"
+  },
+  "allowedHosts": [
+    "weebcentral.com",
+    "*.compsci88.com",
+    "*.planeptune.us"
+  ],
+  "limits": {
+    "timeoutMilliseconds": 30000,
+    "maxConcurrentRequests": 2,
+    "maxResponseBytes": 16777216,
+    "maxScriptBytes": 524288,
+    "cacheTTLSeconds": 900
+  },
+  "attribution": {
+    "author": "Synthetiq-HQ",
+    "website": "https://weebcentral.com"
+  }
+}

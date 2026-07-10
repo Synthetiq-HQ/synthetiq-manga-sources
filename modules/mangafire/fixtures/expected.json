@@ -1,0 +1,97 @@
+{
+  "search": {
+    "items": [
+      {
+        "id": "https://mangafire.to/title/fixture-fixture-alpha",
+        "href": "https://mangafire.to/title/fixture-fixture-alpha",
+        "url": "https://mangafire.to/title/fixture-fixture-alpha",
+        "title": "Fixture Alpha",
+        "image": "https://static.mfcdn.nl/fixture/alpha@280.jpg",
+        "status": "Ongoing"
+      }
+    ],
+    "hasMore": true
+  },
+  "details": {
+    "id": "https://mangafire.to/title/fixture-fixture-alpha",
+    "href": "https://mangafire.to/title/fixture-fixture-alpha",
+    "url": "https://mangafire.to/title/fixture-fixture-alpha",
+    "title": "Fixture Alpha",
+    "description": "A protected-flow fixture.\nNo live content.",
+    "image": "https://static.mfcdn.nl/fixture/alpha.jpg",
+    "author": "Fixture Author",
+    "authors": ["Fixture Author"],
+    "genres": ["Action", "Adventure", "Found Family", "Shounen"],
+    "status": "Ongoing"
+  },
+  "chapters": [
+    {
+      "id": "https://mangafire.to/title/fixture-fixture-alpha/chapter/9001",
+      "href": "https://mangafire.to/title/fixture-fixture-alpha/chapter/9001",
+      "url": "https://mangafire.to/title/fixture-fixture-alpha/chapter/9001",
+      "title": "Chapter 12.5: A Decimal Chapter",
+      "number": 12.5,
+      "releaseDate": "2026-01-01T00:00:00.000Z",
+      "language": "en",
+      "type": "official"
+    },
+    {
+      "id": "https://mangafire.to/title/fixture-fixture-alpha/chapter/9000",
+      "href": "https://mangafire.to/title/fixture-fixture-alpha/chapter/9000",
+      "url": "https://mangafire.to/title/fixture-fixture-alpha/chapter/9000",
+      "title": "Chapter 12: The Previous Chapter",
+      "number": 12,
+      "releaseDate": "2025-12-31T00:00:00.000Z",
+      "language": "en",
+      "type": "unofficial"
+    },
+    {
+      "id": "https://mangafire.to/title/fixture-fixture-alpha/chapter/8999",
+      "href": "https://mangafire.to/title/fixture-fixture-alpha/chapter/8999",
+      "url": "https://mangafire.to/title/fixture-fixture-alpha/chapter/8999",
+      "title": "Chapter 11: The First Fixture",
+      "number": 11,
+      "releaseDate": "2025-12-30T00:00:00.000Z",
+      "language": "en",
+      "type": "unofficial"
+    }
+  ],
+  "images": [
+    {
+      "url": "https://k1.mfcdn1.xyz/fixture/page-001.jpg",
+      "headers": {
+        "Accept": "image/avif,image/webp,image/*,*/*",
+        "Referer": "https://mangafire.to/"
+      },
+      "scrambled": false,
+      "scrambleOffset": null
+    },
+    {
+      "url": "https://k1.mfcdn1.xyz/fixture/page-002.jpg#scrambled_3",
+      "headers": {
+        "Accept": "image/avif,image/webp,image/*,*/*",
+        "Referer": "https://mangafire.to/"
+      },
+      "scrambled": true,
+      "scrambleOffset": 3
+    },
+    {
+      "url": "https://k1.mfcdn1.xyz/fixture/page-003.jpg#scrambled_5",
+      "headers": {
+        "Accept": "image/avif,image/webp,image/*,*/*",
+        "Referer": "https://mangafire.to/"
+      },
+      "scrambled": true,
+      "scrambleOffset": 5
+    },
+    {
+      "url": "https://k1.mfcdn1.xyz/fixture/page-004.jpg#scrambled_7",
+      "headers": {
+        "Accept": "image/avif,image/webp,image/*,*/*",
+        "Referer": "https://mangafire.to/"
+      },
+      "scrambled": true,
+      "scrambleOffset": 7
+    }
+  ]
+}

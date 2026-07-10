@@ -1,0 +1,16 @@
+{
+  "metadata": {
+    "identifier": "fixture-restricted-book",
+    "title": "Fixture Restricted Book",
+    "mediatype": "texts",
+    "licenseurl": "https://creativecommons.org/licenses/by/4.0/",
+    "access-restricted-item": "true"
+  },
+  "files": [
+    {
+      "name": "fixture-restricted-book.pdf",
+      "format": "Text PDF",
+      "size": "2048"
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "items": [
+    {
+      "id": 9001,
+      "number": 12.5,
+      "name": "A Decimal Chapter",
+      "language": "en",
+      "type": "official",
+      "createdAt": 1767225600
+    },
+    {
+      "id": 9000,
+      "number": 12,
+      "name": "The Previous Chapter",
+      "language": "en",
+      "type": "unofficial",
+      "createdAt": 1767139200
+    }
+  ],
+  "meta": {
+    "total": 3,
+    "perPage": 2,
+    "page": 1,
+    "lastPage": 2,
+    "hasNext": true,
+    "hasPrev": false
+  }
+}

@@ -1,0 +1,3 @@
+Fixture Open Book
+
+This deterministic text fixture is openly available under CC0 1.0.

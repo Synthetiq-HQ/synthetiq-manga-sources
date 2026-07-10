@@ -1,0 +1,53 @@
+{
+  "id": "internet-archive",
+  "familyID": "internet-archive",
+  "legacyIDs": [
+    "archive.org",
+    "internetarchive"
+  ],
+  "name": "Internet Archive Open Texts",
+  "version": "1.0.0",
+  "contractVersion": 1,
+  "minimumAppVersion": "1.0.0",
+  "contentType": "publication",
+  "language": "multi",
+  "contentRating": "unknown",
+  "releaseTrack": "stable",
+  "status": "active",
+  "capabilities": [
+    "popular",
+    "latest",
+    "search",
+    "details",
+    "chapters",
+    "text",
+    "resources",
+    "discovery"
+  ],
+  "baseURL": "https://archive.org",
+  "universalLink": "https://synthetiq.uk/manga/modules/internet-archive",
+  "entry": {
+    "path": "modules/internet-archive/index.js",
+    "sha256": "30eaeb640addb0fa4fbc8bcc980e25a194b816234bb944c6a1a8389d2a3dfd08"
+  },
+  "icon": {
+    "path": "modules/internet-archive/icon.png",
+    "sha256": "d7d88a14626575cccba7e9212592b61917d885ed647c9055b333da4abffc56c0"
+  },
+  "allowedHosts": [
+    "archive.org",
+    "*.archive.org"
+  ],
+  "limits": {
+    "timeoutMilliseconds": 30000,
+    "maxConcurrentRequests": 3,
+    "maxResponseBytes": 16777216,
+    "maxScriptBytes": 524288,
+    "cacheTTLSeconds": 3600
+  },
+  "attribution": {
+    "author": "Synthetiq-HQ",
+    "website": "https://archive.org",
+    "authorizationURL": "https://archive.org/about/terms.php"
+  }
+}

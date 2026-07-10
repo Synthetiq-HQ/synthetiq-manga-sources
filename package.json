@@ -1,0 +1,12 @@
+{
+  "name": "synthetiq-manga-sources",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "finalize": "node scripts/finalize-hashes.mjs",
+    "test": "node --test tests/modules.test.mjs && node scripts/validate.mjs && node scripts/verify-repository.mjs",
+    "test:live": "RUN_LIVE_TESTS=1 node scripts/live-smoke.mjs",
+    "verify": "node scripts/validate.mjs && node scripts/verify-repository.mjs"
+  }
+}

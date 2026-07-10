@@ -1,0 +1,44 @@
+{
+  "responseHeader": { "status": 0 },
+  "response": {
+    "numFound": 3,
+    "start": 0,
+    "docs": [
+      {
+        "identifier": "open-fixture",
+        "title": "Open Fixture Book",
+        "description": "A deterministic openly licensed item.",
+        "creator": ["Fixture Author", "Fixture Editor"],
+        "licenseurl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "language": "eng",
+        "publicdate": "2026-01-01T00:00:00Z",
+        "subject": ["Fixtures", "Public domain"],
+        "downloads": 100,
+        "mediatype": "texts"
+      },
+      {
+        "identifier": "rights-fixture",
+        "title": "Rights Fixture Book",
+        "description": "Rights metadata is explicitly public domain.",
+        "creator": "Rights Author",
+        "rights": "Public domain in the USA.",
+        "language": "eng",
+        "publicdate": "2025-12-01T00:00:00Z",
+        "subject": "Fixtures",
+        "downloads": 50,
+        "mediatype": "texts"
+      },
+      {
+        "identifier": "closed-fixture",
+        "title": "Closed Fixture Book",
+        "description": "This item has no recognized open license.",
+        "creator": "Closed Author",
+        "rights": "All rights reserved.",
+        "language": "eng",
+        "publicdate": "2025-11-01T00:00:00Z",
+        "downloads": 1,
+        "mediatype": "texts"
+      }
+    ]
+  }
+}

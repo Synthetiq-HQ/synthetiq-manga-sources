@@ -1,0 +1,24 @@
+{
+  "data": {
+    "id": 9001,
+    "number": 12.5,
+    "name": "A Decimal Chapter",
+    "language": "en",
+    "type": "official",
+    "pages": [
+      {
+        "url": "https://k1.mfcdn1.xyz/fixture/page-001.jpg",
+        "width": 800,
+        "height": 1200
+      },
+      {
+        "url": "https://k1.mfcdn1.xyz/fixture/page-002.jpg",
+        "offset": 3
+      },
+      ["https://k1.mfcdn1.xyz/fixture/page-003.jpg", null, 5],
+      {
+        "url": "https://k1.mfcdn1.xyz/fixture/page-004.jpg#scrambled_7"
+      }
+    ]
+  }
+}

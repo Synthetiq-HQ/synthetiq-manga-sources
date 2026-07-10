@@ -1,0 +1,24 @@
+{
+  "items": [
+    {
+      "hid": "fx1",
+      "slug": "fixture-title",
+      "title": "Fixture Title",
+      "type": "manga",
+      "status": "releasing",
+      "poster": {
+        "small": "https://static.mfcdn.nl/fixture/cover@100.jpg",
+        "medium": "https://static.mfcdn.nl/fixture/cover@280.jpg",
+        "large": "https://static.mfcdn.nl/fixture/cover.jpg"
+      },
+      "url": "/title/fx1-fixture-title"
+    }
+  ],
+  "meta": {
+    "total": 1,
+    "perPage": 50,
+    "page": 1,
+    "lastPage": 1,
+    "hasNext": false
+  }
+}

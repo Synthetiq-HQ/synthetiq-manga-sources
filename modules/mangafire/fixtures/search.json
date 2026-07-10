@@ -1,0 +1,36 @@
+{
+  "items": [
+    {
+      "id": 101,
+      "hid": "fixture",
+      "slug": "fixture-alpha",
+      "title": "Fixture Alpha",
+      "type": "manga",
+      "status": "releasing",
+      "poster": {
+        "small": "https://static.mfcdn.nl/fixture/alpha@100.jpg",
+        "medium": "https://static.mfcdn.nl/fixture/alpha@280.jpg",
+        "large": "https://static.mfcdn.nl/fixture/alpha.jpg"
+      },
+      "url": "/title/fixture-fixture-alpha"
+    },
+    {
+      "id": 102,
+      "hid": "closed",
+      "slug": "excluded-fixture",
+      "title": "Excluded Fixture",
+      "status": "releasing",
+      "poster": { "medium": "https://static.mfcdn.nl/fixture/excluded@280.jpg" },
+      "genres": [{ "id": 268929, "title": "Explicit" }],
+      "url": "/title/closed-excluded-fixture"
+    }
+  ],
+  "meta": {
+    "total": 31,
+    "perPage": 30,
+    "page": 1,
+    "lastPage": 2,
+    "hasNext": true,
+    "hasPrev": false
+  }
+}

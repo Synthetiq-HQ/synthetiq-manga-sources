@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-07-10T00:00:00Z",
+  "repository": {
+    "id": "synthetiq.sources",
+    "name": "Synthetiq Manga Sources",
+    "owner": "Synthetiq-HQ",
+    "homepage": "https://github.com/Synthetiq-HQ/synthetiq-manga-sources",
+    "universalLink": "https://synthetiq.uk/manga/modules"
+  },
+  "modules": [
+    {
+      "id": "weebcentral-v2",
+      "familyID": "weebcentral-v2",
+      "name": "WeebCentral",
+      "version": "4.0.0",
+      "language": "en",
+      "contentType": "pageImages",
+      "contentRating": "suggestive",
+      "releaseTrack": "stable",
+      "status": "active",
+      "manifest": {
+        "path": "modules/weebcentral/manifest.json",
+        "sha256": "4a91d2b107c7ca04ccf0b0bcd816ae142c76faee0ed99eeedf8b1b6beb5d9864"
+      },
+      "icon": {
+        "path": "modules/weebcentral/icon.png",
+        "sha256": "2f18cbf3cfe2388c0f9c231e8d2c5bef9b857a46f0e173bf57a7f20ed27aabae"
+      }
+    },
+    {
+      "id": "mangafire-v2",
+      "familyID": "mangafire-v2",
+      "name": "MangaFire",
+      "version": "2.0.0",
+      "language": "en",
+      "contentType": "pageImages",
+      "contentRating": "suggestive",
+      "releaseTrack": "stable",
+      "status": "active",
+      "manifest": {
+        "path": "modules/mangafire/manifest.json",
+        "sha256": "4210055a2c374a1731a87d6fea182ffbccd0c35fde7f82a97c0ea09545f763a7"
+      },
+      "icon": {
+        "path": "modules/mangafire/icon.png",
+        "sha256": "c15a6e470318cd91ffa1fa11d7bde3af8118b1c31c75a42520943841271d0ac5"
+      }
+    },
+    {
+      "id": "internet-archive",
+      "familyID": "internet-archive",
+      "name": "Internet Archive Open Texts",
+      "version": "1.0.0",
+      "language": "multi",
+      "contentType": "publication",
+      "contentRating": "unknown",
+      "releaseTrack": "stable",
+      "status": "active",
+      "manifest": {
+        "path": "modules/internet-archive/manifest.json",
+        "sha256": "d4544da722bb7b086699a9fd52a3bd9bc39cdc30bd1cd338495b51131352d115"
+      },
+      "icon": {
+        "path": "modules/internet-archive/icon.png",
+        "sha256": "d7d88a14626575cccba7e9212592b61917d885ed647c9055b333da4abffc56c0"
+      }
+    }
+  ]
+}

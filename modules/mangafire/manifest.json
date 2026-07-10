@@ -1,0 +1,56 @@
+{
+  "id": "mangafire-v2",
+  "familyID": "mangafire-v2",
+  "legacyIDs": [
+    "mangafire",
+    "mangafire-en"
+  ],
+  "name": "MangaFire",
+  "version": "2.0.0",
+  "contractVersion": 1,
+  "minimumAppVersion": "1.0.0",
+  "contentType": "pageImages",
+  "language": "en",
+  "contentRating": "suggestive",
+  "releaseTrack": "stable",
+  "status": "active",
+  "capabilities": [
+    "popular",
+    "latest",
+    "search",
+    "details",
+    "chapters",
+    "images",
+    "imageRequest",
+    "discovery",
+    "interactivePage"
+  ],
+  "baseURL": "https://mangafire.to",
+  "universalLink": "https://synthetiq.uk/manga/modules/mangafire-v2",
+  "entry": {
+    "path": "modules/mangafire/index.js",
+    "sha256": "9d37dde817f2f938cabfb9fe23bb1d7f147d569d98c82ccc9ddbaa51dc0a30fa"
+  },
+  "icon": {
+    "path": "modules/mangafire/icon.png",
+    "sha256": "c15a6e470318cd91ffa1fa11d7bde3af8118b1c31c75a42520943841271d0ac5"
+  },
+  "allowedHosts": [
+    "mangafire.to",
+    "*.mangafire.to",
+    "mfcdn.nl",
+    "*.mfcdn.nl",
+    "*.mfcdn1.xyz"
+  ],
+  "limits": {
+    "timeoutMilliseconds": 30000,
+    "maxConcurrentRequests": 2,
+    "maxResponseBytes": 16777216,
+    "maxScriptBytes": 524288,
+    "cacheTTLSeconds": 300
+  },
+  "attribution": {
+    "author": "Synthetiq-HQ",
+    "website": "https://mangafire.to"
+  }
+}

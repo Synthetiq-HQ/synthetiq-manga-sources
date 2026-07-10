@@ -1,0 +1,73 @@
+{
+  "search": {
+    "items": [
+      {
+        "id": "open-fixture",
+        "href": "https://archive.org/details/open-fixture",
+        "url": "https://archive.org/details/open-fixture",
+        "title": "Open Fixture Book",
+        "image": "https://archive.org/services/img/open-fixture",
+        "description": "A deterministic openly licensed item.",
+        "author": "Fixture Author, Fixture Editor",
+        "genres": ["Fixtures", "Public domain"],
+        "status": "Completed"
+      },
+      {
+        "id": "rights-fixture",
+        "href": "https://archive.org/details/rights-fixture",
+        "url": "https://archive.org/details/rights-fixture",
+        "title": "Rights Fixture Book",
+        "image": "https://archive.org/services/img/rights-fixture",
+        "description": "Rights metadata is explicitly public domain.",
+        "author": "Rights Author",
+        "genres": ["Fixtures"],
+        "status": "Completed"
+      }
+    ],
+    "hasMore": false
+  },
+  "details": {
+    "id": "open-fixture",
+    "href": "https://archive.org/details/open-fixture",
+    "url": "https://archive.org/details/open-fixture",
+    "title": "Open Fixture Book",
+    "description": "A deterministic open metadata fixture.",
+    "image": "https://archive.org/services/img/open-fixture",
+    "author": "Fixture Author, Fixture Editor",
+    "authors": ["Fixture Author", "Fixture Editor"],
+    "genres": ["Fixtures", "Public domain"],
+    "status": "Completed",
+    "licenseURL": "https://creativecommons.org/publicdomain/zero/1.0/"
+  },
+  "chapters": [
+    {
+      "id": "https://archive.org/download/open-fixture/fixture_book_djvu.txt",
+      "href": "https://archive.org/download/open-fixture/fixture_book_djvu.txt",
+      "url": "https://archive.org/download/open-fixture/fixture_book_djvu.txt",
+      "title": "Full text",
+      "number": 1,
+      "releaseDate": "2026-01-01T00:00:00Z",
+      "language": "eng"
+    }
+  ],
+  "resources": [
+    {
+      "format": "epub",
+      "url": "https://archive.org/download/open-fixture/Fixture%20Book.epub",
+      "fileName": "Fixture Book.epub",
+      "size": 2048,
+      "headers": {
+        "Referer": "https://archive.org/details/open-fixture"
+      }
+    },
+    {
+      "format": "pdf",
+      "url": "https://archive.org/download/open-fixture/Fixture%20Book.pdf",
+      "fileName": "Fixture Book.pdf",
+      "size": 4096,
+      "headers": {
+        "Referer": "https://archive.org/details/open-fixture"
+      }
+    }
+  ]
+}

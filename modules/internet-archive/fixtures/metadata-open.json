@@ -1,0 +1,52 @@
+{
+  "created": 1767225600,
+  "d1": "ia600000.us.archive.org",
+  "d2": "ia800000.us.archive.org",
+  "dir": "/1/items/open-fixture",
+  "is_dark": false,
+  "metadata": {
+    "identifier": "open-fixture",
+    "mediatype": "texts",
+    "title": "Open Fixture Book",
+    "description": "A deterministic <b>open</b> metadata fixture.",
+    "creator": ["Fixture Author", "Fixture Editor"],
+    "licenseurl": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "language": "eng",
+    "publicdate": "2026-01-01T00:00:00Z",
+    "subject": ["Fixtures", "Public domain"],
+    "access-restricted-item": false
+  },
+  "files": [
+    {
+      "name": "Fixture Book.epub",
+      "source": "derivative",
+      "format": "EPUB",
+      "size": "2048"
+    },
+    {
+      "name": "Fixture Book.pdf",
+      "source": "original",
+      "format": "Text PDF",
+      "size": "4096"
+    },
+    {
+      "name": "fixture_book_djvu.txt",
+      "source": "derivative",
+      "format": "DjVuTXT",
+      "size": "128"
+    },
+    {
+      "name": "Private.pdf",
+      "source": "original",
+      "format": "PDF",
+      "size": "1024",
+      "private": "true"
+    },
+    {
+      "name": "open-fixture_meta.xml",
+      "source": "original",
+      "format": "Metadata",
+      "size": "512"
+    }
+  ]
+}

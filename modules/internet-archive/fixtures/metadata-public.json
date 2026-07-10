@@ -1,0 +1,37 @@
+{
+  "metadata": {
+    "identifier": "fixture-open-book",
+    "title": "Fixture Open Book",
+    "creator": ["Fixture Author", "Second Author"],
+    "description": "<p>A deterministic <strong>public-domain</strong> item.</p>",
+    "subject": ["Fiction", "Fixtures"],
+    "mediatype": "texts",
+    "licenseurl": "https://creativecommons.org/publicdomain/zero/1.0/"
+  },
+  "files": [
+    {
+      "name": "fixture-open-book.epub",
+      "format": "EPUB",
+      "size": "1024",
+      "source": "original"
+    },
+    {
+      "name": "fixture-open-book.pdf",
+      "format": "Text PDF",
+      "size": "2048",
+      "source": "derivative"
+    },
+    {
+      "name": "fixture-open-book_djvu.txt",
+      "format": "DjVuTXT",
+      "size": "88",
+      "source": "derivative"
+    },
+    {
+      "name": "fixture-private.epub",
+      "format": "EPUB",
+      "size": "512",
+      "private": "true"
+    }
+  ]
+}

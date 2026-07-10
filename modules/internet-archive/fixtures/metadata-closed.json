@@ -1,0 +1,18 @@
+{
+  "created": 1767225600,
+  "metadata": {
+    "identifier": "closed-fixture",
+    "mediatype": "texts",
+    "title": "Closed Fixture Book",
+    "rights": "All rights reserved.",
+    "access-restricted-item": false
+  },
+  "files": [
+    {
+      "name": "Closed.pdf",
+      "source": "original",
+      "format": "Text PDF",
+      "size": "4096"
+    }
+  ]
+}

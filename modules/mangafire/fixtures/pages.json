@@ -1,0 +1,20 @@
+{
+  "data": {
+    "id": 9002,
+    "pages": [
+      {
+        "url": "https://k99.mfcdn1.xyz/mf/fixture/page-001.jpg",
+        "width": 800,
+        "height": 1200
+      },
+      {
+        "url": "https://k99.mfcdn1.xyz/mf/fixture/page-002.jpg",
+        "width": 800,
+        "height": 1200,
+        "scrambled": true,
+        "scrambleKey": "fixture-key",
+        "tiles": { "rows": 4, "columns": 4, "order": [3, 0, 1, 2] }
+      }
+    ]
+  }
+}

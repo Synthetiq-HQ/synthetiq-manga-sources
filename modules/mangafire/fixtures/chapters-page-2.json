@@ -1,0 +1,28 @@
+{
+  "items": [
+    {
+      "id": 8999,
+      "number": 11,
+      "name": "The First Fixture",
+      "language": "en",
+      "type": "unofficial",
+      "createdAt": 1767052800
+    },
+    {
+      "id": 9000,
+      "number": 12,
+      "name": "Duplicate Should Be Removed",
+      "language": "en",
+      "type": "unofficial",
+      "createdAt": 1767139200
+    }
+  ],
+  "meta": {
+    "total": 3,
+    "perPage": 2,
+    "page": 2,
+    "lastPage": 2,
+    "hasNext": false,
+    "hasPrev": true
+  }
+}
