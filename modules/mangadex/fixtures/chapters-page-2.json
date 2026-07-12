@@ -1,0 +1,24 @@
+{
+  "result": "ok",
+  "response": "collection",
+  "data": [
+    {
+      "id": "eeeeeeee-eeee-4eee-8eee-eeeeeeeeeeee",
+      "type": "chapter",
+      "attributes": {
+        "volume": "2",
+        "chapter": "3",
+        "title": "Turning Point",
+        "translatedLanguage": "en",
+        "externalUrl": null,
+        "isUnavailable": false,
+        "publishAt": "2026-01-15T00:00:00+00:00",
+        "readableAt": "2026-01-15T00:00:00+00:00",
+        "pages": 21
+      }
+    }
+  ],
+  "limit": 500,
+  "offset": 500,
+  "total": 501
+}

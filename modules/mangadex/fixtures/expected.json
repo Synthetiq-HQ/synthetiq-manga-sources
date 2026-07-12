@@ -1,0 +1,72 @@
+{
+  "search": {
+    "items": [
+      {
+        "id": "11111111-1111-4111-8111-111111111111",
+        "href": "https://mangadex.org/title/11111111-1111-4111-8111-111111111111",
+        "url": "https://mangadex.org/title/11111111-1111-4111-8111-111111111111",
+        "title": "Fixture Chronicles",
+        "image": "https://uploads.mangadex.org/covers/11111111-1111-4111-8111-111111111111/fixture-cover.jpg.256.jpg",
+        "description": "A fictional manga used only for module fixture testing.",
+        "author": "Fixture Author, Fixture Artist",
+        "genres": [
+          "Action",
+          "Fantasy"
+        ],
+        "status": "Ongoing"
+      }
+    ],
+    "hasMore": false
+  },
+  "details": {
+    "id": "11111111-1111-4111-8111-111111111111",
+    "href": "https://mangadex.org/title/11111111-1111-4111-8111-111111111111",
+    "url": "https://mangadex.org/title/11111111-1111-4111-8111-111111111111",
+    "title": "Fixture Chronicles",
+    "image": "https://uploads.mangadex.org/covers/11111111-1111-4111-8111-111111111111/fixture-cover.jpg.256.jpg",
+    "description": "A fictional manga used only for module fixture testing.",
+    "author": "Fixture Author, Fixture Artist",
+    "genres": [
+      "Action",
+      "Fantasy"
+    ],
+    "status": "Ongoing",
+    "authors": [
+      "Fixture Author",
+      "Fixture Artist"
+    ]
+  },
+  "chapters": [
+    {
+      "id": "https://mangadex.org/chapter/aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
+      "href": "https://mangadex.org/chapter/aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
+      "url": "https://mangadex.org/chapter/aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
+      "title": "Chapter 1: Awakening",
+      "number": 1,
+      "releaseDate": "2026-01-01T00:00:00+00:00",
+      "language": "en"
+    },
+    {
+      "id": "https://mangadex.org/chapter/dddddddd-dddd-4ddd-8ddd-dddddddddddd",
+      "href": "https://mangadex.org/chapter/dddddddd-dddd-4ddd-8ddd-dddddddddddd",
+      "url": "https://mangadex.org/chapter/dddddddd-dddd-4ddd-8ddd-dddddddddddd",
+      "title": "Chapter 2",
+      "number": 2,
+      "releaseDate": "2026-01-08T00:00:00+00:00",
+      "language": "en"
+    },
+    {
+      "id": "https://mangadex.org/chapter/eeeeeeee-eeee-4eee-8eee-eeeeeeeeeeee",
+      "href": "https://mangadex.org/chapter/eeeeeeee-eeee-4eee-8eee-eeeeeeeeeeee",
+      "url": "https://mangadex.org/chapter/eeeeeeee-eeee-4eee-8eee-eeeeeeeeeeee",
+      "title": "Chapter 3: Turning Point",
+      "number": 3,
+      "releaseDate": "2026-01-15T00:00:00+00:00",
+      "language": "en"
+    }
+  ],
+  "images": [
+    "https://fixture.mangadex.network:443/data/fixturehash123/p1-fixture.jpg",
+    "https://fixture.mangadex.network:443/data/fixturehash123/p2-fixture.png"
+  ]
+}

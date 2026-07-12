@@ -6,9 +6,10 @@ import { fileURLToPath } from "node:url";
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const failures = [];
 const expectedHandlers = {
-  "internet-archive": ["searchResults", "extractDetails", "extractText", "extractResources"],
+  "internet-archive": ["searchResults", "extractDetails", "extractChapters", "extractText", "extractResources"],
   mangafire: ["searchResults", "extractDetails", "extractChapters", "extractImages"],
   weebcentral: ["searchResults", "extractDetails", "extractChapters", "extractImages"],
+  mangadex: ["searchResults", "extractDetails", "extractChapters", "extractImages"],
 };
 
 function fail(message) {
@@ -74,7 +75,7 @@ for (const file of allFiles) {
 const index = await readJSON("index.json");
 if (index) {
   if (index.schemaVersion !== 1) fail("index.json: schemaVersion must be 1");
-  if (!Array.isArray(index.modules) || index.modules.length !== 3) fail("index.json: expected exactly three modules");
+  if (!Array.isArray(index.modules) || index.modules.length !== 4) fail("index.json: expected exactly four modules");
   const identities = new Set();
 
   for (const entry of index.modules || []) {
@@ -124,5 +125,5 @@ if (failures.length > 0) {
   for (const message of failures) console.error(`- ${message}`);
   process.exitCode = 1;
 } else {
-  console.log(`Repository verification passed: ${allFiles.length} files, 3 modules, all hashes exact.`);
+  console.log(`Repository verification passed: ${allFiles.length} files, ${index.modules.length} modules, all hashes exact.`);
 }
