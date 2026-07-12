@@ -212,18 +212,37 @@
     return chapters;
   }
 
-  function parseImagesHTML(html) {
-    const reader = String(html).match(
-      /<section\b[^>]*x-data=(["'])[^"']*scroll[^"']*\1[^>]*>([\s\S]*?)<\/section>/i,
-    );
-    const source = reader ? reader[2] : String(html);
+  function imageURLFromTag(tag) {
+    const candidates = [
+      attribute(tag, "src"),
+      attribute(tag, "data-src"),
+      attribute(tag, "data-lazy-src"),
+    ];
+    for (const value of candidates) {
+      if (value.startsWith("https://")) return value;
+    }
+    const srcset = attribute(tag, "srcset");
+    if (srcset) {
+      const first = srcset.split(",")[0].trim().split(/\s+/)[0];
+      if (first.startsWith("https://")) return first;
+    }
+    return "";
+  }
+
+  function isReaderPageURL(url) {
+    return url.startsWith("https://")
+      && !/\/static\/images\/broken_image/i.test(url)
+      && !/\/cover\/normal\//i.test(url);
+  }
+
+  function collectImagesFromHTML(html) {
     const pages = [];
     const seen = new Set();
     const pattern = /<img\b[^>]*>/gi;
     let match;
-    while ((match = pattern.exec(source)) !== null) {
-      const url = attribute(match[0], "src");
-      if (!url.startsWith("https://") || seen.has(url) || /\/static\/images\/broken_image/i.test(url)) continue;
+    while ((match = pattern.exec(html)) !== null) {
+      const url = imageURLFromTag(match[0]);
+      if (!isReaderPageURL(url) || seen.has(url)) continue;
       pages.push({
         url,
         headers: {
@@ -234,6 +253,17 @@
       seen.add(url);
     }
     return pages;
+  }
+
+  function parseImagesHTML(html) {
+    const reader = String(html).match(
+      /<section\b[^>]*x-data=(["'])[^"']*scroll[^"']*\1[^>]*>([\s\S]*?)<\/section>/i,
+    );
+    if (reader) {
+      const sectionPages = collectImagesFromHTML(reader[2]);
+      if (sectionPages.length) return sectionPages;
+    }
+    return collectImagesFromHTML(String(html));
   }
 
   function searchURL(query, page) {
@@ -274,7 +304,11 @@
   async function extractImages(id) {
     const chapterID = normalizedChapterID(id);
     const endpoint = `${BASE_URL}/chapters/${chapterID}/images?is_prev=False&reading_style=long_strip`;
-    return parseImagesHTML(await fetchDirect(endpoint, { maxBytesHint: 4 * 1024 * 1024 }));
+    const pages = parseImagesHTML(await fetchDirect(endpoint, { maxBytesHint: 4 * 1024 * 1024 }));
+    if (!pages.length) {
+      throw new Error("WeebCentral returned no readable pages for this chapter.");
+    }
+    return pages;
   }
 
   async function discoveryHome() {

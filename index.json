@@ -13,7 +13,7 @@
       "id": "weebcentral-v2",
       "familyID": "weebcentral-v2",
       "name": "WeebCentral",
-      "version": "4.0.0",
+      "version": "4.0.1",
       "language": "en",
       "contentType": "pageImages",
       "contentRating": "suggestive",
@@ -21,7 +21,7 @@
       "status": "active",
       "manifest": {
         "path": "modules/weebcentral/manifest.json",
-        "sha256": "4a91d2b107c7ca04ccf0b0bcd816ae142c76faee0ed99eeedf8b1b6beb5d9864"
+        "sha256": "ec1d8dcf4ce16237dd24af98fa8010fff71b9409b693f9ccfb62315bc095f073"
       },
       "icon": {
         "path": "modules/weebcentral/icon.png",
