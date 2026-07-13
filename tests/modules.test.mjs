@@ -176,7 +176,10 @@ test("MangaDex uses fetchv2 against the official API, paginates chapters, exclud
       if (u.pathname === "/manga/11111111-1111-4111-8111-111111111111") return response(JSON.stringify(fixtures.details));
       if (u.pathname === "/manga/22222222-2222-4222-8222-222222222222") return response(JSON.stringify(fixtures.detailsExcluded));
       if (u.pathname === "/manga/11111111-1111-4111-8111-111111111111/feed") {
-        return response(JSON.stringify(u.searchParams.get("offset") === "500" ? fixtures.chapters2 : fixtures.chapters1));
+        const offset = u.searchParams.get("offset") || "0";
+        if (offset === "0") return response(JSON.stringify(fixtures.chapters1));
+        if (offset === "500") return response(JSON.stringify(fixtures.chapters2));
+        return response(JSON.stringify({ result: "ok", data: [], total: 501, limit: 500, offset: Number(offset) }));
       }
       if (u.pathname === "/at-home/server/aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa") return response(JSON.stringify(fixtures.images));
       throw new Error(`Unexpected URL: ${url}`);

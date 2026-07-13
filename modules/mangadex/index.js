@@ -79,7 +79,10 @@
 
   function firstLocaleValue(map) {
     if (!map || typeof map !== "object") return "";
-    if (typeof map.en === "string" && map.en.trim()) return map.en.trim();
+    const preferred = ["en", "en-us", "ja-ro", "ko-ro", "zh-ro"];
+    for (const key of preferred) {
+      if (typeof map[key] === "string" && map[key].trim()) return map[key].trim();
+    }
     const values = Object.values(map).filter((value) => typeof value === "string" && value.trim());
     return values.length ? values[0].trim() : "";
   }
@@ -102,6 +105,7 @@
   function coverURL(mangaID, relationships) {
     const cover = relationshipsOfType(relationships, "cover_art")[0];
     const fileName = cover && cover.attributes && cover.attributes.fileName;
+    // Prefer the 256px derivative so cover grids never download multi‑MB art.
     return fileName ? `${COVER_BASE}/${mangaID}/${fileName}.256.jpg` : null;
   }
 
@@ -153,15 +157,22 @@
     const offset = (currentPage - 1) * SEARCH_LIMIT;
     const params = [];
     if (query === "__feed:popular") {
-      params.push(["order[followedCount]", "desc"], ["hasAvailableChapters", "true"]);
+      params.push(["order[followedCount]", "desc"]);
     } else if (query === "__feed:latest") {
-      params.push(["order[latestUploadedChapter]", "desc"], ["hasAvailableChapters", "true"]);
+      params.push(["order[latestUploadedChapter]", "desc"]);
     } else {
       const text = String(query || "").trim().slice(0, 200);
       if (text) params.push(["title", text]);
-      params.push(["order[relevance]", "desc"], ["hasAvailableChapters", "true"]);
+      params.push(["order[relevance]", "desc"]);
     }
-    params.push(["limit", String(SEARCH_LIMIT)], ["offset", String(offset)], ["includes[]", "cover_art"]);
+    // Prefer titles that actually have English chapters the app can open.
+    params.push(
+      ["hasAvailableChapters", "true"],
+      ["availableTranslatedLanguage[]", "en"],
+      ["limit", String(SEARCH_LIMIT)],
+      ["offset", String(offset)],
+      ["includes[]", "cover_art"],
+    );
     withContentRating(params);
     return `${BASE_URL}/manga?${queryString(params)}`;
   }
@@ -177,8 +188,11 @@
 
   async function extractDetails(id) {
     const mangaID = normalizeMangaID(id);
-    const params = [["includes[]", "cover_art"]];
-    params.push(["includes[]", "author"], ["includes[]", "artist"]);
+    const params = [
+      ["includes[]", "cover_art"],
+      ["includes[]", "author"],
+      ["includes[]", "artist"],
+    ];
     const payload = await fetchJSON(`${BASE_URL}/manga/${mangaID}?${queryString(params)}`);
     const manga = payload.data;
     if (!manga || !manga.attributes) throw new Error("MangaDex details were empty.");
@@ -193,7 +207,9 @@
   function chapterFrom(chapter) {
     const attributes = chapter.attributes || {};
     if (attributes.isUnavailable === true) return null;
-    if (attributes.externalUrl) return null; // Hosted only on an external licensed platform; not readable via this bridge.
+    // External-only chapters cannot be opened through MangaDex@Home.
+    if (attributes.externalUrl) return null;
+    if (attributes.pages === 0) return null;
     const href = `https://mangadex.org/chapter/${chapter.id}`;
     const number = Number(attributes.chapter);
     const chapterTitle = String(attributes.title || "").trim();
@@ -211,34 +227,46 @@
 
   async function extractChapters(id) {
     const mangaID = normalizeMangaID(id);
+    // contentRating is for manga listings; chapter feed uses translatedLanguage.
     const baseParams = [
       ["translatedLanguage[]", "en"],
       ["order[chapter]", "asc"],
-      ["includes[]", "scanlation_group"],
+      ["order[volume]", "asc"],
       ["limit", String(CHAPTER_PAGE_LIMIT)],
     ];
-    withContentRating(baseParams);
 
     let offset = 0;
     let total = Infinity;
     const chapters = [];
-    for (let page = 0; page < MAX_CHAPTER_PAGES && offset < total; page += 1) {
-      const params = [...baseParams, ["offset", String(offset)]];
-      const payload = await fetchJSON(`${BASE_URL}/manga/${mangaID}/feed?${queryString(params)}`);
-      total = Number(payload.total) || 0;
-      const batch = Array.isArray(payload.data) ? payload.data : [];
-      for (const entry of batch) {
-        const mapped = chapterFrom(entry);
-        if (mapped) chapters.push(mapped);
+    const seen = new Set();
+    try {
+      for (let page = 0; page < MAX_CHAPTER_PAGES && offset < total; page += 1) {
+        const params = [...baseParams, ["offset", String(offset)]];
+        const payload = await fetchJSON(`${BASE_URL}/manga/${mangaID}/feed?${queryString(params)}`);
+        total = Number(payload.total) || 0;
+        const batch = Array.isArray(payload.data) ? payload.data : [];
+        for (const entry of batch) {
+          const mapped = chapterFrom(entry);
+          if (!mapped || seen.has(mapped.id)) continue;
+          chapters.push(mapped);
+          seen.add(mapped.id);
+        }
+        offset += CHAPTER_PAGE_LIMIT;
+        if (typeof globalThis.reportProgress === "function") {
+          await globalThis.reportProgress({ stage: "chapters", completed: Math.min(offset, total), total });
+        }
+        if (batch.length === 0) break;
       }
-      offset += CHAPTER_PAGE_LIMIT;
-      if (typeof globalThis.reportProgress === "function") {
-        await globalThis.reportProgress({ stage: "chapters", completed: Math.min(offset, total), total });
-      }
-      if (batch.length === 0) break;
+    } catch (error) {
+      const message = String(error && error.message ? error.message : error);
+      throw new Error(
+        `MangaDex chapter feed failed for this title (${message}). It may be restricted, external-only, or temporarily unavailable.`,
+      );
     }
-    if (offset < total) {
-      throw new Error(`MangaDex chapter list exceeds the ${MAX_CHAPTER_PAGES}-page safety limit.`);
+    if (!chapters.length) {
+      throw new Error(
+        "MangaDex returned no English chapters hosted on MangaDex@Home for this title (they may be external-only or restricted).",
+      );
     }
     return chapters;
   }
@@ -253,12 +281,20 @@
     if (!baseUrl.startsWith("https://") || !hash) {
       throw new Error("MangaDex returned an invalid MangaDex@Home server response.");
     }
-    const files = fullQuality.length ? fullQuality.map((name) => ({ name, quality: "data" }))
-      : dataSaver.map((name) => ({ name, quality: "data-saver" }));
+    // Prefer data-saver in-app for reliability and size on mobile networks.
+    const files = dataSaver.length
+      ? dataSaver.map((name) => ({ name, quality: "data-saver" }))
+      : fullQuality.map((name) => ({ name, quality: "data" }));
     if (!files.length) {
       throw new Error("MangaDex chapter has no readable pages on MangaDex@Home.");
     }
-    return files.map(({ name, quality }) => `${baseUrl}/${quality}/${hash}/${name}`);
+    return files.map(({ name, quality }) => ({
+      url: `${baseUrl}/${quality}/${hash}/${name}`,
+      headers: {
+        Accept: "image/avif,image/webp,image/*,*/*",
+        Referer: "https://mangadex.org/",
+      },
+    }));
   }
 
   async function discoveryHome() {

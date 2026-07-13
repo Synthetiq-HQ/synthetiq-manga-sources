@@ -92,10 +92,10 @@
   }
 
   function isChapterURL(url) {
-    const value = String(url || "").toLowerCase();
+    const value = String(url || "").toLowerCase().split("#")[0];
     if (!value.includes("/manga/")) return false;
-    if (!/chapter|ch-\d|ch_\d|ch\d/i.test(value)) return false;
-    if (value.includes("#") && value.indexOf("#") < value.length - 1 && !/chapter/i.test(value.split("#")[0])) return false;
+    if (!/(?:chapter|ch)[-_ ]?\d/i.test(value)) return false;
+    if (/\/(?:tag|genre|author|page|wp-content|login|register)\//i.test(value)) return false;
     return true;
   }
 
@@ -129,16 +129,41 @@
   }
 
   function parseCover(html, base) {
+    // Prefer explicit social/card art, never page scans or multi-thousand-pixel chapter thumbs.
     const og = decodeEntities((html.match(/og:image" content="([^"]+)"/i) || [])[1] || "");
-    if (og.startsWith("https://")) return og;
+    if (og.startsWith("https://") && !/logo|icon|sprite/i.test(og)) return og;
+    const twitter = decodeEntities((html.match(/twitter:image[^>]*content="([^"]+)"/i) || [])[1] || "");
+    if (twitter.startsWith("https://") && !/logo|icon|sprite/i.test(twitter)) return twitter;
+
     const candidates = Array.from(
       html.matchAll(/(?:data-src|src)=["']?(https?:\/\/[^"'\s>]+\.(?:jpg|jpeg|png|webp|avif))/gi),
     ).map((entry) => absoluteURL(entry[1], base));
-    for (const url of candidates) {
-      if (/logo|icon|emoji|avatar|sprite/i.test(url)) continue;
-      return url;
-    }
-    return candidates[0] || "";
+
+    const scored = candidates
+      .filter((url) => url.startsWith("https://"))
+      .filter((url) => !/logo|icon|emoji|avatar|sprite|gravatar|adservice|favicon/i.test(url))
+      // Skip chapter-page style assets and extreme WordPress derivatives.
+      .filter((url) => !/chapter-\d|\/\d{2,4}-[a-z0-9-]+-chapter/i.test(url))
+      .filter((url) => !/-\d{3,4}x\d{3,4}\.(?:jpg|jpeg|png|webp|avif)$/i.test(url) || /cover/i.test(url))
+      .map((url) => {
+        let score = 0;
+        if (/cover/i.test(url)) score += 50;
+        if (/thumbnail|poster|featured/i.test(url)) score += 20;
+        if (/uploads\/\d{4}\//i.test(url)) score += 5;
+        // Prefer moderate dimensions when encoded in the filename.
+        const dim = url.match(/(\d{3,4})x(\d{3,4})/i);
+        if (dim) {
+          const w = Number(dim[1]);
+          const h = Number(dim[2]);
+          if (w <= 800 && h <= 1200) score += 10;
+          if (h > 2000 || w > 2000) score -= 40;
+        }
+        return { url, score };
+      })
+      .sort((a, b) => b.score - a.score);
+
+    if (scored.length) return scored[0].url;
+    return og.startsWith("https://") ? og : "";
   }
 
   function parseDescription(html) {

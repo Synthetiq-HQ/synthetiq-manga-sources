@@ -78,7 +78,7 @@
       "status": "active",
       "manifest": {
         "path": "modules/mangadex/manifest.json",
-        "sha256": "978df98e1d5f2c37d88c7ddb58f75367e1b1833b1d6e42607d420457c556472d"
+        "sha256": "33f41fc547e2ed2e7a89d857e89d40b7a2db9739fa0c4f10cf2b0b4e2de91b45"
       },
       "icon": {
         "path": "modules/mangadex/icon.png",
@@ -135,7 +135,7 @@
       "status": "active",
       "manifest": {
         "path": "modules/black-clover/manifest.json",
-        "sha256": "1e7279d81be694da3b1d43452f5f250c86f5c78295083b0305c750994d698589"
+        "sha256": "842eb3ca9fff334c6d41bb8fd874074ee11bba0768cb35f09c7dd580213275f7"
       },
       "icon": {
         "path": "modules/black-clover/icon.png",
@@ -154,7 +154,7 @@
       "status": "active",
       "manifest": {
         "path": "modules/kagurabachi/manifest.json",
-        "sha256": "bbaaa531058cc50f8ecf08d4ce8e3728859541c9b7ebbb81ecf2cb214da29363"
+        "sha256": "8d12e0be3b01fe26298706749afe37436356301209d73e4ec1622907cdf8489a"
       },
       "icon": {
         "path": "modules/kagurabachi/icon.png",
@@ -173,7 +173,7 @@
       "status": "active",
       "manifest": {
         "path": "modules/beginning-after-the-end/manifest.json",
-        "sha256": "76f171fbdc26649e0bc3df60359747aea9a43ffb2c67a938cc7595cbf70af67d"
+        "sha256": "e8f0a390c065032dbde0b3b829cbda2c587dd3dbfa698ce5f196ff27278242d6"
       },
       "icon": {
         "path": "modules/beginning-after-the-end/icon.png",
@@ -192,7 +192,7 @@
       "status": "active",
       "manifest": {
         "path": "modules/solo-leveling/manifest.json",
-        "sha256": "f68a00889d799e44e5ad040956fc435ead073c9ed8fe6557a3ef392e6223820a"
+        "sha256": "504072fdafc21de5883246c111ea8ffe97c0ee5405e3424947ecf4672b53f367"
       },
       "icon": {
         "path": "modules/solo-leveling/icon.png",
@@ -211,7 +211,7 @@
       "status": "active",
       "manifest": {
         "path": "modules/gachiakuta/manifest.json",
-        "sha256": "7ec26ad5ca310bb862afbaf37b93892b781dc32d35caf9582e5d2b49ef28a3a8"
+        "sha256": "52a847f8547caed0ef520774fbd51df49747124c6f92bb3365333c1686f24719"
       },
       "icon": {
         "path": "modules/gachiakuta/icon.png",
@@ -230,7 +230,7 @@
       "status": "active",
       "manifest": {
         "path": "modules/haikyuu/manifest.json",
-        "sha256": "763c1975bf46b4b1ef76128144649da8fc51fa7cc4c5d0e9b4d6865faec7c961"
+        "sha256": "349881bb73f0a6c3a78f4fed0b1f0fb78b0dd71ba6ccb001b2ea2c6ef2fdfd01"
       },
       "icon": {
         "path": "modules/haikyuu/icon.png",

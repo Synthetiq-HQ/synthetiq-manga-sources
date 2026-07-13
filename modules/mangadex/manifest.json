@@ -25,7 +25,7 @@
   "universalLink": "https://synthetiq.uk/manga/modules/mangadex",
   "entry": {
     "path": "modules/mangadex/index.js",
-    "sha256": "3616861f75ba44332f5bce4f50367f77022620000cb51759413ba7ef8a64bf85"
+    "sha256": "fa0fbc246ae120889565a57c78b6bd5b6278bbf520261117235eeeae6b56d664"
   },
   "icon": {
     "path": "modules/mangadex/icon.png",

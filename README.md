@@ -30,6 +30,19 @@ Run the explicitly network-dependent end-to-end smoke path with:
 npm run test:live
 ```
 
+Run the app-shaped module tester (discovery/search → details → chapters → terminal content):
+
+```sh
+# one module, live network
+npm run test:module -- mangadex
+
+# every module in index.json
+npm run test:module
+
+# fixture-only (no network)
+npm run test:module:fixtures -- black-clover
+```
+
 After changing an entry script or icon, finalize hashes and validate again:
 
 ```sh

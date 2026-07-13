@@ -7,6 +7,8 @@
     "finalize": "node scripts/finalize-hashes.mjs",
     "test": "node --test tests/modules.test.mjs && node scripts/validate.mjs && node scripts/verify-repository.mjs",
     "test:live": "RUN_LIVE_TESTS=1 node scripts/live-smoke.mjs",
+    "test:module": "node scripts/module-tester.mjs",
+    "test:module:fixtures": "node scripts/module-tester.mjs --fixtures",
     "verify": "node scripts/validate.mjs && node scripts/verify-repository.mjs"
   }
 }
