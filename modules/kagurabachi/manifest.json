@@ -1,0 +1,53 @@
+{
+  "id": "kagurabachi",
+  "familyID": "kagurabachi",
+  "legacyIDs": [],
+  "name": "Kagurabachi",
+  "version": "1.0.0",
+  "contractVersion": 1,
+  "minimumAppVersion": "1.0.0",
+  "contentType": "pageImages",
+  "language": "en",
+  "contentRating": "suggestive",
+  "releaseTrack": "beta",
+  "status": "active",
+  "capabilities": [
+    "popular",
+    "latest",
+    "search",
+    "details",
+    "chapters",
+    "images",
+    "imageRequest",
+    "discovery"
+  ],
+  "baseURL": "https://thekagurabachi.com",
+  "universalLink": "https://synthetiq.uk/manga/modules/kagurabachi",
+  "entry": {
+    "path": "modules/kagurabachi/index.js",
+    "sha256": "e88315e11c8c30892aa394a3934963b5a045ff0f874bd8afc8eed540282e1959"
+  },
+  "icon": {
+    "path": "modules/kagurabachi/icon.png",
+    "sha256": "49e590ffec88c45380ea263e09f8b89e10e294412d7ab8606944bd1c843af5c9"
+  },
+  "allowedHosts": [
+    "thekagurabachi.com",
+    "www.thekagurabachi.com",
+    "*.thekagurabachi.com"
+  ],
+  "limits": {
+    "timeoutMilliseconds": 25000,
+    "maxConcurrentRequests": 2,
+    "maxResponseBytes": 8388608,
+    "maxScriptBytes": 262144,
+    "cacheTTLSeconds": 900
+  },
+  "attribution": {
+    "author": "Synthetiq-HQ",
+    "website": "https://thekagurabachi.com",
+    "licenseName": null,
+    "licenseURL": null,
+    "authorizationURL": null
+  }
+}

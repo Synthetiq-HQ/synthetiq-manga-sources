@@ -1,0 +1,55 @@
+{
+  "id": "haikyuu",
+  "familyID": "haikyuu",
+  "legacyIDs": [],
+  "name": "Haikyuu",
+  "version": "1.0.0",
+  "contractVersion": 1,
+  "minimumAppVersion": "1.0.0",
+  "contentType": "pageImages",
+  "language": "en",
+  "contentRating": "suggestive",
+  "releaseTrack": "beta",
+  "status": "active",
+  "capabilities": [
+    "popular",
+    "latest",
+    "search",
+    "details",
+    "chapters",
+    "images",
+    "imageRequest",
+    "discovery"
+  ],
+  "baseURL": "https://www.read-haikyuu.com",
+  "universalLink": "https://synthetiq.uk/manga/modules/haikyuu",
+  "entry": {
+    "path": "modules/haikyuu/index.js",
+    "sha256": "292db35b209258564c15ad4e49018f34df1ade06ca3b3004f62eb0230dcbe8ad"
+  },
+  "icon": {
+    "path": "modules/haikyuu/icon.png",
+    "sha256": "52019a72dc9d76ad28015b96cc75174154ab4c30026d2acfb772f608d84c8dbd"
+  },
+  "allowedHosts": [
+    "qubn.us",
+    "read-haikyuu.com",
+    "www.read-haikyuu.com",
+    "*.qubn.us",
+    "*.read-haikyuu.com"
+  ],
+  "limits": {
+    "timeoutMilliseconds": 25000,
+    "maxConcurrentRequests": 2,
+    "maxResponseBytes": 8388608,
+    "maxScriptBytes": 262144,
+    "cacheTTLSeconds": 900
+  },
+  "attribution": {
+    "author": "Synthetiq-HQ",
+    "website": "https://www.read-haikyuu.com",
+    "licenseName": null,
+    "licenseURL": null,
+    "authorizationURL": null
+  }
+}

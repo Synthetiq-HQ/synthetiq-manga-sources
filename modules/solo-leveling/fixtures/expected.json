@@ -1,0 +1,77 @@
+{
+  "search": {
+    "items": [
+      {
+        "id": "https://thesololevelingmanga.com/",
+        "href": "https://thesololevelingmanga.com/",
+        "title": "Solo Leveling",
+        "image": "https://thesololevelingmanga.com/wp-content/uploads/cover.webp"
+      }
+    ],
+    "hasMore": false
+  },
+  "details": {
+    "id": "https://thesololevelingmanga.com/",
+    "href": "https://thesololevelingmanga.com/",
+    "url": "https://thesololevelingmanga.com/",
+    "title": "Solo Leveling",
+    "description": "Fixture description for Solo Leveling.",
+    "image": "https://thesololevelingmanga.com/wp-content/uploads/cover.webp",
+    "authors": [],
+    "author": "",
+    "genres": [],
+    "status": "Ongoing"
+  },
+  "chapters": [
+    {
+      "id": "https://thesololevelingmanga.com/manga/solo-leveling-chapter-3/",
+      "href": "https://thesololevelingmanga.com/manga/solo-leveling-chapter-3/",
+      "url": "https://thesololevelingmanga.com/manga/solo-leveling-chapter-3/",
+      "title": "Chapter 3",
+      "number": 3,
+      "releaseDate": null,
+      "language": "en"
+    },
+    {
+      "id": "https://thesololevelingmanga.com/manga/solo-leveling-chapter-2/",
+      "href": "https://thesololevelingmanga.com/manga/solo-leveling-chapter-2/",
+      "url": "https://thesololevelingmanga.com/manga/solo-leveling-chapter-2/",
+      "title": "Chapter 2",
+      "number": 2,
+      "releaseDate": null,
+      "language": "en"
+    },
+    {
+      "id": "https://thesololevelingmanga.com/manga/solo-leveling-chapter-1/",
+      "href": "https://thesololevelingmanga.com/manga/solo-leveling-chapter-1/",
+      "url": "https://thesololevelingmanga.com/manga/solo-leveling-chapter-1/",
+      "title": "Chapter 1",
+      "number": 1,
+      "releaseDate": null,
+      "language": "en"
+    }
+  ],
+  "images": [
+    {
+      "url": "https://img.thesololevelingmanga.com/uploads/2024/08/image_1.webp",
+      "headers": {
+        "Accept": "image/avif,image/webp,image/*,*/*",
+        "Referer": "https://thesololevelingmanga.com/"
+      }
+    },
+    {
+      "url": "https://img.thesololevelingmanga.com/uploads/2024/08/image_2.webp",
+      "headers": {
+        "Accept": "image/avif,image/webp,image/*,*/*",
+        "Referer": "https://thesololevelingmanga.com/"
+      }
+    },
+    {
+      "url": "https://img.thesololevelingmanga.com/uploads/2024/08/image_3.webp",
+      "headers": {
+        "Accept": "image/avif,image/webp,image/*,*/*",
+        "Referer": "https://thesololevelingmanga.com/"
+      }
+    }
+  ]
+}

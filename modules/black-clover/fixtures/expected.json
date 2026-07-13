@@ -1,0 +1,77 @@
+{
+  "search": {
+    "items": [
+      {
+        "id": "https://blackcloveronline.com/",
+        "href": "https://blackcloveronline.com/",
+        "title": "Black Clover",
+        "image": "https://blackcloveronline.com/wp-content/uploads/cover.webp"
+      }
+    ],
+    "hasMore": false
+  },
+  "details": {
+    "id": "https://blackcloveronline.com/",
+    "href": "https://blackcloveronline.com/",
+    "url": "https://blackcloveronline.com/",
+    "title": "Black Clover",
+    "description": "Fixture description for Black Clover.",
+    "image": "https://blackcloveronline.com/wp-content/uploads/cover.webp",
+    "authors": [],
+    "author": "",
+    "genres": [],
+    "status": "Ongoing"
+  },
+  "chapters": [
+    {
+      "id": "https://blackcloveronline.com/manga/black-clover-chapter-3/",
+      "href": "https://blackcloveronline.com/manga/black-clover-chapter-3/",
+      "url": "https://blackcloveronline.com/manga/black-clover-chapter-3/",
+      "title": "Chapter 3",
+      "number": 3,
+      "releaseDate": null,
+      "language": "en"
+    },
+    {
+      "id": "https://blackcloveronline.com/manga/black-clover-chapter-2/",
+      "href": "https://blackcloveronline.com/manga/black-clover-chapter-2/",
+      "url": "https://blackcloveronline.com/manga/black-clover-chapter-2/",
+      "title": "Chapter 2",
+      "number": 2,
+      "releaseDate": null,
+      "language": "en"
+    },
+    {
+      "id": "https://blackcloveronline.com/manga/black-clover-chapter-1/",
+      "href": "https://blackcloveronline.com/manga/black-clover-chapter-1/",
+      "url": "https://blackcloveronline.com/manga/black-clover-chapter-1/",
+      "title": "Chapter 1",
+      "number": 1,
+      "releaseDate": null,
+      "language": "en"
+    }
+  ],
+  "images": [
+    {
+      "url": "https://blackcloveronline.com/wp-content/uploads/image_1.webp",
+      "headers": {
+        "Accept": "image/avif,image/webp,image/*,*/*",
+        "Referer": "https://blackcloveronline.com/"
+      }
+    },
+    {
+      "url": "https://blackcloveronline.com/wp-content/uploads/image_2.webp",
+      "headers": {
+        "Accept": "image/avif,image/webp,image/*,*/*",
+        "Referer": "https://blackcloveronline.com/"
+      }
+    },
+    {
+      "url": "https://blackcloveronline.com/wp-content/uploads/image_3.webp",
+      "headers": {
+        "Accept": "image/avif,image/webp,image/*,*/*",
+        "Referer": "https://blackcloveronline.com/"
+      }
+    }
+  ]
+}

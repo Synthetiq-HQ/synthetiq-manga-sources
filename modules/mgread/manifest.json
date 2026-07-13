@@ -1,0 +1,56 @@
+{
+  "id": "mgread",
+  "familyID": "mgread",
+  "legacyIDs": [
+    "likemanga",
+    "likemanga-io"
+  ],
+  "name": "MGRead (LikeManga)",
+  "version": "1.0.0",
+  "contractVersion": 1,
+  "minimumAppVersion": "1.0.0",
+  "contentType": "pageImages",
+  "language": "en",
+  "contentRating": "suggestive",
+  "releaseTrack": "beta",
+  "status": "active",
+  "capabilities": [
+    "popular",
+    "latest",
+    "search",
+    "details",
+    "chapters",
+    "images",
+    "imageRequest",
+    "discovery"
+  ],
+  "baseURL": "https://mgread.io",
+  "universalLink": "https://synthetiq.uk/manga/modules/mgread",
+  "entry": {
+    "path": "modules/mgread/index.js",
+    "sha256": "1fc68dac12e2203e7f7cf9fefbbef5e00c7781ac913ccd48070cb5c44a051b79"
+  },
+  "icon": {
+    "path": "modules/mgread/icon.png",
+    "sha256": "6e4d659d99e5f330293c1e35b9770f7467b637b93d47b4d1ea3c7b744912cf0d"
+  },
+  "allowedHosts": [
+    "mgread.io",
+    "*.mgread.io",
+    "likemanga.io"
+  ],
+  "limits": {
+    "timeoutMilliseconds": 30000,
+    "maxConcurrentRequests": 2,
+    "maxResponseBytes": 8388608,
+    "maxScriptBytes": 262144,
+    "cacheTTLSeconds": 900
+  },
+  "attribution": {
+    "author": "Synthetiq-HQ",
+    "website": "https://mgread.io",
+    "licenseName": null,
+    "licenseURL": null,
+    "authorizationURL": null
+  }
+}

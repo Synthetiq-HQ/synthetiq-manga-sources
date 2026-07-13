@@ -1,0 +1,53 @@
+{
+  "id": "solo-leveling",
+  "familyID": "solo-leveling",
+  "legacyIDs": [],
+  "name": "Solo Leveling",
+  "version": "1.0.0",
+  "contractVersion": 1,
+  "minimumAppVersion": "1.0.0",
+  "contentType": "pageImages",
+  "language": "en",
+  "contentRating": "suggestive",
+  "releaseTrack": "beta",
+  "status": "active",
+  "capabilities": [
+    "popular",
+    "latest",
+    "search",
+    "details",
+    "chapters",
+    "images",
+    "imageRequest",
+    "discovery"
+  ],
+  "baseURL": "https://thesololevelingmanga.com",
+  "universalLink": "https://synthetiq.uk/manga/modules/solo-leveling",
+  "entry": {
+    "path": "modules/solo-leveling/index.js",
+    "sha256": "72575ef449f843a9790a5aaf8e98f96f60e821037579bcf97124c1a2fb79edb1"
+  },
+  "icon": {
+    "path": "modules/solo-leveling/icon.png",
+    "sha256": "199d0f365d171c5cdcd1352d36793f96924be36e2356671f16f8969f3c56979e"
+  },
+  "allowedHosts": [
+    "thesololevelingmanga.com",
+    "www.thesololevelingmanga.com",
+    "*.thesololevelingmanga.com"
+  ],
+  "limits": {
+    "timeoutMilliseconds": 25000,
+    "maxConcurrentRequests": 2,
+    "maxResponseBytes": 8388608,
+    "maxScriptBytes": 262144,
+    "cacheTTLSeconds": 900
+  },
+  "attribution": {
+    "author": "Synthetiq-HQ",
+    "website": "https://thesololevelingmanga.com",
+    "licenseName": null,
+    "licenseURL": null,
+    "authorizationURL": null
+  }
+}

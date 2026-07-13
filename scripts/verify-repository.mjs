@@ -10,6 +10,14 @@ const expectedHandlers = {
   mangafire: ["searchResults", "extractDetails", "extractChapters", "extractImages"],
   weebcentral: ["searchResults", "extractDetails", "extractChapters", "extractImages"],
   mangadex: ["searchResults", "extractDetails", "extractChapters", "extractImages"],
+  mangakatana: ["searchResults", "extractDetails", "extractChapters", "extractImages"],
+  mgread: ["searchResults", "extractDetails", "extractChapters", "extractImages"],
+  "haikyuu": ["searchResults", "extractDetails", "extractChapters", "extractImages"],
+  "gachiakuta": ["searchResults", "extractDetails", "extractChapters", "extractImages"],
+  "solo-leveling": ["searchResults", "extractDetails", "extractChapters", "extractImages"],
+  "beginning-after-the-end": ["searchResults", "extractDetails", "extractChapters", "extractImages"],
+  "kagurabachi": ["searchResults", "extractDetails", "extractChapters", "extractImages"],
+  "black-clover": ["searchResults", "extractDetails", "extractChapters", "extractImages"],
 };
 
 function fail(message) {
@@ -75,7 +83,7 @@ for (const file of allFiles) {
 const index = await readJSON("index.json");
 if (index) {
   if (index.schemaVersion !== 1) fail("index.json: schemaVersion must be 1");
-  if (!Array.isArray(index.modules) || index.modules.length !== 4) fail("index.json: expected exactly four modules");
+  if (!Array.isArray(index.modules) || index.modules.length < 1) fail("index.json: expected at least one module");
   const identities = new Set();
 
   for (const entry of index.modules || []) {

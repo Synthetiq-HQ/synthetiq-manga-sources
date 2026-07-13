@@ -1,0 +1,53 @@
+{
+  "id": "beginning-after-the-end",
+  "familyID": "beginning-after-the-end",
+  "legacyIDs": [],
+  "name": "The Beginning After The End",
+  "version": "1.0.0",
+  "contractVersion": 1,
+  "minimumAppVersion": "1.0.0",
+  "contentType": "pageImages",
+  "language": "en",
+  "contentRating": "suggestive",
+  "releaseTrack": "beta",
+  "status": "active",
+  "capabilities": [
+    "popular",
+    "latest",
+    "search",
+    "details",
+    "chapters",
+    "images",
+    "imageRequest",
+    "discovery"
+  ],
+  "baseURL": "https://thebeginningaftertheendmanga.com",
+  "universalLink": "https://synthetiq.uk/manga/modules/beginning-after-the-end",
+  "entry": {
+    "path": "modules/beginning-after-the-end/index.js",
+    "sha256": "bd662d39485704ba1d470f5e109e22430a18454bbee9f40382b1b82ea7a96498"
+  },
+  "icon": {
+    "path": "modules/beginning-after-the-end/icon.png",
+    "sha256": "091676715f568ce3d1198f260fde07b667d003ddc45a1366e08fc90c13f04671"
+  },
+  "allowedHosts": [
+    "thebeginningaftertheendmanga.com",
+    "www.thebeginningaftertheendmanga.com",
+    "*.thebeginningaftertheendmanga.com"
+  ],
+  "limits": {
+    "timeoutMilliseconds": 25000,
+    "maxConcurrentRequests": 2,
+    "maxResponseBytes": 8388608,
+    "maxScriptBytes": 262144,
+    "cacheTTLSeconds": 900
+  },
+  "attribution": {
+    "author": "Synthetiq-HQ",
+    "website": "https://thebeginningaftertheendmanga.com",
+    "licenseName": null,
+    "licenseURL": null,
+    "authorizationURL": null
+  }
+}

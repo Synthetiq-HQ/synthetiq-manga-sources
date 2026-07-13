@@ -203,3 +203,105 @@ test("MangaDex uses fetchv2 against the official API, paginates chapters, exclud
   const images = await module.extractImages(chapters[0].id);
   assert.deepEqual(JSON.parse(JSON.stringify(images)), fixtures.expected.images);
 });
+
+test("MangaKatana parses search, details, complete chapter list, and thzq page images", async () => {
+  const fixtures = {
+    search: await text("modules/mangakatana/fixtures/search.html"),
+    details: await text("modules/mangakatana/fixtures/details.html"),
+    chapter: await text("modules/mangakatana/fixtures/chapter.html"),
+    expected: await json("modules/mangakatana/fixtures/expected.json"),
+  };
+  const module = await loadModule("modules/mangakatana/index.js", {
+    fetchv2: async (url) => {
+      assert.equal(typeof url, "string");
+      if (url.includes("?search=") || url.includes("&search=")) return response(fixtures.search);
+      if (/\/manga\/fixture-alpha\.1001\/c\d+/.test(url)) return response(fixtures.chapter);
+      if (url.includes("/manga/fixture-alpha.1001")) return response(fixtures.details);
+      throw new Error(`Unexpected URL: ${url}`);
+    },
+  });
+
+  const search = await module.searchResults("fixture", 1);
+  assert.deepEqual(JSON.parse(JSON.stringify(search)), fixtures.expected.search);
+
+  const details = await module.extractDetails(search.items[0].id);
+  assert.deepEqual(JSON.parse(JSON.stringify(details)), fixtures.expected.details);
+
+  const chapters = await module.extractChapters(search.items[0].id);
+  assert.deepEqual(JSON.parse(JSON.stringify(chapters)), fixtures.expected.chapters);
+
+  const pages = await module.extractImages(chapters[2].id);
+  assert.deepEqual(JSON.parse(JSON.stringify(pages)), fixtures.expected.images);
+});
+
+test("MGRead (LikeManga) parses search, details, paginated chapters, and CDN page images", async () => {
+  const fixtures = {
+    search: await text("modules/mgread/fixtures/search.html"),
+    details: await text("modules/mgread/fixtures/details.html"),
+    chapter: await text("modules/mgread/fixtures/chapter.html"),
+    expected: await json("modules/mgread/fixtures/expected.json"),
+  };
+  const module = await loadModule("modules/mgread/index.js", {
+    fetchv2: async (url) => {
+      assert.equal(typeof url, "string");
+      if (url.includes("?s=") || url.includes("/?s=")) return response(fixtures.search);
+      if (url.includes("/chapter-")) return response(fixtures.chapter);
+      if (url.includes("/manga/fixture-alpha")) return response(fixtures.details);
+      throw new Error(`Unexpected URL: ${url}`);
+    },
+  });
+
+  const search = await module.searchResults("fixture", 1);
+  assert.deepEqual(JSON.parse(JSON.stringify(search)), fixtures.expected.search);
+
+  const details = await module.extractDetails(search.items[0].id);
+  assert.deepEqual(JSON.parse(JSON.stringify(details)), fixtures.expected.details);
+
+  const chapters = await module.extractChapters(search.items[0].id);
+  assert.deepEqual(JSON.parse(JSON.stringify(chapters)), fixtures.expected.chapters);
+
+  const pages = await module.extractImages(chapters[1].id);
+  assert.deepEqual(JSON.parse(JSON.stringify(pages)), fixtures.expected.images);
+});
+
+const singleSeriesModules = [
+  "black-clover",
+  "kagurabachi",
+  "beginning-after-the-end",
+  "solo-leveling",
+  "gachiakuta",
+  "haikyuu",
+];
+
+for (const slug of singleSeriesModules) {
+  test(`${slug} single-series module parses home chapters and page images`, async () => {
+    const fixtures = {
+      home: await text(`modules/${slug}/fixtures/home.html`),
+      chapter: await text(`modules/${slug}/fixtures/chapter.html`),
+      expected: await json(`modules/${slug}/fixtures/expected.json`),
+    };
+    const module = await loadModule(`modules/${slug}/index.js`, {
+      fetchv2: async (url) => {
+        assert.equal(typeof url, "string");
+        if (/\/manga\/.*chapter/i.test(url)) return response(fixtures.chapter);
+        return response(fixtures.home);
+      },
+    });
+
+    const search = await module.searchResults("zzz-no-match-token", 1);
+    assert.equal(search.items.length, 0);
+
+    const openSearch = await module.searchResults("__feed:popular", 1);
+    assert.deepEqual(JSON.parse(JSON.stringify(openSearch)), fixtures.expected.search);
+
+    const details = await module.extractDetails(fixtures.expected.details.id);
+    assert.deepEqual(JSON.parse(JSON.stringify(details)), fixtures.expected.details);
+
+    const chapters = await module.extractChapters(fixtures.expected.details.id);
+    assert.deepEqual(JSON.parse(JSON.stringify(chapters)), fixtures.expected.chapters);
+
+    const pages = await module.extractImages(chapters[2].id);
+    assert.deepEqual(JSON.parse(JSON.stringify(pages)), fixtures.expected.images);
+  });
+}
+

@@ -1,0 +1,77 @@
+{
+  "search": {
+    "items": [
+      {
+        "id": "https://thebeginningaftertheendmanga.com/",
+        "href": "https://thebeginningaftertheendmanga.com/",
+        "title": "The Beginning After The End",
+        "image": "https://thebeginningaftertheendmanga.com/wp-content/uploads/cover.webp"
+      }
+    ],
+    "hasMore": false
+  },
+  "details": {
+    "id": "https://thebeginningaftertheendmanga.com/",
+    "href": "https://thebeginningaftertheendmanga.com/",
+    "url": "https://thebeginningaftertheendmanga.com/",
+    "title": "The Beginning After The End",
+    "description": "Fixture description for The Beginning After The End.",
+    "image": "https://thebeginningaftertheendmanga.com/wp-content/uploads/cover.webp",
+    "authors": [],
+    "author": "",
+    "genres": [],
+    "status": "Ongoing"
+  },
+  "chapters": [
+    {
+      "id": "https://thebeginningaftertheendmanga.com/manga/the-beginning-after-the-end-chapter-3/",
+      "href": "https://thebeginningaftertheendmanga.com/manga/the-beginning-after-the-end-chapter-3/",
+      "url": "https://thebeginningaftertheendmanga.com/manga/the-beginning-after-the-end-chapter-3/",
+      "title": "Chapter 3",
+      "number": 3,
+      "releaseDate": null,
+      "language": "en"
+    },
+    {
+      "id": "https://thebeginningaftertheendmanga.com/manga/the-beginning-after-the-end-chapter-2/",
+      "href": "https://thebeginningaftertheendmanga.com/manga/the-beginning-after-the-end-chapter-2/",
+      "url": "https://thebeginningaftertheendmanga.com/manga/the-beginning-after-the-end-chapter-2/",
+      "title": "Chapter 2",
+      "number": 2,
+      "releaseDate": null,
+      "language": "en"
+    },
+    {
+      "id": "https://thebeginningaftertheendmanga.com/manga/the-beginning-after-the-end-chapter-1/",
+      "href": "https://thebeginningaftertheendmanga.com/manga/the-beginning-after-the-end-chapter-1/",
+      "url": "https://thebeginningaftertheendmanga.com/manga/the-beginning-after-the-end-chapter-1/",
+      "title": "Chapter 1",
+      "number": 1,
+      "releaseDate": null,
+      "language": "en"
+    }
+  ],
+  "images": [
+    {
+      "url": "https://img.thebeginningaftertheendmanga.com/wp-content/uploads/01-the-beginning-after-the-end-chapter-243.webp",
+      "headers": {
+        "Accept": "image/avif,image/webp,image/*,*/*",
+        "Referer": "https://thebeginningaftertheendmanga.com/"
+      }
+    },
+    {
+      "url": "https://img.thebeginningaftertheendmanga.com/wp-content/uploads/02-the-beginning-after-the-end-chapter-243.webp",
+      "headers": {
+        "Accept": "image/avif,image/webp,image/*,*/*",
+        "Referer": "https://thebeginningaftertheendmanga.com/"
+      }
+    },
+    {
+      "url": "https://img.thebeginningaftertheendmanga.com/wp-content/uploads/03-the-beginning-after-the-end-chapter-243.webp",
+      "headers": {
+        "Accept": "image/avif,image/webp,image/*,*/*",
+        "Referer": "https://thebeginningaftertheendmanga.com/"
+      }
+    }
+  ]
+}

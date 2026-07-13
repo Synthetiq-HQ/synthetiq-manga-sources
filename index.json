@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-07-10T10:38:25Z",
+  "generatedAt": "2026-07-13T10:42:38Z",
   "repository": {
     "id": "synthetiq.sources",
     "name": "Synthetiq Manga Sources",
@@ -83,6 +83,158 @@
       "icon": {
         "path": "modules/mangadex/icon.png",
         "sha256": "39f72915dc53c2784d4596d2033afbcc1d53e6368ce9869cd2ff06846d1eaf1a"
+      }
+    },
+    {
+      "id": "mangakatana",
+      "familyID": "mangakatana",
+      "name": "MangaKatana",
+      "version": "1.0.0",
+      "language": "en",
+      "contentType": "pageImages",
+      "contentRating": "suggestive",
+      "releaseTrack": "beta",
+      "status": "active",
+      "manifest": {
+        "path": "modules/mangakatana/manifest.json",
+        "sha256": "c89f8ce29f135694f84fb0cc2bc12a7125f78232f7015c7efa26506a51a80e24"
+      },
+      "icon": {
+        "path": "modules/mangakatana/icon.png",
+        "sha256": "b483124e3a259ea16dceecb9736d609f37084880b09864b1b88cc4b3e8c15969"
+      }
+    },
+    {
+      "id": "mgread",
+      "familyID": "mgread",
+      "name": "MGRead (LikeManga)",
+      "version": "1.0.0",
+      "language": "en",
+      "contentType": "pageImages",
+      "contentRating": "suggestive",
+      "releaseTrack": "beta",
+      "status": "active",
+      "manifest": {
+        "path": "modules/mgread/manifest.json",
+        "sha256": "a3333d51587aff193fe83923a959b56bbecf933db189b0b8dac301431ffe0cc1"
+      },
+      "icon": {
+        "path": "modules/mgread/icon.png",
+        "sha256": "6e4d659d99e5f330293c1e35b9770f7467b637b93d47b4d1ea3c7b744912cf0d"
+      }
+    },
+    {
+      "id": "black-clover",
+      "familyID": "black-clover",
+      "name": "Black Clover Online",
+      "version": "1.0.0",
+      "language": "en",
+      "contentType": "pageImages",
+      "contentRating": "suggestive",
+      "releaseTrack": "beta",
+      "status": "active",
+      "manifest": {
+        "path": "modules/black-clover/manifest.json",
+        "sha256": "1e7279d81be694da3b1d43452f5f250c86f5c78295083b0305c750994d698589"
+      },
+      "icon": {
+        "path": "modules/black-clover/icon.png",
+        "sha256": "8eed829020022006a99fd7cb79d7f3e23832044b5f826c85b2a5d097f6fd02b2"
+      }
+    },
+    {
+      "id": "kagurabachi",
+      "familyID": "kagurabachi",
+      "name": "Kagurabachi",
+      "version": "1.0.0",
+      "language": "en",
+      "contentType": "pageImages",
+      "contentRating": "suggestive",
+      "releaseTrack": "beta",
+      "status": "active",
+      "manifest": {
+        "path": "modules/kagurabachi/manifest.json",
+        "sha256": "bbaaa531058cc50f8ecf08d4ce8e3728859541c9b7ebbb81ecf2cb214da29363"
+      },
+      "icon": {
+        "path": "modules/kagurabachi/icon.png",
+        "sha256": "49e590ffec88c45380ea263e09f8b89e10e294412d7ab8606944bd1c843af5c9"
+      }
+    },
+    {
+      "id": "beginning-after-the-end",
+      "familyID": "beginning-after-the-end",
+      "name": "The Beginning After The End",
+      "version": "1.0.0",
+      "language": "en",
+      "contentType": "pageImages",
+      "contentRating": "suggestive",
+      "releaseTrack": "beta",
+      "status": "active",
+      "manifest": {
+        "path": "modules/beginning-after-the-end/manifest.json",
+        "sha256": "76f171fbdc26649e0bc3df60359747aea9a43ffb2c67a938cc7595cbf70af67d"
+      },
+      "icon": {
+        "path": "modules/beginning-after-the-end/icon.png",
+        "sha256": "091676715f568ce3d1198f260fde07b667d003ddc45a1366e08fc90c13f04671"
+      }
+    },
+    {
+      "id": "solo-leveling",
+      "familyID": "solo-leveling",
+      "name": "Solo Leveling",
+      "version": "1.0.0",
+      "language": "en",
+      "contentType": "pageImages",
+      "contentRating": "suggestive",
+      "releaseTrack": "beta",
+      "status": "active",
+      "manifest": {
+        "path": "modules/solo-leveling/manifest.json",
+        "sha256": "f68a00889d799e44e5ad040956fc435ead073c9ed8fe6557a3ef392e6223820a"
+      },
+      "icon": {
+        "path": "modules/solo-leveling/icon.png",
+        "sha256": "199d0f365d171c5cdcd1352d36793f96924be36e2356671f16f8969f3c56979e"
+      }
+    },
+    {
+      "id": "gachiakuta",
+      "familyID": "gachiakuta",
+      "name": "Gachiakuta",
+      "version": "1.0.0",
+      "language": "en",
+      "contentType": "pageImages",
+      "contentRating": "suggestive",
+      "releaseTrack": "beta",
+      "status": "active",
+      "manifest": {
+        "path": "modules/gachiakuta/manifest.json",
+        "sha256": "7ec26ad5ca310bb862afbaf37b93892b781dc32d35caf9582e5d2b49ef28a3a8"
+      },
+      "icon": {
+        "path": "modules/gachiakuta/icon.png",
+        "sha256": "384d2bf7b1e3402719cf36a666388affb034a390ee5c4bc8b8c5e524f3f75931"
+      }
+    },
+    {
+      "id": "haikyuu",
+      "familyID": "haikyuu",
+      "name": "Haikyuu",
+      "version": "1.0.0",
+      "language": "en",
+      "contentType": "pageImages",
+      "contentRating": "suggestive",
+      "releaseTrack": "beta",
+      "status": "active",
+      "manifest": {
+        "path": "modules/haikyuu/manifest.json",
+        "sha256": "763c1975bf46b4b1ef76128144649da8fc51fa7cc4c5d0e9b4d6865faec7c961"
+      },
+      "icon": {
+        "path": "modules/haikyuu/icon.png",
+        "sha256": "52019a72dc9d76ad28015b96cc75174154ab4c30026d2acfb772f608d84c8dbd"
       }
     }
   ]

@@ -1,0 +1,52 @@
+{
+  "id": "mangakatana",
+  "familyID": "mangakatana",
+  "legacyIDs": [],
+  "name": "MangaKatana",
+  "version": "1.0.0",
+  "contractVersion": 1,
+  "minimumAppVersion": "1.0.0",
+  "contentType": "pageImages",
+  "language": "en",
+  "contentRating": "suggestive",
+  "releaseTrack": "beta",
+  "status": "active",
+  "capabilities": [
+    "popular",
+    "latest",
+    "search",
+    "details",
+    "chapters",
+    "images",
+    "imageRequest",
+    "discovery"
+  ],
+  "baseURL": "https://mangakatana.com",
+  "universalLink": "https://synthetiq.uk/manga/modules/mangakatana",
+  "entry": {
+    "path": "modules/mangakatana/index.js",
+    "sha256": "50b1a775d788f23f4f9ab53b915d1bbd5b9bd75970323914b9c46782eea9d05e"
+  },
+  "icon": {
+    "path": "modules/mangakatana/icon.png",
+    "sha256": "b483124e3a259ea16dceecb9736d609f37084880b09864b1b88cc4b3e8c15969"
+  },
+  "allowedHosts": [
+    "mangakatana.com",
+    "*.mangakatana.com"
+  ],
+  "limits": {
+    "timeoutMilliseconds": 25000,
+    "maxConcurrentRequests": 2,
+    "maxResponseBytes": 8388608,
+    "maxScriptBytes": 262144,
+    "cacheTTLSeconds": 900
+  },
+  "attribution": {
+    "author": "Synthetiq-HQ",
+    "website": "https://mangakatana.com",
+    "licenseName": null,
+    "licenseURL": null,
+    "authorizationURL": null
+  }
+}

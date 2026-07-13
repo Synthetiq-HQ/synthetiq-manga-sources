@@ -1,0 +1,83 @@
+{
+  "search": {
+    "items": [
+      {
+        "id": "https://mangakatana.com/manga/fixture-alpha.1001",
+        "href": "https://mangakatana.com/manga/fixture-alpha.1001",
+        "title": "Fixture Alpha",
+        "image": "https://mangakatana.com/imgs/cover/fixture/alpha.jpg"
+      },
+      {
+        "id": "https://mangakatana.com/manga/fixture-beta.1002",
+        "href": "https://mangakatana.com/manga/fixture-beta.1002",
+        "title": "Fixture Beta",
+        "image": "https://mangakatana.com/imgs/cover/fixture/beta.jpg"
+      }
+    ],
+    "hasMore": false
+  },
+  "details": {
+    "id": "https://mangakatana.com/manga/fixture-alpha.1001",
+    "href": "https://mangakatana.com/manga/fixture-alpha.1001",
+    "url": "https://mangakatana.com/manga/fixture-alpha.1001",
+    "title": "Fixture Alpha",
+    "description": "A deterministic parser fixture for MangaKatana.",
+    "image": "https://mangakatana.com/imgs/cover/fixture/alpha.jpg",
+    "authors": ["Fixture Author"],
+    "author": "Fixture Author",
+    "genres": ["Action", "Adventure"],
+    "status": "Ongoing"
+  },
+  "chapters": [
+    {
+      "id": "https://mangakatana.com/manga/fixture-alpha.1001/c3",
+      "href": "https://mangakatana.com/manga/fixture-alpha.1001/c3",
+      "url": "https://mangakatana.com/manga/fixture-alpha.1001/c3",
+      "title": "Chapter 3",
+      "number": 3,
+      "releaseDate": null,
+      "language": "en"
+    },
+    {
+      "id": "https://mangakatana.com/manga/fixture-alpha.1001/c2",
+      "href": "https://mangakatana.com/manga/fixture-alpha.1001/c2",
+      "url": "https://mangakatana.com/manga/fixture-alpha.1001/c2",
+      "title": "Chapter 2",
+      "number": 2,
+      "releaseDate": null,
+      "language": "en"
+    },
+    {
+      "id": "https://mangakatana.com/manga/fixture-alpha.1001/c1",
+      "href": "https://mangakatana.com/manga/fixture-alpha.1001/c1",
+      "url": "https://mangakatana.com/manga/fixture-alpha.1001/c1",
+      "title": "Chapter 1",
+      "number": 1,
+      "releaseDate": null,
+      "language": "en"
+    }
+  ],
+  "images": [
+    {
+      "url": "https://i1.mangakatana.com/token/fixture/0.jpg",
+      "headers": {
+        "Accept": "image/avif,image/webp,image/*,*/*",
+        "Referer": "https://mangakatana.com/"
+      }
+    },
+    {
+      "url": "https://i1.mangakatana.com/token/fixture/1.jpg",
+      "headers": {
+        "Accept": "image/avif,image/webp,image/*,*/*",
+        "Referer": "https://mangakatana.com/"
+      }
+    },
+    {
+      "url": "https://i1.mangakatana.com/token/fixture/2.jpg",
+      "headers": {
+        "Accept": "image/avif,image/webp,image/*,*/*",
+        "Referer": "https://mangakatana.com/"
+      }
+    }
+  ]
+}

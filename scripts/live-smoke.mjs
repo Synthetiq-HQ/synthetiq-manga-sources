@@ -93,6 +93,26 @@ if (archiveChapters.length > 0) {
   assert.ok(archiveTextBytes > 0);
 }
 
+const mangaKatana = await loadModule("mangakatana", { fetchv2 });
+const mangaKatanaSearch = await mangaKatana.searchResults("naruto", 1);
+assert.ok(mangaKatanaSearch.items.length > 0);
+const mangaKatanaDetails = await mangaKatana.extractDetails(mangaKatanaSearch.items[0].id);
+const mangaKatanaChapters = await mangaKatana.extractChapters(mangaKatanaDetails.id);
+assert.ok(mangaKatanaChapters.length > 0);
+const mangaKatanaImages = await mangaKatana.extractImages(mangaKatanaChapters[mangaKatanaChapters.length - 1].id);
+assert.ok(mangaKatanaImages.length > 0);
+
+const mgread = await loadModule("mgread", { fetchv2, reportProgress: async () => ({ ok: true }) });
+const mgreadSearch = await mgread.searchResults("martial peak", 1);
+assert.ok(mgreadSearch.items.length > 0);
+const mgreadDetails = await mgread.extractDetails(mgreadSearch.items[0].id);
+const mgreadChapters = await mgread.extractChapters(mgreadDetails.id);
+assert.ok(mgreadChapters.length > 0);
+const mgreadImages = await mgread.extractImages(
+  mgreadChapters.find((chapter) => chapter.number === 1)?.id || mgreadChapters[mgreadChapters.length - 1].id,
+);
+assert.ok(mgreadImages.length > 0);
+
 console.log(JSON.stringify({
   weebcentral: {
     result: weebDetails.title,
@@ -111,5 +131,17 @@ console.log(JSON.stringify({
     resources: archiveResources.length,
     textSections: archiveChapters.length,
     textBytes: archiveTextBytes,
+  },
+  mangakatana: {
+    result: mangaKatanaDetails.title,
+    chapters: mangaKatanaChapters.length,
+    pages: mangaKatanaImages.length,
+    firstPage: typeof mangaKatanaImages[0] === "string" ? mangaKatanaImages[0] : mangaKatanaImages[0]?.url,
+  },
+  mgread: {
+    result: mgreadDetails.title,
+    chapters: mgreadChapters.length,
+    pages: mgreadImages.length,
+    firstPage: typeof mgreadImages[0] === "string" ? mgreadImages[0] : mgreadImages[0]?.url,
   },
 }, null, 2));

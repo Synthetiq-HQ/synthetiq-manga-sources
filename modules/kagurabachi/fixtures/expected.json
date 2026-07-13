@@ -1,0 +1,77 @@
+{
+  "search": {
+    "items": [
+      {
+        "id": "https://thekagurabachi.com/",
+        "href": "https://thekagurabachi.com/",
+        "title": "Kagurabachi",
+        "image": "https://thekagurabachi.com/wp-content/uploads/cover.webp"
+      }
+    ],
+    "hasMore": false
+  },
+  "details": {
+    "id": "https://thekagurabachi.com/",
+    "href": "https://thekagurabachi.com/",
+    "url": "https://thekagurabachi.com/",
+    "title": "Kagurabachi",
+    "description": "Fixture description for Kagurabachi.",
+    "image": "https://thekagurabachi.com/wp-content/uploads/cover.webp",
+    "authors": [],
+    "author": "",
+    "genres": [],
+    "status": "Ongoing"
+  },
+  "chapters": [
+    {
+      "id": "https://thekagurabachi.com/manga/kagurabachi-chapter-3/",
+      "href": "https://thekagurabachi.com/manga/kagurabachi-chapter-3/",
+      "url": "https://thekagurabachi.com/manga/kagurabachi-chapter-3/",
+      "title": "Chapter 3",
+      "number": 3,
+      "releaseDate": null,
+      "language": "en"
+    },
+    {
+      "id": "https://thekagurabachi.com/manga/kagurabachi-chapter-2/",
+      "href": "https://thekagurabachi.com/manga/kagurabachi-chapter-2/",
+      "url": "https://thekagurabachi.com/manga/kagurabachi-chapter-2/",
+      "title": "Chapter 2",
+      "number": 2,
+      "releaseDate": null,
+      "language": "en"
+    },
+    {
+      "id": "https://thekagurabachi.com/manga/kagurabachi-chapter-1/",
+      "href": "https://thekagurabachi.com/manga/kagurabachi-chapter-1/",
+      "url": "https://thekagurabachi.com/manga/kagurabachi-chapter-1/",
+      "title": "Chapter 1",
+      "number": 1,
+      "releaseDate": null,
+      "language": "en"
+    }
+  ],
+  "images": [
+    {
+      "url": "https://img.thekagurabachi.com/uploads/2024/08/Kagurabachi-manga-ch-1_1.jpeg",
+      "headers": {
+        "Accept": "image/avif,image/webp,image/*,*/*",
+        "Referer": "https://thekagurabachi.com/"
+      }
+    },
+    {
+      "url": "https://img.thekagurabachi.com/uploads/2024/08/Kagurabachi-manga-ch-1_2.jpeg",
+      "headers": {
+        "Accept": "image/avif,image/webp,image/*,*/*",
+        "Referer": "https://thekagurabachi.com/"
+      }
+    },
+    {
+      "url": "https://img.thekagurabachi.com/uploads/2024/08/Kagurabachi-manga-ch-1_3.jpeg",
+      "headers": {
+        "Accept": "image/avif,image/webp,image/*,*/*",
+        "Referer": "https://thekagurabachi.com/"
+      }
+    }
+  ]
+}

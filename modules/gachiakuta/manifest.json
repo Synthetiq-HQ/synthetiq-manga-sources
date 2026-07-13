@@ -1,0 +1,53 @@
+{
+  "id": "gachiakuta",
+  "familyID": "gachiakuta",
+  "legacyIDs": [],
+  "name": "Gachiakuta",
+  "version": "1.0.0",
+  "contractVersion": 1,
+  "minimumAppVersion": "1.0.0",
+  "contentType": "pageImages",
+  "language": "en",
+  "contentRating": "suggestive",
+  "releaseTrack": "beta",
+  "status": "active",
+  "capabilities": [
+    "popular",
+    "latest",
+    "search",
+    "details",
+    "chapters",
+    "images",
+    "imageRequest",
+    "discovery"
+  ],
+  "baseURL": "https://www.gachiakuta.com.lv",
+  "universalLink": "https://synthetiq.uk/manga/modules/gachiakuta",
+  "entry": {
+    "path": "modules/gachiakuta/index.js",
+    "sha256": "3ad754f48013063d4f5b399c67a6319acaba84a589c74afc8fbe92be35309089"
+  },
+  "icon": {
+    "path": "modules/gachiakuta/icon.png",
+    "sha256": "384d2bf7b1e3402719cf36a666388affb034a390ee5c4bc8b8c5e524f3f75931"
+  },
+  "allowedHosts": [
+    "gachiakuta.com.lv",
+    "www.gachiakuta.com.lv",
+    "*.gachiakuta.com.lv"
+  ],
+  "limits": {
+    "timeoutMilliseconds": 25000,
+    "maxConcurrentRequests": 2,
+    "maxResponseBytes": 8388608,
+    "maxScriptBytes": 262144,
+    "cacheTTLSeconds": 900
+  },
+  "attribution": {
+    "author": "Synthetiq-HQ",
+    "website": "https://www.gachiakuta.com.lv",
+    "licenseName": null,
+    "licenseURL": null,
+    "authorizationURL": null
+  }
+}
