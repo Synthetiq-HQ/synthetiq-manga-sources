@@ -3,7 +3,7 @@
   "familyID": "beginning-after-the-end",
   "legacyIDs": [],
   "name": "The Beginning After The End",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "contractVersion": 1,
   "minimumAppVersion": "1.0.0",
   "contentType": "pageImages",
@@ -29,7 +29,7 @@
   },
   "icon": {
     "path": "modules/beginning-after-the-end/icon.png",
-    "sha256": "091676715f568ce3d1198f260fde07b667d003ddc45a1366e08fc90c13f04671"
+    "sha256": "822eb0488badda510c87a0c24e4443fef2f428d918f44b4aac0c07973967a058"
   },
   "allowedHosts": [
     "thebeginningaftertheendmanga.com",

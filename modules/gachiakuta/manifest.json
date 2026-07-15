@@ -3,7 +3,7 @@
   "familyID": "gachiakuta",
   "legacyIDs": [],
   "name": "Gachiakuta",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "contractVersion": 1,
   "minimumAppVersion": "1.0.0",
   "contentType": "pageImages",
@@ -29,7 +29,7 @@
   },
   "icon": {
     "path": "modules/gachiakuta/icon.png",
-    "sha256": "384d2bf7b1e3402719cf36a666388affb034a390ee5c4bc8b8c5e524f3f75931"
+    "sha256": "90b6370e1883cd622d9cf4c64ab8f33efb9e1ad47704e92f47add1271a70c7e7"
   },
   "allowedHosts": [
     "gachiakuta.com.lv",

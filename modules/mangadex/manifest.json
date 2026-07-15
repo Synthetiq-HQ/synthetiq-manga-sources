@@ -10,7 +10,7 @@
   "language": "en",
   "contentRating": "suggestive",
   "releaseTrack": "stable",
-  "status": "active",
+  "status": "retired",
   "capabilities": [
     "popular",
     "latest",
@@ -29,7 +29,7 @@
   },
   "icon": {
     "path": "modules/mangadex/icon.png",
-    "sha256": "39f72915dc53c2784d4596d2033afbcc1d53e6368ce9869cd2ff06846d1eaf1a"
+    "sha256": "1e4c13fe2c1d055d56044425e878ad7a8e33acd836692100d2e9d40786373fad"
   },
   "allowedHosts": [
     "api.mangadex.org",

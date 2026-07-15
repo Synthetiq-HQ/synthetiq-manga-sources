@@ -3,7 +3,7 @@
   "familyID": "haikyuu",
   "legacyIDs": [],
   "name": "Haikyuu",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "contractVersion": 1,
   "minimumAppVersion": "1.0.0",
   "contentType": "pageImages",
@@ -29,7 +29,7 @@
   },
   "icon": {
     "path": "modules/haikyuu/icon.png",
-    "sha256": "52019a72dc9d76ad28015b96cc75174154ab4c30026d2acfb772f608d84c8dbd"
+    "sha256": "f1e408839b2ff5d36eb1cf040f457d37b95903e6a2aa075ad173cbc97951f078"
   },
   "allowedHosts": [
     "qubn.us",

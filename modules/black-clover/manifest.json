@@ -3,7 +3,7 @@
   "familyID": "black-clover",
   "legacyIDs": [],
   "name": "Black Clover Online",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "contractVersion": 1,
   "minimumAppVersion": "1.0.0",
   "contentType": "pageImages",
@@ -29,7 +29,7 @@
   },
   "icon": {
     "path": "modules/black-clover/icon.png",
-    "sha256": "8eed829020022006a99fd7cb79d7f3e23832044b5f826c85b2a5d097f6fd02b2"
+    "sha256": "3bbbe114076c9db6a5c7382985758886521c2a4f4597bc0d48c9fb740bf8800f"
   },
   "allowedHosts": [
     "blackclover.com.lv",

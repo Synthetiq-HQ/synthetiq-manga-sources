@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-07-13T10:42:38Z",
+  "generatedAt": "2026-07-15T17:07:40Z",
   "repository": {
     "id": "synthetiq.sources",
     "name": "Synthetiq Manga Sources",
@@ -21,11 +21,11 @@
       "status": "active",
       "manifest": {
         "path": "modules/weebcentral/manifest.json",
-        "sha256": "ec1d8dcf4ce16237dd24af98fa8010fff71b9409b693f9ccfb62315bc095f073"
+        "sha256": "144dd4db1ed2d3496f88cb64e1f93419435402adeecda669f03540680252873b"
       },
       "icon": {
         "path": "modules/weebcentral/icon.png",
-        "sha256": "2f18cbf3cfe2388c0f9c231e8d2c5bef9b857a46f0e173bf57a7f20ed27aabae"
+        "sha256": "9a684e14510979d6e45513efd43d5b421ca66c6d6f6c3ad3bcfb1fc259d8780f"
       }
     },
     {
@@ -40,11 +40,11 @@
       "status": "active",
       "manifest": {
         "path": "modules/mangafire/manifest.json",
-        "sha256": "bb5312fa7ae547d4db581eee87e4ec1223df1dcd91f6b3760aef84a320417ef8"
+        "sha256": "812a5456e3e588158da61215eb75335c1af75e81a32b2659949b4177e14717a1"
       },
       "icon": {
         "path": "modules/mangafire/icon.png",
-        "sha256": "c15a6e470318cd91ffa1fa11d7bde3af8118b1c31c75a42520943841271d0ac5"
+        "sha256": "07c412838c50652996da91cb3cff1fa03293b778d8e0c3b5bd718096dc7eea05"
       }
     },
     {
@@ -59,11 +59,11 @@
       "status": "active",
       "manifest": {
         "path": "modules/internet-archive/manifest.json",
-        "sha256": "d4544da722bb7b086699a9fd52a3bd9bc39cdc30bd1cd338495b51131352d115"
+        "sha256": "ce3b26cb160e4478117e8703c152ad90055b640d7a0781162abd9a2f543acba3"
       },
       "icon": {
         "path": "modules/internet-archive/icon.png",
-        "sha256": "d7d88a14626575cccba7e9212592b61917d885ed647c9055b333da4abffc56c0"
+        "sha256": "8c5ddb7fba27a8d7b46a727f41e8c7bb14cbb6542a1bca8b35660c6caadff3a9"
       }
     },
     {
@@ -75,14 +75,14 @@
       "contentType": "pageImages",
       "contentRating": "suggestive",
       "releaseTrack": "stable",
-      "status": "active",
+      "status": "retired",
       "manifest": {
         "path": "modules/mangadex/manifest.json",
-        "sha256": "33f41fc547e2ed2e7a89d857e89d40b7a2db9739fa0c4f10cf2b0b4e2de91b45"
+        "sha256": "9bd886bf3d9355ddcd435cf6ca25ba2e66666478df6cae8dc3be698b7b447ab2"
       },
       "icon": {
         "path": "modules/mangadex/icon.png",
-        "sha256": "39f72915dc53c2784d4596d2033afbcc1d53e6368ce9869cd2ff06846d1eaf1a"
+        "sha256": "1e4c13fe2c1d055d56044425e878ad7a8e33acd836692100d2e9d40786373fad"
       }
     },
     {
@@ -97,11 +97,11 @@
       "status": "active",
       "manifest": {
         "path": "modules/mangakatana/manifest.json",
-        "sha256": "c89f8ce29f135694f84fb0cc2bc12a7125f78232f7015c7efa26506a51a80e24"
+        "sha256": "1c8ea1e8cfb318f1e6418f3cc480360cfb6bbb302aeded5612c3c10c62738be7"
       },
       "icon": {
         "path": "modules/mangakatana/icon.png",
-        "sha256": "b483124e3a259ea16dceecb9736d609f37084880b09864b1b88cc4b3e8c15969"
+        "sha256": "b1fc0249caf13b4e5e7ca12beb9e8e32e5927d5d5b32d68c8b051b381af9c82d"
       }
     },
     {
@@ -116,18 +116,18 @@
       "status": "active",
       "manifest": {
         "path": "modules/mgread/manifest.json",
-        "sha256": "a3333d51587aff193fe83923a959b56bbecf933db189b0b8dac301431ffe0cc1"
+        "sha256": "dbe24054a7ea0e0c3d19910c8a762e4abc5f7d2d1966f424fc9c34d273c649b5"
       },
       "icon": {
         "path": "modules/mgread/icon.png",
-        "sha256": "6e4d659d99e5f330293c1e35b9770f7467b637b93d47b4d1ea3c7b744912cf0d"
+        "sha256": "454ccf2602bb0d2960f911f87bd305b34835beb938a47ce43f1c8febd6743e75"
       }
     },
     {
       "id": "black-clover",
       "familyID": "black-clover",
       "name": "Black Clover Online",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "language": "en",
       "contentType": "pageImages",
       "contentRating": "suggestive",
@@ -135,18 +135,18 @@
       "status": "active",
       "manifest": {
         "path": "modules/black-clover/manifest.json",
-        "sha256": "842eb3ca9fff334c6d41bb8fd874074ee11bba0768cb35f09c7dd580213275f7"
+        "sha256": "a599c0284711612f7b7a8f9c79f968d6697df0598d48720e366678c3e2bfab69"
       },
       "icon": {
         "path": "modules/black-clover/icon.png",
-        "sha256": "8eed829020022006a99fd7cb79d7f3e23832044b5f826c85b2a5d097f6fd02b2"
+        "sha256": "3bbbe114076c9db6a5c7382985758886521c2a4f4597bc0d48c9fb740bf8800f"
       }
     },
     {
       "id": "kagurabachi",
       "familyID": "kagurabachi",
       "name": "Kagurabachi",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "language": "en",
       "contentType": "pageImages",
       "contentRating": "suggestive",
@@ -154,18 +154,18 @@
       "status": "active",
       "manifest": {
         "path": "modules/kagurabachi/manifest.json",
-        "sha256": "8d12e0be3b01fe26298706749afe37436356301209d73e4ec1622907cdf8489a"
+        "sha256": "af670286b507f76db0cf5c92e0d31fc5aa8c88160724d4b17431ff61ac2fc5fc"
       },
       "icon": {
         "path": "modules/kagurabachi/icon.png",
-        "sha256": "49e590ffec88c45380ea263e09f8b89e10e294412d7ab8606944bd1c843af5c9"
+        "sha256": "865c2fde6848e37bd60914fa7a7d0e6af0ba4a626aab50d4f28aff3f8858063e"
       }
     },
     {
       "id": "beginning-after-the-end",
       "familyID": "beginning-after-the-end",
       "name": "The Beginning After The End",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "language": "en",
       "contentType": "pageImages",
       "contentRating": "suggestive",
@@ -173,18 +173,18 @@
       "status": "active",
       "manifest": {
         "path": "modules/beginning-after-the-end/manifest.json",
-        "sha256": "e8f0a390c065032dbde0b3b829cbda2c587dd3dbfa698ce5f196ff27278242d6"
+        "sha256": "e5fb98577991ecf677f2615509b11b6c9ce7a69abeeb6ce1d60ed26d600007d7"
       },
       "icon": {
         "path": "modules/beginning-after-the-end/icon.png",
-        "sha256": "091676715f568ce3d1198f260fde07b667d003ddc45a1366e08fc90c13f04671"
+        "sha256": "822eb0488badda510c87a0c24e4443fef2f428d918f44b4aac0c07973967a058"
       }
     },
     {
       "id": "solo-leveling",
       "familyID": "solo-leveling",
       "name": "Solo Leveling",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "language": "en",
       "contentType": "pageImages",
       "contentRating": "suggestive",
@@ -192,18 +192,18 @@
       "status": "active",
       "manifest": {
         "path": "modules/solo-leveling/manifest.json",
-        "sha256": "504072fdafc21de5883246c111ea8ffe97c0ee5405e3424947ecf4672b53f367"
+        "sha256": "2c762196a18e48c73f68807a98e40d114617bd2ec651f987f6ddac7ba26f5b71"
       },
       "icon": {
         "path": "modules/solo-leveling/icon.png",
-        "sha256": "199d0f365d171c5cdcd1352d36793f96924be36e2356671f16f8969f3c56979e"
+        "sha256": "9dc87ed50f0bfc83a111f1b9e17db69e8f7e772e880253cdfcab15cc62b9adf1"
       }
     },
     {
       "id": "gachiakuta",
       "familyID": "gachiakuta",
       "name": "Gachiakuta",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "language": "en",
       "contentType": "pageImages",
       "contentRating": "suggestive",
@@ -211,18 +211,18 @@
       "status": "active",
       "manifest": {
         "path": "modules/gachiakuta/manifest.json",
-        "sha256": "52a847f8547caed0ef520774fbd51df49747124c6f92bb3365333c1686f24719"
+        "sha256": "dbaad2962b7640b9985c252e23d0a61efd1d70afe24b2a0f0b067a8c3cc3d076"
       },
       "icon": {
         "path": "modules/gachiakuta/icon.png",
-        "sha256": "384d2bf7b1e3402719cf36a666388affb034a390ee5c4bc8b8c5e524f3f75931"
+        "sha256": "90b6370e1883cd622d9cf4c64ab8f33efb9e1ad47704e92f47add1271a70c7e7"
       }
     },
     {
       "id": "haikyuu",
       "familyID": "haikyuu",
       "name": "Haikyuu",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "language": "en",
       "contentType": "pageImages",
       "contentRating": "suggestive",
@@ -230,11 +230,11 @@
       "status": "active",
       "manifest": {
         "path": "modules/haikyuu/manifest.json",
-        "sha256": "349881bb73f0a6c3a78f4fed0b1f0fb78b0dd71ba6ccb001b2ea2c6ef2fdfd01"
+        "sha256": "9b5704a1d5ee6f6976725b5048c8b5402bc67bde36d98ba6619a5fb5f6e11898"
       },
       "icon": {
         "path": "modules/haikyuu/icon.png",
-        "sha256": "52019a72dc9d76ad28015b96cc75174154ab4c30026d2acfb772f608d84c8dbd"
+        "sha256": "f1e408839b2ff5d36eb1cf040f457d37b95903e6a2aa075ad173cbc97951f078"
       }
     }
   ]

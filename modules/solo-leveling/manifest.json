@@ -3,7 +3,7 @@
   "familyID": "solo-leveling",
   "legacyIDs": [],
   "name": "Solo Leveling",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "contractVersion": 1,
   "minimumAppVersion": "1.0.0",
   "contentType": "pageImages",
@@ -29,7 +29,7 @@
   },
   "icon": {
     "path": "modules/solo-leveling/icon.png",
-    "sha256": "199d0f365d171c5cdcd1352d36793f96924be36e2356671f16f8969f3c56979e"
+    "sha256": "9dc87ed50f0bfc83a111f1b9e17db69e8f7e772e880253cdfcab15cc62b9adf1"
   },
   "allowedHosts": [
     "thesololevelingmanga.com",

@@ -3,7 +3,7 @@
   "familyID": "kagurabachi",
   "legacyIDs": [],
   "name": "Kagurabachi",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "contractVersion": 1,
   "minimumAppVersion": "1.0.0",
   "contentType": "pageImages",
@@ -29,7 +29,7 @@
   },
   "icon": {
     "path": "modules/kagurabachi/icon.png",
-    "sha256": "49e590ffec88c45380ea263e09f8b89e10e294412d7ab8606944bd1c843af5c9"
+    "sha256": "865c2fde6848e37bd60914fa7a7d0e6af0ba4a626aab50d4f28aff3f8858063e"
   },
   "allowedHosts": [
     "thekagurabachi.com",
