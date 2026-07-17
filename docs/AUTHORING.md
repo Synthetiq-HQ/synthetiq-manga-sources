@@ -1,5 +1,9 @@
 # Module Authoring
 
+For a contributor-friendly overview (fork → install → publish), start with
+[OPEN_SOURCE_MODULES.md](./OPEN_SOURCE_MODULES.md). This file is the engineering
+checklist for parser authors.
+
 ## Workflow
 
 1. Classify the source as direct HTTP, interactive/protected, or unsupported.
