@@ -208,10 +208,10 @@
       "contentType": "pageImages",
       "contentRating": "suggestive",
       "releaseTrack": "beta",
-      "status": "active",
+      "status": "retired",
       "manifest": {
         "path": "modules/gachiakuta/manifest.json",
-        "sha256": "dbaad2962b7640b9985c252e23d0a61efd1d70afe24b2a0f0b067a8c3cc3d076"
+        "sha256": "b403d883081e2508e437cfbc22854f2caef54b8734511af5dd1a37d8ad1165b4"
       },
       "icon": {
         "path": "modules/gachiakuta/icon.png",
