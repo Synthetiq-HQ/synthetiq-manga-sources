@@ -3,7 +3,7 @@
   "familyID": "beginning-after-the-end",
   "legacyIDs": [],
   "name": "The Beginning After The End",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "contractVersion": 1,
   "minimumAppVersion": "1.0.0",
   "contentType": "pageImages",
@@ -25,7 +25,7 @@
   "universalLink": "https://synthetiq.uk/manga/modules/beginning-after-the-end",
   "entry": {
     "path": "modules/beginning-after-the-end/index.js",
-    "sha256": "664af913c256a96b4e4d21307308a0bb5d2eda6237e12c4fe1453447e5e6c652"
+    "sha256": "31fc69d281b7a367114b9f5a1bcb4d94c53ac505dfff7b76348c75a5378c6b41"
   },
   "icon": {
     "path": "modules/beginning-after-the-end/icon.png",
@@ -34,6 +34,7 @@
   "allowedHosts": [
     "thebeginningaftertheendmanga.com",
     "www.thebeginningaftertheendmanga.com",
+    "blogger.googleusercontent.com",
     "*.thebeginningaftertheendmanga.com"
   ],
   "limits": {

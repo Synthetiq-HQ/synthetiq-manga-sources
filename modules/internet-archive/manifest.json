@@ -6,7 +6,7 @@
     "internetarchive"
   ],
   "name": "Internet Archive Open Texts",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "contractVersion": 1,
   "minimumAppVersion": "1.0.0",
   "contentType": "publication",
@@ -28,11 +28,11 @@
   "universalLink": "https://synthetiq.uk/manga/modules/internet-archive",
   "entry": {
     "path": "modules/internet-archive/index.js",
-    "sha256": "30eaeb640addb0fa4fbc8bcc980e25a194b816234bb944c6a1a8389d2a3dfd08"
+    "sha256": "ea104be5b1f11df60ad6ccdda1889074b46534c42980ed6a013ff93502086a44"
   },
   "icon": {
     "path": "modules/internet-archive/icon.png",
-    "sha256": "d7d88a14626575cccba7e9212592b61917d885ed647c9055b333da4abffc56c0"
+    "sha256": "8c5ddb7fba27a8d7b46a727f41e8c7bb14cbb6542a1bca8b35660c6caadff3a9"
   },
   "allowedHosts": [
     "archive.org",

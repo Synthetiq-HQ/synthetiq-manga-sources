@@ -73,6 +73,8 @@ async function loadModule(slug, bridges) {
     TextDecoder,
     TextEncoder,
     console,
+    setTimeout,
+    clearTimeout,
     ...bridges,
   });
   new vm.Script(source, { filename: `modules/${slug}/index.js` }).runInContext(context);

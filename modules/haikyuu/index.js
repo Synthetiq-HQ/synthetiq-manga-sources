@@ -8,6 +8,17 @@
     Accept: "text/html,application/xhtml+xml",
     Referer: `${BASE_URL}/`,
   };
+  const RETRYABLE_STATUS = new Set([403, 408, 425, 429, 500, 502, 503, 504]);
+  const MAX_ATTEMPTS = 3;
+  const HOME_CACHE_TTL = 60_000;
+  let homeCache = { at: 0, value: null };
+
+  function sleep(milliseconds) {
+    return new Promise((resolve) => {
+      if (typeof globalThis.setTimeout === "function") globalThis.setTimeout(resolve, milliseconds);
+      else Promise.resolve().then(resolve);
+    });
+  }
 
   function decodeEntities(value) {
     const named = { amp: "&", apos: "'", gt: ">", lt: "<", nbsp: " ", quot: '"' };
@@ -51,27 +62,41 @@
     if (typeof globalThis.fetchv2 !== "function") {
       throw new Error(`${SERIES_TITLE} requires the fetchv2 bridge.`);
     }
-    const response = await globalThis.fetchv2(
-      url,
-      { ...DEFAULT_HEADERS, ...(options.headers || {}) },
-      options.method || "GET",
-      options.body || null,
-      {
-        followRedirects: true,
-        maxBytesHint: options.maxBytesHint || null,
-        responseClass: options.responseClass || "html",
-      },
-    );
-    const status = Number(response && response.status);
-    if (!response || response.ok === false || (status && (status < 200 || status >= 300))) {
-      throw new Error(`${SERIES_TITLE} request failed with HTTP ${status || "error"}.`);
+    let lastError = null;
+    for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt += 1) {
+      if (attempt > 1) await sleep(1200 * (attempt - 1));
+      let response = null;
+      try {
+        response = await globalThis.fetchv2(
+          url,
+          { ...DEFAULT_HEADERS, ...(options.headers || {}) },
+          options.method || "GET",
+          options.body || null,
+          {
+            followRedirects: true,
+            maxBytesHint: options.maxBytesHint || null,
+            responseClass: options.responseClass || "html",
+          },
+        );
+      } catch (error) {
+        // Bridge/network failures (timeouts, aborted sockets) are transient.
+        lastError = error instanceof Error ? error : new Error(String(error));
+        continue;
+      }
+      const status = Number(response && response.status);
+      if (!response || response.ok === false || (status && (status < 200 || status >= 300))) {
+        lastError = new Error(`${SERIES_TITLE} request failed with HTTP ${status || "error"}.`);
+        if (status && !RETRYABLE_STATUS.has(status)) break;
+        continue;
+      }
+      if (response.bodyDropped) {
+        throw new Error(`${SERIES_TITLE} response was dropped: ${response.dropReason || "size policy"}.`);
+      }
+      const body = await responseText(response);
+      if (body) return { body, finalUrl: response.finalUrl || url };
+      lastError = new Error(`${SERIES_TITLE} returned an empty response.`);
     }
-    if (response.bodyDropped) {
-      throw new Error(`${SERIES_TITLE} response was dropped: ${response.dropReason || "size policy"}.`);
-    }
-    const body = await responseText(response);
-    if (!body) throw new Error(`${SERIES_TITLE} returned an empty response.`);
-    return { body, finalUrl: response.finalUrl || url };
+    throw lastError || new Error(`${SERIES_TITLE} request failed.`);
   }
 
   function absoluteURL(value, base = BASE_URL) {
@@ -220,9 +245,13 @@
     };
   }
 
-  async function loadHome() {
-    const result = await fetchDirect(`${BASE_URL.replace(/\/+$/, "")}/`, { maxBytesHint: 4 * 1024 * 1024 });
-    return result;
+  async function loadHome(forceRefresh = false) {
+    if (!forceRefresh && homeCache.value && Date.now() - homeCache.at < HOME_CACHE_TTL) {
+      return homeCache.value;
+    }
+    const value = await fetchDirect(`${BASE_URL.replace(/\/+$/, "")}/`, { maxBytesHint: 4 * 1024 * 1024 });
+    homeCache = { at: Date.now(), value };
+    return value;
   }
 
   async function searchResults(query, page = 1) {
@@ -266,8 +295,14 @@
   }
 
   async function extractChapters(id) {
-    const home = await loadHome();
-    const chapters = parseChaptersHTML(home.body, home.finalUrl || BASE_URL);
+    let chapters = [];
+    // A burst-rate-limited or interstitial homepage can parse to zero links;
+    // re-fetch fresh copies before declaring the series empty.
+    for (let attempt = 1; attempt <= MAX_ATTEMPTS && !chapters.length; attempt += 1) {
+      if (attempt > 1) await sleep(1200 * (attempt - 1));
+      const home = await loadHome(attempt > 1);
+      chapters = parseChaptersHTML(home.body, home.finalUrl || BASE_URL);
+    }
     if (!chapters.length) {
       throw new Error(`${SERIES_TITLE} homepage returned no chapter links.`);
     }
@@ -280,8 +315,14 @@
       throw new Error(`Invalid ${SERIES_TITLE} chapter identifier.`);
     }
     const url = absoluteURL(input);
-    const page = await fetchDirect(url, { maxBytesHint: 4 * 1024 * 1024 });
-    const pages = parseImagesHTML(page.body, page.finalUrl || url);
+    let pages = [];
+    // Interstitial or rate-limited chapter pages can parse to zero images;
+    // retry before turning a transient empty page into a hard failure.
+    for (let attempt = 1; attempt <= MAX_ATTEMPTS && !pages.length; attempt += 1) {
+      if (attempt > 1) await sleep(1200 * (attempt - 1));
+      const page = await fetchDirect(url, { maxBytesHint: 4 * 1024 * 1024 });
+      pages = parseImagesHTML(page.body, page.finalUrl || url);
+    }
     if (!pages.length) {
       throw new Error(`${SERIES_TITLE} chapter returned no readable page images.`);
     }

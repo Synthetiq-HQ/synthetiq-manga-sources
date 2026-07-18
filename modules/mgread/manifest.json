@@ -6,7 +6,7 @@
     "likemanga-io"
   ],
   "name": "MGRead (LikeManga)",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "contractVersion": 1,
   "minimumAppVersion": "1.0.0",
   "contentType": "pageImages",
@@ -28,11 +28,11 @@
   "universalLink": "https://synthetiq.uk/manga/modules/mgread",
   "entry": {
     "path": "modules/mgread/index.js",
-    "sha256": "1fc68dac12e2203e7f7cf9fefbbef5e00c7781ac913ccd48070cb5c44a051b79"
+    "sha256": "35f1e44bf9c81daca12b56bc35d5e3e0266409b2ad691f5981aef69d7f8c07d4"
   },
   "icon": {
     "path": "modules/mgread/icon.png",
-    "sha256": "6e4d659d99e5f330293c1e35b9770f7467b637b93d47b4d1ea3c7b744912cf0d"
+    "sha256": "454ccf2602bb0d2960f911f87bd305b34835beb938a47ce43f1c8febd6743e75"
   },
   "allowedHosts": [
     "mgread.io",

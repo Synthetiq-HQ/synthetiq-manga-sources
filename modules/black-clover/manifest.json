@@ -3,7 +3,7 @@
   "familyID": "black-clover",
   "legacyIDs": [],
   "name": "Black Clover Online",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "contractVersion": 1,
   "minimumAppVersion": "1.0.0",
   "contentType": "pageImages",
@@ -25,7 +25,7 @@
   "universalLink": "https://synthetiq.uk/manga/modules/black-clover",
   "entry": {
     "path": "modules/black-clover/index.js",
-    "sha256": "44b5f08e2d703ffd873e4be3dfb67a72b86636b94ce091811f9a4ba65643aa5c"
+    "sha256": "47e078b51a6fd3c678d289a9cb36fc6e1dc1400c198b88c89c7051eaef283011"
   },
   "icon": {
     "path": "modules/black-clover/icon.png",

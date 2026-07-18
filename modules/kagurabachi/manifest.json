@@ -3,7 +3,7 @@
   "familyID": "kagurabachi",
   "legacyIDs": [],
   "name": "Kagurabachi",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "contractVersion": 1,
   "minimumAppVersion": "1.0.0",
   "contentType": "pageImages",
@@ -25,7 +25,7 @@
   "universalLink": "https://synthetiq.uk/manga/modules/kagurabachi",
   "entry": {
     "path": "modules/kagurabachi/index.js",
-    "sha256": "d321376bf9e121f2ede8331b5ed2f670f6b0d8806bb66b483a78a9bd6b5d0c2f"
+    "sha256": "8f34ebf2640fceb9353894df901d6dac065259e3c144729e939c1338020cdaf7"
   },
   "icon": {
     "path": "modules/kagurabachi/icon.png",

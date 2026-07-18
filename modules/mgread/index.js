@@ -8,6 +8,17 @@
     Referer: `${BASE_URL}/`,
   };
   const MAX_CHAPTER_PAGES = 200;
+  const RETRYABLE_STATUS = new Set([403, 408, 425, 429, 500, 502, 503, 504]);
+  const MAX_ATTEMPTS = 3;
+  const GET_CACHE_TTL = 45_000;
+  const getCache = new Map();
+
+  function sleep(milliseconds) {
+    return new Promise((resolve) => {
+      if (typeof globalThis.setTimeout === "function") globalThis.setTimeout(resolve, milliseconds);
+      else Promise.resolve().then(resolve);
+    });
+  }
 
   function decodeEntities(value) {
     const named = { amp: "&", apos: "'", gt: ">", lt: "<", nbsp: " ", quot: '"' };
@@ -51,27 +62,53 @@
     if (typeof globalThis.fetchv2 !== "function") {
       throw new Error("MGRead requires the fetchv2 bridge.");
     }
-    const response = await globalThis.fetchv2(
-      url,
-      { ...DEFAULT_HEADERS, ...(options.headers || {}) },
-      options.method || "GET",
-      options.body || null,
-      {
-        followRedirects: true,
-        maxBytesHint: options.maxBytesHint || null,
-        responseClass: options.responseClass || "html",
-      },
-    );
-    const status = Number(response && response.status);
-    if (!response || response.ok === false || (status && (status < 200 || status >= 300))) {
-      throw new Error(`MGRead request failed with HTTP ${status || "error"}.`);
+    const method = options.method || "GET";
+    const cacheKey = `${method} ${url}`;
+    if (method === "GET" && !options.headers) {
+      const cached = getCache.get(cacheKey);
+      if (cached && Date.now() - cached.at < GET_CACHE_TTL) return cached.body;
     }
-    if (response.bodyDropped) {
-      throw new Error(`MGRead response was dropped: ${response.dropReason || "size policy"}.`);
+    let lastError = null;
+    for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt += 1) {
+      if (attempt > 1) await sleep(1200 * (attempt - 1));
+      let response = null;
+      try {
+        response = await globalThis.fetchv2(
+          url,
+          { ...DEFAULT_HEADERS, ...(options.headers || {}) },
+          method,
+          options.body || null,
+          {
+            followRedirects: true,
+            maxBytesHint: options.maxBytesHint || null,
+            responseClass: options.responseClass || "html",
+          },
+        );
+      } catch (error) {
+        // Bridge/network failures (timeouts, aborted sockets) are transient.
+        lastError = error instanceof Error ? error : new Error(String(error));
+        continue;
+      }
+      const status = Number(response && response.status);
+      if (!response || response.ok === false || (status && (status < 200 || status >= 300))) {
+        lastError = new Error(`MGRead request failed with HTTP ${status || "error"}.`);
+        if (status && !RETRYABLE_STATUS.has(status)) break;
+        continue;
+      }
+      if (response.bodyDropped) {
+        throw new Error(`MGRead response was dropped: ${response.dropReason || "size policy"}.`);
+      }
+      const body = await responseText(response);
+      if (body) {
+        if (method === "GET" && !options.headers) {
+          if (getCache.size >= 16) getCache.delete(getCache.keys().next().value);
+          getCache.set(cacheKey, { at: Date.now(), body });
+        }
+        return body;
+      }
+      lastError = new Error("MGRead returned an empty response.");
     }
-    const body = await responseText(response);
-    if (!body) throw new Error("MGRead returned an empty response.");
-    return body;
+    throw lastError || new Error("MGRead request failed.");
   }
 
   function absoluteURL(value) {

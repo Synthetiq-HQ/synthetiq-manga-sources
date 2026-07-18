@@ -239,6 +239,8 @@ async function createRuntime(slug, mode) {
     TextDecoder,
     TextEncoder,
     console,
+    setTimeout,
+    clearTimeout,
     ...bridges,
   });
   context.globalThis = context;

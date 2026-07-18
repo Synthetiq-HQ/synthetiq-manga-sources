@@ -12,7 +12,7 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
 async function loadModule(slug, bridges) {
   const source = await readFile(path.join(root, "modules", slug, "index.js"), "utf8");
-  const context = vm.createContext({ URL, URLSearchParams, TextDecoder, TextEncoder, console, ...bridges });
+  const context = vm.createContext({ URL, URLSearchParams, TextDecoder, TextEncoder, console, setTimeout, clearTimeout, ...bridges });
   new vm.Script(source, { filename: `modules/${slug}/index.js` }).runInContext(context);
   return context.SynthetiqModule;
 }

@@ -10,6 +10,18 @@
     Referer: `${BASE_URL}/`,
     "X-Requested-With": "XMLHttpRequest",
   };
+  const MAX_ATTEMPTS = 3;
+  // The API rate-limits sustained bursts with 429s; keep a floor between
+  // pagev2 calls so a full reader walk stays under the burst budget.
+  const MIN_REQUEST_SPACING = 500;
+  let lastRequestAt = 0;
+
+  function sleep(milliseconds) {
+    return new Promise((resolve) => {
+      if (typeof globalThis.setTimeout === "function") globalThis.setTimeout(resolve, milliseconds);
+      else Promise.resolve().then(resolve);
+    });
+  }
 
   function decodeEntities(value) {
     const named = {
@@ -68,37 +80,51 @@
       throw new Error("MangaFire requires the pagev2 bridge.");
     }
     const target = assertAPIURL(url);
-    const snapshot = await globalThis.pagev2({
-      url: target,
-      headers: { ...API_HEADERS, ...(options.headers || {}) },
-      userAgent: null,
-      timeoutMilliseconds: options.timeoutMilliseconds || 8_000,
-      settleMilliseconds: 75,
-      includeHTML: true,
-      captureResponseBodies: false,
-      maxEntries: 16,
-      maxResponseCharacters: 1_000_000,
-      actionScript: null,
-      returnScript: "document.body ? document.body.innerText : ''",
-      waitForSelector: "body",
-      waitForURLIncludes: "/api/",
-      waitForRequestURLIncludes: null,
-      waitForResponseURLIncludes: null,
-      waitForResponseBodyIncludes: null,
-    });
+    let lastError = null;
+    // The API answers bursts and cold WebKit sessions with 429/challenge
+    // bodies; retry with backoff instead of failing the whole stage.
+    for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt += 1) {
+      if (attempt > 1) await sleep(1200 * (attempt - 1));
+      const spacingWait = lastRequestAt + MIN_REQUEST_SPACING - Date.now();
+      if (spacingWait > 0) await sleep(spacingWait);
+      lastRequestAt = Date.now();
+      try {
+        const snapshot = await globalThis.pagev2({
+          url: target,
+          headers: { ...API_HEADERS, ...(options.headers || {}) },
+          userAgent: null,
+          timeoutMilliseconds: options.timeoutMilliseconds || 15_000,
+          settleMilliseconds: 75,
+          includeHTML: true,
+          captureResponseBodies: false,
+          maxEntries: 16,
+          maxResponseCharacters: 1_000_000,
+          actionScript: null,
+          returnScript: "document.body ? document.body.innerText : ''",
+          waitForSelector: "body",
+          waitForURLIncludes: "/api/",
+          waitForRequestURLIncludes: null,
+          waitForResponseURLIncludes: null,
+          waitForResponseBodyIncludes: null,
+        });
 
-    let payload = parseJSON(snapshot && snapshot.evaluatedData);
-    if (!payload && snapshot && Array.isArray(snapshot.events)) {
-      for (let index = snapshot.events.length - 1; index >= 0 && !payload; index -= 1) {
-        payload = parseJSON(snapshot.events[index] && snapshot.events[index].body);
+        let payload = parseJSON(snapshot && snapshot.evaluatedData);
+        if (!payload && snapshot && Array.isArray(snapshot.events)) {
+          for (let index = snapshot.events.length - 1; index >= 0 && !payload; index -= 1) {
+            payload = parseJSON(snapshot.events[index] && snapshot.events[index].body);
+          }
+        }
+        if (!payload && snapshot) payload = JSONFromHTML(snapshot.html);
+        if (!payload) {
+          throw new Error("MangaFire pagev2 returned no JSON. The source may be challenged or unavailable.");
+        }
+        if (payload.error) throw new Error(`MangaFire API error: ${String(payload.error)}`);
+        return payload;
+      } catch (error) {
+        lastError = error instanceof Error ? error : new Error(String(error));
       }
     }
-    if (!payload && snapshot) payload = JSONFromHTML(snapshot.html);
-    if (!payload) {
-      throw new Error("MangaFire pagev2 returned no JSON. The source may be challenged or unavailable.");
-    }
-    if (payload.error) throw new Error(`MangaFire API error: ${String(payload.error)}`);
-    return payload;
+    throw lastError || new Error("MangaFire request failed.");
   }
 
   function titlePath(value) {

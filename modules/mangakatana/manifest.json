@@ -3,7 +3,7 @@
   "familyID": "mangakatana",
   "legacyIDs": [],
   "name": "MangaKatana",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "contractVersion": 1,
   "minimumAppVersion": "1.0.0",
   "contentType": "pageImages",
@@ -25,11 +25,11 @@
   "universalLink": "https://synthetiq.uk/manga/modules/mangakatana",
   "entry": {
     "path": "modules/mangakatana/index.js",
-    "sha256": "50b1a775d788f23f4f9ab53b915d1bbd5b9bd75970323914b9c46782eea9d05e"
+    "sha256": "35e56c70895af21a9c34b3fdc303c785d041663189725e4524c8110be3cab623"
   },
   "icon": {
     "path": "modules/mangakatana/icon.png",
-    "sha256": "b483124e3a259ea16dceecb9736d609f37084880b09864b1b88cc4b3e8c15969"
+    "sha256": "b1fc0249caf13b4e5e7ca12beb9e8e32e5927d5d5b32d68c8b051b381af9c82d"
   },
   "allowedHosts": [
     "mangakatana.com",

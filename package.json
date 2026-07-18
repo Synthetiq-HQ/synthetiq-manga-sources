@@ -5,10 +5,13 @@
   "type": "module",
   "scripts": {
     "finalize": "node scripts/finalize-hashes.mjs",
-    "test": "node --test tests/modules.test.mjs && node scripts/validate.mjs && node scripts/verify-repository.mjs",
+    "test": "node --test tests/modules.test.mjs tests/module-report.test.mjs && node scripts/validate.mjs && node scripts/verify-repository.mjs",
     "test:live": "RUN_LIVE_TESTS=1 node scripts/live-smoke.mjs",
     "test:module": "node scripts/module-tester.mjs",
     "test:module:fixtures": "node scripts/module-tester.mjs --fixtures",
+    "test:module:report": "node scripts/module-tester.mjs --report",
+    "test:module:report:fixtures": "node scripts/module-tester.mjs --fixtures --report",
+    "report:module": "node scripts/module-tester.mjs --report",
     "verify": "node scripts/validate.mjs && node scripts/verify-repository.mjs"
   }
 }

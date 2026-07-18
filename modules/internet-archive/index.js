@@ -8,7 +8,16 @@
     Accept: "application/json,text/plain;q=0.9,*/*;q=0.5",
     Referer: `${BASE_URL}/`,
   };
+  const RETRYABLE_STATUS = new Set([403, 408, 425, 429, 500, 502, 503, 504]);
+  const MAX_ATTEMPTS = 3;
   const metadataCache = new Map();
+
+  function sleep(milliseconds) {
+    return new Promise((resolve) => {
+      if (typeof globalThis.setTimeout === "function") globalThis.setTimeout(resolve, milliseconds);
+      else Promise.resolve().then(resolve);
+    });
+  }
 
   function firstValue(value) {
     if (Array.isArray(value)) return value.length ? value[0] : "";
@@ -54,25 +63,39 @@
     if (typeof globalThis.fetchv2 !== "function") {
       throw new Error("Internet Archive requires the fetchv2 bridge.");
     }
-    const response = await globalThis.fetchv2(
-      url,
-      { ...DEFAULT_HEADERS, ...(options.headers || {}) },
-      options.method || "GET",
-      options.body || null,
-      {
-        followRedirects: true,
-        maxBytesHint: options.maxBytesHint || null,
-        responseClass: options.responseClass || "json",
-      },
-    );
-    const status = Number(response && response.status);
-    if (!response || response.ok === false || (status && (status < 200 || status >= 300))) {
-      throw new Error(`Internet Archive request failed with HTTP ${status || "error"}.`);
+    let lastError = null;
+    for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt += 1) {
+      if (attempt > 1) await sleep(1200 * (attempt - 1));
+      let response = null;
+      try {
+        response = await globalThis.fetchv2(
+          url,
+          { ...DEFAULT_HEADERS, ...(options.headers || {}) },
+          options.method || "GET",
+          options.body || null,
+          {
+            followRedirects: true,
+            maxBytesHint: options.maxBytesHint || null,
+            responseClass: options.responseClass || "json",
+          },
+        );
+      } catch (error) {
+        // Bridge/network failures (timeouts, aborted sockets) are transient.
+        lastError = error instanceof Error ? error : new Error(String(error));
+        continue;
+      }
+      const status = Number(response && response.status);
+      if (!response || response.ok === false || (status && (status < 200 || status >= 300))) {
+        lastError = new Error(`Internet Archive request failed with HTTP ${status || "error"}.`);
+        if (status && !RETRYABLE_STATUS.has(status)) break;
+        continue;
+      }
+      if (response.bodyDropped) {
+        throw new Error(`Internet Archive response was dropped: ${response.dropReason || "size policy"}.`);
+      }
+      return response;
     }
-    if (response.bodyDropped) {
-      throw new Error(`Internet Archive response was dropped: ${response.dropReason || "size policy"}.`);
-    }
-    return response;
+    throw lastError || new Error("Internet Archive request failed.");
   }
 
   async function fetchJSON(url, maxBytesHint = 4 * 1024 * 1024) {

@@ -13,7 +13,7 @@
       "id": "weebcentral-v2",
       "familyID": "weebcentral-v2",
       "name": "WeebCentral",
-      "version": "4.0.1",
+      "version": "4.0.2",
       "language": "en",
       "contentType": "pageImages",
       "contentRating": "suggestive",
@@ -21,7 +21,7 @@
       "status": "active",
       "manifest": {
         "path": "modules/weebcentral/manifest.json",
-        "sha256": "144dd4db1ed2d3496f88cb64e1f93419435402adeecda669f03540680252873b"
+        "sha256": "887afc94f418bc8cea3eda34db4711edcc3dc2b820a00a02c4cd4d6368c402a6"
       },
       "icon": {
         "path": "modules/weebcentral/icon.png",
@@ -32,7 +32,7 @@
       "id": "mangafire-v2",
       "familyID": "mangafire-v2",
       "name": "MangaFire",
-      "version": "2.0.1",
+      "version": "2.0.2",
       "language": "en",
       "contentType": "pageImages",
       "contentRating": "suggestive",
@@ -40,7 +40,7 @@
       "status": "active",
       "manifest": {
         "path": "modules/mangafire/manifest.json",
-        "sha256": "812a5456e3e588158da61215eb75335c1af75e81a32b2659949b4177e14717a1"
+        "sha256": "e86cba3f84b70b6a3096480d254946a16c68ccb0770a3def4d24df81ee7ba675"
       },
       "icon": {
         "path": "modules/mangafire/icon.png",
@@ -51,7 +51,7 @@
       "id": "internet-archive",
       "familyID": "internet-archive",
       "name": "Internet Archive Open Texts",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "language": "multi",
       "contentType": "publication",
       "contentRating": "unknown",
@@ -59,7 +59,7 @@
       "status": "active",
       "manifest": {
         "path": "modules/internet-archive/manifest.json",
-        "sha256": "ce3b26cb160e4478117e8703c152ad90055b640d7a0781162abd9a2f543acba3"
+        "sha256": "bbf7278b0887a3d690ae26b09c6cde49d2473073190a1a94a524ce60b4a394c6"
       },
       "icon": {
         "path": "modules/internet-archive/icon.png",
@@ -89,7 +89,7 @@
       "id": "mangakatana",
       "familyID": "mangakatana",
       "name": "MangaKatana",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "language": "en",
       "contentType": "pageImages",
       "contentRating": "suggestive",
@@ -97,7 +97,7 @@
       "status": "active",
       "manifest": {
         "path": "modules/mangakatana/manifest.json",
-        "sha256": "1c8ea1e8cfb318f1e6418f3cc480360cfb6bbb302aeded5612c3c10c62738be7"
+        "sha256": "912bdf1cd15ed0cc4310f5ca612ed2e4fc725fba70a506efab1eb8578e5a4e72"
       },
       "icon": {
         "path": "modules/mangakatana/icon.png",
@@ -108,7 +108,7 @@
       "id": "mgread",
       "familyID": "mgread",
       "name": "MGRead (LikeManga)",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "language": "en",
       "contentType": "pageImages",
       "contentRating": "suggestive",
@@ -116,7 +116,7 @@
       "status": "active",
       "manifest": {
         "path": "modules/mgread/manifest.json",
-        "sha256": "dbe24054a7ea0e0c3d19910c8a762e4abc5f7d2d1966f424fc9c34d273c649b5"
+        "sha256": "711729d1f3fed78ea94bbd93f6231f873c321a40fbe3b970cc1bb8bf44505433"
       },
       "icon": {
         "path": "modules/mgread/icon.png",
@@ -127,7 +127,7 @@
       "id": "black-clover",
       "familyID": "black-clover",
       "name": "Black Clover Online",
-      "version": "1.0.1",
+      "version": "1.0.2",
       "language": "en",
       "contentType": "pageImages",
       "contentRating": "suggestive",
@@ -135,7 +135,7 @@
       "status": "active",
       "manifest": {
         "path": "modules/black-clover/manifest.json",
-        "sha256": "a599c0284711612f7b7a8f9c79f968d6697df0598d48720e366678c3e2bfab69"
+        "sha256": "d3c75a0445a95cd37bc0edf6b9d0d8da8ba8df490683e16d080eda5f991ed095"
       },
       "icon": {
         "path": "modules/black-clover/icon.png",
@@ -146,7 +146,7 @@
       "id": "kagurabachi",
       "familyID": "kagurabachi",
       "name": "Kagurabachi",
-      "version": "1.0.1",
+      "version": "1.0.2",
       "language": "en",
       "contentType": "pageImages",
       "contentRating": "suggestive",
@@ -154,7 +154,7 @@
       "status": "active",
       "manifest": {
         "path": "modules/kagurabachi/manifest.json",
-        "sha256": "af670286b507f76db0cf5c92e0d31fc5aa8c88160724d4b17431ff61ac2fc5fc"
+        "sha256": "db8f10d20407617b5f5f67c30642270f2bb151ff49e9420a79d8ca0c215a05cf"
       },
       "icon": {
         "path": "modules/kagurabachi/icon.png",
@@ -165,7 +165,7 @@
       "id": "beginning-after-the-end",
       "familyID": "beginning-after-the-end",
       "name": "The Beginning After The End",
-      "version": "1.0.1",
+      "version": "1.0.2",
       "language": "en",
       "contentType": "pageImages",
       "contentRating": "suggestive",
@@ -173,7 +173,7 @@
       "status": "active",
       "manifest": {
         "path": "modules/beginning-after-the-end/manifest.json",
-        "sha256": "e5fb98577991ecf677f2615509b11b6c9ce7a69abeeb6ce1d60ed26d600007d7"
+        "sha256": "fa59cf4ade0855c2aa338068dfc43bc77463cc86f12cd7523f01dfcc16b3a627"
       },
       "icon": {
         "path": "modules/beginning-after-the-end/icon.png",
@@ -184,7 +184,7 @@
       "id": "solo-leveling",
       "familyID": "solo-leveling",
       "name": "Solo Leveling",
-      "version": "1.0.1",
+      "version": "1.0.2",
       "language": "en",
       "contentType": "pageImages",
       "contentRating": "suggestive",
@@ -192,7 +192,7 @@
       "status": "active",
       "manifest": {
         "path": "modules/solo-leveling/manifest.json",
-        "sha256": "2c762196a18e48c73f68807a98e40d114617bd2ec651f987f6ddac7ba26f5b71"
+        "sha256": "75d5926c146c8702eb4d780656301b09c2428fa0529eed2aab9f2eed66b29a7b"
       },
       "icon": {
         "path": "modules/solo-leveling/icon.png",
@@ -222,7 +222,7 @@
       "id": "haikyuu",
       "familyID": "haikyuu",
       "name": "Haikyuu",
-      "version": "1.0.1",
+      "version": "1.0.2",
       "language": "en",
       "contentType": "pageImages",
       "contentRating": "suggestive",
@@ -230,7 +230,7 @@
       "status": "active",
       "manifest": {
         "path": "modules/haikyuu/manifest.json",
-        "sha256": "9b5704a1d5ee6f6976725b5048c8b5402bc67bde36d98ba6619a5fb5f6e11898"
+        "sha256": "ace9eb42d8aadbf8a1f4e6d3ac501b00d5cee8bfa31512a2f2af48113306748c"
       },
       "icon": {
         "path": "modules/haikyuu/icon.png",

@@ -14,7 +14,7 @@ async function json(path) {
 }
 
 async function loadModule(path, bridges) {
-  const context = vm.createContext({ URL, URLSearchParams, TextDecoder, TextEncoder, ...bridges });
+  const context = vm.createContext({ URL, URLSearchParams, TextDecoder, TextEncoder, setTimeout, clearTimeout, ...bridges });
   context.globalThis = context;
   new vm.Script(await text(path), { filename: path }).runInContext(context);
   return context;

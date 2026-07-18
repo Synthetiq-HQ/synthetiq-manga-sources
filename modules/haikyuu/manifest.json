@@ -3,7 +3,7 @@
   "familyID": "haikyuu",
   "legacyIDs": [],
   "name": "Haikyuu",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "contractVersion": 1,
   "minimumAppVersion": "1.0.0",
   "contentType": "pageImages",
@@ -25,7 +25,7 @@
   "universalLink": "https://synthetiq.uk/manga/modules/haikyuu",
   "entry": {
     "path": "modules/haikyuu/index.js",
-    "sha256": "7badcbbbc86b154788d20ad4a713c891f35de543676230b63f36640edf25cf9a"
+    "sha256": "8de130cecb2e72e9bf8ada090449afcf45df0a6b90ce26e560fdf9c77bbacd0f"
   },
   "icon": {
     "path": "modules/haikyuu/icon.png",
@@ -35,7 +35,9 @@
     "qubn.us",
     "read-haikyuu.com",
     "www.read-haikyuu.com",
+    "lastation.us",
     "*.qubn.us",
+    "*.lastation.us",
     "*.read-haikyuu.com"
   ],
   "limits": {

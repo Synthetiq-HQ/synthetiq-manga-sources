@@ -7,6 +7,15 @@
     Accept: "text/html,application/xhtml+xml",
     Referer: `${BASE_URL}/`,
   };
+  const RETRYABLE_STATUS = new Set([403, 408, 425, 429, 500, 502, 503, 504]);
+  const MAX_ATTEMPTS = 3;
+
+  function sleep(milliseconds) {
+    return new Promise((resolve) => {
+      if (typeof globalThis.setTimeout === "function") globalThis.setTimeout(resolve, milliseconds);
+      else Promise.resolve().then(resolve);
+    });
+  }
 
   function decodeEntities(value) {
     const named = {
@@ -60,25 +69,39 @@
       throw new Error("WeebCentral requires the fetchv2 bridge.");
     }
     const headers = { ...DEFAULT_HEADERS, ...(options.headers || {}) };
-    const response = await globalThis.fetchv2(
-      url,
-      headers,
-      options.method || "GET",
-      options.body || null,
-      {
-        followRedirects: true,
-        maxBytesHint: options.maxBytesHint || null,
-        responseClass: options.responseClass || "html",
-      },
-    );
+    let lastError = null;
+    for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt += 1) {
+      if (attempt > 1) await sleep(1200 * (attempt - 1));
+      let response = null;
+      try {
+        response = await globalThis.fetchv2(
+          url,
+          headers,
+          options.method || "GET",
+          options.body || null,
+          {
+            followRedirects: true,
+            maxBytesHint: options.maxBytesHint || null,
+            responseClass: options.responseClass || "html",
+          },
+        );
+      } catch (error) {
+        // Bridge/network failures (timeouts, aborted sockets) are transient.
+        lastError = error instanceof Error ? error : new Error(String(error));
+        continue;
+      }
 
-    const status = Number(response.status || 0);
-    if (response.ok === false || (status && (status < 200 || status >= 300))) {
-      throw new Error(`WeebCentral request failed with HTTP ${status || "error"}.`);
+      const status = Number(response.status || 0);
+      if (response.ok === false || (status && (status < 200 || status >= 300))) {
+        lastError = new Error(`WeebCentral request failed with HTTP ${status || "error"}.`);
+        if (status && !RETRYABLE_STATUS.has(status)) break;
+        continue;
+      }
+      const body = await responseText(response);
+      if (body) return body;
+      lastError = new Error("WeebCentral returned an empty response.");
     }
-    const body = await responseText(response);
-    if (!body) throw new Error("WeebCentral returned an empty response.");
-    return body;
+    throw lastError || new Error("WeebCentral request failed.");
   }
 
   function normalizedSeriesURL(value) {

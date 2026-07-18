@@ -3,7 +3,7 @@
   "familyID": "solo-leveling",
   "legacyIDs": [],
   "name": "Solo Leveling",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "contractVersion": 1,
   "minimumAppVersion": "1.0.0",
   "contentType": "pageImages",
@@ -25,7 +25,7 @@
   "universalLink": "https://synthetiq.uk/manga/modules/solo-leveling",
   "entry": {
     "path": "modules/solo-leveling/index.js",
-    "sha256": "7e8f857d2688ba1b8d79c875bece9f054b28f726f02075cbb933d36e7cfabd32"
+    "sha256": "9aaeae9ff52c0b52797d22b6373c0ba5d8cf02dfd5349526d8be020aff5b1203"
   },
   "icon": {
     "path": "modules/solo-leveling/icon.png",

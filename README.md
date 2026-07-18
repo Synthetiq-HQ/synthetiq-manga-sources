@@ -30,7 +30,7 @@ Run the explicitly network-dependent end-to-end smoke path with:
 npm run test:live
 ```
 
-Run the app-shaped module tester (discovery/search → details → chapters → terminal content):
+Run the **app-shaped live probe** (Node `vm` handler walk: discovery/search → details → chapters → terminal content). This is **not** a full one-to-one iOS harness — it skips install, WebKit, library, and downloads:
 
 ```sh
 # one module, live network
@@ -41,6 +41,10 @@ npm run test:module
 
 # fixture-only (no network)
 npm run test:module:fixtures -- black-clover
+
+# JSON + HTML report under reports/
+npm run test:module:report
+npm run test:module:report:fixtures
 ```
 
 After changing an entry script or icon, finalize hashes and validate again:

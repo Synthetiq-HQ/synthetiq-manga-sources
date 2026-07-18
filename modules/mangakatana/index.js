@@ -6,6 +6,23 @@
     Accept: "text/html,application/xhtml+xml",
     Referer: `${BASE_URL}/`,
   };
+  // The site answers bursts inside a ~1s window with an empty HTTP 200 body,
+  // so transport retries and a short-lived GET cache are required for a
+  // reliable search -> details -> chapters -> images walk.
+  const RETRYABLE_STATUS = new Set([403, 408, 425, 429, 500, 502, 503, 504]);
+  const MAX_ATTEMPTS = 3;
+  const GET_CACHE_TTL = 45_000;
+  const getCache = new Map();
+  // Keep a floor between requests so normal walks never trip the window.
+  const MIN_REQUEST_SPACING = 600;
+  let lastRequestAt = 0;
+
+  function sleep(milliseconds) {
+    return new Promise((resolve) => {
+      if (typeof globalThis.setTimeout === "function") globalThis.setTimeout(resolve, milliseconds);
+      else Promise.resolve().then(resolve);
+    });
+  }
 
   function decodeEntities(value) {
     const named = { amp: "&", apos: "'", gt: ">", lt: "<", nbsp: " ", quot: '"' };
@@ -49,27 +66,57 @@
     if (typeof globalThis.fetchv2 !== "function") {
       throw new Error("MangaKatana requires the fetchv2 bridge.");
     }
-    const response = await globalThis.fetchv2(
-      url,
-      { ...DEFAULT_HEADERS, ...(options.headers || {}) },
-      options.method || "GET",
-      options.body || null,
-      {
-        followRedirects: true,
-        maxBytesHint: options.maxBytesHint || null,
-        responseClass: options.responseClass || "html",
-      },
-    );
-    const status = Number(response && response.status);
-    if (!response || response.ok === false || (status && (status < 200 || status >= 300))) {
-      throw new Error(`MangaKatana request failed with HTTP ${status || "error"}.`);
+    const method = options.method || "GET";
+    const cacheKey = `${method} ${url}`;
+    if (method === "GET" && !options.headers) {
+      const cached = getCache.get(cacheKey);
+      if (cached && Date.now() - cached.at < GET_CACHE_TTL) return cached.body;
     }
-    if (response.bodyDropped) {
-      throw new Error(`MangaKatana response was dropped: ${response.dropReason || "size policy"}.`);
+    let lastError = null;
+    for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt += 1) {
+      if (attempt > 1) await sleep(1200 * (attempt - 1));
+      const spacingWait = lastRequestAt + MIN_REQUEST_SPACING - Date.now();
+      if (spacingWait > 0) await sleep(spacingWait);
+      lastRequestAt = Date.now();
+      let response = null;
+      try {
+        response = await globalThis.fetchv2(
+          url,
+          { ...DEFAULT_HEADERS, ...(options.headers || {}) },
+          method,
+          options.body || null,
+          {
+            followRedirects: true,
+            maxBytesHint: options.maxBytesHint || null,
+            responseClass: options.responseClass || "html",
+          },
+        );
+      } catch (error) {
+        // Bridge/network failures (timeouts, aborted sockets) are transient.
+        lastError = error instanceof Error ? error : new Error(String(error));
+        continue;
+      }
+      const status = Number(response && response.status);
+      if (!response || response.ok === false || (status && (status < 200 || status >= 300))) {
+        lastError = new Error(`MangaKatana request failed with HTTP ${status || "error"}.`);
+        if (status && !RETRYABLE_STATUS.has(status)) break;
+        continue;
+      }
+      if (response.bodyDropped) {
+        throw new Error(`MangaKatana response was dropped: ${response.dropReason || "size policy"}.`);
+      }
+      const body = await responseText(response);
+      if (body) {
+        if (method === "GET" && !options.headers) {
+          if (getCache.size >= 16) getCache.delete(getCache.keys().next().value);
+          getCache.set(cacheKey, { at: Date.now(), body });
+        }
+        return body;
+      }
+      // Empty 200 bodies are this host's rate-limit signal; retry them.
+      lastError = new Error("MangaKatana returned an empty response.");
     }
-    const body = await responseText(response);
-    if (!body) throw new Error("MangaKatana returned an empty response.");
-    return body;
+    throw lastError || new Error("MangaKatana request failed.");
   }
 
   function absoluteURL(value) {
@@ -304,10 +351,10 @@
   }
 
   async function discoveryHome() {
-    const [popular, latest] = await Promise.all([
-      searchResults("__feed:popular", 1),
-      searchResults("__feed:latest", 1),
-    ]);
+    // Serialized on purpose: parallel feed requests trip this host's
+    // empty-body rate window (see fetchDirect above).
+    const popular = await searchResults("__feed:popular", 1);
+    const latest = await searchResults("__feed:latest", 1);
     return {
       sections: [
         { id: "popular", title: "New Manga", items: popular.items },
