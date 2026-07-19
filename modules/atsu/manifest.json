@@ -1,0 +1,52 @@
+{
+  "id": "atsu",
+  "familyID": "atsu",
+  "legacyIDs": [
+    "atsu-v3"
+  ],
+  "name": "Atsu",
+  "version": "1.0.0",
+  "contractVersion": 1,
+  "minimumAppVersion": "1.0.0",
+  "contentType": "pageImages",
+  "language": "en",
+  "contentRating": "suggestive",
+  "releaseTrack": "beta",
+  "status": "active",
+  "capabilities": [
+    "popular",
+    "search",
+    "details",
+    "chapters",
+    "images",
+    "imageRequest",
+    "discovery"
+  ],
+  "baseURL": "https://atsu.moe",
+  "universalLink": "https://synthetiq.uk/manga/modules/atsu",
+  "entry": {
+    "path": "modules/atsu/index.js",
+    "sha256": "0d13a72a16d181caa11cf62f18f8fad41ed6382b8e55e9b45645a31559f733f8"
+  },
+  "icon": {
+    "path": "modules/atsu/icon.png",
+    "sha256": "b8feb015e571f0919f63f1fd2ea065ad337d98b045eeb9157a32bc7ceb995dcc"
+  },
+  "allowedHosts": [
+    "atsu.moe"
+  ],
+  "limits": {
+    "timeoutMilliseconds": 30000,
+    "maxConcurrentRequests": 2,
+    "maxResponseBytes": 2097152,
+    "maxScriptBytes": 524288,
+    "cacheTTLSeconds": 900
+  },
+  "attribution": {
+    "author": "Synthetiq-HQ",
+    "website": "https://atsu.moe",
+    "licenseName": null,
+    "licenseURL": null,
+    "authorizationURL": null
+  }
+}

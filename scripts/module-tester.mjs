@@ -182,11 +182,20 @@ async function createRuntime(slug, mode) {
     const details =
       (await readFile(path.join(root, "modules", slug, "fixtures", "details.html"), "utf8").catch(() => null))
       || (await readFile(path.join(root, "modules", slug, "fixtures", "details.json"), "utf8").catch(() => null));
+    const sourceInfo = await readFile(path.join(root, "modules", slug, "fixtures", "chapters.json"), "utf8").catch(() => null);
+    const sourcePages = await readFile(path.join(root, "modules", slug, "fixtures", "pages.json"), "utf8").catch(() => null);
 
     bridges = {
       fetchv2: async (url, headers, method, body, options) => {
         calls.push({ kind: "fetchv2", url: String(url) });
         const u = String(url);
+        if (slug === "atsu") {
+          if (/\/api\/read\/chapter/i.test(u) && sourcePages) return fixtureResponse(sourcePages);
+          if (/\/api\/manga\/info/i.test(u) && sourceInfo) return fixtureResponse(sourceInfo);
+          if (/\/collections\/manga\/documents\/search/i.test(u) && home) return fixtureResponse(home);
+          if (/\/manga\//i.test(u) && details) return fixtureResponse(details);
+          if (home) return fixtureResponse(home);
+        }
         if (/chapter|images|at-home|pages|token/i.test(u) && chapter) return fixtureResponse(chapter);
         if (/details|manga\/|title\//i.test(u) && details) return fixtureResponse(details);
         if (!home) throw new Error(`No fixtures available for ${slug}`);

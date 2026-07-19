@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-07-15T17:07:40Z",
+  "generatedAt": "2026-07-19T01:15:00Z",
   "repository": {
     "id": "synthetiq.sources",
     "name": "Synthetiq Manga Sources",
@@ -9,6 +9,25 @@
     "universalLink": "https://synthetiq.uk/manga/modules"
   },
   "modules": [
+    {
+      "id": "atsu",
+      "familyID": "atsu",
+      "name": "Atsu",
+      "version": "1.0.0",
+      "language": "en",
+      "contentType": "pageImages",
+      "contentRating": "suggestive",
+      "releaseTrack": "beta",
+      "status": "active",
+      "manifest": {
+        "path": "modules/atsu/manifest.json",
+        "sha256": "9e5e042f9ccf6676db255bc42172d989e9e2d2afe7eab4f2492965228ece1358"
+      },
+      "icon": {
+        "path": "modules/atsu/icon.png",
+        "sha256": "b8feb015e571f0919f63f1fd2ea065ad337d98b045eeb9157a32bc7ceb995dcc"
+      }
+    },
     {
       "id": "weebcentral-v2",
       "familyID": "weebcentral-v2",

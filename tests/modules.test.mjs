@@ -59,6 +59,50 @@ test("WeebCentral parses direct HTTP fixtures and preserves every chapter", asyn
   assert.deepEqual(JSON.parse(JSON.stringify(pages)), fixtures.expected.images);
 });
 
+test("Atsu uses direct APIs, keeps complete chapters, and filters source-marked adult titles", async () => {
+  const fixtures = {
+    search: await text("modules/atsu/fixtures/search.json"),
+    details: await text("modules/atsu/fixtures/details.html"),
+    chapters: await text("modules/atsu/fixtures/chapters.json"),
+    pages: await text("modules/atsu/fixtures/pages.json"),
+    expected: await json("modules/atsu/fixtures/expected.json"),
+  };
+  const calls = [];
+  const module = await loadModule("modules/atsu/index.js", {
+    fetchv2: async (url, headers, method, body, options) => {
+      assert.equal(method, "GET");
+      assert.equal(body, null);
+      assert.equal(headers.Referer, "https://atsu.moe/");
+      calls.push({ url, options });
+      if (url.includes("/collections/manga/documents/search?")) return response(fixtures.search);
+      if (url.endsWith("/api/search/popular")) {
+        return response(JSON.stringify({ items: JSON.parse(fixtures.search).hits.map((hit) => hit.document) }));
+      }
+      if (url.includes("/api/manga/info?mangaId=fixture-safe")) return response(fixtures.chapters);
+      if (url.includes("/api/read/chapter?mangaId=fixture-safe&chapterId=fixture-chapter-1")) return response(fixtures.pages);
+      if (url.endsWith("/manga/fixture-safe")) return response(fixtures.details);
+      throw new Error(`Unexpected Atsu URL: ${url}`);
+    },
+  });
+
+  const search = await module.searchResults("fixture", 1);
+  assert.deepEqual(JSON.parse(JSON.stringify(search)), fixtures.expected.search);
+  assert.equal(search.items.some((item) => item.id === "fixture-adult"), false);
+
+  const details = await module.extractDetails(search.items[0].id);
+  assert.deepEqual(JSON.parse(JSON.stringify(details)), fixtures.expected.details);
+
+  const chapters = await module.extractChapters(details.id);
+  assert.deepEqual(JSON.parse(JSON.stringify(chapters)), fixtures.expected.chapters);
+
+  const images = await module.extractImages(chapters[0].id);
+  assert.deepEqual(JSON.parse(JSON.stringify(images)), fixtures.expected.images);
+
+  const discovery = await module.discoveryHome();
+  assert.ok(discovery.sections.every((section) => section.items.every((item) => item.id !== "fixture-adult")));
+  assert.ok(calls.every((call) => call.options.maxBytesHint <= 2 * 1024 * 1024));
+});
+
 test("MangaFire uses pagev2, paginates chapters, and keeps scramble markers", async () => {
   const fixtures = {
     search: await json("modules/mangafire/fixtures/search.json"),
@@ -307,4 +351,3 @@ for (const slug of singleSeriesModules) {
     assert.deepEqual(JSON.parse(JSON.stringify(pages)), fixtures.expected.images);
   });
 }
-

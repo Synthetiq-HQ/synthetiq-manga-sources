@@ -1,0 +1,13 @@
+{
+  "search": {"items":[{"id":"fixture-safe","href":"https://atsu.moe/manga/fixture-safe","title":"Fixture Safe Title","image":"https://atsu.moe/static/posters/fixture-safe.webp"}],"hasMore":false},
+  "details": {"id":"fixture-safe","href":"https://atsu.moe/manga/fixture-safe","url":"https://atsu.moe/manga/fixture-safe","title":"Fixture Safe Title","description":"A deterministic source fixture.","image":"https://atsu.moe/static/posters/fixture-safe.webp","authors":["Fixture Author"],"author":"Fixture Author","genres":["Adventure","Comedy"],"status":"Ongoing"},
+  "chapters": [
+    {"id":"atsu|fixture-safe|fixture-chapter-1","href":"atsu|fixture-safe|fixture-chapter-1","url":"atsu|fixture-safe|fixture-chapter-1","title":"Chapter 1","number":1,"language":"en"},
+    {"id":"atsu|fixture-safe|fixture-chapter-2","href":"atsu|fixture-safe|fixture-chapter-2","url":"atsu|fixture-safe|fixture-chapter-2","title":"Chapter 2","number":2,"language":"en"},
+    {"id":"atsu|fixture-safe|fixture-special","href":"atsu|fixture-safe|fixture-special","url":"atsu|fixture-safe|fixture-special","title":"Fixture Special","number":null,"language":"en"}
+  ],
+  "images": [
+    {"url":"https://atsu.moe/static/pages/fixture-safe/fixture-chapter-1/0.webp","headers":{"Accept":"image/avif,image/webp,image/*,*/*;q=0.8","Referer":"https://atsu.moe/"}},
+    {"url":"https://atsu.moe/static/pages/fixture-safe/fixture-chapter-1/1.webp","headers":{"Accept":"image/avif,image/webp,image/*,*/*;q=0.8","Referer":"https://atsu.moe/"}}
+  ]
+}

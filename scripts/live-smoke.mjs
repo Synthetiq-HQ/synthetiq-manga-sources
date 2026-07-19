@@ -102,6 +102,15 @@ assert.ok(mangaKatanaChapters.length > 0);
 const mangaKatanaImages = await mangaKatana.extractImages(mangaKatanaChapters[mangaKatanaChapters.length - 1].id);
 assert.ok(mangaKatanaImages.length > 0);
 
+const atsu = await loadModule("atsu", { fetchv2 });
+const atsuSearch = await atsu.searchResults("one piece", 1);
+assert.ok(atsuSearch.items.length > 0);
+const atsuDetails = await atsu.extractDetails(atsuSearch.items[0].id);
+const atsuChapters = await atsu.extractChapters(atsuDetails.id);
+assert.ok(atsuChapters.length > 0);
+const atsuImages = await atsu.extractImages(atsuChapters[0].id);
+assert.ok(atsuImages.length > 0);
+
 const mgread = await loadModule("mgread", { fetchv2, reportProgress: async () => ({ ok: true }) });
 const mgreadSearch = await mgread.searchResults("martial peak", 1);
 assert.ok(mgreadSearch.items.length > 0);
@@ -137,6 +146,12 @@ console.log(JSON.stringify({
     chapters: mangaKatanaChapters.length,
     pages: mangaKatanaImages.length,
     firstPage: typeof mangaKatanaImages[0] === "string" ? mangaKatanaImages[0] : mangaKatanaImages[0]?.url,
+  },
+  atsu: {
+    result: atsuDetails.title,
+    chapters: atsuChapters.length,
+    pages: atsuImages.length,
+    firstPage: typeof atsuImages[0] === "string" ? atsuImages[0] : atsuImages[0]?.url,
   },
   mgread: {
     result: mgreadDetails.title,
