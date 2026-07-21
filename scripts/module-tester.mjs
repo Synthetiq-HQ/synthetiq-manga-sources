@@ -179,11 +179,25 @@ async function createRuntime(slug, mode) {
       || (await readFile(path.join(root, "modules", slug, "fixtures", "images.json"), "utf8").catch(() => null))
       || (await readFile(path.join(root, "modules", slug, "fixtures", "pages.json"), "utf8").catch(() => null))
       || (await readFile(path.join(root, "modules", slug, "fixtures", "chapter.json"), "utf8").catch(() => null));
+    const chapterList =
+      (await readFile(path.join(root, "modules", slug, "fixtures", "chapters.html"), "utf8").catch(() => null))
+      || (await readFile(path.join(root, "modules", slug, "fixtures", "chapters.json"), "utf8").catch(() => null));
     const details =
       (await readFile(path.join(root, "modules", slug, "fixtures", "details.html"), "utf8").catch(() => null))
       || (await readFile(path.join(root, "modules", slug, "fixtures", "details.json"), "utf8").catch(() => null));
     const sourceInfo = await readFile(path.join(root, "modules", slug, "fixtures", "chapters.json"), "utf8").catch(() => null);
     const sourcePages = await readFile(path.join(root, "modules", slug, "fixtures", "pages.json"), "utf8").catch(() => null);
+    const fixture = (name) => readFile(path.join(root, "modules", slug, "fixtures", name), "utf8").catch(() => null);
+    const special = {
+      metadataOpen: await fixture("metadata-open.json"),
+      metadataClosed: await fixture("metadata-closed.json"),
+      text: await fixture("text.txt"),
+      detailsExcluded: await fixture("details-excluded.json"),
+      chaptersPage1: await fixture("chapters-page-1.json"),
+      chaptersPage2: await fixture("chapters-page-2.json"),
+      imagesJSON: await fixture("images.json"),
+      chapterJSON: await fixture("chapter.json"),
+    };
 
     bridges = {
       fetchv2: async (url, headers, method, body, options) => {
@@ -196,13 +210,56 @@ async function createRuntime(slug, mode) {
           if (/\/manga\//i.test(u) && details) return fixtureResponse(details);
           if (home) return fixtureResponse(home);
         }
-        if (/chapter|images|at-home|pages|token/i.test(u) && chapter) return fixtureResponse(chapter);
-        if (/details|manga\/|title\//i.test(u) && details) return fixtureResponse(details);
+        if (slug === "internet-archive") {
+          if (/\/metadata\/open-fixture/i.test(u) && special.metadataOpen) return fixtureResponse(special.metadataOpen);
+          if (/\/metadata\/(?:closed|rights)-fixture/i.test(u) && special.metadataClosed) return fixtureResponse(special.metadataClosed);
+          if (/\/download\/open-fixture\//i.test(u) && special.text) return fixtureResponse(special.text);
+          if (home) return fixtureResponse(home);
+        }
+        if (slug === "mangadex") {
+          const parsed = new URL(u);
+          if (parsed.pathname === "/manga" && home) return fixtureResponse(home);
+          if (parsed.pathname.includes("22222222-2222-4222-8222-222222222222") && special.detailsExcluded) {
+            return fixtureResponse(special.detailsExcluded);
+          }
+          if (parsed.pathname.endsWith("/feed")) {
+            return fixtureResponse(parsed.searchParams.get("offset") === "500" ? special.chaptersPage2 : special.chaptersPage1);
+          }
+          if (parsed.pathname.startsWith("/manga/") && details) return fixtureResponse(details);
+          if (parsed.pathname.startsWith("/at-home/server/") && special.imagesJSON) return fixtureResponse(special.imagesJSON);
+        }
+        // WeebCentral uses /series/<id> for details and
+        // /series/<id>/full-chapter-list for chapters. Resolve the more
+        // specific chapter route first so the generic fixture runner exercises
+        // the same contract as the dedicated module tests.
+        if (/full-chapter-list/i.test(u) && chapterList) return fixtureResponse(chapterList);
+        if ((/chapter|images|at-home|pages|token/i.test(u) || /\/manga\/[^/]+\/c\d+/i.test(u)) && chapter) return fixtureResponse(chapter);
+        if (/details|manga\/|title\/|\/series\//i.test(u) && details) return fixtureResponse(details);
         if (!home) throw new Error(`No fixtures available for ${slug}`);
         return fixtureResponse(home);
       },
       pagev2: async (task) => {
         calls.push({ kind: "pagev2", url: String(task.url) });
+        if (slug === "mangafire") {
+          const u = String(task.url);
+          let payload = null;
+          if (/\/api\/titles\?/.test(u) && home) payload = home;
+          else if (/\/api\/titles\/fixture$/.test(u) && details) payload = details;
+          else if (/\/api\/titles\/fixture\/chapters/.test(u) && /page=1/.test(u)) payload = await fixture("chapters-page-1.json");
+          else if (/\/api\/titles\/fixture\/chapters/.test(u) && /page=2/.test(u)) payload = await fixture("chapters-page-2.json");
+          else if (/\/api\/chapters\/9001$/.test(u) && special.chapterJSON) payload = special.chapterJSON;
+          else if (/\/api\/chapters\/9002$/.test(u) && sourcePages) payload = sourcePages;
+          if (payload) {
+            return {
+              finalURL: u,
+              title: "",
+              html: null,
+              cookies: {},
+              events: [],
+              evaluatedData: typeof payload === "string" ? payload : JSON.stringify(payload),
+            };
+          }
+        }
         throw new Error("Fixture mode does not implement pagev2 for this module.");
       },
       reportProgress: async (payload) => {
