@@ -25,6 +25,12 @@ function response(body, status = 200) {
 }
 
 test("WeebCentral parses direct HTTP fixtures and preserves every chapter", async () => {
+  const manifest = await json("modules/weebcentral/manifest.json");
+  assert.ok(
+    manifest.allowedHosts.includes("*.lowee.us"),
+    "WeebCentral serves less-common series from official.lowee.us",
+  );
+
   const fixtures = {
     search: await text("modules/weebcentral/fixtures/search.html"),
     details: await text("modules/weebcentral/fixtures/details.html"),
@@ -38,6 +44,12 @@ test("WeebCentral parses direct HTTP fixtures and preserves every chapter", asyn
       assert.equal(typeof url, "string");
       calls.push({ url, headers, method, body, options });
       if (url.includes("/search/data?")) return response(fixtures.search);
+      if (url.endsWith("/search")) {
+        return response([
+          '<input name="included_tag" value="Comedy">',
+          '<input name="included_tag" value="Horror">',
+        ].join("\n"));
+      }
       if (url.endsWith("/full-chapter-list")) return response(fixtures.chapters);
       if (url.includes("/images?")) return response(fixtures.images);
       if (url.includes("/series/")) return response(fixtures.details);
@@ -48,6 +60,25 @@ test("WeebCentral parses direct HTTP fixtures and preserves every chapter", asyn
   const search = await module.searchResults("fixture", 1);
   assert.deepEqual(JSON.parse(JSON.stringify(search)), fixtures.expected.search);
   assert.match(calls[0].url, /adult=False/);
+
+  const nicheEnvelope = "__niche__:" + JSON.stringify({
+    text: "",
+    tags: ["Comedy", "Horror"],
+    excludeTags: ["Romance"],
+    status: "Ongoing",
+  });
+  const niche = await module.searchResults(nicheEnvelope, 2);
+  assert.deepEqual(JSON.parse(JSON.stringify(niche)), fixtures.expected.search);
+  const nicheURL = new URL(calls.at(-1).url);
+  assert.deepEqual(nicheURL.searchParams.getAll("included_tag"), ["Comedy", "Horror"]);
+  assert.deepEqual(nicheURL.searchParams.getAll("excluded_tag"), ["Romance"]);
+  assert.equal(nicheURL.searchParams.get("included_status"), "Ongoing");
+  assert.equal(nicheURL.searchParams.get("offset"), "32");
+  assert.equal(nicheURL.searchParams.get("adult"), "False");
+
+  const tags = await module.extractTags();
+  assert.ok(tags.includes("Comedy"));
+  assert.ok(tags.includes("Horror"));
 
   const details = await module.extractDetails(search.items[0].id);
   assert.deepEqual(JSON.parse(JSON.stringify(details)), fixtures.expected.details);
