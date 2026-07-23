@@ -117,9 +117,25 @@ test("MangaFire uses pagev2, paginates chapters, and keeps scramble markers", as
   const module = await loadModule("modules/mangafire/index.js", {
     pagev2: async (task) => {
       assert.equal(typeof task, "object");
+      calls.push(task);
+      if (task.url.includes("/browse?keyword=")) {
+        assert.equal(task.captureResponseBodies, true);
+        assert.equal(task.returnScript, null);
+        return {
+          finalURL: task.url,
+          title: "",
+          html: null,
+          cookies: {},
+          events: [{
+            phase: "response",
+            url: "https://mangafire.to/api/titles?keyword=fixture&vrf=fixture",
+            body: JSON.stringify(fixtures.search),
+          }],
+          evaluatedData: null,
+        };
+      }
       assert.equal(task.captureResponseBodies, false);
       assert.equal(task.returnScript, "document.body ? document.body.innerText : ''");
-      calls.push(task);
       let payload;
       if (task.url.includes("/api/titles?")) payload = fixtures.search;
       else if (task.url.endsWith("/api/titles/fixture")) payload = fixtures.details;

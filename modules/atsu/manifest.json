@@ -5,7 +5,7 @@
     "atsu-v3"
   ],
   "name": "Atsu",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "contractVersion": 1,
   "minimumAppVersion": "1.0.0",
   "contentType": "pageImages",
@@ -13,9 +13,11 @@
   "contentRating": "suggestive",
   "releaseTrack": "beta",
   "status": "active",
+  "isFlagship": true,
   "capabilities": [
     "popular",
     "search",
+    "tags",
     "details",
     "chapters",
     "images",
@@ -26,7 +28,7 @@
   "universalLink": "https://synthetiq.uk/manga/modules/atsu",
   "entry": {
     "path": "modules/atsu/index.js",
-    "sha256": "0d13a72a16d181caa11cf62f18f8fad41ed6382b8e55e9b45645a31559f733f8"
+    "sha256": "c44a1f7aa986afedea60b761f77e5a3358f4be8f4c44dcada05fc6e380dde003"
   },
   "icon": {
     "path": "modules/atsu/icon.png",

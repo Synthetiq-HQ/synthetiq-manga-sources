@@ -13,7 +13,7 @@
       "id": "atsu",
       "familyID": "atsu",
       "name": "Atsu",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "language": "en",
       "contentType": "pageImages",
       "contentRating": "suggestive",
@@ -21,7 +21,7 @@
       "status": "active",
       "manifest": {
         "path": "modules/atsu/manifest.json",
-        "sha256": "9e5e042f9ccf6676db255bc42172d989e9e2d2afe7eab4f2492965228ece1358"
+        "sha256": "2e3896a906e654be2c212ea3595a3826e10f080ceb14b3ece89cb480b7e8dba6"
       },
       "icon": {
         "path": "modules/atsu/icon.png",
@@ -32,7 +32,7 @@
       "id": "weebcentral-v2",
       "familyID": "weebcentral-v2",
       "name": "WeebCentral",
-      "version": "4.0.2",
+      "version": "4.1.4",
       "language": "en",
       "contentType": "pageImages",
       "contentRating": "suggestive",
@@ -40,7 +40,7 @@
       "status": "active",
       "manifest": {
         "path": "modules/weebcentral/manifest.json",
-        "sha256": "887afc94f418bc8cea3eda34db4711edcc3dc2b820a00a02c4cd4d6368c402a6"
+        "sha256": "9a617324e7c88051884bacd59dc86d4fde1660575fe008250fcb0fde70273082"
       },
       "icon": {
         "path": "modules/weebcentral/icon.png",
@@ -51,7 +51,7 @@
       "id": "mangafire-v2",
       "familyID": "mangafire-v2",
       "name": "MangaFire",
-      "version": "2.0.2",
+      "version": "2.0.3",
       "language": "en",
       "contentType": "pageImages",
       "contentRating": "suggestive",
@@ -59,7 +59,7 @@
       "status": "active",
       "manifest": {
         "path": "modules/mangafire/manifest.json",
-        "sha256": "e86cba3f84b70b6a3096480d254946a16c68ccb0770a3def4d24df81ee7ba675"
+        "sha256": "796c1c0354e309138f979005e743d2d941e54ce578c65b464231330b01073648"
       },
       "icon": {
         "path": "modules/mangafire/icon.png",
@@ -254,6 +254,25 @@
       "icon": {
         "path": "modules/haikyuu/icon.png",
         "sha256": "f1e408839b2ff5d36eb1cf040f457d37b95903e6a2aa075ad173cbc97951f078"
+      }
+    },
+    {
+      "id": "weeb-central",
+      "familyID": "weeb-central",
+      "name": "Weeb Central (Retired)",
+      "version": "1.0.1",
+      "language": "en",
+      "contentType": "pageImages",
+      "contentRating": "suggestive",
+      "releaseTrack": "beta",
+      "status": "retired",
+      "manifest": {
+        "path": "modules/weeb-central/manifest.json",
+        "sha256": "27b50d4c51ad10fa3b3f1d8b41ba6021fb79db9a36ad907dc1db25c2c9d68bbe"
+      },
+      "icon": {
+        "path": "modules/weeb-central/icon.png",
+        "sha256": "961c7175cde3ba32c2ee46017576353f5fb77ed3c87e7d8f4e585c03d251772a"
       }
     }
   ]

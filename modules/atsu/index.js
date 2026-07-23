@@ -118,7 +118,7 @@
     return output;
   }
 
-  async function catalogue(query, page) {
+  async function catalogue(query, page, options = {}) {
     const requestedPage = Math.max(1, Number(page) || 1);
     const params = new URLSearchParams({
       q: nonEmpty(query) || "*",
@@ -127,6 +127,8 @@
       page: String(requestedPage),
       per_page: String(PAGE_SIZE),
     });
+    if (options.sort_by) params.append("sort_by", options.sort_by);
+    if (options.filter_by) params.append("filter_by", options.filter_by);
     const payload = await requestJSON(`${SEARCH_URL}?${params.toString()}`);
     return {
       items: cards(payload.hits),
@@ -134,9 +136,19 @@
     };
   }
 
-  async function popular() {
-    const payload = await requestJSON(`${BASE_URL}/api/search/popular`);
-    return { items: cards(payload.items || payload), hasMore: false };
+  async function popular(page = 1) {
+    const requested = Math.max(1, Number(page) || 1);
+    if (requested <= 1) {
+      const payload = await requestJSON(`${BASE_URL}/api/search/popular`);
+      const items = cards(payload.items || payload);
+      // First page from the curated popular API; more pages continue via catalogue.
+      return { items, hasMore: items.length > 0 };
+    }
+    // Endless Discover: page further through Typesense by score.
+    return catalogue("*", requested, {
+      sort_by: "score:desc",
+      filter_by: "isAdult:=false",
+    });
   }
 
   function mangaPageFromHTML(html) {
@@ -179,13 +191,85 @@
     };
   }
 
+  async function niche(page) {
+    // For Atsu, we can find niche gems by filtering out mainstream genres (like Action/Shounen if possible)
+    // or by sorting by old/completed series that might be forgotten, or using random seed if Typesense supports it.
+    // Let's sort by `chaptersCount:asc` and `score:desc` or similar if those fields exist,
+    // or just sort by `createdAt:asc` with a filter.
+    // Assuming tags filter is possible:
+    return catalogue("*", page, {
+      sort_by: "id:asc", // Using ID as a pseudo-random distribution or older titles
+      // Niche genres: Slice of Life, Psychological, Seinen
+      filter_by: "tags:=[Slice of Life, Psychological, Mystery, Seinen]"
+    });
+  }
+
+  const FALLBACK_TAGS = [
+    "Action", "Adventure", "Comedy", "Drama", "Fantasy", "Horror", "Isekai",
+    "Martial Arts", "Mystery", "Psychological", "Romance", "School Life",
+    "Sci-Fi", "Seinen", "Shoujo", "Shounen", "Slice of Life", "Sports",
+    "Supernatural", "Tragedy",
+  ];
+
+  function normalizeSearchQuery(query) {
+    if (typeof query === "string" && query.startsWith("__niche__:")) {
+      try {
+        return normalizeSearchQuery(JSON.parse(query.slice("__niche__:".length)));
+      } catch {
+        // fall through
+      }
+    }
+    if (query && typeof query === "object" && !Array.isArray(query)) {
+      const tags = Array.isArray(query.tags)
+        ? query.tags.map((t) => nonEmpty(typeof t === "object" ? (t.name || t.id || "") : t)).filter(Boolean)
+        : [];
+      const excludeTags = Array.isArray(query.excludeTags)
+        ? query.excludeTags.map((t) => nonEmpty(typeof t === "object" ? (t.name || t.id || "") : t)).filter(Boolean)
+        : [];
+      return {
+        text: nonEmpty(query.text || query.query || ""),
+        tags,
+        excludeTags,
+        status: nonEmpty(query.status),
+      };
+    }
+    return { text: nonEmpty(query), tags: [], excludeTags: [], status: "" };
+  }
+
   async function searchResults(query, page = 1) {
-    const normalized = nonEmpty(query);
-    if (normalized === "__feed:popular") return popular();
-    // The site does not expose an update feed. Return an honest empty page
-    // instead of labelling popular titles as latest updates.
-    if (normalized === "__feed:latest") return { items: [], hasMore: false };
-    return catalogue(normalized, page);
+    const normalized = normalizeSearchQuery(query);
+    if (normalized.text === "__feed:popular" && !normalized.tags.length) return popular(page);
+    if (normalized.text === "__feed:niche" && !normalized.tags.length) return niche(page);
+    if (normalized.text === "__feed:latest" && !normalized.tags.length) {
+      return { items: [], hasMore: false };
+    }
+
+    const filters = ["isAdult:=false"];
+    if (normalized.tags.length) {
+      filters.push(`tags:=[${normalized.tags.join(", ")}]`);
+    }
+    if (normalized.excludeTags.length) {
+      for (const tag of normalized.excludeTags) {
+        filters.push(`tags:!=[${tag}]`);
+      }
+    }
+    if (normalized.status) {
+      const status = normalized.status.toLowerCase();
+      if (status === "ongoing" || status === "publishing") filters.push("status:=Ongoing");
+      else if (status === "completed" || status === "complete") filters.push("status:=Completed");
+    }
+
+    const text = normalized.text && !normalized.text.startsWith("__feed:")
+      ? normalized.text
+      : (normalized.tags.length || normalized.status ? "*" : normalized.text);
+    return catalogue(text || "*", page, {
+      filter_by: filters.join(" && "),
+      sort_by: normalized.tags.length || normalized.status ? "score:desc" : undefined,
+    });
+  }
+
+  async function extractTags() {
+    return FALLBACK_TAGS.slice();
   }
 
   async function extractDetails(value) {
@@ -248,16 +332,22 @@
   async function discoveryHome() {
     const popularItems = await popular();
     const explore = await catalogue("", 1);
+    const nicheItems = await niche(1);
     return {
       sections: [
         { id: "popular", title: "Popular", items: popularItems.items },
         { id: "explore", title: "Explore", items: explore.items },
+        { id: "niche", title: "Niche Gems", items: nicheItems.items },
       ].filter((section) => section.items.length),
     };
   }
 
   async function discoveryFeed(feedID, page = 1) {
-    if (String(feedID) === "popular") return popular();
+    if (String(feedID) === "popular") return popular(page);
+    if (String(feedID) === "niche") {
+      const result = await niche(page);
+      return { ...result, page: Math.max(1, Number(page) || 1) };
+    }
     if (String(feedID) !== "explore") return { items: [], page: Math.max(1, Number(page) || 1), hasMore: false };
     const result = await catalogue("", page);
     return { ...result, page: Math.max(1, Number(page) || 1) };
@@ -268,6 +358,7 @@
     extractDetails,
     extractChapters,
     extractImages,
+    extractTags,
     discoveryHome,
     discoveryFeed,
   };

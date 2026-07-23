@@ -2,11 +2,12 @@
   "id": "weebcentral-v2",
   "familyID": "weebcentral-v2",
   "legacyIDs": [
+    "weeb-central",
     "weebcentral",
     "weebcentral-en"
   ],
   "name": "WeebCentral",
-  "version": "4.0.2",
+  "version": "4.1.4",
   "contractVersion": 1,
   "minimumAppVersion": "1.0.0",
   "contentType": "pageImages",
@@ -14,10 +15,12 @@
   "contentRating": "suggestive",
   "releaseTrack": "stable",
   "status": "active",
+  "isFlagship": true,
   "capabilities": [
     "popular",
     "latest",
     "search",
+    "tags",
     "details",
     "chapters",
     "images",
@@ -28,7 +31,7 @@
   "universalLink": "https://synthetiq.uk/manga/modules/weebcentral-v2",
   "entry": {
     "path": "modules/weebcentral/index.js",
-    "sha256": "b31402b0365574dbd3866675d38d38f9eb7327bd293bb84d32a115f7a2d650db"
+    "sha256": "dfb393576e638a1603b3a3fcc7d814944e7af7b6c98e8f1ede62b843f36236cb"
   },
   "icon": {
     "path": "modules/weebcentral/icon.png",
@@ -36,8 +39,13 @@
   },
   "allowedHosts": [
     "weebcentral.com",
+    "*.weebcentral.com",
     "*.compsci88.com",
-    "*.planeptune.us"
+    "*.planeptune.us",
+    "*.lastation.us",
+    "*.lowee.space",
+    "*.akamaihd.net",
+    "*.cloudfront.net"
   ],
   "limits": {
     "timeoutMilliseconds": 30000,

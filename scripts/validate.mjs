@@ -198,6 +198,21 @@ async function testMangaFire() {
   const expected = await JSONFile("modules/mangafire/fixtures/expected.json");
   const pagev2 = async (task) => {
     assert.equal(new URL(task.url).hostname, "mangafire.to");
+    if (new URL(task.url).pathname === "/browse") {
+      assert.equal(task.captureResponseBodies, true);
+      return {
+        finalURL: task.url,
+        title: "",
+        html: null,
+        events: [{
+          phase: "response",
+          url: "https://mangafire.to/api/titles?keyword=fixture&vrf=fixture",
+          body: fixtures.search,
+        }],
+        cookies: {},
+        evaluatedData: null,
+      };
+    }
     assert.ok(new URL(task.url).pathname.startsWith("/api/"));
     assert.equal(task.returnScript, "document.body ? document.body.innerText : ''");
     assert.equal(task.captureResponseBodies, false);

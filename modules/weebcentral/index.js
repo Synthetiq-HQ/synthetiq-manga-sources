@@ -10,6 +10,40 @@
   const RETRYABLE_STATUS = new Set([403, 408, 425, 429, 500, 502, 503, 504]);
   const MAX_ATTEMPTS = 3;
 
+  // Known WeebCentral filter tags used when the search page cannot be parsed.
+  // Values must match the site's included_tag query parameter names.
+  const FALLBACK_TAGS = [
+    "Action",
+    "Adventure",
+    "Comedy",
+    "Drama",
+    "Ecchi",
+    "Fantasy",
+    "Gender Bender",
+    "Harem",
+    "Historical",
+    "Horror",
+    "Isekai",
+    "Josei",
+    "Martial Arts",
+    "Mature",
+    "Mecha",
+    "Mystery",
+    "Psychological",
+    "Romance",
+    "School Life",
+    "Sci-Fi",
+    "Seinen",
+    "Shoujo",
+    "Shounen",
+    "Slice of Life",
+    "Sports",
+    "Supernatural",
+    "Tragedy",
+    "Wuxia",
+    "Yuri",
+  ];
+
   function sleep(milliseconds) {
     return new Promise((resolve) => {
       if (typeof globalThis.setTimeout === "function") globalThis.setTimeout(resolve, milliseconds);
@@ -50,6 +84,20 @@
       new RegExp(`\\b${name}\\s*=\\s*(["'])([\\s\\S]*?)\\1`, "i"),
     );
     return match ? decodeEntities(match[2].trim()) : "";
+  }
+
+  function uniqueStrings(values) {
+    const seen = new Set();
+    const out = [];
+    for (const raw of values) {
+      const value = String(raw || "").trim();
+      if (!value) continue;
+      const key = value.toLowerCase();
+      if (seen.has(key)) continue;
+      seen.add(key);
+      out.push(value);
+    }
+    return out;
   }
 
   async function responseText(response) {
@@ -124,10 +172,80 @@
     throw new Error("Invalid WeebCentral chapter identifier.");
   }
 
+  const BLOCKED_TAGS = new Set([
+    "adult", "hentai", "lolicon", "shotacon", "smut", "explicit",
+  ]);
+
+  function mapStatusFilter(status) {
+    const raw = String(status || "").trim().toLowerCase();
+    if (!raw || raw === "any") return null;
+    // Site form uses included_status with these exact values.
+    if (raw === "ongoing" || raw === "publishing") return "Ongoing";
+    if (raw === "completed" || raw === "complete" || raw === "finished") return "Complete";
+    if (raw === "hiatus") return "Hiatus";
+    if (raw === "canceled" || raw === "cancelled" || raw === "dropped") return "Canceled";
+    return String(status).trim();
+  }
+
+  function tagList(value) {
+    if (!Array.isArray(value)) return [];
+    return uniqueStrings(value.map((tag) => {
+      if (tag && typeof tag === "object") {
+        return tag.name || tag.label || tag.id || tag.value || "";
+      }
+      return tag;
+    })).filter((tag) => !BLOCKED_TAGS.has(tag.toLowerCase()));
+  }
+
+  function normalizeSearchQuery(query) {
+    // App may pass a JSON envelope so WebKit always delivers a plain string.
+    if (typeof query === "string" && query.startsWith("__niche__:")) {
+      try {
+        return normalizeSearchQuery(JSON.parse(query.slice("__niche__:".length)));
+      } catch {
+        // fall through
+      }
+    }
+    if (query && typeof query === "object" && !Array.isArray(query)) {
+      const text = String(query.text || query.query || query.q || "").trim();
+      return {
+        feed: null,
+        text,
+        tags: tagList(query.tags || query.includeTags || query.includedTags),
+        excludeTags: tagList(query.excludeTags || query.excludedTags),
+        status: mapStatusFilter(query.status),
+      };
+    }
+
+    const raw = String(query || "");
+    if (raw === "__feed:popular") {
+      return { feed: "popular", text: "", tags: [], excludeTags: [], status: null };
+    }
+    if (raw === "__feed:latest") {
+      return { feed: "latest", text: "", tags: [], excludeTags: [], status: null };
+    }
+    if (raw === "__feed:niche") {
+      return { feed: "niche", text: "", tags: [], excludeTags: [], status: null };
+    }
+    return {
+      feed: "search",
+      text: raw.replace(/[!#:(),-]+/g, " ").trim().slice(0, 200),
+      tags: [],
+      excludeTags: [],
+      status: null,
+    };
+  }
+
   function parseSearchHTML(html) {
-    const chunks = String(html).split(
+    const source = String(html || "");
+    // Prefer article cards; fall back to any series-link blocks if the class changes.
+    let chunks = source.split(
       /<article\b[^>]*class=["'][^"']*\bbg-base-300\b[^"']*["'][^>]*>/i,
     ).slice(1);
+    if (!chunks.length) {
+      chunks = source.split(/(?=<a\b[^>]*href=(["'])[^"']*\/series\/[^"']+\1)/i).slice(1);
+    }
+
     const seen = new Set();
     const items = [];
 
@@ -135,14 +253,20 @@
       const hrefMatch = chunk.match(/<a\b[^>]*href=(["'])([^"']*\/series\/[^"']+)\1/i);
       if (!hrefMatch) continue;
       const href = decodeEntities(hrefMatch[2]);
-      const absoluteHref = href.startsWith("https://") ? href : `${BASE_URL}${href.startsWith("/") ? "" : "/"}${href}`;
+      const absoluteHref = href.startsWith("https://")
+        ? href
+        : `${BASE_URL}${href.startsWith("/") ? "" : "/"}${href}`;
       if (seen.has(absoluteHref)) continue;
 
       const linkedTitle = chunk.match(/<a\b[^>]*class=["'][^"']*line-clamp[^"']*["'][^>]*>([\s\S]*?)<\/a>/i);
       const compactTitle = chunk.match(/<div\b[^>]*class=["'][^"']*text-ellipsis[^"']*["'][^>]*>([\s\S]*?)<\/div>/i);
-      const altTitle = chunk.match(/<img\b[^>]*alt=(["'])(.*?)\s+cover\1/i);
-      const title = stripHTML(linkedTitle?.[1] || compactTitle?.[1] || altTitle?.[2] || "");
-      if (!title) continue;
+      const headingTitle = chunk.match(/<h[1-4]\b[^>]*>([\s\S]*?)<\/h[1-4]>/i);
+      const altTitle = chunk.match(/<img\b[^>]*alt=(["'])(.*?)\s+cover\1/i)
+        || chunk.match(/<img\b[^>]*alt=(["'])([^"']+)\1/i);
+      const title = stripHTML(
+        linkedTitle?.[1] || compactTitle?.[1] || headingTitle?.[1] || altTitle?.[2] || "",
+      );
+      if (!title || /^cover$/i.test(title)) continue;
 
       const normalCover = chunk.match(/https:\/\/[^"'\s]+\/cover\/normal\/[^"'\s]+/i);
       const imageTag = chunk.match(/<(?:source|img)\b[^>]*(?:srcset|src)=(["'])(https:\/\/[^"']+)\1/i);
@@ -153,7 +277,9 @@
 
     return {
       items,
-      hasMore: /<button\b/i.test(html),
+      hasMore: items.length >= SEARCH_LIMIT
+        || /<button\b[^>]*>[\s\S]*?(?:next|load more|show more)/i.test(source)
+        || /data-offset=["']\d+["']/i.test(source),
     };
   }
 
@@ -212,7 +338,9 @@
     let match;
     while ((match = anchorPattern.exec(html)) !== null) {
       const rawHref = decodeEntities(match[3]);
-      const href = rawHref.startsWith("https://") ? rawHref : `${BASE_URL}${rawHref.startsWith("/") ? "" : "/"}${rawHref}`;
+      const href = rawHref.startsWith("https://")
+        ? rawHref
+        : `${BASE_URL}${rawHref.startsWith("/") ? "" : "/"}${rawHref}`;
       if (seen.has(href)) continue;
       const body = match[4];
       const nestedTitle = body.match(/<span\b[^>]*class=["'][^"']*\bflex\b[^"']*["'][^>]*>\s*<span\b[^>]*>([\s\S]*?)<\/span>/i)
@@ -289,15 +417,65 @@
     return collectImagesFromHTML(String(html));
   }
 
-  function searchURL(query, page) {
+  function parseTagsFromSearchPage(html) {
+    const source = String(html || "");
+    const found = [];
+
+    // id="tag-Action-value" style controls
+    for (const match of source.matchAll(/id=["']tag-([^"']+)-value["']/gi)) {
+      found.push(decodeEntities(match[1].replace(/_/g, " ")));
+    }
+
+    // checkboxes / inputs for included_tag
+    for (const match of source.matchAll(
+      /<(?:input|option)\b[^>]*(?:name|data-name)=["']included_tag["'][^>]*>/gi,
+    )) {
+      const value = attribute(match[0], "value") || attribute(match[0], "data-value");
+      if (value) found.push(value);
+    }
+
+    // label text next to tag inputs
+    for (const match of source.matchAll(
+      /<label\b[^>]*(?:for=["']tag-[^"']+["']|class=["'][^"']*tag[^"']*["'])[^>]*>([\s\S]*?)<\/label>/gi,
+    )) {
+      const text = stripHTML(match[1]);
+      if (text && text.length < 40) found.push(text);
+    }
+
+    // Alpine / data attributes
+    for (const match of source.matchAll(/data-tag=(["'])([^"']+)\1/gi)) {
+      found.push(decodeEntities(match[2]));
+    }
+
+    return uniqueStrings(found)
+      .filter((tag) => !BLOCKED_TAGS.has(tag.toLowerCase()))
+      .sort((a, b) => a.localeCompare(b));
+  }
+
+  function searchURL(normalized, page) {
     const currentPage = Math.max(1, Number(page) || 1);
-    const feed = query === "__feed:popular" ? "popular" : query === "__feed:latest" ? "latest" : "search";
-    const text = feed === "search" ? String(query || "").replace(/[!#:(),-]+/g, " ").trim().slice(0, 200) : "";
-    const sort = feed === "popular" ? "Popularity" : feed === "latest" ? "Latest Updates" : "Best Match";
+    const feed = normalized.feed;
+    const hasFilters = Boolean(
+      (normalized.tags && normalized.tags.length)
+      || (normalized.excludeTags && normalized.excludeTags.length)
+      || normalized.status,
+    );
+    // Tag/status-only Surprise Me searches rank better with Popularity than empty Best Match.
+    const sort = feed === "popular"
+      ? "Popularity"
+      : feed === "latest"
+        ? "Latest Updates"
+        : feed === "niche"
+          ? "Oldest"
+          : hasFilters
+            ? "Popularity"
+            : "Best Match";
+    const order = feed === "niche" ? "Ascending" : "Descending";
+    const text = feed === "search" || !feed ? normalized.text : "";
     const params = [
       ["text", text],
       ["sort", sort],
-      ["order", "Descending"],
+      ["order", order],
       ["official", "Any"],
       ["anime", "Any"],
       ["adult", "False"],
@@ -305,11 +483,41 @@
       ["offset", String((currentPage - 1) * SEARCH_LIMIT)],
       ["display_mode", "Full Display"],
     ];
-    return `${BASE_URL}/search/data?${params.map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`).join("&")}`;
+
+    // Critical: WeebCentral's form field is `included_status`, not `status`.
+    if (normalized.status) {
+      params.push(["included_status", normalized.status]);
+    }
+
+    for (const tag of normalized.tags || []) {
+      params.push(["included_tag", tag]);
+    }
+    for (const tag of normalized.excludeTags || []) {
+      params.push(["excluded_tag", tag]);
+    }
+
+    return `${BASE_URL}/search/data?${params
+      .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
+      .join("&")}`;
   }
 
   async function searchResults(query, page = 1) {
-    return parseSearchHTML(await fetchDirect(searchURL(query, page), { maxBytesHint: 2 * 1024 * 1024 }));
+    const normalized = normalizeSearchQuery(query);
+    if (!normalized.feed) normalized.feed = "search";
+    return parseSearchHTML(
+      await fetchDirect(searchURL(normalized, page), { maxBytesHint: 2 * 1024 * 1024 }),
+    );
+  }
+
+  async function extractTags() {
+    try {
+      const html = await fetchDirect(`${BASE_URL}/search`, { maxBytesHint: 2 * 1024 * 1024 });
+      const parsed = parseTagsFromSearchPage(html);
+      if (parsed.length >= 8) return parsed;
+    } catch {
+      // Fall through to curated tags so Surprise Me still works offline-ish.
+    }
+    return FALLBACK_TAGS.slice();
   }
 
   async function extractDetails(id) {
@@ -335,21 +543,24 @@
   }
 
   async function discoveryHome() {
-    const [popular, latest] = await Promise.all([
+    const [popular, latest, niche] = await Promise.all([
       searchResults("__feed:popular", 1),
       searchResults("__feed:latest", 1),
+      searchResults("__feed:niche", 1),
     ]);
     return {
       sections: [
         { id: "popular", title: "Popular", items: popular.items },
         { id: "latest", title: "Latest", items: latest.items },
+        { id: "niche", title: "Niche Gems", items: niche.items },
       ],
     };
   }
 
   async function discoveryFeed(feedID, page = 1) {
-    const feed = String(feedID || "").toLowerCase() === "latest" ? "latest" : "popular";
-    return searchResults(`__feed:${feed}`, page);
+    const feed = String(feedID || "").toLowerCase();
+    const mapped = feed === "latest" ? "latest" : (feed === "niche" ? "niche" : "popular");
+    return searchResults(`__feed:${mapped}`, page);
   }
 
   const handlers = {
@@ -357,6 +568,7 @@
     extractDetails,
     extractChapters,
     extractImages,
+    extractTags,
     discoveryHome,
     discoveryFeed,
   };

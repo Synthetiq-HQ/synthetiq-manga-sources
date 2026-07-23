@@ -127,6 +127,42 @@
     throw lastError || new Error("MangaFire request failed.");
   }
 
+  async function renderedRouteJSON(path, responseURLIncludes) {
+    if (typeof globalThis.pagev2 !== "function") {
+      throw new Error("MangaFire requires the pagev2 bridge.");
+    }
+    const route = new URL(path, BASE_URL);
+    if (route.protocol !== "https:" || route.hostname !== "mangafire.to") {
+      throw new Error("MangaFire rendered routes are restricted to its HTTPS origin.");
+    }
+    const snapshot = await globalThis.pagev2({
+      url: route.toString(),
+      headers: { Accept: "text/html,application/xhtml+xml", Referer: `${BASE_URL}/` },
+      userAgent: null,
+      timeoutMilliseconds: 20_000,
+      settleMilliseconds: 150,
+      includeHTML: false,
+      captureResponseBodies: true,
+      maxEntries: 64,
+      maxResponseCharacters: 1_000_000,
+      actionScript: null,
+      returnScript: null,
+      waitForSelector: "body",
+      waitForURLIncludes: null,
+      waitForRequestURLIncludes: null,
+      waitForResponseURLIncludes: responseURLIncludes,
+      waitForResponseBodyIncludes: null,
+    });
+    const events = snapshot && Array.isArray(snapshot.events) ? snapshot.events : [];
+    for (let index = events.length - 1; index >= 0; index -= 1) {
+      const event = events[index] || {};
+      if (event.phase !== "response" || !String(event.url || "").includes(responseURLIncludes)) continue;
+      const payload = parseJSON(event.body);
+      if (payload && !payload.error) return payload;
+    }
+    throw new Error("MangaFire did not expose the rendered search response.");
+  }
+
   function titlePath(value) {
     const input = String(value || "").trim();
     const match = input.match(/(?:https:\/\/mangafire\.to)?\/?title\/([^/?#]+)/i);
@@ -156,20 +192,67 @@
     return pairs.map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`).join("&");
   }
 
+  const FALLBACK_TAGS = [
+    "Action", "Adventure", "Comedy", "Drama", "Fantasy", "Horror", "Isekai",
+    "Martial Arts", "Mystery", "Psychological", "Romance", "School Life",
+    "Sci-Fi", "Seinen", "Shoujo", "Shounen", "Slice of Life", "Sports",
+    "Supernatural", "Tragedy",
+  ];
+
+  function normalizeSearchQuery(query) {
+    if (typeof query === "string" && query.startsWith("__niche__:")) {
+      try {
+        return normalizeSearchQuery(JSON.parse(query.slice("__niche__:".length)));
+      } catch {
+        // fall through
+      }
+    }
+    if (query && typeof query === "object" && !Array.isArray(query)) {
+      const tags = Array.isArray(query.tags)
+        ? query.tags.map((t) => String(typeof t === "object" ? (t.name || t.id || "") : t).trim()).filter(Boolean)
+        : [];
+      const excludeTags = Array.isArray(query.excludeTags)
+        ? query.excludeTags.map((t) => String(typeof t === "object" ? (t.name || t.id || "") : t).trim()).filter(Boolean)
+        : [];
+      return {
+        text: String(query.text || query.query || "").trim(),
+        tags,
+        excludeTags,
+        status: String(query.status || "").trim(),
+      };
+    }
+    return { text: String(query || "").trim(), tags: [], excludeTags: [], status: "" };
+  }
+
   function searchURL(query, page) {
     const currentPage = Math.max(1, Number(page) || 1);
-    const text = String(query || "").trim().slice(0, 200);
+    const normalized = normalizeSearchQuery(query);
+    const text = normalized.text;
     const params = [];
-    if (text === "__feed:popular") {
+    if (text === "__feed:popular" && !normalized.tags.length && !normalized.status) {
       params.push(["type", "trending"], ["days", "7"]);
-    } else if (text === "__feed:latest") {
+    } else if (text === "__feed:latest" && !normalized.tags.length && !normalized.status) {
       params.push(["order[chapter_updated_at]", "desc"]);
-    } else if (text) {
-      params.push(["keyword", text]);
+    } else if (text === "__feed:niche" && !normalized.tags.length && !normalized.status) {
+      params.push(["order[chapter_updated_at]", "asc"]);
+    } else {
+      // Genre names as keyword is the most reliable public search surface.
+      const keyword = [text && !text.startsWith("__feed:") ? text : "", ...normalized.tags]
+        .filter(Boolean)
+        .join(" ")
+        .slice(0, 200);
+      if (keyword) params.push(["keyword", keyword]);
+      if (normalized.status) {
+        const status = normalized.status.toLowerCase();
+        if (status === "ongoing" || status === "publishing") params.push(["status[]", "releasing"]);
+        else if (status === "completed" || status === "complete") params.push(["status[]", "finished"]);
+      }
     }
     addExcludedGenres(params);
     params.push(["page", String(currentPage)], ["limit", "30"]);
-    const endpoint = text === "__feed:popular" ? "/api/top-titles" : "/api/titles";
+    const endpoint = text === "__feed:popular" && !normalized.tags.length && !normalized.status
+      ? "/api/top-titles"
+      : "/api/titles";
     return `${BASE_URL}${endpoint}?${queryString(params)}`;
   }
 
@@ -205,14 +288,39 @@
   }
 
   async function searchResults(query, page = 1) {
-    const payload = await pageJSON(searchURL(query, page));
-    const items = (Array.isArray(payload.items) ? payload.items : [])
+    const normalized = normalizeSearchQuery(query);
+    const isPlainTitleSearch = Boolean(
+      normalized.text
+      && !normalized.text.startsWith("__feed:")
+      && !normalized.tags.length
+      && !normalized.excludeTags.length
+      && !normalized.status,
+    );
+    const payload = isPlainTitleSearch
+      ? await renderedRouteJSON(
+        `/browse?keyword=${encodeURIComponent(normalized.text)}&sort=relevance%3Adesc&page=${Math.max(1, Number(page) || 1)}`,
+        "/api/titles?keyword=",
+      )
+      : await pageJSON(searchURL(query, page));
+    let items = (Array.isArray(payload.items) ? payload.items : [])
       .map(mapSearchItem)
       .filter(Boolean);
+    // Client-side exclude pass when the API only accepts keyword search.
+    if (normalized.excludeTags.length) {
+      const blocked = new Set(normalized.excludeTags.map((t) => t.toLowerCase()));
+      items = items.filter((item) => {
+        const hay = `${item.title} ${item.status || ""}`.toLowerCase();
+        return ![...blocked].some((tag) => hay.includes(tag));
+      });
+    }
     return {
       items,
       hasMore: Boolean(payload.meta && payload.meta.hasNext),
     };
+  }
+
+  async function extractTags() {
+    return FALLBACK_TAGS.slice();
   }
 
   function detailsObject(payload, fallback) {
@@ -364,17 +472,20 @@
   async function discoveryHome() {
     const popular = await searchResults("__feed:popular", 1);
     const latest = await searchResults("__feed:latest", 1);
+    const niche = await searchResults("__feed:niche", 1);
     return {
       sections: [
         { id: "popular", title: "Popular", items: popular.items },
         { id: "latest", title: "Latest", items: latest.items },
+        { id: "niche", title: "Niche Gems", items: niche.items },
       ],
     };
   }
 
   async function discoveryFeed(feedID, page = 1) {
-    const feed = String(feedID || "").toLowerCase() === "latest" ? "latest" : "popular";
-    return searchResults(`__feed:${feed}`, page);
+    const feed = String(feedID || "").toLowerCase();
+    const mapped = feed === "latest" ? "latest" : (feed === "niche" ? "niche" : "popular");
+    return searchResults(`__feed:${mapped}`, page);
   }
 
   const handlers = {
@@ -382,6 +493,7 @@
     extractDetails,
     extractChapters,
     extractImages,
+    extractTags,
     discoveryHome,
     discoveryFeed,
   };

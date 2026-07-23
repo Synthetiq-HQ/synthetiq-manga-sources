@@ -243,6 +243,20 @@ async function createRuntime(slug, mode) {
         if (slug === "mangafire") {
           const u = String(task.url);
           let payload = null;
+          if (/\/browse\?keyword=/.test(u) && home) {
+            return {
+              finalURL: u,
+              title: "",
+              html: null,
+              cookies: {},
+              events: [{
+                phase: "response",
+                url: "https://mangafire.to/api/titles?keyword=fixture&vrf=fixture",
+                body: home,
+              }],
+              evaluatedData: null,
+            };
+          }
           if (/\/api\/titles\?/.test(u) && home) payload = home;
           else if (/\/api\/titles\/fixture$/.test(u) && details) payload = details;
           else if (/\/api\/titles\/fixture\/chapters/.test(u) && /page=1/.test(u)) payload = await fixture("chapters-page-1.json");

@@ -1,0 +1,49 @@
+{
+  "id": "weeb-central",
+  "familyID": "weeb-central",
+  "legacyIDs": [],
+  "name": "Weeb Central (Retired)",
+  "version": "1.0.1",
+  "contractVersion": 1,
+  "minimumAppVersion": "1.0.0",
+  "contentType": "pageImages",
+  "language": "en",
+  "contentRating": "suggestive",
+  "releaseTrack": "beta",
+  "status": "retired",
+  "capabilities": [
+    "search",
+    "tags",
+    "details",
+    "chapters",
+    "images"
+  ],
+  "baseURL": "https://weebcentral.com",
+  "universalLink": "https://synthetiq.uk/manga/modules/weeb-central",
+  "entry": {
+    "path": "modules/weeb-central/index.js",
+    "sha256": "4026f2e81c4455c7d10edee67c39f1b4a13915196ad08288bb167bbbc7677277"
+  },
+  "icon": {
+    "path": "modules/weeb-central/icon.png",
+    "sha256": "961c7175cde3ba32c2ee46017576353f5fb77ed3c87e7d8f4e585c03d251772a"
+  },
+  "allowedHosts": [
+    "weebcentral.com",
+    "*.weebcentral.com"
+  ],
+  "limits": {
+    "timeoutMilliseconds": 20000,
+    "maxConcurrentRequests": 2,
+    "maxResponseBytes": 8388608,
+    "maxScriptBytes": 262144,
+    "cacheTTLSeconds": 900
+  },
+  "attribution": {
+    "author": "Synthetiq-HQ",
+    "website": "https://weebcentral.com",
+    "licenseName": null,
+    "licenseURL": null,
+    "authorizationURL": "https://weebcentral.com/"
+  }
+}
