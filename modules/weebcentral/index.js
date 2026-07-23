@@ -238,6 +238,13 @@
 
   function parseSearchHTML(html) {
     const source = String(html || "");
+    // WeebCentral renders branded 400/challenge pages with HTTP 200 and a
+    // `/series/random` link. Never let that navigation card masquerade as a
+    // title in discovery or search results.
+    if (/<title\b[^>]*>\s*400\s*\|\s*Weeb Central\s*<\/title>/i.test(source)
+      || /<link\b[^>]*rel=["']canonical["'][^>]*href=["']https:\/\/weebcentral\.com\/400["']/i.test(source)) {
+      return { items: [], hasMore: false };
+    }
     // Prefer article cards; fall back to any series-link blocks if the class changes.
     let chunks = source.split(
       /<article\b[^>]*class=["'][^"']*\bbg-base-300\b[^"']*["'][^>]*>/i,
@@ -256,6 +263,7 @@
       const absoluteHref = href.startsWith("https://")
         ? href
         : `${BASE_URL}${href.startsWith("/") ? "" : "/"}${href}`;
+      if (/\/series\/random(?:[/?#]|$)/i.test(absoluteHref)) continue;
       if (seen.has(absoluteHref)) continue;
 
       const linkedTitle = chunk.match(/<a\b[^>]*class=["'][^"']*line-clamp[^"']*["'][^>]*>([\s\S]*?)<\/a>/i);
@@ -466,7 +474,7 @@
       : feed === "latest"
         ? "Latest Updates"
         : feed === "niche"
-          ? "Oldest"
+          ? "Subscribers"
           : hasFilters
             ? "Popularity"
             : "Best Match";

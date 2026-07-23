@@ -7,7 +7,7 @@
     "weebcentral-en"
   ],
   "name": "WeebCentral",
-  "version": "4.1.5",
+  "version": "4.1.6",
   "contractVersion": 1,
   "minimumAppVersion": "1.0.0",
   "contentType": "pageImages",
@@ -31,7 +31,7 @@
   "universalLink": "https://synthetiq.uk/manga/modules/weebcentral-v2",
   "entry": {
     "path": "modules/weebcentral/index.js",
-    "sha256": "dfb393576e638a1603b3a3fcc7d814944e7af7b6c98e8f1ede62b843f36236cb"
+    "sha256": "d9fe81cd4be1cda1beacaf7e8c9df9f318f189adef96b03ee88e3beb87a40ae9"
   },
   "icon": {
     "path": "modules/weebcentral/icon.png",

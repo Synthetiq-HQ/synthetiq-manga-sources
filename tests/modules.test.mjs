@@ -43,6 +43,13 @@ test("WeebCentral parses direct HTTP fixtures and preserves every chapter", asyn
     fetchv2: async (url, headers, method, body, options) => {
       assert.equal(typeof url, "string");
       calls.push({ url, headers, method, body, options });
+      if (url.includes("text=challenge")) {
+        return response([
+          "<title>400 | Weeb Central</title>",
+          '<link rel="canonical" href="https://weebcentral.com/400">',
+          '<a href="/series/random"><h2>Verification Required</h2></a>',
+        ].join("\n"));
+      }
       if (url.includes("/search/data?")) return response(fixtures.search);
       if (url.endsWith("/search")) {
         return response([
@@ -60,6 +67,16 @@ test("WeebCentral parses direct HTTP fixtures and preserves every chapter", asyn
   const search = await module.searchResults("fixture", 1);
   assert.deepEqual(JSON.parse(JSON.stringify(search)), fixtures.expected.search);
   assert.match(calls[0].url, /adult=False/);
+
+  const challenge = await module.searchResults("challenge", 1);
+  assert.deepEqual(JSON.parse(JSON.stringify(challenge)), { items: [], hasMore: false });
+
+  const home = await module.discoveryHome();
+  assert.equal(home.sections.find((section) => section.id === "niche").items.length, 2);
+  const nicheFeedCall = calls.find((call) => call.url.includes("sort=Subscribers"));
+  assert.ok(nicheFeedCall, "Niche Gems must use a supported low-subscriber sort");
+  assert.match(nicheFeedCall.url, /order=Ascending/);
+  assert.equal(calls.some((call) => call.url.includes("sort=Oldest")), false);
 
   const nicheEnvelope = "__niche__:" + JSON.stringify({
     text: "",
