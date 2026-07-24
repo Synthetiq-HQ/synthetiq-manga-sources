@@ -21,7 +21,7 @@
       "status": "active",
       "manifest": {
         "path": "modules/atsu/manifest.json",
-        "sha256": "2e3896a906e654be2c212ea3595a3826e10f080ceb14b3ece89cb480b7e8dba6"
+        "sha256": "18862053b32c2d23afcf2e38e800fb8a12c2cf24594c6ca449f899c2e85f276b"
       },
       "icon": {
         "path": "modules/atsu/icon.png",
