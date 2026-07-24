@@ -9,6 +9,7 @@
   };
   const RETRYABLE_STATUS = new Set([403, 408, 425, 429, 500, 502, 503, 504]);
   const MAX_ATTEMPTS = 3;
+  const searchMetadata = new Map();
 
   // Known WeebCentral filter tags used when the search page cannot be parsed.
   // Values must match the site's included_tag query parameter names.
@@ -512,9 +513,16 @@
   async function searchResults(query, page = 1) {
     const normalized = normalizeSearchQuery(query);
     if (!normalized.feed) normalized.feed = "search";
-    return parseSearchHTML(
+    const result = parseSearchHTML(
       await fetchDirect(searchURL(normalized, page), { maxBytesHint: 2 * 1024 * 1024 }),
     );
+    for (const item of result.items) {
+      const genres = uniqueStrings(normalized.tags || []);
+      if (genres.length) {
+        searchMetadata.set(item.id, { genres });
+      }
+    }
+    return result;
   }
 
   async function extractTags() {
@@ -530,7 +538,13 @@
 
   async function extractDetails(id) {
     const href = normalizedSeriesURL(id);
-    return parseDetailsHTML(await fetchDirect(href, { maxBytesHint: 2 * 1024 * 1024 }), href);
+    const details = parseDetailsHTML(await fetchDirect(href, { maxBytesHint: 2 * 1024 * 1024 }), href);
+    for (const genre of searchMetadata.get(href)?.genres || []) {
+      if (!details.genres.some((value) => value.toLowerCase() === genre.toLowerCase())) {
+        details.genres.push(genre);
+      }
+    }
+    return details;
   }
 
   async function extractChapters(id) {

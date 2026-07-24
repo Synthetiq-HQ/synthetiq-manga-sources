@@ -13,7 +13,7 @@
       "id": "atsu",
       "familyID": "atsu",
       "name": "Atsu",
-      "version": "1.0.4",
+      "version": "1.0.5",
       "language": "en",
       "contentType": "pageImages",
       "contentRating": "suggestive",
@@ -21,7 +21,7 @@
       "status": "active",
       "manifest": {
         "path": "modules/atsu/manifest.json",
-        "sha256": "aadc95e6eb247800877fb75c5fea0af68a715aefe4d4053ed032e411e0a936b7"
+        "sha256": "7d867a506bac35dc4edb3305fc62724ef7e988b80c8b577130348c638d4e04db"
       },
       "icon": {
         "path": "modules/atsu/icon.png",
@@ -32,7 +32,7 @@
       "id": "weebcentral-v2",
       "familyID": "weebcentral-v2",
       "name": "WeebCentral",
-      "version": "4.1.6",
+      "version": "4.1.7",
       "language": "en",
       "contentType": "pageImages",
       "contentRating": "suggestive",
@@ -40,7 +40,7 @@
       "status": "active",
       "manifest": {
         "path": "modules/weebcentral/manifest.json",
-        "sha256": "5a0de0b90c5915960e50f94481d25c101c0ee82fb52d3052ee477d1076856be6"
+        "sha256": "d358bb8ef6378366d05bf2d5e4246c14402075b087d54441857d563b50c6d0a1"
       },
       "icon": {
         "path": "modules/weebcentral/icon.png",
@@ -51,7 +51,7 @@
       "id": "mangafire-v2",
       "familyID": "mangafire-v2",
       "name": "MangaFire",
-      "version": "2.0.4",
+      "version": "2.0.5",
       "language": "en",
       "contentType": "pageImages",
       "contentRating": "suggestive",
@@ -59,7 +59,7 @@
       "status": "active",
       "manifest": {
         "path": "modules/mangafire/manifest.json",
-        "sha256": "a7e3bec9f209059ebdc8b539c7a0e3bbf6647c885453633e4637c3f150c05d36"
+        "sha256": "5451dff2a22ebed4780642bbc58fd3cce2dee3953fedb14853ce040f47a0f749"
       },
       "icon": {
         "path": "modules/mangafire/icon.png",
@@ -273,6 +273,25 @@
       "icon": {
         "path": "modules/weeb-central/icon.png",
         "sha256": "961c7175cde3ba32c2ee46017576353f5fb77ed3c87e7d8f4e585c03d251772a"
+      }
+    },
+    {
+      "id": "snafu",
+      "familyID": "snafu",
+      "name": "SNAFU Comics",
+      "version": "1.0.0",
+      "language": "en",
+      "contentType": "pageImages",
+      "contentRating": "suggestive",
+      "releaseTrack": "beta",
+      "status": "active",
+      "manifest": {
+        "path": "modules/snafu/manifest.json",
+        "sha256": "1e57a60acccba99af0f9fdf5e534d0ab6207f9cd1a50996166b5f8a1b759db11"
+      },
+      "icon": {
+        "path": "modules/snafu/icon.png",
+        "sha256": "e5b048c4679b76cd9f5c7c9d2b88e0e6919a96c22d4f4de5e129fabe2fc3da6c"
       }
     }
   ]

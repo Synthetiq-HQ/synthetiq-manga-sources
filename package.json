@@ -12,6 +12,10 @@
     "test:module:fixtures": "node scripts/module-tester.mjs --fixtures",
     "test:module:report": "node scripts/module-tester.mjs --report",
     "test:module:report:fixtures": "node scripts/module-tester.mjs --fixtures --report",
+    "certify:flagships": "node scripts/source-certifier.mjs --mode all",
+    "certify:flagships:fixtures": "node scripts/source-certifier.mjs --mode fixtures",
+    "certify:flagships:live": "node scripts/source-certifier.mjs --mode live",
+    "mcp:certifier": "node scripts/module-certifier-mcp.mjs",
     "report:module": "node scripts/module-tester.mjs --report",
     "verify": "node scripts/validate.mjs && node scripts/verify-repository.mjs"
   }

@@ -98,7 +98,10 @@ test("WeebCentral parses direct HTTP fixtures and preserves every chapter", asyn
   assert.ok(tags.includes("Horror"));
 
   const details = await module.extractDetails(search.items[0].id);
-  assert.deepEqual(JSON.parse(JSON.stringify(details)), fixtures.expected.details);
+  assert.deepEqual(JSON.parse(JSON.stringify(details)), {
+    ...fixtures.expected.details,
+    genres: ["Adventure", "Comedy", "Horror"],
+  });
 
   const chapters = await module.extractChapters(search.items[0].id);
   assert.deepEqual(JSON.parse(JSON.stringify(chapters)), fixtures.expected.chapters);
@@ -383,6 +386,49 @@ const singleSeriesModules = [
   "gachiakuta",
   "haikyuu",
 ];
+
+test("SNAFU Comics parses catalogue, archive pages, and comic images", async () => {
+  const fixtures = {
+    allComics: await text("modules/snafu/fixtures/all-comics.html"),
+    home: await text("modules/snafu/fixtures/home.html"),
+    archive: await text("modules/snafu/fixtures/archive.html"),
+    page: await text("modules/snafu/fixtures/page.html"),
+    expected: await json("modules/snafu/fixtures/expected.json"),
+  };
+  const module = await loadModule("modules/snafu/index.js", {
+    fetchv2: async (url) => {
+      assert.equal(typeof url, "string");
+      if (url.endsWith("/all-comics")) return response(fixtures.allComics);
+      if (url === "https://www.snafu-comics.com/" || url.endsWith("snafu-comics.com")) {
+        return response(fixtures.home);
+      }
+      if (url.includes("/archive")) return response(fixtures.archive);
+      if (url.includes("/powerpuffgirls/")) return response(fixtures.page);
+      if (url.endsWith("/powerpuffgirls")) return response(fixtures.archive);
+      throw new Error(`Unexpected SNAFU URL: ${url}`);
+    },
+  });
+
+  const search = await module.searchResults("powerpuff", 1);
+  assert.equal(search.items.length, 1);
+  assert.equal(search.items[0].title, "Powerpuff Girls D");
+
+  const popular = await module.searchResults("__feed:popular", 1);
+  assert.deepEqual(JSON.parse(JSON.stringify(popular)), fixtures.expected.search);
+
+  const details = await module.extractDetails("https://www.snafu-comics.com/powerpuffgirls");
+  assert.deepEqual(JSON.parse(JSON.stringify(details)), fixtures.expected.details);
+
+  const chapters = await module.extractChapters("https://www.snafu-comics.com/powerpuffgirls");
+  assert.deepEqual(JSON.parse(JSON.stringify(chapters)), fixtures.expected.chapters);
+
+  const pages = await module.extractImages(chapters[0].id);
+  assert.deepEqual(JSON.parse(JSON.stringify(pages)), fixtures.expected.images);
+
+  const home = await module.discoveryHome();
+  assert.ok(home.sections.some((s) => s.id === "popular" && s.items.length >= 1));
+  assert.ok(home.sections.some((s) => s.id === "latest" && s.items.length >= 1));
+});
 
 for (const slug of singleSeriesModules) {
   test(`${slug} single-series module parses home chapters and page images`, async () => {

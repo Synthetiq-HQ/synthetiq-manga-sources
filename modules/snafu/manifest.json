@@ -1,0 +1,57 @@
+{
+  "id": "snafu",
+  "familyID": "snafu",
+  "legacyIDs": [
+    "snafu-comics",
+    "snafucomics"
+  ],
+  "name": "SNAFU Comics",
+  "version": "1.0.0",
+  "contractVersion": 1,
+  "minimumAppVersion": "1.0.0",
+  "contentType": "pageImages",
+  "language": "en",
+  "contentRating": "suggestive",
+  "releaseTrack": "beta",
+  "status": "active",
+  "capabilities": [
+    "popular",
+    "latest",
+    "search",
+    "tags",
+    "details",
+    "chapters",
+    "images",
+    "imageRequest",
+    "discovery"
+  ],
+  "baseURL": "https://www.snafu-comics.com",
+  "universalLink": "https://synthetiq.uk/manga/modules/snafu",
+  "entry": {
+    "path": "modules/snafu/index.js",
+    "sha256": "d1c33c2e7c0d930e6baedae9802d89e943d5174657fc63688cfb0052a9b61519"
+  },
+  "icon": {
+    "path": "modules/snafu/icon.png",
+    "sha256": "e5b048c4679b76cd9f5c7c9d2b88e0e6919a96c22d4f4de5e129fabe2fc3da6c"
+  },
+  "allowedHosts": [
+    "www.snafu-comics.com",
+    "snafu-comics.com",
+    "*.snafu-comics.com"
+  ],
+  "limits": {
+    "timeoutMilliseconds": 30000,
+    "maxConcurrentRequests": 2,
+    "maxResponseBytes": 8388608,
+    "maxScriptBytes": 262144,
+    "cacheTTLSeconds": 900
+  },
+  "attribution": {
+    "author": "SNAFU Comics",
+    "website": "https://www.snafu-comics.com",
+    "licenseName": null,
+    "licenseURL": null,
+    "authorizationURL": "https://www.snafu-comics.com/about-us"
+  }
+}

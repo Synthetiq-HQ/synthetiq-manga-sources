@@ -8,7 +8,10 @@
     Accept: "application/json, text/plain, */*",
     Referer: `${BASE_URL}/`,
   };
-  const MAX_REQUEST_ATTEMPTS = 3;
+  const MAX_REQUEST_ATTEMPTS = 4;
+  const catalogueMetadata = new Map();
+  const catalogueCache = new Map();
+  const CATALOGUE_CACHE_TTL_MS = 30_000;
 
   function sleep(milliseconds) {
     return new Promise((resolve) => globalThis.setTimeout(resolve, milliseconds));
@@ -72,7 +75,7 @@
     }
     let lastError = null;
     for (let attempt = 1; attempt <= MAX_REQUEST_ATTEMPTS; attempt += 1) {
-      if (attempt > 1) await sleep(700 * (attempt - 1));
+      if (attempt > 1) await sleep(900 * (attempt - 1));
       try {
         const response = await globalThis.fetchv2(url, DEFAULT_HEADERS, "GET", null, {
           followRedirects: true,
@@ -121,11 +124,17 @@
     const id = nonEmpty(item.id);
     const title = nonEmpty(item.englishTitle || item.title);
     if (!id || !title) return null;
+    const genres = (Array.isArray(item.tags) ? item.tags : [])
+      .map((tag) => nonEmpty(tag?.name || tag))
+      .filter(Boolean)
+      .filter((tag, index, values) => values.indexOf(tag) === index);
+    catalogueMetadata.set(id, { genres });
     return {
       id,
       href: `${BASE_URL}/manga/${encodeURIComponent(id)}`,
       title,
       image: assetURL(item.posterSmall || item.smallImage || item.posterMedium || item.mediumImage || item.poster || item.image),
+      ...(genres.length ? { genres } : {}),
     };
   }
 
@@ -146,13 +155,24 @@
     const params = new URLSearchParams({
       q: nonEmpty(query) || "*",
       query_by: "title,englishTitle,otherNames,authors",
-      include_fields: "id,title,englishTitle,poster,posterSmall,posterMedium,type,isAdult",
+      include_fields: "id,title,englishTitle,poster,posterSmall,posterMedium,type,isAdult,tags,status,authors",
       page: String(requestedPage),
       per_page: String(PAGE_SIZE),
     });
     if (options.sort_by) params.append("sort_by", options.sort_by);
     if (options.filter_by) params.append("filter_by", options.filter_by);
-    const payload = await requestJSON(`${SEARCH_URL}?${params.toString()}`);
+    const url = `${SEARCH_URL}?${params.toString()}`;
+    const cached = catalogueCache.get(url);
+    let payload;
+    if (cached && Date.now() - cached.storedAt < CATALOGUE_CACHE_TTL_MS) {
+      payload = cached.payload;
+    } else {
+      payload = await requestJSON(url);
+      catalogueCache.set(url, { storedAt: Date.now(), payload });
+      if (catalogueCache.size > 40) {
+        catalogueCache.delete(catalogueCache.keys().next().value);
+      }
+    }
     return {
       items: cards(payload.hits),
       hasMore: requestedPage * PAGE_SIZE < Number(payload.found || 0),
@@ -160,16 +180,15 @@
   }
 
   async function popular(page = 1) {
-    const requested = Math.max(1, Number(page) || 1);
-    if (requested <= 1) {
-      const payload = await requestJSON(`${BASE_URL}/api/search/popular`);
-      const items = cards(payload.items || payload);
-      // First page from the curated popular API; more pages continue via catalogue.
-      return { items, hasMore: items.length > 0 };
-    }
-    // Endless Discover: page further through Typesense by score.
-    return catalogue("*", requested, {
-      sort_by: "score:desc",
+    return catalogue("*", page, {
+      sort_by: "trending:desc",
+      filter_by: "isAdult:=false",
+    });
+  }
+
+  async function latest(page = 1) {
+    return catalogue("*", page, {
+      sort_by: "dateAdded:desc",
       filter_by: "isAdult:=false",
     });
   }
@@ -193,10 +212,14 @@
     const authors = (Array.isArray(manga.authors) ? manga.authors : [])
       .map((author) => nonEmpty(author?.name || author))
       .filter(Boolean);
-    const genres = (Array.isArray(manga.tags) ? manga.tags : [])
+    const pageGenres = (Array.isArray(manga.tags) ? manga.tags : [])
       .map((tag) => nonEmpty(tag?.name || tag))
       .filter(Boolean)
-      .slice(0, 30);
+      .filter((tag, index, values) => values.indexOf(tag) === index);
+    const genres = [...pageGenres];
+    for (const tag of catalogueMetadata.get(id)?.genres || []) {
+      if (!genres.includes(tag)) genres.push(tag);
+    }
     const image = assetURL(
       manga.poster?.smallImage || manga.poster?.mediumImage || manga.poster?.image || manga.posterSmall || manga.smallImage,
     );
@@ -215,15 +238,9 @@
   }
 
   async function niche(page) {
-    // For Atsu, we can find niche gems by filtering out mainstream genres (like Action/Shounen if possible)
-    // or by sorting by old/completed series that might be forgotten, or using random seed if Typesense supports it.
-    // Let's sort by `chaptersCount:asc` and `score:desc` or similar if those fields exist,
-    // or just sort by `createdAt:asc` with a filter.
-    // Assuming tags filter is possible:
     return catalogue("*", page, {
-      sort_by: "id:asc", // Using ID as a pseudo-random distribution or older titles
-      // Niche genres: Slice of Life, Psychological, Seinen
-      filter_by: "tags:=[Slice of Life, Psychological, Mystery, Seinen]"
+      sort_by: "views:asc",
+      filter_by: "isAdult:=false",
     });
   }
 
@@ -259,22 +276,22 @@
     return { text: nonEmpty(query), tags: [], excludeTags: [], status: "" };
   }
 
+  function filterValue(value) {
+    return `\`${nonEmpty(value).replace(/`/g, "")}\``;
+  }
+
   async function searchResults(query, page = 1) {
     const normalized = normalizeSearchQuery(query);
     if (normalized.text === "__feed:popular" && !normalized.tags.length) return popular(page);
     if (normalized.text === "__feed:niche" && !normalized.tags.length) return niche(page);
-    if (normalized.text === "__feed:latest" && !normalized.tags.length) {
-      return { items: [], hasMore: false };
-    }
+    if (normalized.text === "__feed:latest" && !normalized.tags.length) return latest(page);
 
     const filters = ["isAdult:=false"];
-    if (normalized.tags.length) {
-      filters.push(`tags:=[${normalized.tags.join(", ")}]`);
+    for (const tag of normalized.tags) {
+      filters.push(`tags:=${filterValue(tag)}`);
     }
-    if (normalized.excludeTags.length) {
-      for (const tag of normalized.excludeTags) {
-        filters.push(`tags:!=[${tag}]`);
-      }
+    for (const tag of normalized.excludeTags) {
+      filters.push(`tags:!=${filterValue(tag)}`);
     }
     if (normalized.status) {
       const status = normalized.status.toLowerCase();
@@ -287,7 +304,7 @@
       : (normalized.tags.length || normalized.status ? "*" : normalized.text);
     return catalogue(text || "*", page, {
       filter_by: filters.join(" && "),
-      sort_by: normalized.tags.length || normalized.status ? "score:desc" : undefined,
+      sort_by: text === "*" ? "trending:desc" : undefined,
     });
   }
 
@@ -301,10 +318,75 @@
     return detailsFromManga(mangaPageFromHTML(html), id);
   }
 
+  function chapterNumber(chapter) {
+    const parsed = Number(chapter?.number);
+    return chapter?.number == null || !Number.isFinite(parsed) ? null : parsed;
+  }
+
+  function chapterIdentity(chapter) {
+    const number = chapterNumber(chapter);
+    if (number != null) return `number:${number}`;
+    return `special:${nonEmpty(chapter?.title).toLowerCase()}:${nonEmpty(chapter?.id)}`;
+  }
+
+  function selectPrimaryScanlation(chapters) {
+    const groups = new Map();
+    for (const chapter of chapters) {
+      const scanID = nonEmpty(chapter?.scanId || chapter?.scanlationMangaId) || "default";
+      const group = groups.get(scanID) || [];
+      group.push(chapter);
+      groups.set(scanID, group);
+    }
+    if (groups.size <= 1) return chapters;
+
+    const ranked = Array.from(groups.entries()).map(([scanID, items]) => {
+      const numeric = items.map(chapterNumber).filter((value) => value != null);
+      const identities = new Set(items.map(chapterIdentity));
+      const readable = items.filter((item) => Number(item?.pageCount || 0) > 0).length;
+      return {
+        scanID,
+        items,
+        coverage: identities.size,
+        maxNumber: numeric.length ? Math.max(...numeric) : -1,
+        readableRatio: items.length ? readable / items.length : 0,
+      };
+    });
+    const widest = Math.max(...ranked.map((group) => group.coverage));
+    const candidates = ranked.filter((group) => group.coverage >= widest * 0.85);
+    candidates.sort((left, right) =>
+      right.maxNumber - left.maxNumber
+      || right.coverage - left.coverage
+      || right.readableRatio - left.readableRatio
+      || left.scanID.localeCompare(right.scanID),
+    );
+    return candidates[0]?.items || chapters;
+  }
+
+  function deduplicateChapters(chapters) {
+    const selected = new Map();
+    for (const chapter of chapters) {
+      const key = chapterIdentity(chapter);
+      const previous = selected.get(key);
+      if (!previous) {
+        selected.set(key, chapter);
+        continue;
+      }
+      const previousPages = Number(previous?.pageCount || 0);
+      const nextPages = Number(chapter?.pageCount || 0);
+      const previousDate = Date.parse(previous?.createdAt || "") || 0;
+      const nextDate = Date.parse(chapter?.createdAt || "") || 0;
+      if (nextPages > previousPages || (nextPages === previousPages && nextDate > previousDate)) {
+        selected.set(key, chapter);
+      }
+    }
+    return Array.from(selected.values());
+  }
+
   async function extractChapters(value) {
     const id = mangaID(value);
     const payload = await requestJSON(`${BASE_URL}/api/manga/info?mangaId=${encodeURIComponent(id)}`);
-    const chapters = Array.isArray(payload.chapters) ? payload.chapters : [];
+    const allChapters = Array.isArray(payload.chapters) ? payload.chapters : [];
+    const chapters = deduplicateChapters(selectPrimaryScanlation(allChapters));
     const seen = new Set();
     const output = [];
     for (const chapter of chapters) {
@@ -354,12 +436,12 @@
 
   async function discoveryHome() {
     const popularItems = await popular();
-    const explore = await catalogue("", 1);
+    const latestItems = await latest();
     const nicheItems = await niche(1);
     return {
       sections: [
         { id: "popular", title: "Popular", items: popularItems.items },
-        { id: "explore", title: "Explore", items: explore.items },
+        { id: "latest", title: "Latest", items: latestItems.items },
         { id: "niche", title: "Niche Gems", items: nicheItems.items },
       ].filter((section) => section.items.length),
     };
@@ -371,8 +453,8 @@
       const result = await niche(page);
       return { ...result, page: Math.max(1, Number(page) || 1) };
     }
-    if (String(feedID) !== "explore") return { items: [], page: Math.max(1, Number(page) || 1), hasMore: false };
-    const result = await catalogue("", page);
+    if (String(feedID) !== "latest") return { items: [], page: Math.max(1, Number(page) || 1), hasMore: false };
+    const result = await latest(page);
     return { ...result, page: Math.max(1, Number(page) || 1) };
   }
 

@@ -270,7 +270,7 @@
     const text = normalized.text;
     const params = [];
     if (text === "__feed:popular" && !normalized.tags.length && !normalized.status) {
-      params.push(["type", "trending"], ["days", "7"]);
+      params.push(["order[views_7d]", "desc"]);
     } else if (text === "__feed:latest" && !normalized.tags.length && !normalized.status) {
       params.push(["order[chapter_updated_at]", "desc"]);
     } else if (text === "__feed:niche" && !normalized.tags.length && !normalized.status) {
@@ -290,10 +290,7 @@
     }
     addExcludedGenres(params);
     params.push(["page", String(currentPage)], ["limit", "30"]);
-    const endpoint = text === "__feed:popular" && !normalized.tags.length && !normalized.status
-      ? "/api/top-titles"
-      : "/api/titles";
-    return `${BASE_URL}${endpoint}?${queryString(params)}`;
+    return `${BASE_URL}/api/titles?${queryString(params)}`;
   }
 
   function mapStatus(value) {
@@ -343,7 +340,9 @@
     }
     return {
       items,
-      hasMore: Boolean(payload.meta && payload.meta.hasNext),
+      hasMore: payload.meta
+        ? Boolean(payload.meta.hasNext)
+        : items.length >= 30,
     };
   }
 

@@ -1,0 +1,84 @@
+{
+  "search": {
+    "items": [
+      {
+        "id": "https://www.snafu-comics.com/powerpuffgirls",
+        "href": "https://www.snafu-comics.com/powerpuffgirls",
+        "url": "https://www.snafu-comics.com/powerpuffgirls",
+        "title": "Powerpuff Girls D",
+        "image": "https://www.snafu-comics.com/images/thumbs/powerpuff.jpg",
+        "author": "BeeAre and Bleedman",
+        "authors": ["BeeAre and Bleedman"]
+      },
+      {
+        "id": "https://www.snafu-comics.com/hbp",
+        "href": "https://www.snafu-comics.com/hbp",
+        "url": "https://www.snafu-comics.com/hbp",
+        "title": "The Halfbound Blade",
+        "image": "https://www.snafu-comics.com/images/thumbs/halfbound-blade.jpg",
+        "author": "Michael DeVillar",
+        "authors": ["Michael DeVillar"]
+      },
+      {
+        "id": "https://www.snafu-comics.com/braindead",
+        "href": "https://www.snafu-comics.com/braindead",
+        "url": "https://www.snafu-comics.com/braindead",
+        "title": "Brain Dead",
+        "image": "https://www.snafu-comics.com/images/thumbs/brain-dead.jpg",
+        "author": "Nick Kirschner",
+        "authors": ["Nick Kirschner"]
+      }
+    ],
+    "hasMore": false
+  },
+  "details": {
+    "id": "https://www.snafu-comics.com/powerpuffgirls",
+    "href": "https://www.snafu-comics.com/powerpuffgirls",
+    "url": "https://www.snafu-comics.com/powerpuffgirls",
+    "title": "Powerpuff Girls D",
+    "description": "Read Powerpuff Girls D on SNAFU Comics.",
+    "image": "https://www.snafu-comics.com/images/thumbs/powerpuff.jpg",
+    "author": "BeeAre and Bleedman",
+    "authors": ["BeeAre and Bleedman"],
+    "status": "Unknown",
+    "genres": ["Webcomic"]
+  },
+  "chapters": [
+    {
+      "id": "https://www.snafu-comics.com/powerpuffgirls/ppg-chapter-1",
+      "href": "https://www.snafu-comics.com/powerpuffgirls/ppg-chapter-1",
+      "url": "https://www.snafu-comics.com/powerpuffgirls/ppg-chapter-1",
+      "title": "PPG Chapter 1",
+      "number": 1,
+      "releaseDate": "January 18, 2004",
+      "language": "en"
+    },
+    {
+      "id": "https://www.snafu-comics.com/powerpuffgirls/megaville",
+      "href": "https://www.snafu-comics.com/powerpuffgirls/megaville",
+      "url": "https://www.snafu-comics.com/powerpuffgirls/megaville",
+      "title": "Megaville",
+      "number": 2,
+      "releaseDate": "January 25, 2004",
+      "language": "en"
+    },
+    {
+      "id": "https://www.snafu-comics.com/powerpuffgirls/you-gotta-planet-all-out",
+      "href": "https://www.snafu-comics.com/powerpuffgirls/you-gotta-planet-all-out",
+      "url": "https://www.snafu-comics.com/powerpuffgirls/you-gotta-planet-all-out",
+      "title": "You Gotta Planet All Out",
+      "number": 3,
+      "releaseDate": "May 24, 2025",
+      "language": "en"
+    }
+  ],
+  "images": [
+    {
+      "url": "https://www.snafu-comics.com/comics/powerpuffgirls_00001_fixture.jpg",
+      "headers": {
+        "Accept": "image/avif,image/webp,image/*,*/*",
+        "Referer": "https://www.snafu-comics.com/"
+      }
+    }
+  ]
+}

@@ -31,12 +31,21 @@ const flags = new Set();
 const positionals = [];
 let query = "a";
 let itemLimit = 3;
+let paginationPages = 1;
+let includeTags = [];
+let excludeTags = [];
+let publicationStatus = "";
+let expectedTitle = "";
 let reportOutBase = path.join(root, "reports", "module-test-latest");
 
 for (let i = 0; i < args.length; i += 1) {
   const arg = args[i];
   if (arg === "--fixtures") {
     flags.add("--fixtures");
+    continue;
+  }
+  if (arg === "--skip-discovery") {
+    flags.add("--skip-discovery");
     continue;
   }
   if (arg === "--report") {
@@ -53,6 +62,31 @@ for (let i = 0; i < args.length; i += 1) {
     i += 1;
     continue;
   }
+  if (arg === "--pages") {
+    paginationPages = Math.max(1, Math.min(10, Number(args[i + 1]) || 1));
+    i += 1;
+    continue;
+  }
+  if (arg === "--include-tags") {
+    includeTags = String(args[i + 1] || "").split(",").map((value) => value.trim()).filter(Boolean);
+    i += 1;
+    continue;
+  }
+  if (arg === "--exclude-tags") {
+    excludeTags = String(args[i + 1] || "").split(",").map((value) => value.trim()).filter(Boolean);
+    i += 1;
+    continue;
+  }
+  if (arg === "--status") {
+    publicationStatus = String(args[i + 1] || "").trim();
+    i += 1;
+    continue;
+  }
+  if (arg === "--expect-title") {
+    expectedTitle = String(args[i + 1] || "").trim();
+    i += 1;
+    continue;
+  }
   if (arg === "--out") {
     reportOutBase = path.resolve(root, args[i + 1] || reportOutBase);
     i += 1;
@@ -65,6 +99,7 @@ for (let i = 0; i < args.length; i += 1) {
   positionals.push(arg);
 }
 const useFixtures = flags.has("--fixtures");
+const skipDiscovery = flags.has("--skip-discovery");
 const writeReport = flags.has("--report") || flags.has("--html") || flags.has("--json");
 
 function parseJSON(text) {
@@ -257,12 +292,12 @@ async function createRuntime(slug, mode) {
               evaluatedData: null,
             };
           }
-          if (/\/api\/titles\?/.test(u) && home) payload = home;
+          if ((/\/api\/titles\?/.test(u) || /\/api\/top-titles\?/.test(u)) && home) payload = home;
           else if (/\/api\/titles\/fixture$/.test(u) && details) payload = details;
           else if (/\/api\/titles\/fixture\/chapters/.test(u) && /page=1/.test(u)) payload = await fixture("chapters-page-1.json");
           else if (/\/api\/titles\/fixture\/chapters/.test(u) && /page=2/.test(u)) payload = await fixture("chapters-page-2.json");
           else if (/\/api\/chapters\/9001$/.test(u) && special.chapterJSON) payload = special.chapterJSON;
-          else if (/\/api\/chapters\/9002$/.test(u) && sourcePages) payload = sourcePages;
+          else if (/\/api\/chapters\/\d+$/.test(u) && sourcePages) payload = sourcePages;
           if (payload) {
             return {
               finalURL: u,
@@ -396,9 +431,9 @@ async function testModule(slug, mode, indexEntry) {
       terminal: pickTerminal(module),
     };
 
-    // Stage 1: discovery / search
-    let page;
-    if (typeof module.discoveryHome === "function") {
+    // Discovery and search are independent contracts. A healthy home feed must
+    // never hide a broken requested query (the old tester did exactly that).
+    if (!skipDiscovery && typeof module.discoveryHome === "function") {
       const homeResult = await timed(() => module.discoveryHome());
       report.timingsMs.discoveryHome = homeResult.durationMs;
       if (homeResult.ok) {
@@ -406,12 +441,12 @@ async function testModule(slug, mode, indexEntry) {
         const sections = home && Array.isArray(home.sections) ? home.sections : [];
         const popular =
           sections.find((s) => /popular|trending/i.test(`${s.id || ""} ${s.title || ""}`)) || sections[0];
-        page = {
+        const discoveryPage = {
           items: (popular && popular.items) || [],
           hasMore: false,
         };
         report.stages.discoveryHome = {
-          ok: page.items.length > 0,
+          ok: discoveryPage.items.length > 0,
           durationMs: homeResult.durationMs,
           sections: sections.map((s) => ({ id: s.id, title: s.title, count: (s.items || []).length })),
         };
@@ -422,32 +457,47 @@ async function testModule(slug, mode, indexEntry) {
           error: homeResult.error,
         };
       }
+      assert.equal(report.stages.discoveryHome.ok, true, report.stages.discoveryHome.error || "discoveryHome returned no items");
     }
 
-    if (!page || !page.items.length) {
-      const searchResult = await timed(() => module.searchResults(mode === "fixtures" ? "fixture" : query, 1));
-      report.timingsMs.searchResults = searchResult.durationMs;
-      if (!searchResult.ok) throw new Error(searchResult.error);
-      page = searchResult.value;
-      report.stages.searchResults = {
-        ok: Array.isArray(page.items) && page.items.length > 0,
-        durationMs: searchResult.durationMs,
-        count: Array.isArray(page.items) ? page.items.length : 0,
-        hasMore: !!page.hasMore,
-        sample: (page.items || []).slice(0, 3).map(summarizeItem),
-      };
-    } else {
-      report.stages.searchResults = {
-        ok: true,
-        durationMs: 0,
-        count: page.items.length,
-        hasMore: !!page.hasMore,
-        sample: page.items.slice(0, 3).map(summarizeItem),
-        via: "discoveryHome",
-      };
-      report.timingsMs.searchResults = 0;
-    }
+    const effectiveQuery = includeTags.length || excludeTags.length || publicationStatus
+      ? { text: query === "*" ? "" : query, tags: includeTags, excludeTags, status: publicationStatus }
+      : query;
+    const searchResult = await timed(() => module.searchResults(effectiveQuery, 1));
+    report.timingsMs.searchResults = searchResult.durationMs;
+    if (!searchResult.ok) throw new Error(searchResult.error);
+    const page = searchResult.value;
+    report.stages.searchResults = {
+      ok: Array.isArray(page.items) && page.items.length > 0,
+      durationMs: searchResult.durationMs,
+      count: Array.isArray(page.items) ? page.items.length : 0,
+      hasMore: !!page.hasMore,
+      query: effectiveQuery,
+      sample: (page.items || []).slice(0, 3).map(summarizeItem),
+    };
     assert.ok(page.items && page.items.length > 0, "search/discovery returned no items");
+
+    const paginationItems = [...page.items];
+    const paginationSeen = new Set(page.items.map((item) => String(item.id || item.href || item.url)));
+    let paginationHasMore = !!page.hasMore;
+    for (let requestedPage = 2; requestedPage <= paginationPages && paginationHasMore; requestedPage += 1) {
+      const next = await module.searchResults(effectiveQuery, requestedPage);
+      assert.ok(Array.isArray(next.items) && next.items.length > 0, `page ${requestedPage} was empty while hasMore was true`);
+      for (const item of next.items) {
+        const identity = String(item.id || item.href || item.url);
+        assert.ok(identity, `page ${requestedPage} returned an item without identity`);
+        assert.equal(paginationSeen.has(identity), false, `page ${requestedPage} repeated ${identity}`);
+        paginationSeen.add(identity);
+        paginationItems.push(item);
+      }
+      paginationHasMore = !!next.hasMore;
+    }
+    report.stages.pagination = {
+      ok: true,
+      requestedPages: paginationPages,
+      uniqueItems: paginationItems.length,
+      hasMore: paginationHasMore,
+    };
 
     const candidates = page.items.slice(0, Math.max(itemLimit, 8));
     const detailsResults = [];
@@ -467,6 +517,19 @@ async function testModule(slug, mode, indexEntry) {
         if (!dResult.ok) throw new Error(dResult.error);
         const d = dResult.value;
         assert.ok(d && (d.title || d.name), "details missing title");
+        if (expectedTitle) {
+          assert.ok(
+            String(d.title || d.name).toLowerCase().includes(expectedTitle.toLowerCase()),
+            `resolved ${d.title || d.name} instead of ${expectedTitle}`,
+          );
+        }
+        const detailGenres = Array.isArray(d.genres) ? d.genres.map((value) => String(value).toLowerCase()) : [];
+        for (const tag of includeTags) {
+          assert.ok(detailGenres.includes(tag.toLowerCase()), `details did not preserve required tag ${tag}`);
+        }
+        for (const tag of excludeTags) {
+          assert.equal(detailGenres.includes(tag.toLowerCase()), false, `details contained excluded tag ${tag}`);
+        }
         detailsResults.push({ ok: true, id: item.id, title: d.title || d.name, durationMs: dResult.durationMs });
 
         let itemChapters = [];
@@ -483,63 +546,73 @@ async function testModule(slug, mode, indexEntry) {
 
         const terminal = pickTerminal(module);
         if (terminal === "images") {
-          const chapter = itemChapters[0] || itemChapters[itemChapters.length - 1];
-          const pResult = await timed(() => module.extractImages(chapter.id || chapter.href || chapter.url));
-          terminalMs += pResult.durationMs;
-          if (!pResult.ok) throw new Error(pResult.error);
-          const pages = pResult.value;
-          assert.ok(Array.isArray(pages) && pages.length > 0, "no page images");
-          const urls = pages.map((p) => (typeof p === "string" ? p : p && p.url)).filter(Boolean);
-          assert.ok(urls.every((u) => String(u).startsWith("https://")), "non-HTTPS page image");
+          const proofChapters = [itemChapters[0], itemChapters[itemChapters.length - 1]]
+            .filter(Boolean)
+            .filter((chapter, index, values) => values.findIndex((value) => value.id === chapter.id) === index);
+          const chapterProofs = [];
+          for (const chapter of proofChapters) {
+            const pResult = await timed(() => module.extractImages(chapter.id || chapter.href || chapter.url));
+            terminalMs += pResult.durationMs;
+            if (!pResult.ok) throw new Error(pResult.error);
+            const pages = pResult.value;
+            assert.ok(Array.isArray(pages) && pages.length > 0, `no page images for ${chapter.title || chapter.id}`);
+            const urls = pages.map((p) => (typeof p === "string" ? p : p && p.url)).filter(Boolean);
+            assert.ok(urls.every((u) => String(u).startsWith("https://")), "non-HTTPS page image");
 
-          let deliveries = [];
-          if (mode === "live") {
-            // A single cover-like first page can hide broken later page URLs.
-            // Sample the first, middle, and final page while keeping the live
-            // suite bounded enough to run for every module on each change.
-            const sampleIndexes = [...new Set([0, Math.floor((pages.length - 1) / 2), pages.length - 1])];
-            deliveries = await Promise.all(sampleIndexes.map(async (index) => {
-              const page = pages[index];
-              const url = typeof page === "string" ? page : page.url;
-              const headers = typeof page === "string" ? {} : (page.headers || {});
-              const parsedURL = new URL(url);
-              assert.ok(
-                isAllowedHost(parsedURL.hostname, manifest.allowedHosts),
-                `image host is not declared by manifest: ${parsedURL.hostname}`
-              );
-
-              const imageResult = await timed(() => networkResponse(
-                url,
-                headers,
-                "GET",
-                null,
-                { timeoutMilliseconds: manifest.limits?.timeoutMilliseconds, maxBytesHint: manifest.limits?.maxResponseBytes }
-              ));
-              if (!imageResult.ok) throw new Error(imageResult.error);
-              const image = imageResult.value;
-              assert.ok(image.ok, `page ${index + 1} returned HTTP ${image.status}`);
-              assert.ok(image.bodyBytes > 0, `page ${index + 1} response was empty`);
-              assert.ok(looksLikeImage(image), `page ${index + 1} did not look like an image (${image.contentType || "unknown content type"})`);
-              return {
-                ok: true,
-                page: index + 1,
-                durationMs: imageResult.durationMs,
-                status: image.status,
-                contentType: image.contentType || null,
-                bytes: image.bodyBytes,
-                host: parsedURL.hostname,
-              };
-            }));
+            let deliveries = [];
+            if (mode === "live") {
+              const sampleIndexes = [...new Set([0, Math.floor((pages.length - 1) / 2), pages.length - 1])];
+              deliveries = await Promise.all(sampleIndexes.map(async (index) => {
+                const page = pages[index];
+                const url = typeof page === "string" ? page : page.url;
+                const headers = typeof page === "string" ? {} : (page.headers || {});
+                const parsedURL = new URL(url);
+                assert.ok(
+                  isAllowedHost(parsedURL.hostname, manifest.allowedHosts),
+                  `image host is not declared by manifest: ${parsedURL.hostname}`
+                );
+                const imageResult = await timed(() => networkResponse(
+                  url,
+                  headers,
+                  "GET",
+                  null,
+                  { timeoutMilliseconds: manifest.limits?.timeoutMilliseconds, maxBytesHint: manifest.limits?.maxResponseBytes }
+                ));
+                if (!imageResult.ok) throw new Error(imageResult.error);
+                const image = imageResult.value;
+                assert.ok(image.ok, `page ${index + 1} returned HTTP ${image.status}`);
+                assert.ok(image.bodyBytes > 0, `page ${index + 1} response was empty`);
+                assert.ok(looksLikeImage(image), `page ${index + 1} did not look like an image (${image.contentType || "unknown content type"})`);
+                return {
+                  ok: true,
+                  page: index + 1,
+                  durationMs: imageResult.durationMs,
+                  status: image.status,
+                  contentType: image.contentType || null,
+                  bytes: image.bodyBytes,
+                  host: parsedURL.hostname,
+                };
+              }));
+            }
+            chapterProofs.push({
+              id: chapter.id || chapter.href || chapter.url,
+              title: chapter.title || null,
+              count: pages.length,
+              first: String(urls[0]).slice(0, 140),
+              durationMs: pResult.durationMs,
+              deliveries,
+            });
           }
 
           terminalReport = {
             kind: "images",
-            ok: true,
-            durationMs: pResult.durationMs,
-            count: pages.length,
-            first: String(urls[0]).slice(0, 140),
+            ok: chapterProofs.length > 0,
+            durationMs: chapterProofs.reduce((sum, proof) => sum + proof.durationMs, 0),
+            count: chapterProofs[0]?.count || 0,
+            first: chapterProofs[0]?.first || null,
             title: d.title || d.name,
-            deliveries,
+            chapters: chapterProofs,
+            deliveries: chapterProofs.flatMap((proof) => proof.deliveries),
           };
         } else if (terminal === "text") {
           const section = itemChapters[0];
