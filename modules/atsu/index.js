@@ -8,6 +8,11 @@
     Accept: "application/json, text/plain, */*",
     Referer: `${BASE_URL}/`,
   };
+  const MAX_REQUEST_ATTEMPTS = 3;
+
+  function sleep(milliseconds) {
+    return new Promise((resolve) => globalThis.setTimeout(resolve, milliseconds));
+  }
 
   function nonEmpty(value) {
     const text = String(value ?? "").trim();
@@ -65,23 +70,41 @@
     if (typeof globalThis.fetchv2 !== "function") {
       throw new Error("Atsu requires the fetchv2 bridge.");
     }
-    const response = await globalThis.fetchv2(url, DEFAULT_HEADERS, "GET", null, {
-      followRedirects: true,
-      maxBytesHint: 2 * 1024 * 1024,
-      responseClass,
-    });
-    if (!response || response.bodyDropped) {
-      throw new Error("Atsu response exceeded the module safety limit.");
+    let lastError = null;
+    for (let attempt = 1; attempt <= MAX_REQUEST_ATTEMPTS; attempt += 1) {
+      if (attempt > 1) await sleep(700 * (attempt - 1));
+      try {
+        const response = await globalThis.fetchv2(url, DEFAULT_HEADERS, "GET", null, {
+          followRedirects: true,
+          maxBytesHint: 2 * 1024 * 1024,
+          responseClass,
+        });
+        if (!response || response.bodyDropped) {
+          throw new Error("Atsu response exceeded the module safety limit.");
+        }
+        const status = Number(response.status || 0);
+        if (response.ok === false || (status && (status < 200 || status >= 300))) {
+          const error = new Error(`Atsu request failed with HTTP ${status || "error"}.`);
+          if ((status === 429 || status >= 500) && attempt < MAX_REQUEST_ATTEMPTS) {
+            lastError = error;
+            continue;
+          }
+          throw error;
+        }
+        const body = await responseText(response);
+        if (!body) throw new Error("Atsu returned an empty response.");
+        if (/cf-chl|just a moment|attention required/i.test(body)) {
+          throw new Error("Atsu requires a browser challenge before it can respond.");
+        }
+        return body;
+      } catch (error) {
+        lastError = error instanceof Error ? error : new Error(String(error));
+        if (attempt >= MAX_REQUEST_ATTEMPTS || !/network|timed?\s*out|connection|HTTP (?:429|5\d\d)/i.test(lastError.message)) {
+          throw lastError;
+        }
+      }
     }
-    if (response.ok === false || (response.status && (response.status < 200 || response.status >= 300))) {
-      throw new Error(`Atsu request failed with HTTP ${response.status || "error"}.`);
-    }
-    const body = await responseText(response);
-    if (!body) throw new Error("Atsu returned an empty response.");
-    if (/cf-chl|just a moment|attention required/i.test(body)) {
-      throw new Error("Atsu requires a browser challenge before it can respond.");
-    }
-    return body;
+    throw lastError || new Error("Atsu request failed.");
   }
 
   async function requestJSON(url) {

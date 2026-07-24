@@ -13,7 +13,7 @@
       "id": "atsu",
       "familyID": "atsu",
       "name": "Atsu",
-      "version": "1.0.3",
+      "version": "1.0.4",
       "language": "en",
       "contentType": "pageImages",
       "contentRating": "suggestive",
@@ -21,7 +21,7 @@
       "status": "active",
       "manifest": {
         "path": "modules/atsu/manifest.json",
-        "sha256": "55146ead059499f4579cb52b0ef62d48dc50c1ce60c4451fcb5e436c0786ecab"
+        "sha256": "aadc95e6eb247800877fb75c5fea0af68a715aefe4d4053ed032e411e0a936b7"
       },
       "icon": {
         "path": "modules/atsu/icon.png",
