@@ -6,7 +6,7 @@
     "mangafire-en"
   ],
   "name": "MangaFire",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "contractVersion": 1,
   "minimumAppVersion": "1.0.0",
   "contentType": "pageImages",
@@ -31,7 +31,7 @@
   "universalLink": "https://synthetiq.uk/manga/modules/mangafire-v2",
   "entry": {
     "path": "modules/mangafire/index.js",
-    "sha256": "aa1d85b1511f77c7137554b2bc01fa70a47e1615881196d6b3a5dca6a6f3370a"
+    "sha256": "99002238994bee395ca08bc10ecb5e892efef3a4e0deca3464fe66464e489149"
   },
   "icon": {
     "path": "modules/mangafire/icon.png",

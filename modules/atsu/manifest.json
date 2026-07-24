@@ -5,7 +5,7 @@
     "atsu-v3"
   ],
   "name": "Atsu",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "contractVersion": 1,
   "minimumAppVersion": "1.0.0",
   "contentType": "pageImages",
@@ -35,7 +35,8 @@
     "sha256": "b8feb015e571f0919f63f1fd2ea065ad337d98b045eeb9157a32bc7ceb995dcc"
   },
   "allowedHosts": [
-    "atsu.moe"
+    "atsu.moe",
+    "cdn.atsu.moe"
   ],
   "limits": {
     "timeoutMilliseconds": 30000,

@@ -13,7 +13,7 @@
       "id": "atsu",
       "familyID": "atsu",
       "name": "Atsu",
-      "version": "1.0.2",
+      "version": "1.0.3",
       "language": "en",
       "contentType": "pageImages",
       "contentRating": "suggestive",
@@ -21,7 +21,7 @@
       "status": "active",
       "manifest": {
         "path": "modules/atsu/manifest.json",
-        "sha256": "c85a471ae9eabb00d67f844a657be358ff95d285f39036fbcc9c7df6dad77321"
+        "sha256": "55146ead059499f4579cb52b0ef62d48dc50c1ce60c4451fcb5e436c0786ecab"
       },
       "icon": {
         "path": "modules/atsu/icon.png",
@@ -51,7 +51,7 @@
       "id": "mangafire-v2",
       "familyID": "mangafire-v2",
       "name": "MangaFire",
-      "version": "2.0.3",
+      "version": "2.0.4",
       "language": "en",
       "contentType": "pageImages",
       "contentRating": "suggestive",
@@ -59,7 +59,7 @@
       "status": "active",
       "manifest": {
         "path": "modules/mangafire/manifest.json",
-        "sha256": "796c1c0354e309138f979005e743d2d941e54ce578c65b464231330b01073648"
+        "sha256": "a7e3bec9f209059ebdc8b539c7a0e3bbf6647c885453633e4637c3f150c05d36"
       },
       "icon": {
         "path": "modules/mangafire/icon.png",

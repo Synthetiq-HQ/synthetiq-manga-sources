@@ -15,6 +15,7 @@
   // pagev2 calls so a full reader walk stays under the burst budget.
   const MIN_REQUEST_SPACING = 500;
   let lastRequestAt = 0;
+  const protectionTokenCache = new Map();
 
   function sleep(milliseconds) {
     return new Promise((resolve) => {
@@ -75,12 +76,80 @@
     return target.toString();
   }
 
+  function protectionValue(value) {
+    const text = String(value || "");
+    if (/^-?[0-9]+(?:\.[0-9]+)?$/.test(text)) return Number(text);
+    if (text === "true") return true;
+    if (text === "false") return false;
+    return text;
+  }
+
+  function protectionRequest(value) {
+    const target = new URL(assertAPIURL(value));
+    target.searchParams.delete("vrf");
+    const params = {};
+    for (const [rawKey, rawValue] of target.searchParams.entries()) {
+      const isArray = rawKey.endsWith("[]");
+      const key = isArray ? rawKey.slice(0, -2) : rawKey;
+      const value = protectionValue(rawValue);
+      if (!Object.prototype.hasOwnProperty.call(params, key)) {
+        params[key] = isArray ? [value] : value;
+      } else {
+        if (!Array.isArray(params[key])) params[key] = [params[key]];
+        params[key].push(value);
+      }
+    }
+    return {
+      target,
+      path: target.pathname,
+      params,
+      cacheKey: `${target.pathname}?${target.searchParams.toString()}`,
+    };
+  }
+
+  async function protectedAPIURL(value, forceRefresh = false) {
+    const request = protectionRequest(value);
+    if (forceRefresh) protectionTokenCache.delete(request.cacheKey);
+    let token = protectionTokenCache.get(request.cacheKey) || "";
+    if (!token) {
+      const pathLiteral = JSON.stringify(request.path);
+      const paramsLiteral = JSON.stringify(request.params);
+      const snapshot = await globalThis.pagev2({
+        url: `${BASE_URL}/`,
+        headers: { Accept: "text/html,application/xhtml+xml", Referer: `${BASE_URL}/` },
+        userAgent: null,
+        timeoutMilliseconds: 15_000,
+        settleMilliseconds: 350,
+        includeHTML: false,
+        captureResponseBodies: false,
+        maxEntries: 12,
+        maxResponseCharacters: 32_000,
+        actionScript: null,
+        returnScript: `typeof globalThis.getProtectionToken === "function" ? globalThis.getProtectionToken(${pathLiteral}, ${paramsLiteral}) : null`,
+        waitForSelector: "body",
+        waitForURLIncludes: null,
+        waitForRequestURLIncludes: null,
+        waitForResponseURLIncludes: null,
+        waitForResponseBodyIncludes: null,
+      });
+      token = String((snapshot && snapshot.evaluatedData) || "").trim();
+      if (!token) throw new Error("MangaFire could not prepare its protected API request.");
+      if (protectionTokenCache.size >= 64) {
+        protectionTokenCache.delete(protectionTokenCache.keys().next().value);
+      }
+      protectionTokenCache.set(request.cacheKey, token);
+    }
+    request.target.searchParams.set("vrf", token);
+    return request.target.toString();
+  }
+
   async function pageJSON(url, options = {}) {
     if (typeof globalThis.pagev2 !== "function") {
       throw new Error("MangaFire requires the pagev2 bridge.");
     }
-    const target = assertAPIURL(url);
+    let target = assertAPIURL(url);
     let lastError = null;
+    let refreshedProtection = false;
     // The API answers bursts and cold WebKit sessions with 429/challenge
     // bodies; retry with backoff instead of failing the whole stage.
     for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt += 1) {
@@ -118,6 +187,13 @@
         if (!payload) {
           throw new Error("MangaFire pagev2 returned no JSON. The source may be challenged or unavailable.");
         }
+        const APIMessage = String((payload && (payload.error || payload.message)) || "");
+        if (/token/i.test(APIMessage)) {
+          target = await protectedAPIURL(url, refreshedProtection);
+          refreshedProtection = true;
+          lastError = new Error(`MangaFire API authorization changed: ${APIMessage}`);
+          continue;
+        }
         if (payload.error) throw new Error(`MangaFire API error: ${String(payload.error)}`);
         return payload;
       } catch (error) {
@@ -125,42 +201,6 @@
       }
     }
     throw lastError || new Error("MangaFire request failed.");
-  }
-
-  async function renderedRouteJSON(path, responseURLIncludes) {
-    if (typeof globalThis.pagev2 !== "function") {
-      throw new Error("MangaFire requires the pagev2 bridge.");
-    }
-    const route = new URL(path, BASE_URL);
-    if (route.protocol !== "https:" || route.hostname !== "mangafire.to") {
-      throw new Error("MangaFire rendered routes are restricted to its HTTPS origin.");
-    }
-    const snapshot = await globalThis.pagev2({
-      url: route.toString(),
-      headers: { Accept: "text/html,application/xhtml+xml", Referer: `${BASE_URL}/` },
-      userAgent: null,
-      timeoutMilliseconds: 20_000,
-      settleMilliseconds: 150,
-      includeHTML: false,
-      captureResponseBodies: true,
-      maxEntries: 64,
-      maxResponseCharacters: 1_000_000,
-      actionScript: null,
-      returnScript: null,
-      waitForSelector: "body",
-      waitForURLIncludes: null,
-      waitForRequestURLIncludes: null,
-      waitForResponseURLIncludes: responseURLIncludes,
-      waitForResponseBodyIncludes: null,
-    });
-    const events = snapshot && Array.isArray(snapshot.events) ? snapshot.events : [];
-    for (let index = events.length - 1; index >= 0; index -= 1) {
-      const event = events[index] || {};
-      if (event.phase !== "response" || !String(event.url || "").includes(responseURLIncludes)) continue;
-      const payload = parseJSON(event.body);
-      if (payload && !payload.error) return payload;
-    }
-    throw new Error("MangaFire did not expose the rendered search response.");
   }
 
   function titlePath(value) {
@@ -289,19 +329,7 @@
 
   async function searchResults(query, page = 1) {
     const normalized = normalizeSearchQuery(query);
-    const isPlainTitleSearch = Boolean(
-      normalized.text
-      && !normalized.text.startsWith("__feed:")
-      && !normalized.tags.length
-      && !normalized.excludeTags.length
-      && !normalized.status,
-    );
-    const payload = isPlainTitleSearch
-      ? await renderedRouteJSON(
-        `/browse?keyword=${encodeURIComponent(normalized.text)}&sort=relevance%3Adesc&page=${Math.max(1, Number(page) || 1)}`,
-        "/api/titles?keyword=",
-      )
-      : await pageJSON(searchURL(query, page));
+    const payload = await pageJSON(searchURL(query, page));
     let items = (Array.isArray(payload.items) ? payload.items : [])
       .map(mapSearchItem)
       .filter(Boolean);
