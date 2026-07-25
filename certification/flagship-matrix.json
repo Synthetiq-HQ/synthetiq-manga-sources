@@ -25,6 +25,14 @@
       "niche": null,
       "paginationPages": 5,
       "requiresIOSReason": "This module requires the app's real WKWebView pagev2 bridge."
+    },
+    {
+      "id": "mangakatana",
+      "slug": "mangakatana",
+      "nodeLive": true,
+      "queries": ["One Piece", "Attack on Titan"],
+      "niche": null,
+      "paginationPages": 5
     }
   ]
 }

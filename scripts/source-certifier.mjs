@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { mkdir, readFile, rm, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { spawn } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -121,23 +121,34 @@ async function certifyNodeLive(entry) {
 
 async function certifyIOS(entries) {
   const ids = entries.map((entry) => entry.id).join(",");
-  return run("xcodebuild", [
-    "test",
-    "-project", "SynthetiqManga.xcodeproj",
-    "-scheme", "SynthetiqManga",
-    "-destination", "platform=iOS Simulator,name=iPhone 17",
-    "CODE_SIGNING_ALLOWED=NO",
-    "SWIFT_ACTIVE_COMPILATION_CONDITIONS=$(inherited) USE_LOCAL_SOURCE_REPO",
-    "-only-testing:SynthetiqMangaEngineTests/LiveModuleRuntimeTests/testPublicModulesReadEndToEnd",
-  ], {
-    cwd: appRoot,
-    timeoutMs: 20 * 60_000,
-    env: {
-      RUN_LIVE_TESTS: "1",
-      TEST_RUNNER_RUN_LIVE_TESTS: "1",
-      TEST_RUNNER_SOURCE_CERT_MODULES: ids,
-    },
-  });
+  const derivedDataPath = await mkdtemp(path.join(root, "reports", ".certifier-derived-"));
+  try {
+    return await run("xcodebuild", [
+      "test",
+      "-project", "SynthetiqManga.xcodeproj",
+      "-scheme", "SynthetiqManga",
+      "-destination", "platform=iOS Simulator,name=iPhone 17",
+      "-derivedDataPath", derivedDataPath,
+      "CODE_SIGNING_ALLOWED=NO",
+      "SWIFT_ACTIVE_COMPILATION_CONDITIONS=$(inherited) USE_LOCAL_SOURCE_REPO",
+      "-only-testing:SynthetiqMangaEngineTests/LiveModuleRuntimeTests/testPublicModulesReadEndToEnd",
+    ], {
+      cwd: appRoot,
+      timeoutMs: 20 * 60_000,
+      env: {
+        // xcodebuild exposes test-process configuration through the
+        // TEST_RUNNER_ namespace. Supplying the unprefixed names silently
+        // skips the gated XCTest on current Xcode versions.
+        TEST_RUNNER_RUN_LIVE_TESTS: "1",
+        TEST_RUNNER_SOURCE_CERT_MODULES: ids,
+        // The system temp volume can be small. Keep live-test artifacts with
+        // the checked-out source repository instead.
+        TEST_RUNNER_SYNTHEIQ_LIVE_TEST_ROOT: path.join(root, "reports", ".live-runtime"),
+      },
+    });
+  } finally {
+    await rm(derivedDataPath, { recursive: true, force: true });
+  }
 }
 
 const report = {

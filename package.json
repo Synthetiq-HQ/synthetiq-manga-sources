@@ -15,6 +15,7 @@
     "certify:flagships": "node scripts/source-certifier.mjs --mode all",
     "certify:flagships:fixtures": "node scripts/source-certifier.mjs --mode fixtures",
     "certify:flagships:live": "node scripts/source-certifier.mjs --mode live",
+    "certify:flagships:ios": "node scripts/source-certifier.mjs --mode ios",
     "mcp:certifier": "node scripts/module-certifier-mcp.mjs",
     "report:module": "node scripts/module-tester.mjs --report",
     "verify": "node scripts/validate.mjs && node scripts/verify-repository.mjs"
