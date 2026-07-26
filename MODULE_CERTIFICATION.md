@@ -1,5 +1,8 @@
 # Module Certification
 
+Start with [docs/TESTING.md](docs/TESTING.md) for the complete public testing
+workflow and evidence-level definitions.
+
 `module-tester.mjs` is a bounded Node probe. It now treats discovery and the
 requested search as separate required contracts, checks stable pagination,
 verifies filter semantics against title details, opens the first and last

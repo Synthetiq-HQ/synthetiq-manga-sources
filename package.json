@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "finalize": "node scripts/finalize-hashes.mjs",
-    "test": "node --test tests/modules.test.mjs tests/module-report.test.mjs && node scripts/validate.mjs && node scripts/verify-repository.mjs",
+    "test": "node --test tests/modules.test.mjs tests/module-report.test.mjs tests/documentation.test.mjs && node scripts/validate.mjs && node scripts/verify-repository.mjs",
     "test:live": "RUN_LIVE_TESTS=1 node scripts/live-smoke.mjs",
     "test:atsu:live": "RUN_LIVE_TESTS=1 node scripts/live-atsu-proof.mjs",
     "test:module": "node scripts/module-tester.mjs",

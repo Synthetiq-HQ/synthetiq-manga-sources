@@ -1,0 +1,60 @@
+name: Module validation
+
+on:
+  pull_request:
+    paths:
+      - "index.json"
+      - "modules/**"
+      - "scripts/**"
+      - "tests/**"
+      - "docs/**"
+      - "package.json"
+      - ".github/workflows/module-validation.yml"
+  push:
+    branches: [main]
+    paths:
+      - "index.json"
+      - "modules/**"
+      - "scripts/**"
+      - "tests/**"
+      - "docs/**"
+      - "package.json"
+      - ".github/workflows/module-validation.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: module-validation-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  deterministic:
+    name: Deterministic contract and fixtures
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm test
+
+  fixture-report:
+    name: Fixture report smoke test
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm run test:module:report:fixtures -- weebcentral
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: weebcentral-fixture-report
+          path: |
+            reports/module-test-latest.json
+            reports/module-test-latest.html
+          if-no-files-found: error

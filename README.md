@@ -24,6 +24,10 @@ Run deterministic validation from this directory:
 node scripts/validate.mjs
 ```
 
+Module authors and coding agents should follow the canonical
+[testing guide](docs/TESTING.md). It defines fixture, live Node, and iOS runtime
+evidence separately and includes the bounded certifier workflow.
+
 Run the explicitly network-dependent end-to-end smoke path with:
 
 ```sh
