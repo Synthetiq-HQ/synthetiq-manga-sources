@@ -464,7 +464,8 @@ for (const slug of singleSeriesModules) {
 
 test("NovelFire parses search, details, complete chapters, and chapter text", async () => {
   const fixtures = {
-    search: await text("modules/novelfire/fixtures/search.json"),
+    search: await text("modules/novelfire/fixtures/search.html"),
+    searchPage2: await text("modules/novelfire/fixtures/search-page-2.html"),
     home: await text("modules/novelfire/fixtures/home.html"),
     details: await text("modules/novelfire/fixtures/details.html"),
     chapters: await text("modules/novelfire/fixtures/chapters.html"),
@@ -477,7 +478,8 @@ test("NovelFire parses search, details, complete chapters, and chapter text", as
       assert.equal(body, null);
       assert.equal(headers.Referer, "https://novelfire.net/");
       assert.equal(options.followRedirects, true);
-      if (url.includes("/ajax/searchLive?")) return response(fixtures.search);
+      if (url.includes("/search?keyword=fixture&page=2")) return response(fixtures.searchPage2);
+      if (url.includes("/search?keyword=fixture")) return response(fixtures.search);
       if (url.endsWith("/genre-all/sort-popular/status-all/all-novel")) return response(fixtures.home);
       if (url.endsWith("/genre-all/sort-new/status-all/all-novel")) return response(fixtures.home);
       if (url.endsWith("/book/fixture-chronicle/chapters")) return response(fixtures.chapters);
@@ -496,6 +498,18 @@ test("NovelFire parses search, details, complete chapters, and chapter text", as
       title: "Fixture Chronicle",
       image: "https://novelfire.net/server-1/fixture-chronicle.jpg",
       chapterCount: 12,
+    }],
+    hasMore: true,
+  });
+
+  const nextSearch = await module.searchResults("fixture", 2);
+  assert.deepEqual(JSON.parse(JSON.stringify(nextSearch)), {
+    items: [{
+      id: "fixture-sequel",
+      href: "https://novelfire.net/book/fixture-sequel",
+      title: "Fixture Sequel",
+      image: "https://novelfire.net/server-1/fixture-sequel.jpg",
+      chapterCount: 8,
     }],
     hasMore: false,
   });

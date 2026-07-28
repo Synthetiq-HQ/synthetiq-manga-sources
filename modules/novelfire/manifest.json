@@ -22,7 +22,7 @@
   "contractVersion": 1,
   "entry": {
     "path": "modules/novelfire/index.js",
-    "sha256": "9aa89f1e8cb4ee569252836e82540dc165eec778a66804f89e49d197c73b51c9"
+    "sha256": "6ccdeb06407686d34a318f5d1257d1a2e71441858d8604aad4641a072f5f798a"
   },
   "familyID": "novelfire",
   "icon": {
@@ -46,5 +46,5 @@
   "releaseTrack": "beta",
   "status": "active",
   "universalLink": "https://novelfire.net",
-  "version": "1.0.0"
+  "version": "1.0.1"
 }

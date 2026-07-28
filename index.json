@@ -310,12 +310,12 @@
       "language": "en",
       "manifest": {
         "path": "modules/novelfire/manifest.json",
-        "sha256": "be05047407172e759b443a3954e3fb28b665d48e92d8f3dd2ef827e7f3b67fd6"
+        "sha256": "b1dd79279073c01bed89821eb5d5c4e580d37907fa09f269b6565324a0291517"
       },
       "name": "NovelFire",
       "releaseTrack": "beta",
       "status": "active",
-      "version": "1.0.0"
+      "version": "1.0.1"
     }
   ]
 }
