@@ -9,8 +9,14 @@
     Referer: `${BASE_URL}/`,
   };
   const RETRYABLE_STATUS = new Set([403, 408, 425, 429, 500, 502, 503, 504]);
-  const MAX_ATTEMPTS = 2;
+  const MAX_ATTEMPTS = 3;
   const MAX_CHAPTER_PAGES = 100;
+  const REQUEST_INTERVAL_MS = 400;
+  const MAX_CACHED_RESPONSES = 48;
+  const responseCache = new Map();
+  const chapterCache = new Map();
+  const chapterLoads = new Map();
+  let nextRequestAt = 0;
 
   function sleep(milliseconds) {
     return new Promise((resolve) => {
@@ -87,12 +93,38 @@
     return typeof response.body === "string" ? response.body : "";
   }
 
+  async function waitForRequestSlot() {
+    const now = Date.now();
+    const delay = Math.max(0, nextRequestAt - now);
+    nextRequestAt = Math.max(nextRequestAt, now) + REQUEST_INTERVAL_MS;
+    if (delay > 0) await sleep(delay);
+  }
+
+  function cachedResponse(url) {
+    if (!responseCache.has(url)) return "";
+    const value = responseCache.get(url);
+    responseCache.delete(url);
+    responseCache.set(url, value);
+    return value;
+  }
+
+  function cacheResponse(url, body) {
+    if (responseCache.has(url)) responseCache.delete(url);
+    responseCache.set(url, body);
+    while (responseCache.size > MAX_CACHED_RESPONSES) responseCache.delete(responseCache.keys().next().value);
+  }
+
   async function request(url, options = {}) {
     if (typeof globalThis.fetchv2 !== "function") throw new Error("NovelFire requires the fetchv2 bridge.");
+    if (options.cacheable !== false) {
+      const cached = cachedResponse(url);
+      if (cached) return cached;
+    }
     let lastError = null;
     for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt += 1) {
-      if (attempt > 1) await sleep(900 * attempt);
+      if (attempt > 1) await sleep(1500 * attempt);
       try {
+        await waitForRequestSlot();
         const response = await globalThis.fetchv2(
           url,
           { ...DEFAULT_HEADERS, ...(options.headers || {}) },
@@ -110,21 +142,13 @@
         const body = await responseText(response);
         if (!body) throw new Error("NovelFire returned an empty response.");
         if (isChallengePage(body)) throw new Error("NovelFire requires browser verification.");
+        if (options.cacheable !== false) cacheResponse(url, body);
         return body;
       } catch (error) {
         lastError = error instanceof Error ? error : new Error(String(error));
       }
     }
     throw lastError || new Error("NovelFire request failed.");
-  }
-
-  async function requestJSON(url) {
-    const body = await request(url, { responseClass: "json", maxBytesHint: 1024 * 1024, headers: { Accept: "application/json,text/plain,*/*", "X-Requested-With": "XMLHttpRequest" } });
-    try {
-      return JSON.parse(body);
-    } catch (_) {
-      throw new Error("NovelFire returned invalid search data.");
-    }
   }
 
   function itemFor(slug, title, image, chapterCount = null) {
@@ -137,7 +161,7 @@
   function parseCatalogue(html) {
     const items = [];
     const seen = new Set();
-    const cardPattern = /<li\b[^>]*class=(['"])\1?[^>]*\bnovel-item\b[\s\S]*?<\/li>/gi;
+    const cardPattern = /<li\b[^>]*class=(['"])[^'"]*\bnovel-item\b[^'"]*\1[^>]*>[\s\S]*?<\/li>/gi;
     for (const cardMatch of String(html || "").matchAll(cardPattern)) {
       const card = cardMatch[0];
       const linkMatch = card.match(/<a\b[^>]*href=(['"])(\/book\/([a-z0-9-]+))\1[^>]*>/i);
@@ -156,22 +180,25 @@
     return items;
   }
 
+  function hasNextPage(html) {
+    return /<a\b[^>]*\brel=(['"])next\1/i.test(String(html || ""));
+  }
+
+  async function cataloguePage(path, page) {
+    const separator = path.includes("?") ? "&" : "?";
+    const html = await request(`${BASE_URL}${path}${page > 1 ? `${separator}page=${page}` : ""}`);
+    return { items: parseCatalogue(html), hasMore: hasNextPage(html) };
+  }
+
   async function searchResults(query, page = 1) {
     const text = String(query || "").trim();
     const requestedPage = Math.max(1, Number(page) || 1);
     if (!text || text.startsWith("__feed:")) {
-      if (requestedPage > 1) return { items: [], hasMore: false };
       const isLatest = text === "__feed:latest";
       const path = isLatest ? "/genre-all/sort-new/status-all/all-novel" : "/genre-all/sort-popular/status-all/all-novel";
-      return { items: parseCatalogue(await request(`${BASE_URL}${path}`)), hasMore: false };
+      return cataloguePage(path, requestedPage);
     }
-    if (requestedPage > 1 || !text) return { items: [], hasMore: false };
-    const data = await requestJSON(`${BASE_URL}/ajax/searchLive?keyword=${encodeURIComponent(text.slice(0, 160))}&type=title`);
-    const items = Array.isArray(data && data.data) ? data.data : [];
-    return {
-      items: items.map((entry) => itemFor(entry.slug, entry.title, entry.image, entry.total_chapter)).filter((item) => item.title),
-      hasMore: false,
-    };
+    return cataloguePage(`/search?keyword=${encodeURIComponent(text.slice(0, 160))}`, requestedPage);
   }
 
   function descriptionFrom(html) {
@@ -213,6 +240,20 @@
 
   async function extractChapters(id) {
     const slug = normalizeSlug(id);
+    if (chapterCache.has(slug)) return chapterCache.get(slug);
+    if (chapterLoads.has(slug)) return chapterLoads.get(slug);
+    const load = loadChapters(slug);
+    chapterLoads.set(slug, load);
+    try {
+      const chapters = await load;
+      chapterCache.set(slug, chapters);
+      return chapters;
+    } finally {
+      chapterLoads.delete(slug);
+    }
+  }
+
+  async function loadChapters(slug) {
     const path = `${BASE_URL}/book/${slug}/chapters`;
     const firstPage = await request(path, { maxBytesHint: 4 * 1024 * 1024 });
     const totalPages = chapterPageCount(firstPage);
@@ -220,11 +261,8 @@
       throw new Error("NovelFire chapter list exceeds the source safety limit.");
     }
     const pages = [firstPage];
-    const pending = Array.from({ length: totalPages - 1 }, (_, index) => index + 2);
-    for (let offset = 0; offset < pending.length; offset += 2) {
-      const batch = pending.slice(offset, offset + 2);
-      const responses = await Promise.all(batch.map((page) => request(`${path}?page=${page}`, { maxBytesHint: 4 * 1024 * 1024 })));
-      pages.push(...responses);
+    for (let page = 2; page <= totalPages; page += 1) {
+      pages.push(await request(`${path}?page=${page}`, { maxBytesHint: 4 * 1024 * 1024 }));
     }
     const seen = new Set();
     return pages.flatMap((page) => chaptersFromHTML(page, slug))
@@ -234,7 +272,7 @@
 
   async function extractText(reference) {
     const { slug, number } = chapterReference(reference);
-    const html = await request(`${BASE_URL}/book/${slug}/chapter-${number}`, { maxBytesHint: MAX_TEXT_BYTES });
+    const html = await request(`${BASE_URL}/book/${slug}/chapter-${number}`, { cacheable: false, maxBytesHint: MAX_TEXT_BYTES });
     const content = html.match(/<div\b[^>]*id=(['"])content\1[^>]*>([\s\S]*?)<\/div>\s*<div\b[^>]*class=(['"])[^'"]*\bchapternav\b/i)?.[2]
       || html.match(/<div\b[^>]*id=(['"])content\1[^>]*>([\s\S]*?)<\/div>/i)?.[2];
     if (!content) throw new Error("NovelFire chapter text was unavailable.");

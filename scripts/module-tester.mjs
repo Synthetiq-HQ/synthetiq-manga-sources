@@ -222,7 +222,9 @@ async function createRuntime(slug, mode) {
       || (await readFile(path.join(root, "modules", slug, "fixtures", "details.json"), "utf8").catch(() => null));
     const sourceInfo = await readFile(path.join(root, "modules", slug, "fixtures", "chapters.json"), "utf8").catch(() => null);
     const sourcePages = await readFile(path.join(root, "modules", slug, "fixtures", "pages.json"), "utf8").catch(() => null);
-    const search = await readFile(path.join(root, "modules", slug, "fixtures", "search.json"), "utf8").catch(() => null);
+    const search =
+      (await readFile(path.join(root, "modules", slug, "fixtures", "search.html"), "utf8").catch(() => null))
+      || (await readFile(path.join(root, "modules", slug, "fixtures", "search.json"), "utf8").catch(() => null));
     const fixture = (name) => readFile(path.join(root, "modules", slug, "fixtures", name), "utf8").catch(() => null);
     const special = {
       metadataOpen: await fixture("metadata-open.json"),
@@ -232,6 +234,7 @@ async function createRuntime(slug, mode) {
       chaptersPage1: await fixture("chapters-page-1.json"),
       chaptersPage2: await fixture("chapters-page-2.json"),
       novelfireChaptersPage2: await fixture("chapters-page-2.html"),
+      novelfireSearchPage2: await fixture("search-page-2.html"),
       imagesJSON: await fixture("images.json"),
       chapterJSON: await fixture("chapter.json"),
     };
@@ -254,7 +257,8 @@ async function createRuntime(slug, mode) {
           if (home) return fixtureResponse(home);
         }
         if (slug === "novelfire") {
-          if (/\/ajax\/searchLive\?/.test(u) && search) return fixtureResponse(search);
+          if (/\/search\?keyword=.*(?:&|%26)page=2/.test(u) && special.novelfireSearchPage2) return fixtureResponse(special.novelfireSearchPage2);
+          if (/\/search\?keyword=/.test(u) && search) return fixtureResponse(search);
           if (/\/book\/[^/]+\/chapters\?page=2/.test(u) && special.novelfireChaptersPage2) return fixtureResponse(special.novelfireChaptersPage2);
           if (/\/book\/[^/]+\/chapters/.test(u) && chapterList) return fixtureResponse(chapterList);
           if (/\/book\/[^/]+\/chapter-\d+/.test(u) && chapter) return fixtureResponse(chapter);
