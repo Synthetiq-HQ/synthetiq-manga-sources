@@ -1,0 +1,50 @@
+{
+  "allowedHosts": [
+    "novelfire.net",
+    "*.novelfire.net"
+  ],
+  "attribution": {
+    "author": "Synthetiq-HQ",
+    "website": "https://novelfire.net"
+  },
+  "baseURL": "https://novelfire.net",
+  "capabilities": [
+    "popular",
+    "latest",
+    "search",
+    "details",
+    "chapters",
+    "text",
+    "discovery"
+  ],
+  "contentRating": "unknown",
+  "contentType": "text",
+  "contractVersion": 1,
+  "entry": {
+    "path": "modules/novelfire/index.js",
+    "sha256": "9aa89f1e8cb4ee569252836e82540dc165eec778a66804f89e49d197c73b51c9"
+  },
+  "familyID": "novelfire",
+  "icon": {
+    "path": "modules/novelfire/icon.png",
+    "sha256": "7ea3e790b051f9d2e2be7742cc4e296e56b21dfd349cfe8fa69b883b4efd04f7"
+  },
+  "id": "novelfire",
+  "language": "en",
+  "legacyIDs": [
+    "novelfire-v3"
+  ],
+  "limits": {
+    "cacheTTLSeconds": 900,
+    "maxConcurrentRequests": 2,
+    "maxResponseBytes": 4194304,
+    "maxScriptBytes": 524288,
+    "timeoutMilliseconds": 30000
+  },
+  "minimumAppVersion": "1.0.0",
+  "name": "NovelFire",
+  "releaseTrack": "beta",
+  "status": "active",
+  "universalLink": "https://novelfire.net",
+  "version": "1.0.0"
+}

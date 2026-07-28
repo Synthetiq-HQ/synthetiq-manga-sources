@@ -293,6 +293,25 @@
         "path": "modules/snafu/icon.png",
         "sha256": "e5b048c4679b76cd9f5c7c9d2b88e0e6919a96c22d4f4de5e129fabe2fc3da6c"
       }
+    },
+    {
+      "contentRating": "unknown",
+      "contentType": "text",
+      "familyID": "novelfire",
+      "icon": {
+        "path": "modules/novelfire/icon.png",
+        "sha256": "7ea3e790b051f9d2e2be7742cc4e296e56b21dfd349cfe8fa69b883b4efd04f7"
+      },
+      "id": "novelfire",
+      "language": "en",
+      "manifest": {
+        "path": "modules/novelfire/manifest.json",
+        "sha256": "be05047407172e759b443a3954e3fb28b665d48e92d8f3dd2ef827e7f3b67fd6"
+      },
+      "name": "NovelFire",
+      "releaseTrack": "beta",
+      "status": "active",
+      "version": "1.0.0"
     }
   ]
 }
