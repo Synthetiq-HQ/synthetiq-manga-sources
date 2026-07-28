@@ -222,6 +222,7 @@ async function createRuntime(slug, mode) {
       || (await readFile(path.join(root, "modules", slug, "fixtures", "details.json"), "utf8").catch(() => null));
     const sourceInfo = await readFile(path.join(root, "modules", slug, "fixtures", "chapters.json"), "utf8").catch(() => null);
     const sourcePages = await readFile(path.join(root, "modules", slug, "fixtures", "pages.json"), "utf8").catch(() => null);
+    const search = await readFile(path.join(root, "modules", slug, "fixtures", "search.json"), "utf8").catch(() => null);
     const fixture = (name) => readFile(path.join(root, "modules", slug, "fixtures", name), "utf8").catch(() => null);
     const special = {
       metadataOpen: await fixture("metadata-open.json"),
@@ -230,6 +231,7 @@ async function createRuntime(slug, mode) {
       detailsExcluded: await fixture("details-excluded.json"),
       chaptersPage1: await fixture("chapters-page-1.json"),
       chaptersPage2: await fixture("chapters-page-2.json"),
+      novelfireChaptersPage2: await fixture("chapters-page-2.html"),
       imagesJSON: await fixture("images.json"),
       chapterJSON: await fixture("chapter.json"),
     };
@@ -249,6 +251,14 @@ async function createRuntime(slug, mode) {
           if (/\/metadata\/open-fixture/i.test(u) && special.metadataOpen) return fixtureResponse(special.metadataOpen);
           if (/\/metadata\/(?:closed|rights)-fixture/i.test(u) && special.metadataClosed) return fixtureResponse(special.metadataClosed);
           if (/\/download\/open-fixture\//i.test(u) && special.text) return fixtureResponse(special.text);
+          if (home) return fixtureResponse(home);
+        }
+        if (slug === "novelfire") {
+          if (/\/ajax\/searchLive\?/.test(u) && search) return fixtureResponse(search);
+          if (/\/book\/[^/]+\/chapters\?page=2/.test(u) && special.novelfireChaptersPage2) return fixtureResponse(special.novelfireChaptersPage2);
+          if (/\/book\/[^/]+\/chapters/.test(u) && chapterList) return fixtureResponse(chapterList);
+          if (/\/book\/[^/]+\/chapter-\d+/.test(u) && chapter) return fixtureResponse(chapter);
+          if (/\/book\//.test(u) && details) return fixtureResponse(details);
           if (home) return fixtureResponse(home);
         }
         if (slug === "mangadex") {

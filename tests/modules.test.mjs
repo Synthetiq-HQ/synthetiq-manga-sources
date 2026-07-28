@@ -461,3 +461,69 @@ for (const slug of singleSeriesModules) {
     assert.deepEqual(JSON.parse(JSON.stringify(pages)), fixtures.expected.images);
   });
 }
+
+test("NovelFire parses search, details, complete chapters, and chapter text", async () => {
+  const fixtures = {
+    search: await text("modules/novelfire/fixtures/search.json"),
+    home: await text("modules/novelfire/fixtures/home.html"),
+    details: await text("modules/novelfire/fixtures/details.html"),
+    chapters: await text("modules/novelfire/fixtures/chapters.html"),
+    chaptersPage2: await text("modules/novelfire/fixtures/chapters-page-2.html"),
+    chapter: await text("modules/novelfire/fixtures/chapter.html"),
+  };
+  const module = await loadModule("modules/novelfire/index.js", {
+    fetchv2: async (url, headers, method, body, options) => {
+      assert.equal(method, "GET");
+      assert.equal(body, null);
+      assert.equal(headers.Referer, "https://novelfire.net/");
+      assert.equal(options.followRedirects, true);
+      if (url.includes("/ajax/searchLive?")) return response(fixtures.search);
+      if (url.endsWith("/genre-all/sort-popular/status-all/all-novel")) return response(fixtures.home);
+      if (url.endsWith("/genre-all/sort-new/status-all/all-novel")) return response(fixtures.home);
+      if (url.endsWith("/book/fixture-chronicle/chapters")) return response(fixtures.chapters);
+      if (url.endsWith("/book/fixture-chronicle/chapters?page=2")) return response(fixtures.chaptersPage2);
+      if (url.endsWith("/book/fixture-chronicle/chapter-1")) return response(fixtures.chapter);
+      if (url.endsWith("/book/fixture-chronicle")) return response(fixtures.details);
+      throw new Error(`Unexpected NovelFire URL: ${url}`);
+    },
+  });
+
+  const search = await module.searchResults("fixture", 1);
+  assert.deepEqual(JSON.parse(JSON.stringify(search)), {
+    items: [{
+      id: "fixture-chronicle",
+      href: "https://novelfire.net/book/fixture-chronicle",
+      title: "Fixture Chronicle",
+      image: "https://novelfire.net/server-1/fixture-chronicle.jpg",
+      chapterCount: 12,
+    }],
+    hasMore: false,
+  });
+
+  const details = await module.extractDetails(search.items[0].id);
+  assert.deepEqual(JSON.parse(JSON.stringify(details)), {
+    id: "fixture-chronicle",
+    href: "https://novelfire.net/book/fixture-chronicle",
+    title: "Fixture Chronicle",
+    author: "Sample Author",
+    status: "Ongoing",
+    image: "https://novelfire.net/server-1/fixture-chronicle.jpg",
+    description: "A synthetic fixture description.",
+    genres: ["Fantasy"],
+  });
+
+  const chapters = await module.extractChapters(details.id);
+  assert.equal(chapters.length, 2);
+  assert.equal(chapters[0].number, 1);
+  assert.equal(chapters[1].number, 2);
+
+  const chapter = await module.extractText(chapters[0].id);
+  assert.deepEqual(JSON.parse(JSON.stringify(chapter)), {
+    title: "Chapter 1",
+    content: "Fixture paragraph one.\n\nFixture paragraph two.",
+  });
+
+  const home = await module.discoveryHome();
+  assert.equal(home.sections.length, 2);
+  assert.equal(home.sections[0].items.length, 1);
+});
