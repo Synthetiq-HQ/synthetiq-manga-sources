@@ -1,0 +1,5 @@
+[     566ms] [LOG] Error @ https://precheck.dcrtb-pixel.com/dc?pl=K-Od5kDdLEyj_6HSlbtEBA&click_id=cf3b7cde-44a6-4a3a-b224-12760c442754&sub_id=30111208:15
+[     710ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://precheck.dcrtb-pixel.com/favicon.ico:0
+[     883ms] [ERROR] Failed to load resource: the server responded with a status of 403 () @ https://redirect.js-check.com/pass?nrid=0399dd1948610ce8705a3aa4287879cb&a=6&r=https%3A%2F%2Fdcfeed.dcrtb-pixel.com%2Fdc%3Fpl%3DK-Od5kDdLEyj_6HSlbtEBA%26click_id%3Dcf3b7cde-44a6-4a3a-b224-12760c442754%26sub_id%3D30111208%26nrid%3D0399dd1948610ce8705a3aa4287879cb&ch=0&pl=K-Od5kDdLEyj_6HSlbtEBA&sub_id=30111208&pc=1&pr=3:0
+[    1247ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://redirect.js-check.com/favicon.ico:0
+[    1266ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://redirect.js-check.com/favicon.ico:0
