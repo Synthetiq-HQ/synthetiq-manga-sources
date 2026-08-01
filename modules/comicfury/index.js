@@ -11,7 +11,10 @@
   const RETRYABLE_STATUS = new Set([403, 408, 425, 429, 500, 502, 503, 504]);
   const MAX_ATTEMPTS = 3;
   const PAGE_CACHE_TTL = 60_000;
+  const MAX_CHAPTERS = 120;
+  const MAX_PAGES_PER_CHAPTER = 400;
   let archiveCache = { key: "", at: 0, value: null };
+  const warningsCookieCache = new Map();
 
   function sleep(milliseconds) {
     return new Promise((resolve) => {
@@ -129,30 +132,61 @@
   }
 
   function isContentWarningPage(body) {
-    return /<form[^>]*method=["']POST["'][^>]*action=["'][^"']*goto\.php[^"']*["'][^>]*>[\s\S]*?<input[^>]*name=["']proceed["']/i.test(String(body || ""));
+    // The interstitial form declares no method attribute (defaults to GET), so
+    // only the action target and the proceed field identify it reliably.
+    return /<form\b[^>]*action=["'][^"']*goto\.php[^"']*["'][^>]*>[\s\S]*?<input[^>]*name=["']proceed["']/i.test(String(body || ""));
   }
 
-  async function resolveDomain(slug) {
+  async function resolveDomain(slug, profileHTML) {
     const url = `${GOTO_URL}?mode=visit&url=${encodeURIComponent(slug)}`;
+    const cachedWarningsCookie = warningsCookieCache.get(slug) || "";
     let response = await globalThis.fetchv2(
       url,
-      DEFAULT_HEADERS,
+      { ...DEFAULT_HEADERS, ...(cachedWarningsCookie ? { Cookie: cachedWarningsCookie } : {}) },
       "GET",
       null,
       { followRedirects: false, maxBytesHint: 8192, responseClass: "html" },
     );
 
+    // The interstitial issues a token cookie on the first visit; keep it so the
+    // proceed POST works even without a persistent cookie store.
+    const setCookie = String(response?.headers?.["set-cookie"] || response?.headers?.["Set-Cookie"] || "");
+    let cookieValue = setCookie.match(/^([^=;]+=[^;]+)/)?.[1] || "";
+
     // Content-warning interstitial: POST back with the token to continue.
     if (isContentWarningPage(response.body)) {
-      const tokenMatch = String(response.body).match(/<input[^>]*name=["']token["'][^>]*value=["']([0-9]+)["']/i);
-      const token = tokenMatch?.[1] || "";
-      response = await globalThis.fetchv2(
-        url,
-        { ...DEFAULT_HEADERS, "Content-Type": "application/x-www-form-urlencoded" },
-        "POST",
-        `token=${encodeURIComponent(token)}&proceed=${encodeURIComponent("View Webcomic")}`,
-        { followRedirects: false, maxBytesHint: 8192, responseClass: "html" },
-      );
+      for (let attempt = 0; attempt < 2; attempt += 1) {
+        const tokenMatch = String(response.body).match(/<input[^>]*name=["']token["'][^>]*value=["']([0-9]+)["']/i);
+        const token = tokenMatch?.[1] || "";
+        response = await globalThis.fetchv2(
+          url,
+          {
+            ...DEFAULT_HEADERS,
+            "Content-Type": "application/x-www-form-urlencoded",
+            ...(cookieValue ? { Cookie: cookieValue } : {}),
+          },
+          "POST",
+          `token=${encodeURIComponent(token)}&proceed=${encodeURIComponent("View Webcomic")}`,
+          { followRedirects: false, maxBytesHint: 8192, responseClass: "html" },
+        );
+        const location = String(response?.headers?.location || "");
+        if (location) {
+          // A successful proceed POST sets a webcomic_warnings cookie that
+          // bypasses the interstitial on subsequent requests to this comic.
+          const warnings = String(response?.headers?.["set-cookie"] || "").match(/webcomic_warnings=[^;]+/i);
+          if (warnings) warningsCookieCache.set(slug, warnings[0]);
+          const parsed = new URL(location);
+          return parsed.hostname;
+        }
+        // The interstitial re-renders with a fresh token and cookie; retry once
+        // with the rotated values.
+        const rotatedCookie = String(response?.headers?.["set-cookie"] || response?.headers?.["Set-Cookie"] || "");
+        if (rotatedCookie) {
+          const rotatedValue = rotatedCookie.match(/^([^=;]+=[^;]+)/)?.[1] || "";
+          if (rotatedValue) cookieValue = rotatedValue;
+        }
+        if (!isContentWarningPage(response.body)) break;
+      }
     }
 
     const location = String(response?.headers?.location || "");
@@ -166,6 +200,12 @@
       const parsed = new URL(finalUrl);
       return parsed.hostname;
     }
+    // Fallback: the profile page links the comic's own host, which for
+    // ComicFury-hosted comics is <slug>.thecomicseries.com / <slug>.webcomic.ws.
+    const profileHost = String(profileHTML || "").match(
+      new RegExp(`https?://${slug.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\.((?:thecomicseries\\.com|webcomic\\.ws|comicfury\\.com))`, "i"),
+    );
+    if (profileHost) return `${slug}.${profileHost[1]}`;
     throw new Error(`Comic Fury could not resolve domain for ${slug}.`);
   }
 
@@ -244,13 +284,13 @@
     const authorsHeading = source.search(/<h2 class="pchead">Authors<\/h2>/i);
     if (authorsHeading !== -1) {
       const authorsBlock = source.slice(authorsHeading, authorsHeading + 3000);
-      authors = Array.from(authorsBlock.matchAll(/<img\b[^>]*alt=["']([^"']+)["'][^>]*>/gi))
+      authors = Array.from(authorsBlock.matchAll(/<a\b[^>]*href=["']\/user\/[a-z0-9_-]+\/?["'][^>]*>([\s\S]*?)<\/a>/gi))
         .map((m) => stripHTML(m[1]))
         .filter(Boolean);
       if (!authors.length) {
-        authors = Array.from(authorsBlock.matchAll(/<a\b[^>]*href=["']\/user\/[a-z0-9_-]+\/?["'][^>]*>([\s\S]*?)<\/a>/gi))
+        authors = Array.from(authorsBlock.matchAll(/<img\b[^>]*alt=["']([^"']+)["'][^>]*>/gi))
           .map((m) => stripHTML(m[1]))
-          .filter(Boolean);
+          .filter((value) => value && !/^image$/i.test(value));
       }
     }
 
@@ -277,54 +317,232 @@
     };
   }
 
-  function parseArchiveHTML(html, domain) {
-    const source = String(html || "");
-    const base = `https://${domain}`;
+  function pageNumberFromURL(value) {
+    const match = String(value || "").match(/(?:^|\/)comics\/(?:pl\/)?([0-9]+)\/?/i);
+    return match ? Number(match[1]) : NaN;
+  }
+
+  // Rows in the modern archive layouts: <div class="archivecomic"> blocks
+  // (flex theme), their custom "nl-" variants, or legacy
+  // <tr class="archivecomic"> table rows.
+  function parseComicRows(source, base) {
+    const rows = [];
+    const seen = new Set();
+    const variants = ['<div class="archivecomic">', '<div class="nl-archivecomic">'];
+    for (let v = 0; v < variants.length; v += 1) {
+      const marker = variants[v];
+      const blocks = String(source || "").split(marker).slice(1);
+      for (let i = 0; i < blocks.length; i += 1) {
+        const block = blocks[i];
+        const end = block.indexOf(marker);
+        const body = end === -1 ? block : block.slice(0, end);
+        const numberMatch = body.match(/<div class="(?:archivecomicnumber|nl-archivecomicnumber)">\s*([0-9]+)\.?\s*<\/div>/i);
+        const linkMatch = body.match(/<a class="(?:archivecomictitle|nl-archivecomictitle)"[^>]*href=["']([^"']+)["'][^>]*>([\s\S]*?)<\/a>/i);
+        if (!linkMatch) continue;
+        const number = numberMatch ? Number(numberMatch[1]) : NaN;
+        const title = stripHTML(linkMatch[2]) || (Number.isFinite(number) ? `Page ${number}` : "");
+        const href = absoluteURL(linkMatch[1], base);
+        if (!href || seen.has(href)) continue;
+        seen.add(href);
+        rows.push({ number, title, url: href });
+      }
+    }
+    if (!rows.length) {
+      const canonical = domainFromSource(source);
+      for (const block of String(source || "").split('<tr class="archivecomic">').slice(1)) {
+        const end = block.indexOf('<tr class="archivecomic">');
+        const body = end === -1 ? block : block.slice(0, end);
+        const linkMatch = body.match(/<a\b[^>]*href=["']\/(?:comics|comic)\/([0-9]+)\/?["'][^>]*>([\s\S]*?)<\/a>/i);
+        if (!linkMatch) continue;
+        const number = Number(linkMatch[1]);
+        const title = stripHTML(linkMatch[2]) || `Page ${number}`;
+        if (!Number.isFinite(number) || seen.has(`/comics/${number}/`) || !canonical) continue;
+        seen.add(`/comics/${number}/`);
+        rows.push({ number, title, url: `https://${canonical}/comics/${number}/` });
+      }
+    }
+    return rows;
+  }
+
+  function domainFromSource(source) {
+    const match = String(source || "").match(/<link\b[^>]*rel=["']canonical["'][^>]*href=["']https:\/\/([^\/"']+)/i);
+    return match ? match[1] : "";
+  }
+
+  // Chaptered layout A: <div class="chapter"> blocks with title + "Comics in
+  // this chapter" link to /archive/<id>. Custom archives use the identical
+  // markup under the <div class="nl-chapter"> class.
+  function parseChapterBlocks(source) {
+    const chapters = [];
+    const blocks = String(source || "").split('<div class="chapter">').slice(1);
+    for (let i = 0; i < blocks.length; i += 1) {
+      const block = blocks[i];
+      const end = block.indexOf('<div class="chapter">');
+      const body = end === -1 ? block : block.slice(0, end);
+      const titleLink = body.match(/<h3>\s*<a\b[^>]*href=["']([^"']+)["'][^>]*>([\s\S]*?)<\/a>/i);
+      const moreLink = body.match(/<a\b[^>]*href=["'](\/archive\/([0-9]+))["'][^>]*>/i);
+      if (!titleLink) continue;
+      const title = stripHTML(titleLink[2]) || "Untitled Chapter";
+      const start = pageNumberFromURL(titleLink[1]);
+      chapters.push({
+        kind: "chapter",
+        title,
+        startPage: Number.isFinite(start) ? start : NaN,
+        archivePath: moreLink ? moreLink[1] : null,
+        archiveID: moreLink ? Number(moreLink[2]) : NaN,
+      });
+    }
+    const nlBlocks = String(source || "").split('<div class="nl-chapter">').slice(1);
+    for (let i = 0; i < nlBlocks.length; i += 1) {
+      const block = nlBlocks[i];
+      const end = block.indexOf('<div class="nl-chapter">');
+      const body = end === -1 ? block : block.slice(0, end);
+      const titleLink = body.match(/<h3>\s*<a\b[^>]*href=["']([^"']+)["'][^>]*>([\s\S]*?)<\/a>/i);
+      const moreLink = body.match(/<a\b[^>]*href=["'](\/archive\/([0-9]+))["'][^>]*>/i);
+      if (!titleLink) continue;
+      const title = stripHTML(titleLink[2]) || "Untitled Chapter";
+      const start = pageNumberFromURL(titleLink[1]);
+      chapters.push({
+        kind: "chapter",
+        title,
+        startPage: Number.isFinite(start) ? start : NaN,
+        archivePath: moreLink ? moreLink[1] : null,
+        archiveID: moreLink ? Number(moreLink[2]) : NaN,
+      });
+    }
+    return chapters;
+  }
+
+  // Chaptered layout B: <article class="archive_chapter_detail"> blocks with a
+  // single start page per chapter (game/branching comics). Pages are walked via
+  // the "next" link of each page at read time.
+  function parseChapterDetailBlocks(source, base) {
+    const chapters = [];
+    const blocks = String(source || "").split('<article class="archive_chapter_detail">').slice(1);
+    for (const block of blocks) {
+      const end = block.indexOf('<article class="archive_chapter_detail">');
+      const body = end === -1 ? block : block.slice(0, end);
+      const titleLink = body.match(/<h3[^>]*class=["']archive_chapter_title["'][^>]*>\s*<a\b[^>]*href=["']([^"']+)["'][^>]*>([\s\S]*?)<\/a>/i)
+        || body.match(/<a\b[^>]*href=["']([^"']+[^"']*comics[^"']*|[^"']*\/comics\/[^"']*)["'][^>]*>([\s\S]*?)<\/a>/i);
+      if (!titleLink) continue;
+      const title = stripHTML(titleLink[2]) || "Untitled Chapter";
+      const start = pageNumberFromURL(titleLink[1]);
+      if (!Number.isFinite(start)) continue;
+      chapters.push({
+        kind: "walk",
+        title,
+        startPage: start,
+        startURL: absoluteURL(titleLink[1], base),
+      });
+    }
+    return chapters;
+  }
+
+  // Legacy table layout: chapters grouped by <tr class="chaptertitle"> rows with
+  // <h3 class="archivechapter"> headings, pages in <tr class="archivecomic"> rows.
+  function parseLegacyTableChapters(source, base) {
     const chapters = [];
     const chapterPattern = /<tr class="chaptertitle">[\s\S]*?<h3 class="archivechapter">([\s\S]*?)<\/h3>[\s\S]*?<\/tr>([\s\S]*?)(?=<tr class="chaptertitle">|$)/gi;
     let chapterMatch;
     let chapterIndex = 0;
-
     while ((chapterMatch = chapterPattern.exec(source)) !== null) {
       chapterIndex += 1;
       const title = stripHTML(chapterMatch[1]);
-      const block = chapterMatch[2];
       const pages = [];
       const comicPattern = /<tr class="archivecomic">[\s\S]*?<a href="\/comics\/([0-9]+)\/">([\s\S]*?)<\/a>/gi;
       let comic;
-      while ((comic = comicPattern.exec(block)) !== null) {
+      while ((comic = comicPattern.exec(chapterMatch[2])) !== null) {
         const number = Number(comic[1]);
-        const comicTitle = stripHTML(comic[2]);
         if (!Number.isFinite(number)) continue;
-        pages.push({ number, title: comicTitle });
+        pages.push({ number, title: stripHTML(comic[2]), url: `${base}/comics/${number}/` });
       }
       if (!pages.length) continue;
       chapters.push({
-        index: chapterIndex,
+        kind: "flat",
         title,
         startPage: pages[0].number,
         endPage: pages[pages.length - 1].number,
-        base,
         pages,
       });
     }
+    return chapters;
+  }
 
-    // If the archive has no explicit chapters, treat every comic as its own chapter.
+  // Determine how a comic structures its archive:
+  //  - explicit chapters (layout A / B / legacy tables) -> chapters as the site
+  //    groups them, pages resolved lazily per chapter,
+  //  - no chapters (flat page list) -> every page collected into one chapter so
+  //    the whole comic reads together.
+  function parseArchiveHTML(html, domain) {
+    const source = String(html || "");
+    const base = `https://${domain}`;
+    const chapters = [];
+
+    const chaptered = parseChapterBlocks(source);
+    for (let index = 0; index < chaptered.length; index += 1) {
+      const chapter = chaptered[index];
+      chapters.push({
+        index: index + 1,
+        title: chapter.title,
+        startPage: chapter.startPage,
+        endPage: NaN,
+        base,
+        kind: "chapter",
+        archivePath: chapter.archivePath || `/archive/${chapter.archiveID}`,
+      });
+    }
+
     if (!chapters.length) {
-      const comicPattern = /<tr class="archivecomic">[\s\S]*?<a href="\/comics\/([0-9]+)\/">([\s\S]*?)<\/a>/gi;
-      let comic;
-      while ((comic = comicPattern.exec(source)) !== null) {
-        const number = Number(comic[1]);
-        const title = stripHTML(comic[2]);
-        if (!Number.isFinite(number)) continue;
+      const detailChapters = parseChapterDetailBlocks(source, base);
+      for (let index = 0; index < detailChapters.length; index += 1) {
+        const chapter = detailChapters[index];
         chapters.push({
-          index: chapters.length + 1,
-          title: title || `Page ${number}`,
-          startPage: number,
-          endPage: number,
+          index: index + 1,
+          title: chapter.title,
+          startPage: chapter.startPage,
+          endPage: NaN,
           base,
-          pages: [{ number, title }],
+          kind: "walk",
+          startURL: chapter.startURL,
         });
+      }
+    }
+
+    if (!chapters.length) {
+      const legacy = parseLegacyTableChapters(source, base);
+      for (let index = 0; index < legacy.length; index += 1) {
+        chapters.push({ ...legacy[index], index: index + 1, base });
+      }
+    }
+
+    // Flat archive: no chapter groupings at all. Collect every listed comic
+    // into a single chapter so the whole series reads top to bottom.
+    if (!chapters.length) {
+      const rows = parseComicRows(source, base);
+      if (rows.length) {
+        const pages = rows.map((row) => ({
+          number: row.number,
+          title: row.title,
+          url: row.url,
+        }));
+        chapters.push({
+          index: 1,
+          title: "All Pages",
+          startPage: pages[0].number,
+          endPage: pages[pages.length - 1].number,
+          base,
+          kind: "flat",
+          pages,
+        });
+      }
+    }
+
+    // Walk kind: chapters are consecutive page ranges; fill endPage lazily.
+    for (let index = 0; index < chapters.length; index += 1) {
+      const chapter = chapters[index];
+      if (chapter.kind === "walk") {
+        const next = chapters[index + 1];
+        chapter.endPage = next ? next.startPage - 1 : chapter.startPage;
       }
     }
 
@@ -343,17 +561,72 @@
     return chapters;
   }
 
-  function parseComicPageImage(html, domain) {
-    const source = String(html || "");
-    const match = source.match(/<img\b[^>]*id=["']comicimage["'][^>]*>/i);
-    if (!match) return "";
-    return absoluteURL(attribute(match[0], "src"), `https://${domain}`);
+  // Resolve the concrete page URLs of one chapter according to its kind.
+  async function chapterPages(chapter, domain) {
+    if (chapter.kind === "flat") return chapter.pages || [];
+
+    if (chapter.kind === "chapter") {
+      const url = `${chapter.base}${chapter.archivePath}`;
+      const body = await fetchDirect(url, { maxBytesHint: 4 * 1024 * 1024 });
+      return parseComicRows(body, chapter.base).map((row) => ({
+        number: row.number,
+        title: row.title,
+        url: row.url,
+      }));
+    }
+
+    if (chapter.kind === "walk") {
+      const pages = [];
+      const seen = new Set();
+      let nextURL = chapter.startURL;
+      let guard = 0;
+      while (nextURL && guard < MAX_PAGES_PER_CHAPTER) {
+        const number = pageNumberFromURL(nextURL);
+        if (seen.has(nextURL)) break;
+        seen.add(nextURL);
+        if (Number.isFinite(chapter.endPage) && number > chapter.endPage) break;
+        pages.push({ number, title: pages.length ? `Page ${number}` : chapter.title, url: nextURL });
+        const body = await fetchDirect(nextURL, { maxBytesHint: 2 * 1024 * 1024 });
+        const nextMatch = String(body).match(/<link\b[^>]*rel=["']next["'][^>]*href=["']([^"']+)["'][^>]*>/i)
+          || String(body).match(/<a\b[^>]*rel=["']next["'][^>]*href=["']([^"']+)["'][^>]*>/i);
+        nextURL = nextMatch ? absoluteURL(nextMatch[1], `https://${domain}`) : "";
+        guard += 1;
+      }
+      return pages;
+    }
+
+    return [];
   }
 
-  async function extractComicImage(domain, pageNumber) {
-    const url = `https://${domain}/comics/${pageNumber}/`;
+  function parseComicPageImages(html, domain) {
+    const source = String(html || "");
+    const urls = [];
+    const seen = new Set();
+    const push = (match) => {
+      const url = match ? absoluteURL(attribute(match[0], "src"), `https://${domain}`) : "";
+      if (url && !seen.has(url)) {
+        seen.add(url);
+        urls.push(url);
+      }
+    };
+    const single = source.match(/<img\b[^>]*id=["']comicimage["'][^>]*>/i);
+    if (single) {
+      push(single);
+      return urls;
+    }
+    // Game-style comics render several panels per page as comic_data_N images.
+    for (const match of source.matchAll(/<img\b[^>]*id=["']comic_data_[0-9]+["'][^>]*>/gi)) {
+      push(match);
+    }
+    return urls;
+  }
+
+  async function extractComicImage(page) {
+    const url = String(page.url || "");
+    if (!url) return [];
+    const domain = new URL(url).hostname;
     const body = await fetchDirect(url, { maxBytesHint: 2 * 1024 * 1024 });
-    return parseComicPageImage(body, domain);
+    return parseComicPageImages(body, domain);
   }
 
   function normalizeSearchQuery(query) {
@@ -375,14 +648,12 @@
   async function extractDetails(id) {
     const slug = extractSlug(id);
     const profileUrl = `${PROFILE_URL}?url=${encodeURIComponent(slug)}`;
-    const [html, domain] = await Promise.all([
-      fetchDirect(profileUrl, { maxBytesHint: 2 * 1024 * 1024 }),
-      resolveDomain(slug).catch(() => null),
-    ]);
+    const profileHTML = await fetchDirect(profileUrl, { maxBytesHint: 2 * 1024 * 1024 });
+    const domain = await resolveDomain(slug, profileHTML).catch(() => null);
     if (!domain) {
       throw new Error("Comic Fury could not resolve an external comic site for this profile.");
     }
-    return parseDetailsHTML(html, slug, domain);
+    return parseDetailsHTML(profileHTML, slug, domain);
   }
 
   async function extractChapters(id) {
@@ -419,17 +690,18 @@
 
     const pages = [];
     const seen = new Set();
-    for (const page of chapter.pages) {
-      const url = await extractComicImage(domain, page.number);
-      if (!url || seen.has(url)) continue;
-      seen.add(url);
-      pages.push({
-        url,
-        headers: {
-          Accept: "image/avif,image/webp,image/*,*/*",
-          Referer: `https://${domain}/`,
-        },
-      });
+    for (const page of await chapterPages(chapter, domain)) {
+      for (const url of await extractComicImage(page)) {
+        if (!url || seen.has(url)) continue;
+        seen.add(url);
+        pages.push({
+          url,
+          headers: {
+            Accept: "image/avif,image/webp,image/*,*/*",
+            Referer: `https://${domain}/`,
+          },
+        });
+      }
     }
     if (!pages.length) {
       throw new Error("Comic Fury returned no readable pages for this chapter.");

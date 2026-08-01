@@ -83,44 +83,6 @@
     {
       "contentRating": "suggestive",
       "contentType": "pageImages",
-      "familyID": "mangadex",
-      "icon": {
-        "path": "modules/mangadex/icon.png",
-        "sha256": "1e4c13fe2c1d055d56044425e878ad7a8e33acd836692100d2e9d40786373fad"
-      },
-      "id": "mangadex",
-      "language": "en",
-      "manifest": {
-        "path": "modules/mangadex/manifest.json",
-        "sha256": "f15266f2af9dc233b0f27f04ec4030b0f30ad2ccae578ce7342cf916e51feed7"
-      },
-      "name": "MangaDex",
-      "releaseTrack": "stable",
-      "status": "retired",
-      "version": "1.0.0"
-    },
-    {
-      "contentRating": "suggestive",
-      "contentType": "pageImages",
-      "familyID": "mangadex-v2",
-      "icon": {
-        "path": "modules/mangadex-v2/icon.png",
-        "sha256": "1e4c13fe2c1d055d56044425e878ad7a8e33acd836692100d2e9d40786373fad"
-      },
-      "id": "mangadex-v2",
-      "language": "en",
-      "manifest": {
-        "path": "modules/mangadex-v2/manifest.json",
-        "sha256": "7e07273aafc1a81a304a32c14be83476030de564bce9f330fdadf9211641c4e8"
-      },
-      "name": "MangaDex",
-      "releaseTrack": "beta",
-      "status": "active",
-      "version": "1.0.1"
-    },
-    {
-      "contentRating": "suggestive",
-      "contentType": "pageImages",
       "familyID": "mangakatana",
       "icon": {
         "path": "modules/mangakatana/icon.png",
@@ -397,12 +359,12 @@
       "language": "en",
       "manifest": {
         "path": "modules/comicfury/manifest.json",
-        "sha256": "7b9a0844bf1cd6b7f91fb1819e8b637555b2c4e7905b1427e55537f568d77aff"
+        "sha256": "7822cbdb867df52b63bcde4fcc2409ca8eb20e02d36b93e8d1fbedce50d1d93a"
       },
       "name": "Comic Fury",
       "releaseTrack": "beta",
       "status": "active",
-      "version": "1.0.0"
+      "version": "1.0.1"
     },
     {
       "contentRating": "unknown",

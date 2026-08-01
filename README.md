@@ -8,7 +8,6 @@ separate from the app checkout and intentionally contains no module ZIPs.
 | WeebCentral | Page images | Direct HTTPS through `fetchv2` |
 | MangaFire | Page images | Protected browser flow through `pagev2` |
 | Internet Archive Open Texts | Text, EPUB, PDF | Official search, metadata, and download APIs through `fetchv2` |
-| MangaDex | Page images | Official MangaDex API through `fetchv2` |
 | MangaKatana | Page images | Direct HTTPS HTML through `fetchv2` |
 | MGRead (LikeManga) | Page images | Direct HTTPS HTML through `fetchv2` (`mgread.io`; `likemanga.io` redirects) |
 | Black Clover Online | Page images | Single-series `fetchv2` |
@@ -38,7 +37,7 @@ Run the **app-shaped live probe** (Node `vm` handler walk: discovery/search → 
 
 ```sh
 # one module, live network
-npm run test:module -- mangadex
+npm run test:module -- comicfury
 
 # every module in index.json
 npm run test:module

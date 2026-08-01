@@ -12,12 +12,12 @@
  *
  * Usage:
  *   node scripts/module-tester.mjs                 # all modules in index.json (live)
- *   node scripts/module-tester.mjs mangadex        # one module
+ *   node scripts/module-tester.mjs comicfury      # one module
  *   node scripts/module-tester.mjs --fixtures      # fixture-only path (no network)
  *   node scripts/module-tester.mjs --limit 2
  *   node scripts/module-tester.mjs --report        # write reports/module-test-latest.{json,html}
  *   node scripts/module-tester.mjs --report --out reports/custom
- *   node scripts/module-tester.mjs mangadex --query "solo" --limit 3
+ *   node scripts/module-tester.mjs comicfury --query "colony" --limit 3
  */
 import assert from "node:assert/strict";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
@@ -264,18 +264,6 @@ async function createRuntime(slug, mode) {
           if (/\/book\/[^/]+\/chapter-\d+/.test(u) && chapter) return fixtureResponse(chapter);
           if (/\/book\//.test(u) && details) return fixtureResponse(details);
           if (home) return fixtureResponse(home);
-        }
-        if (slug === "mangadex" || slug === "mangadex-v2") {
-          const parsed = new URL(u);
-          if (parsed.pathname === "/manga" && home) return fixtureResponse(home);
-          if (parsed.pathname.includes("22222222-2222-4222-8222-222222222222") && special.detailsExcluded) {
-            return fixtureResponse(special.detailsExcluded);
-          }
-          if (parsed.pathname.endsWith("/feed")) {
-            return fixtureResponse(parsed.searchParams.get("offset") === "500" ? special.chaptersPage2 : special.chaptersPage1);
-          }
-          if (parsed.pathname.startsWith("/manga/") && details) return fixtureResponse(details);
-          if (parsed.pathname.startsWith("/at-home/server/") && special.imagesJSON) return fixtureResponse(special.imagesJSON);
         }
         // WeebCentral uses /series/<id> for details and
         // /series/<id>/full-chapter-list for chapters. Resolve the more
@@ -865,7 +853,7 @@ function renderHTML(summary) {
 
   <h2>How to re-run</h2>
   <div class="lifecycle">
-    <code>npm run test:module:report</code> · fixtures: <code>npm run test:module:report:fixtures</code> · subset: <code>npm run test:module -- mangadex --report</code>
+    <code>npm run test:module:report</code> · fixtures: <code>npm run test:module:report:fixtures</code> · subset: <code>npm run test:module -- comicfury --report</code>
   </div>
 </main>
 </body>
