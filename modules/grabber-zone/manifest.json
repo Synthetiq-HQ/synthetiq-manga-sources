@@ -23,7 +23,7 @@
   "contractVersion": 1,
   "entry": {
     "path": "modules/grabber-zone/index.js",
-    "sha256": "28b251c65d14b780eeac204abb3a64a60de4cbe0c0c0cd68347b021fe4d3b123"
+    "sha256": "d3376050a54560308a5f34a59c426e96abaa51fda533dabcaa51e1e27cfaf2e2"
   },
   "familyID": "grabber-zone",
   "icon": {

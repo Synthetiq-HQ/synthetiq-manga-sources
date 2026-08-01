@@ -271,8 +271,24 @@
 
   function parseImagesHTML(html) {
     const source = String(html || "");
-    const reader = source.match(/<div\b[^>]*class=["'][^"']*reading-content[^"']*["'][^>]*>([\s\S]*?)<\/div>\s*(?:<div\b[^>]*class=["'][^"']*(?:nav|manga-ad)[^"']*)/i);
-    const scope = reader ? reader[1] : source;
+    // The reader is the reading-content div that hosts the chapter images
+    // (marked by the wp-manga-current-chap input); header and sidebar widgets
+    // reuse the reading-content* class, so pick the reader div explicitly and
+    // scope from it to the end of the page. The img pattern below only
+    // accepts wp-manga-chapter-img entries, so stray markup is ignored.
+    const readerOpen = /<div\b[^>]*class=["'][^"']*reading-content[^"']*["'][^>]*>/gi;
+    let readerStart = -1;
+    let firstStart = -1;
+    let readerMatch;
+    while ((readerMatch = readerOpen.exec(source)) !== null) {
+      if (firstStart < 0) firstStart = readerMatch.index;
+      if (/wp-manga-current-chap/.test(source.slice(readerMatch.index, readerMatch.index + 800))) {
+        readerStart = readerMatch.index;
+        break;
+      }
+    }
+    if (readerStart < 0) readerStart = firstStart;
+    const scope = readerStart >= 0 ? source.slice(readerStart) : source;
     const pages = [];
     const seen = new Set();
     // WP-Manga chapter pages are marked with the wp-manga-chapter-img class and

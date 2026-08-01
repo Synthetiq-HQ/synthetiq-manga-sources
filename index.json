@@ -283,7 +283,7 @@
       "language": "en",
       "manifest": {
         "path": "modules/grabber-zone/manifest.json",
-        "sha256": "b383f7a51b322b98f75cf0504ea6c2e1450e13f2ba276744ea6c4ac457c64a8e"
+        "sha256": "d066824fe79922ecddab4b3968e9fd6c47f6a1ee3c12fc105c1e97bc070e5b30"
       },
       "name": "Grabber Zone",
       "releaseTrack": "beta",
