@@ -282,6 +282,8 @@
 
     let offset = 0;
     let total = Infinity;
+    let englishTotal = 0;
+    const filtered = { external: 0, unavailable: 0, noPages: 0 };
     const collected = [];
     const seen = new Set();
     try {
@@ -289,12 +291,26 @@
         const params = [...baseParams, ["offset", String(offset)]];
         const payload = await fetchJSON(`${BASE_URL}/manga/${mangaID}/feed?${queryString(params)}`);
         total = Number(payload.total) || 0;
+        englishTotal = total;
         const batch = Array.isArray(payload.data) ? payload.data : [];
         for (const entry of batch) {
+          const attributes = entry.attributes || {};
+          if (attributes.externalUrl) {
+            filtered.external += 1;
+            continue;
+          }
+          if (attributes.isUnavailable === true) {
+            filtered.unavailable += 1;
+            continue;
+          }
+          if (attributes.pages === 0) {
+            filtered.noPages += 1;
+            continue;
+          }
           const mapped = chapterFrom(entry);
           if (!mapped || seen.has(mapped.id)) continue;
           seen.add(mapped.id);
-          collected.push({ ...mapped, sortKey: sortKeyFor(entry.attributes || {}) });
+          collected.push({ ...mapped, sortKey: sortKeyFor(attributes) });
         }
         offset += CHAPTER_PAGE_LIMIT;
         if (typeof globalThis.reportProgress === "function") {
@@ -309,8 +325,26 @@
       );
     }
     if (!collected.length) {
+      if (englishTotal === 0) {
+        // Distinguish "no chapters at all" from "chapters exist, but not in English".
+        const other = await fetchJSON(`${BASE_URL}/manga/${mangaID}/feed?${queryString([
+          ["order[chapter]", "asc"],
+          ["limit", String(CHAPTER_PAGE_LIMIT)],
+        ])}`);
+        const otherTotal = Number(other.total) || 0;
+        if (otherTotal === 0) {
+          throw new Error("MangaDex has no chapters in any language for this title.");
+        }
+        const languages = Array.from(new Set((Array.isArray(other.data) ? other.data : [])
+          .map((entry) => entry && entry.attributes && entry.attributes.translatedLanguage)
+          .filter(Boolean)));
+        const languageLabel = languages.length ? languages.join(", ") : "other languages";
+        throw new Error(
+          `This title has no readable English chapters on MangaDex (the English release is licensed-external). It has chapters in: ${languageLabel}.`,
+        );
+      }
       throw new Error(
-        "MangaDex returned no English chapters hosted on MangaDex@Home for this title (they may be external-only or restricted).",
+        `MangaDex has English chapters for this title, but they are external-only or unavailable on MangaDex@Home (external: ${filtered.external}, unavailable: ${filtered.unavailable}, zero-page: ${filtered.noPages}).`,
       );
     }
     // Deterministic local ordering: pagination drift on the upstream feed must

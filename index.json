@@ -111,12 +111,12 @@
       "language": "en",
       "manifest": {
         "path": "modules/mangadex-v2/manifest.json",
-        "sha256": "66ef2254ff11575dc85de096f2c65b57ce3c56af3880d0692e0cfbbe7b96f1da"
+        "sha256": "7e07273aafc1a81a304a32c14be83476030de564bce9f330fdadf9211641c4e8"
       },
       "name": "MangaDex",
       "releaseTrack": "beta",
       "status": "active",
-      "version": "1.0.0"
+      "version": "1.0.1"
     },
     {
       "contentRating": "suggestive",
