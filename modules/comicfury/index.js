@@ -438,23 +438,25 @@
     return chapters;
   }
 
-  // Legacy table layout: chapters grouped by <tr class="chaptertitle"> rows with
-  // <h3 class="archivechapter"> headings, pages in <tr class="archivecomic"> rows.
+  // Legacy table layout: chapters grouped by <tr class="chaptertitle"> rows
+  // (some sites omit the class on the <h3> heading and/or on the page rows).
+  // Page rows link to /comics/<N>/; the row's own number is repeated in a
+  // "comments" link, so numbers are deduplicated.
   function parseLegacyTableChapters(source, base) {
     const chapters = [];
-    const chapterPattern = /<tr class="chaptertitle">[\s\S]*?<h3 class="archivechapter">([\s\S]*?)<\/h3>[\s\S]*?<\/tr>([\s\S]*?)(?=<tr class="chaptertitle">|$)/gi;
+    const chapterPattern = /<tr\b[^>]*class="chaptertitle\s*"[^>]*>[\s\S]*?<h3[^>]*>([\s\S]*?)<\/h3>[\s\S]*?<\/tr>([\s\S]*?)(?=<tr\b[^>]*class="chaptertitle\s*"|$)/gi;
     let chapterMatch;
-    let chapterIndex = 0;
     while ((chapterMatch = chapterPattern.exec(source)) !== null) {
-      chapterIndex += 1;
       const title = stripHTML(chapterMatch[1]);
       const pages = [];
-      const comicPattern = /<tr class="archivecomic">[\s\S]*?<a href="\/comics\/([0-9]+)\/">([\s\S]*?)<\/a>/gi;
+      const seen = new Set();
+      const comicPattern = /<tr\b[^>]*>[\s\S]*?<a\b[^>]*href="\/comics\/([0-9]+)\/"[\s\S]*?<\/tr>/gi;
       let comic;
       while ((comic = comicPattern.exec(chapterMatch[2])) !== null) {
         const number = Number(comic[1]);
-        if (!Number.isFinite(number)) continue;
-        pages.push({ number, title: stripHTML(comic[2]), url: `${base}/comics/${number}/` });
+        if (!Number.isFinite(number) || seen.has(number)) continue;
+        seen.add(number);
+        pages.push({ number, title: `Page ${number}`, url: `${base}/comics/${number}/` });
       }
       if (!pages.length) continue;
       chapters.push({

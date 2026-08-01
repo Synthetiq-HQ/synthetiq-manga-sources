@@ -359,7 +359,7 @@
       "language": "en",
       "manifest": {
         "path": "modules/comicfury/manifest.json",
-        "sha256": "7822cbdb867df52b63bcde4fcc2409ca8eb20e02d36b93e8d1fbedce50d1d93a"
+        "sha256": "457107cd6359be161a3a366cbc01890811d84d019086634c39097c403fad034b"
       },
       "name": "Comic Fury",
       "releaseTrack": "beta",

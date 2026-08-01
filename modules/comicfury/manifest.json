@@ -26,7 +26,7 @@
   "contractVersion": 1,
   "entry": {
     "path": "modules/comicfury/index.js",
-    "sha256": "33c8b4ceb457aaaab47cbdba980dc427b50ac67447fdc010c8c352eecc079fa1"
+    "sha256": "924aa0170bb69e5ed492849f177c0f51c4b4ef563d65c79c20786da8d7fa9ac6"
   },
   "familyID": "comicfury",
   "icon": {
