@@ -1,42 +1,4 @@
 {
-  "id": "weebcentral-v2",
-  "familyID": "weebcentral-v2",
-  "legacyIDs": [
-    "weeb-central",
-    "weebcentral",
-    "weebcentral-en"
-  ],
-  "name": "WeebCentral",
-  "version": "4.1.7",
-  "contractVersion": 1,
-  "minimumAppVersion": "1.0.0",
-  "contentType": "pageImages",
-  "language": "en",
-  "contentRating": "suggestive",
-  "releaseTrack": "stable",
-  "status": "active",
-  "isFlagship": true,
-  "capabilities": [
-    "popular",
-    "latest",
-    "search",
-    "tags",
-    "details",
-    "chapters",
-    "images",
-    "imageRequest",
-    "discovery"
-  ],
-  "baseURL": "https://weebcentral.com",
-  "universalLink": "https://synthetiq.uk/manga/modules/weebcentral-v2",
-  "entry": {
-    "path": "modules/weebcentral/index.js",
-    "sha256": "a01c570dbb5469ca1f5ec6255e690324f525a87242104433594ec8a71662fb4b"
-  },
-  "icon": {
-    "path": "modules/weebcentral/icon.png",
-    "sha256": "9a684e14510979d6e45513efd43d5b421ca66c6d6f6c3ad3bcfb1fc259d8780f"
-  },
   "allowedHosts": [
     "weebcentral.com",
     "*.weebcentral.com",
@@ -48,15 +10,53 @@
     "*.akamaihd.net",
     "*.cloudfront.net"
   ],
-  "limits": {
-    "timeoutMilliseconds": 30000,
-    "maxConcurrentRequests": 2,
-    "maxResponseBytes": 16777216,
-    "maxScriptBytes": 524288,
-    "cacheTTLSeconds": 900
-  },
   "attribution": {
     "author": "Synthetiq-HQ",
     "website": "https://weebcentral.com"
-  }
+  },
+  "baseURL": "https://weebcentral.com",
+  "capabilities": [
+    "popular",
+    "latest",
+    "search",
+    "tags",
+    "details",
+    "chapters",
+    "images",
+    "imageRequest",
+    "discovery"
+  ],
+  "contentRating": "suggestive",
+  "contentType": "pageImages",
+  "contractVersion": 1,
+  "entry": {
+    "path": "modules/weebcentral/index.js",
+    "sha256": "a01c570dbb5469ca1f5ec6255e690324f525a87242104433594ec8a71662fb4b"
+  },
+  "familyID": "weebcentral-v2",
+  "icon": {
+    "path": "modules/weebcentral/icon.png",
+    "sha256": "9a684e14510979d6e45513efd43d5b421ca66c6d6f6c3ad3bcfb1fc259d8780f"
+  },
+  "id": "weebcentral-v2",
+  "isFlagship": true,
+  "language": "en",
+  "legacyIDs": [
+    "weeb-central",
+    "weebcentral",
+    "weebcentral-en"
+  ],
+  "limits": {
+    "cacheTTLSeconds": 900,
+    "maxConcurrentRequests": 2,
+    "maxResponseBytes": 16777216,
+    "maxScriptBytes": 524288,
+    "timeoutMilliseconds": 30000
+  },
+  "minimumAppVersion": "1.0.0",
+  "name": "WeebCentral",
+  "releaseTrack": "stable",
+  "status": "active",
+  "universalLink": "https://synthetiq.uk/manga/modules/weebcentral-v2",
+  "version": "4.1.7"
 }

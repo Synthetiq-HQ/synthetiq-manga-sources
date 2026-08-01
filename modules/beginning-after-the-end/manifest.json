@@ -1,16 +1,18 @@
 {
-  "id": "beginning-after-the-end",
-  "familyID": "beginning-after-the-end",
-  "legacyIDs": [],
-  "name": "The Beginning After The End",
-  "version": "1.0.2",
-  "contractVersion": 1,
-  "minimumAppVersion": "1.0.0",
-  "contentType": "pageImages",
-  "language": "en",
-  "contentRating": "suggestive",
-  "releaseTrack": "beta",
-  "status": "active",
+  "allowedHosts": [
+    "thebeginningaftertheendmanga.com",
+    "www.thebeginningaftertheendmanga.com",
+    "blogger.googleusercontent.com",
+    "*.thebeginningaftertheendmanga.com"
+  ],
+  "attribution": {
+    "author": "Synthetiq-HQ",
+    "authorizationURL": null,
+    "licenseName": null,
+    "licenseURL": null,
+    "website": "https://thebeginningaftertheendmanga.com"
+  },
+  "baseURL": "https://thebeginningaftertheendmanga.com",
   "capabilities": [
     "popular",
     "latest",
@@ -21,34 +23,32 @@
     "imageRequest",
     "discovery"
   ],
-  "baseURL": "https://thebeginningaftertheendmanga.com",
-  "universalLink": "https://synthetiq.uk/manga/modules/beginning-after-the-end",
+  "contentRating": "suggestive",
+  "contentType": "pageImages",
+  "contractVersion": 1,
   "entry": {
     "path": "modules/beginning-after-the-end/index.js",
     "sha256": "31fc69d281b7a367114b9f5a1bcb4d94c53ac505dfff7b76348c75a5378c6b41"
   },
+  "familyID": "beginning-after-the-end",
   "icon": {
     "path": "modules/beginning-after-the-end/icon.png",
     "sha256": "822eb0488badda510c87a0c24e4443fef2f428d918f44b4aac0c07973967a058"
   },
-  "allowedHosts": [
-    "thebeginningaftertheendmanga.com",
-    "www.thebeginningaftertheendmanga.com",
-    "blogger.googleusercontent.com",
-    "*.thebeginningaftertheendmanga.com"
-  ],
+  "id": "beginning-after-the-end",
+  "language": "en",
+  "legacyIDs": [],
   "limits": {
-    "timeoutMilliseconds": 25000,
+    "cacheTTLSeconds": 900,
     "maxConcurrentRequests": 2,
     "maxResponseBytes": 8388608,
     "maxScriptBytes": 262144,
-    "cacheTTLSeconds": 900
+    "timeoutMilliseconds": 25000
   },
-  "attribution": {
-    "author": "Synthetiq-HQ",
-    "website": "https://thebeginningaftertheendmanga.com",
-    "licenseName": null,
-    "licenseURL": null,
-    "authorizationURL": null
-  }
+  "minimumAppVersion": "1.0.0",
+  "name": "The Beginning After The End",
+  "releaseTrack": "beta",
+  "status": "active",
+  "universalLink": "https://synthetiq.uk/manga/modules/beginning-after-the-end",
+  "version": "1.0.2"
 }

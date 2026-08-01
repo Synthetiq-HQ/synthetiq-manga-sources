@@ -1,16 +1,21 @@
 {
-  "id": "haikyuu",
-  "familyID": "haikyuu",
-  "legacyIDs": [],
-  "name": "Haikyuu",
-  "version": "1.0.2",
-  "contractVersion": 1,
-  "minimumAppVersion": "1.0.0",
-  "contentType": "pageImages",
-  "language": "en",
-  "contentRating": "suggestive",
-  "releaseTrack": "beta",
-  "status": "active",
+  "allowedHosts": [
+    "qubn.us",
+    "read-haikyuu.com",
+    "www.read-haikyuu.com",
+    "lastation.us",
+    "*.qubn.us",
+    "*.lastation.us",
+    "*.read-haikyuu.com"
+  ],
+  "attribution": {
+    "author": "Synthetiq-HQ",
+    "authorizationURL": null,
+    "licenseName": null,
+    "licenseURL": null,
+    "website": "https://www.read-haikyuu.com"
+  },
+  "baseURL": "https://www.read-haikyuu.com",
   "capabilities": [
     "popular",
     "latest",
@@ -21,37 +26,32 @@
     "imageRequest",
     "discovery"
   ],
-  "baseURL": "https://www.read-haikyuu.com",
-  "universalLink": "https://synthetiq.uk/manga/modules/haikyuu",
+  "contentRating": "suggestive",
+  "contentType": "pageImages",
+  "contractVersion": 1,
   "entry": {
     "path": "modules/haikyuu/index.js",
     "sha256": "8de130cecb2e72e9bf8ada090449afcf45df0a6b90ce26e560fdf9c77bbacd0f"
   },
+  "familyID": "haikyuu",
   "icon": {
     "path": "modules/haikyuu/icon.png",
     "sha256": "f1e408839b2ff5d36eb1cf040f457d37b95903e6a2aa075ad173cbc97951f078"
   },
-  "allowedHosts": [
-    "qubn.us",
-    "read-haikyuu.com",
-    "www.read-haikyuu.com",
-    "lastation.us",
-    "*.qubn.us",
-    "*.lastation.us",
-    "*.read-haikyuu.com"
-  ],
+  "id": "haikyuu",
+  "language": "en",
+  "legacyIDs": [],
   "limits": {
-    "timeoutMilliseconds": 25000,
+    "cacheTTLSeconds": 900,
     "maxConcurrentRequests": 2,
     "maxResponseBytes": 8388608,
     "maxScriptBytes": 262144,
-    "cacheTTLSeconds": 900
+    "timeoutMilliseconds": 25000
   },
-  "attribution": {
-    "author": "Synthetiq-HQ",
-    "website": "https://www.read-haikyuu.com",
-    "licenseName": null,
-    "licenseURL": null,
-    "authorizationURL": null
-  }
+  "minimumAppVersion": "1.0.0",
+  "name": "Haikyuu",
+  "releaseTrack": "beta",
+  "status": "active",
+  "universalLink": "https://synthetiq.uk/manga/modules/haikyuu",
+  "version": "1.0.2"
 }

@@ -1,0 +1,50 @@
+{
+  "allowedHosts": [
+    "xkcd.com",
+    "*.xkcd.com",
+    "imgs.xkcd.com"
+  ],
+  "attribution": {
+    "author": "Synthetiq-HQ",
+    "website": "https://xkcd.com"
+  },
+  "baseURL": "https://xkcd.com",
+  "capabilities": [
+    "popular",
+    "latest",
+    "search",
+    "details",
+    "chapters",
+    "images",
+    "imageRequest",
+    "discovery"
+  ],
+  "contentRating": "safe",
+  "contentType": "pageImages",
+  "contractVersion": 1,
+  "entry": {
+    "path": "modules/xkcd/index.js",
+    "sha256": "0a8971c59ed38007cda693d64a2128797e76b9f02fc62ad68353864dbbf4afcb"
+  },
+  "familyID": "xkcd",
+  "icon": {
+    "path": "modules/xkcd/icon.png",
+    "sha256": "a6fd8d5ded35b29f8c21180464ce05dd6d56d777a1aad0ae0dd0f507328dff0d"
+  },
+  "id": "xkcd",
+  "language": "en",
+  "legacyIDs": [],
+  "limits": {
+    "cacheTTLSeconds": 900,
+    "maxConcurrentRequests": 2,
+    "maxResponseBytes": 16777216,
+    "maxScriptBytes": 524288,
+    "timeoutMilliseconds": 30000
+  },
+  "minimumAppVersion": "1.0.0",
+  "name": "xkcd",
+  "releaseTrack": "beta",
+  "status": "active",
+  "universalLink": "https://synthetiq.uk/manga/modules/xkcd",
+  "version": "1.0.0"
+}

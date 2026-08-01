@@ -1,19 +1,17 @@
 {
-  "id": "mgread",
-  "familyID": "mgread",
-  "legacyIDs": [
-    "likemanga",
-    "likemanga-io"
+  "allowedHosts": [
+    "mgread.io",
+    "*.mgread.io",
+    "likemanga.io"
   ],
-  "name": "MGRead (LikeManga)",
-  "version": "1.0.1",
-  "contractVersion": 1,
-  "minimumAppVersion": "1.0.0",
-  "contentType": "pageImages",
-  "language": "en",
-  "contentRating": "suggestive",
-  "releaseTrack": "beta",
-  "status": "active",
+  "attribution": {
+    "author": "Synthetiq-HQ",
+    "authorizationURL": null,
+    "licenseName": null,
+    "licenseURL": null,
+    "website": "https://mgread.io"
+  },
+  "baseURL": "https://mgread.io",
   "capabilities": [
     "popular",
     "latest",
@@ -24,33 +22,35 @@
     "imageRequest",
     "discovery"
   ],
-  "baseURL": "https://mgread.io",
-  "universalLink": "https://synthetiq.uk/manga/modules/mgread",
+  "contentRating": "suggestive",
+  "contentType": "pageImages",
+  "contractVersion": 1,
   "entry": {
     "path": "modules/mgread/index.js",
-    "sha256": "35f1e44bf9c81daca12b56bc35d5e3e0266409b2ad691f5981aef69d7f8c07d4"
+    "sha256": "f79b06840b390dd7a3ef243539dd66f96671d979d305d5d7f5c6d99fbd7095ce"
   },
+  "familyID": "mgread",
   "icon": {
     "path": "modules/mgread/icon.png",
     "sha256": "454ccf2602bb0d2960f911f87bd305b34835beb938a47ce43f1c8febd6743e75"
   },
-  "allowedHosts": [
-    "mgread.io",
-    "*.mgread.io",
-    "likemanga.io"
+  "id": "mgread",
+  "language": "en",
+  "legacyIDs": [
+    "likemanga",
+    "likemanga-io"
   ],
   "limits": {
-    "timeoutMilliseconds": 30000,
+    "cacheTTLSeconds": 900,
     "maxConcurrentRequests": 2,
     "maxResponseBytes": 8388608,
     "maxScriptBytes": 262144,
-    "cacheTTLSeconds": 900
+    "timeoutMilliseconds": 30000
   },
-  "attribution": {
-    "author": "Synthetiq-HQ",
-    "website": "https://mgread.io",
-    "licenseName": null,
-    "licenseURL": null,
-    "authorizationURL": null
-  }
+  "minimumAppVersion": "1.0.0",
+  "name": "MGRead (LikeManga)",
+  "releaseTrack": "beta",
+  "status": "active",
+  "universalLink": "https://synthetiq.uk/manga/modules/mgread",
+  "version": "1.0.3"
 }

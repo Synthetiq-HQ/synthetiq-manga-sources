@@ -13,7 +13,7 @@
 | MGRead | Multi-title | HTML scrape |
 | Internet Archive | Publications | Official APIs only |
 | Solo Leveling, Haikyuu, Black Clover, Kagurabachi, TBATE, Gachiakuta | Single-series | Dedicated sites; real cover icons |
-| MangaDex | Multi-title | **Retired** (cover/chapter reliability) |
+| MangaDex | Multi-title | Official API. `mangadex` retired; shipped as `mangadex-v2` (2026-08) |
 
 ## Batch 1 — High value, usually scrape-friendly
 

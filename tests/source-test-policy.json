@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "modules": {
+    "atsu": { "chapterScope": "api" },
+    "weebcentral-v2": { "chapterScope": "endpoint-scoped" },
+    "mangafire-v2": { "chapterScope": "api" },
+    "internet-archive": { "chapterScope": "resource-derived" },
+    "mangadex": { "chapterScope": "api" },
+    "mangadex-v2": { "chapterScope": "api" },
+    "mangakatana": {
+      "chapterScope": "selected-series-dom",
+      "requiredCodeFragments": ["function parseChaptersHTML(html, seriesURL)", "seriesPrefix"]
+    },
+    "mgread": {
+      "chapterScope": "selected-series-dom",
+      "requiredCodeFragments": ["function parseChaptersHTML(html, seriesURL)", "seriesPrefix"]
+    },
+    "black-clover": { "chapterScope": "fixed-series-dom" },
+    "kagurabachi": { "chapterScope": "fixed-series-dom" },
+    "beginning-after-the-end": { "chapterScope": "fixed-series-dom" },
+    "solo-leveling": { "chapterScope": "fixed-series-dom" },
+    "gachiakuta": { "chapterScope": "fixed-series-dom" },
+    "haikyuu": { "chapterScope": "fixed-series-dom" },
+    "weeb-central": { "chapterScope": "fixed-series" },
+    "snafu": { "chapterScope": "source-scoped" },
+    "grabber-zone": {
+      "chapterScope": "selected-series-dom",
+      "requiredCodeFragments": ["function parseChaptersHTML(html, seriesURL)", "seriesPrefix"]
+    },
+    "xkcd": { "chapterScope": "api" },
+    "comicgrowl": { "chapterScope": "endpoint-scoped" },
+    "dbmultiverse": { "chapterScope": "fixed-series" },
+    "comicfury": { "chapterScope": "external-archive" },
+    "novelfire": {
+      "chapterScope": "selected-series-dom",
+      "requiredCodeFragments": ["function chaptersFromHTML(html, slug)", "match[3].toLowerCase() !== slug"]
+    }
+  }
+}

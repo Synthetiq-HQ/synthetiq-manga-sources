@@ -1,0 +1,9 @@
+{
+  "result": "ok",
+  "baseUrl": "https://fixture.mangadex.network:443",
+  "chapter": {
+    "hash": "fixturehash123",
+    "data": ["p1-fixture.jpg", "p2-fixture.png"],
+    "dataSaver": ["p1-fixture-ds.jpg", "p2-fixture-ds.jpg"]
+  }
+}

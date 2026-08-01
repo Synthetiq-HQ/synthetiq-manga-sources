@@ -1,16 +1,17 @@
 {
-  "id": "mangadex",
-  "familyID": "mangadex",
-  "legacyIDs": [],
-  "name": "MangaDex",
-  "version": "1.0.0",
-  "contractVersion": 1,
-  "minimumAppVersion": "1.0.0",
-  "contentType": "pageImages",
-  "language": "en",
-  "contentRating": "suggestive",
-  "releaseTrack": "stable",
-  "status": "retired",
+  "allowedHosts": [
+    "api.mangadex.org",
+    "uploads.mangadex.org",
+    "*.mangadex.network"
+  ],
+  "attribution": {
+    "author": "MangaDex",
+    "authorizationURL": "https://api.mangadex.org/docs/",
+    "licenseName": null,
+    "licenseURL": null,
+    "website": "https://mangadex.org"
+  },
+  "baseURL": "https://api.mangadex.org",
   "capabilities": [
     "popular",
     "latest",
@@ -21,33 +22,32 @@
     "imageRequest",
     "discovery"
   ],
-  "baseURL": "https://api.mangadex.org",
-  "universalLink": "https://synthetiq.uk/manga/modules/mangadex",
+  "contentRating": "suggestive",
+  "contentType": "pageImages",
+  "contractVersion": 1,
   "entry": {
     "path": "modules/mangadex/index.js",
     "sha256": "fa0fbc246ae120889565a57c78b6bd5b6278bbf520261117235eeeae6b56d664"
   },
+  "familyID": "mangadex",
   "icon": {
     "path": "modules/mangadex/icon.png",
     "sha256": "1e4c13fe2c1d055d56044425e878ad7a8e33acd836692100d2e9d40786373fad"
   },
-  "allowedHosts": [
-    "api.mangadex.org",
-    "uploads.mangadex.org",
-    "*.mangadex.network"
-  ],
+  "id": "mangadex",
+  "language": "en",
+  "legacyIDs": [],
   "limits": {
-    "timeoutMilliseconds": 20000,
+    "cacheTTLSeconds": 900,
     "maxConcurrentRequests": 2,
     "maxResponseBytes": 8388608,
     "maxScriptBytes": 262144,
-    "cacheTTLSeconds": 900
+    "timeoutMilliseconds": 20000
   },
-  "attribution": {
-    "author": "MangaDex",
-    "website": "https://mangadex.org",
-    "licenseName": null,
-    "licenseURL": null,
-    "authorizationURL": "https://api.mangadex.org/docs/"
-  }
+  "minimumAppVersion": "1.0.0",
+  "name": "MangaDex",
+  "releaseTrack": "stable",
+  "status": "retired",
+  "universalLink": "https://synthetiq.uk/manga/modules/mangadex",
+  "version": "1.0.0"
 }

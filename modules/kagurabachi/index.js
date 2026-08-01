@@ -188,6 +188,12 @@
       .sort((a, b) => b.score - a.score);
 
     if (scored.length) return scored[0].url;
+    const siteMark = decodeEntities(
+      (html.match(/<img\b[^>]*class=["'][^"']*custom-logo[^"']*["'][^>]*(?:data-src|src)=["']([^"']+)["']/i) || [])[1]
+      || (html.match(/<img\b[^>]*(?:data-src|src)=["']([^"']+)["'][^>]*class=["'][^"']*custom-logo/i) || [])[1]
+      || "",
+    );
+    if (siteMark.startsWith("https://")) return siteMark;
     return og.startsWith("https://") ? og : "";
   }
 
@@ -354,4 +360,3 @@
   globalThis.SynthetiqModule = handlers;
   Object.assign(globalThis, handlers);
 })();
-

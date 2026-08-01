@@ -265,7 +265,7 @@ async function createRuntime(slug, mode) {
           if (/\/book\//.test(u) && details) return fixtureResponse(details);
           if (home) return fixtureResponse(home);
         }
-        if (slug === "mangadex") {
+        if (slug === "mangadex" || slug === "mangadex-v2") {
           const parsed = new URL(u);
           if (parsed.pathname === "/manga" && home) return fixtureResponse(home);
           if (parsed.pathname.includes("22222222-2222-4222-8222-222222222222") && special.detailsExcluded) {
@@ -487,6 +487,7 @@ async function testModule(slug, mode, indexEntry) {
       count: Array.isArray(page.items) ? page.items.length : 0,
       hasMore: !!page.hasMore,
       query: effectiveQuery,
+      expectedTitle: expectedTitle || null,
       sample: (page.items || []).slice(0, 3).map(summarizeItem),
     };
     assert.ok(page.items && page.items.length > 0, "search/discovery returned no items");
@@ -513,7 +514,16 @@ async function testModule(slug, mode, indexEntry) {
       hasMore: paginationHasMore,
     };
 
-    const candidates = page.items.slice(0, Math.max(itemLimit, 8));
+    const candidateLimit = Math.max(itemLimit, 8);
+    const searchCandidates = page.items.slice(0, candidateLimit);
+    const normalizedExpectedTitle = expectedTitle.toLowerCase();
+    const candidates = expectedTitle
+      ? searchCandidates.filter((item) => String(item.title || item.name || "").toLowerCase().includes(normalizedExpectedTitle))
+      : searchCandidates;
+    report.stages.searchResults.expectedCandidateCount = candidates.length;
+    if (expectedTitle) {
+      assert.ok(candidates.length > 0, `search returned no displayed result matching ${expectedTitle}`);
+    }
     const detailsResults = [];
     const chapterAttempts = [];
     let details = null;

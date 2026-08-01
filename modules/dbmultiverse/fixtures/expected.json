@@ -1,0 +1,53 @@
+{
+  "search": {
+    "items": [
+      {
+        "id": "https://www.dragonball-multiverse.com/en/accueil.html",
+        "href": "https://www.dragonball-multiverse.com/en/accueil.html",
+        "title": "Dragon Ball Multiverse",
+        "image": "https://www.dragonball-multiverse.com/image.php?idp=1002727&lg=en&ext=png&pw=30137898cb23522b11be8bcf64064cca"
+      }
+    ],
+    "hasMore": false
+  },
+  "details": {
+    "id": "https://www.dragonball-multiverse.com/en/accueil.html",
+    "href": "https://www.dragonball-multiverse.com/en/accueil.html",
+    "url": "https://www.dragonball-multiverse.com/en/accueil.html",
+    "title": "Dragon Ball Multiverse",
+    "description": "An online fan webcomic by Salagir: a multiverse tournament gathers the warriors of every Dragon Ball universe.",
+    "image": "https://www.dragonball-multiverse.com/image.php?idp=1002727&lg=en&ext=png&pw=30137898cb23522b11be8bcf64064cca",
+    "authors": ["Salagir"],
+    "author": "Salagir",
+    "genres": [],
+    "status": "Ongoing"
+  },
+  "chapters": {
+    "count": 2727,
+    "first": {
+      "id": "https://www.dragonball-multiverse.com/en/page-2727.html",
+      "href": "https://www.dragonball-multiverse.com/en/page-2727.html",
+      "url": "https://www.dragonball-multiverse.com/en/page-2727.html",
+      "title": "Page 2727",
+      "number": 2727,
+      "language": "en"
+    },
+    "last": {
+      "id": "https://www.dragonball-multiverse.com/en/page-1.html",
+      "href": "https://www.dragonball-multiverse.com/en/page-1.html",
+      "url": "https://www.dragonball-multiverse.com/en/page-1.html",
+      "title": "Page 1",
+      "number": 1,
+      "language": "en"
+    }
+  },
+  "images": [
+    {
+      "url": "https://www.dragonball-multiverse.com/image.php?idp=1002727&lg=en&ext=png&pw=30137898cb23522b11be8bcf64064cca",
+      "headers": {
+        "Accept": "image/avif,image/webp,image/*,*/*",
+        "Referer": "https://www.dragonball-multiverse.com/"
+      }
+    }
+  ]
+}

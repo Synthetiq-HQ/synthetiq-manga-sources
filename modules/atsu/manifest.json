@@ -1,19 +1,16 @@
 {
-  "id": "atsu",
-  "familyID": "atsu",
-  "legacyIDs": [
-    "atsu-v3"
+  "allowedHosts": [
+    "atsu.moe",
+    "cdn.atsu.moe"
   ],
-  "name": "Atsu",
-  "version": "1.0.5",
-  "contractVersion": 1,
-  "minimumAppVersion": "1.0.0",
-  "contentType": "pageImages",
-  "language": "en",
-  "contentRating": "suggestive",
-  "releaseTrack": "beta",
-  "status": "active",
-  "isFlagship": true,
+  "attribution": {
+    "author": "Synthetiq-HQ",
+    "authorizationURL": null,
+    "licenseName": null,
+    "licenseURL": null,
+    "website": "https://atsu.moe"
+  },
+  "baseURL": "https://atsu.moe",
   "capabilities": [
     "popular",
     "search",
@@ -24,32 +21,35 @@
     "imageRequest",
     "discovery"
   ],
-  "baseURL": "https://atsu.moe",
-  "universalLink": "https://synthetiq.uk/manga/modules/atsu",
+  "contentRating": "suggestive",
+  "contentType": "pageImages",
+  "contractVersion": 1,
   "entry": {
     "path": "modules/atsu/index.js",
     "sha256": "265f6d8359d43c5d9236b76758be12c6e34c00b2b515fcee83bddd7075162caa"
   },
+  "familyID": "atsu",
   "icon": {
     "path": "modules/atsu/icon.png",
     "sha256": "b8feb015e571f0919f63f1fd2ea065ad337d98b045eeb9157a32bc7ceb995dcc"
   },
-  "allowedHosts": [
-    "atsu.moe",
-    "cdn.atsu.moe"
+  "id": "atsu",
+  "isFlagship": true,
+  "language": "en",
+  "legacyIDs": [
+    "atsu-v3"
   ],
   "limits": {
-    "timeoutMilliseconds": 30000,
+    "cacheTTLSeconds": 900,
     "maxConcurrentRequests": 2,
     "maxResponseBytes": 2097152,
     "maxScriptBytes": 524288,
-    "cacheTTLSeconds": 900
+    "timeoutMilliseconds": 30000
   },
-  "attribution": {
-    "author": "Synthetiq-HQ",
-    "website": "https://atsu.moe",
-    "licenseName": null,
-    "licenseURL": null,
-    "authorizationURL": null
-  }
+  "minimumAppVersion": "1.0.0",
+  "name": "Atsu",
+  "releaseTrack": "beta",
+  "status": "active",
+  "universalLink": "https://synthetiq.uk/manga/modules/atsu",
+  "version": "1.0.5"
 }

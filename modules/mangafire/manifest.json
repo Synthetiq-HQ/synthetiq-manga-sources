@@ -1,20 +1,18 @@
 {
-  "id": "mangafire-v2",
-  "familyID": "mangafire-v2",
-  "legacyIDs": [
-    "mangafire",
-    "mangafire-en"
+  "allowedHosts": [
+    "mangafire.to",
+    "*.mangafire.to",
+    "mfcdn.nl",
+    "*.mfcdn.nl",
+    "*.mfcdn1.xyz",
+    "*.mfcdn2.xyz",
+    "*.mfcdn3.xyz"
   ],
-  "name": "MangaFire",
-  "version": "2.0.5",
-  "contractVersion": 1,
-  "minimumAppVersion": "1.0.0",
-  "contentType": "pageImages",
-  "language": "en",
-  "contentRating": "suggestive",
-  "releaseTrack": "stable",
-  "status": "active",
-  "isFlagship": true,
+  "attribution": {
+    "author": "Synthetiq-HQ",
+    "website": "https://mangafire.to"
+  },
+  "baseURL": "https://mangafire.to",
   "capabilities": [
     "popular",
     "latest",
@@ -27,34 +25,36 @@
     "discovery",
     "interactivePage"
   ],
-  "baseURL": "https://mangafire.to",
-  "universalLink": "https://synthetiq.uk/manga/modules/mangafire-v2",
+  "contentRating": "suggestive",
+  "contentType": "pageImages",
+  "contractVersion": 1,
   "entry": {
     "path": "modules/mangafire/index.js",
-    "sha256": "c304433a076f21c6f30c7c79aade87b21428af54d46a1562b34cd9c0b776c92c"
+    "sha256": "73c11604630fb1449206282a99f819fbd33705fe98fdf81be3e2b91fba7c9f52"
   },
+  "familyID": "mangafire-v2",
   "icon": {
     "path": "modules/mangafire/icon.png",
     "sha256": "07c412838c50652996da91cb3cff1fa03293b778d8e0c3b5bd718096dc7eea05"
   },
-  "allowedHosts": [
-    "mangafire.to",
-    "*.mangafire.to",
-    "mfcdn.nl",
-    "*.mfcdn.nl",
-    "*.mfcdn1.xyz",
-    "*.mfcdn2.xyz",
-    "*.mfcdn3.xyz"
+  "id": "mangafire-v2",
+  "isFlagship": true,
+  "language": "en",
+  "legacyIDs": [
+    "mangafire",
+    "mangafire-en"
   ],
   "limits": {
-    "timeoutMilliseconds": 30000,
+    "cacheTTLSeconds": 300,
     "maxConcurrentRequests": 2,
     "maxResponseBytes": 16777216,
     "maxScriptBytes": 524288,
-    "cacheTTLSeconds": 300
+    "timeoutMilliseconds": 30000
   },
-  "attribution": {
-    "author": "Synthetiq-HQ",
-    "website": "https://mangafire.to"
-  }
+  "minimumAppVersion": "1.0.0",
+  "name": "MangaFire",
+  "releaseTrack": "stable",
+  "status": "active",
+  "universalLink": "https://synthetiq.uk/manga/modules/mangafire-v2",
+  "version": "2.0.6"
 }

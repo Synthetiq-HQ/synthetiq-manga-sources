@@ -1,0 +1,88 @@
+{
+  "search": {
+    "items": [
+      {
+        "id": "https://comic-growl.com/series/fd9075d41e98f",
+        "href": "https://comic-growl.com/series/fd9075d41e98f",
+        "title": "僕のいけずな婚約者",
+        "image": "https://cdn-public.comici.jp/series/1646812/20250217121357404E379BA33C6440DDABAE2A8B424A89056-sm.webp"
+      },
+      {
+        "id": "https://comic-growl.com/series/02674f27ad178",
+        "href": "https://comic-growl.com/series/02674f27ad178",
+        "title": "天空の異世界ビストロ店 ～看板娘ソラノが美味しい幸せ届けます～",
+        "image": "https://cdn-public.comici.jp/series/1646812/202502171213347868BC8E73574912C2BBD480FE2E0F0CC84-sm.webp"
+      }
+    ],
+    "hasMore": false
+  },
+  "details": {
+    "id": "https://comic-growl.com/series/02674f27ad178",
+    "href": "https://comic-growl.com/series/02674f27ad178",
+    "url": "https://comic-growl.com/series/02674f27ad178",
+    "title": "天空の異世界ビストロ店 ～看板娘ソラノが美味しい幸せ届けます～",
+    "description": "異世界の\"おんぼろ\"レストランを立て直す！？空飛ぶ帆船が行き交う異世界に転移してしまった女子高生・ソラノ。助けてくれた料理店の獣人夫妻に恩返しをするために、持ち前のバイタリティで経営改善に挑む！\n【更新予定】第24話-②：8/10(月)｜第25話-①：8/24(月)｜第25話-②：9/14(月)",
+    "image": "https://cdn-public.comici.jp/series/1646812/202502171213347868BC8E73574912C2BBD480FE2E0F0CC84.webp",
+    "authors": ["島田ハチ", "佐倉涼", "すざく"],
+    "author": "島田ハチ, 佐倉涼, すざく",
+    "genres": ["グルメ", "コミカライズ", "ファンタジー・SF", "異世界・転生"],
+    "status": "Unknown"
+  },
+  "chapters": {
+    "count": 2,
+    "first": {
+      "id": "https://comic-growl.com/episodes/4c599dfd47b2f",
+      "href": "https://comic-growl.com/episodes/4c599dfd47b2f",
+      "url": "https://comic-growl.com/episodes/4c599dfd47b2f",
+      "title": "1",
+      "number": 1,
+      "releaseDate": "2025-03-31T00:00:00.000Z",
+      "language": "ja"
+    },
+    "last": {
+      "id": "https://comic-growl.com/episodes/32814a0a2dc44",
+      "href": "https://comic-growl.com/episodes/32814a0a2dc44",
+      "url": "https://comic-growl.com/episodes/32814a0a2dc44",
+      "title": "2-①",
+      "number": 2,
+      "releaseDate": "2025-03-31T00:00:00.000Z",
+      "language": "ja"
+    }
+  },
+  "images": [
+    {
+      "url": "https://viewer.comic-growl.com/book/ac24b821ab18f7def0245340f957bc21/master-fixture-01.jpg",
+      "headers": {
+        "Accept": "image/avif,image/webp,image/*,*/*",
+        "Referer": "https://comic-growl.com/episodes/4c599dfd47b2f"
+      },
+      "scrambled": true,
+      "tiles": {
+        "rows": 4,
+        "columns": 4,
+        "order": [13, 6, 0, 14, 12, 9, 10, 1, 2, 15, 5, 4, 11, 3, 7, 8]
+      }
+    },
+    {
+      "url": "https://viewer.comic-growl.com/book/ac24b821ab18f7def0245340f957bc21/master-fixture-02.jpg",
+      "headers": {
+        "Accept": "image/avif,image/webp,image/*,*/*",
+        "Referer": "https://comic-growl.com/episodes/4c599dfd47b2f"
+      },
+      "scrambled": false
+    },
+    {
+      "url": "https://viewer.comic-growl.com/book/ac24b821ab18f7def0245340f957bc21/master-fixture-03.jpg",
+      "headers": {
+        "Accept": "image/avif,image/webp,image/*,*/*",
+        "Referer": "https://comic-growl.com/episodes/4c599dfd47b2f"
+      },
+      "scrambled": true,
+      "tiles": {
+        "rows": 4,
+        "columns": 4,
+        "order": [5, 2, 13, 8, 9, 10, 1, 14, 12, 4, 6, 11, 15, 0, 3, 7]
+      }
+    }
+  ]
+}

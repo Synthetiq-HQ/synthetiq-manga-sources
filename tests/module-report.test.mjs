@@ -35,6 +35,8 @@ test("module-tester --fixtures --report writes valid JSON and HTML for one modul
     path.join(root, "scripts/module-tester.mjs"),
     "black-clover",
     "--fixtures",
+    "--expect-title",
+    "Black Clover",
     "--report",
     "--out",
     outBase,
@@ -55,6 +57,8 @@ test("module-tester --fixtures --report writes valid JSON and HTML for one modul
   assert.equal(summary.reports[0].module, "black-clover");
   assert.equal(typeof summary.reports[0].passed, "boolean");
   assert.ok(summary.reports[0].stages?.load?.ok);
+  assert.equal(summary.reports[0].stages?.searchResults?.expectedTitle, "Black Clover");
+  assert.equal(summary.reports[0].stages?.searchResults?.expectedCandidateCount, 1);
   assert.ok(summary.reports[0].timingsMs);
   assert.ok(typeof summary.generatedAt === "string");
 

@@ -1,0 +1,54 @@
+{
+  "result": "ok",
+  "response": "collection",
+  "data": [
+    {
+      "id": "eeeeeeee-eeee-4eee-8eee-eeeeeeeeeeee",
+      "type": "chapter",
+      "attributes": {
+        "volume": "2",
+        "chapter": "3",
+        "title": "Turning Point",
+        "translatedLanguage": "en",
+        "externalUrl": null,
+        "isUnavailable": false,
+        "publishAt": "2026-01-15T00:00:00+00:00",
+        "readableAt": "2026-01-15T00:00:00+00:00",
+        "pages": 21
+      }
+    },
+    {
+      "id": "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
+      "type": "chapter",
+      "attributes": {
+        "volume": "1",
+        "chapter": "1",
+        "title": "Awakening (repeat)",
+        "translatedLanguage": "en",
+        "externalUrl": null,
+        "isUnavailable": false,
+        "publishAt": "2026-01-16T00:00:00+00:00",
+        "readableAt": "2026-01-16T00:00:00+00:00",
+        "pages": 18
+      }
+    },
+    {
+      "id": "hhhhhhhh-hhhh-4hhh-8hhh-hhhhhhhhhhhh",
+      "type": "chapter",
+      "attributes": {
+        "volume": "2",
+        "chapter": "3.5",
+        "title": "Interlude",
+        "translatedLanguage": "en",
+        "externalUrl": null,
+        "isUnavailable": false,
+        "publishAt": "2026-01-12T00:00:00+00:00",
+        "readableAt": "2026-01-12T00:00:00+00:00",
+        "pages": 9
+      }
+    }
+  ],
+  "limit": 500,
+  "offset": 500,
+  "total": 501
+}

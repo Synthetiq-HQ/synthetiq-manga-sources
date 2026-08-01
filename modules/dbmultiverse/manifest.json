@@ -1,0 +1,49 @@
+{
+  "allowedHosts": [
+    "www.dragonball-multiverse.com",
+    "dragonball-multiverse.com"
+  ],
+  "attribution": {
+    "author": "Synthetiq-HQ",
+    "website": "https://www.dragonball-multiverse.com"
+  },
+  "baseURL": "https://www.dragonball-multiverse.com",
+  "capabilities": [
+    "popular",
+    "latest",
+    "search",
+    "details",
+    "chapters",
+    "images",
+    "imageRequest",
+    "discovery"
+  ],
+  "contentRating": "suggestive",
+  "contentType": "pageImages",
+  "contractVersion": 1,
+  "entry": {
+    "path": "modules/dbmultiverse/index.js",
+    "sha256": "71d0285f5666c658984f275caef212bbd667ce9cc2f37102392f1bdecc9e12f5"
+  },
+  "familyID": "dbmultiverse",
+  "icon": {
+    "path": "modules/dbmultiverse/icon.png",
+    "sha256": "12f9cea629a6123e5d4ace2f4ceeb711a28d75c0cca3321b0b13fedc5a83a54f"
+  },
+  "id": "dbmultiverse",
+  "language": "en",
+  "legacyIDs": [],
+  "limits": {
+    "cacheTTLSeconds": 900,
+    "maxConcurrentRequests": 2,
+    "maxResponseBytes": 16777216,
+    "maxScriptBytes": 524288,
+    "timeoutMilliseconds": 30000
+  },
+  "minimumAppVersion": "1.0.0",
+  "name": "Dragon Ball Multiverse",
+  "releaseTrack": "beta",
+  "status": "active",
+  "universalLink": "https://synthetiq.uk/manga/modules/dbmultiverse",
+  "version": "1.0.0"
+}

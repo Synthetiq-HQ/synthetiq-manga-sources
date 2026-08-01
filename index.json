@@ -1,298 +1,408 @@
 {
-  "schemaVersion": 1,
-  "generatedAt": "2026-07-19T01:15:00Z",
-  "repository": {
-    "id": "synthetiq.sources",
-    "name": "Synthetiq Manga Sources",
-    "owner": "Synthetiq-HQ",
-    "homepage": "https://github.com/Synthetiq-HQ/synthetiq-manga-sources",
-    "universalLink": "https://synthetiq.uk/manga/modules"
-  },
+  "generatedAt": "2026-08-01T00:00:00Z",
   "modules": [
     {
-      "id": "atsu",
-      "familyID": "atsu",
-      "name": "Atsu",
-      "version": "1.0.5",
-      "language": "en",
-      "contentType": "pageImages",
       "contentRating": "suggestive",
-      "releaseTrack": "beta",
-      "status": "active",
-      "manifest": {
-        "path": "modules/atsu/manifest.json",
-        "sha256": "7d867a506bac35dc4edb3305fc62724ef7e988b80c8b577130348c638d4e04db"
-      },
+      "contentType": "pageImages",
+      "familyID": "atsu",
       "icon": {
         "path": "modules/atsu/icon.png",
         "sha256": "b8feb015e571f0919f63f1fd2ea065ad337d98b045eeb9157a32bc7ceb995dcc"
-      }
+      },
+      "id": "atsu",
+      "language": "en",
+      "manifest": {
+        "path": "modules/atsu/manifest.json",
+        "sha256": "a8a8229d8c36c2835566e143db6a46ef3d3d4ce9042eda6927b2753474d2e409"
+      },
+      "name": "Atsu",
+      "releaseTrack": "beta",
+      "status": "active",
+      "version": "1.0.5",
+      "sortPriority": 4
     },
     {
-      "id": "weebcentral-v2",
-      "familyID": "weebcentral-v2",
-      "name": "WeebCentral",
-      "version": "4.1.7",
-      "language": "en",
-      "contentType": "pageImages",
       "contentRating": "suggestive",
-      "releaseTrack": "stable",
-      "status": "active",
-      "manifest": {
-        "path": "modules/weebcentral/manifest.json",
-        "sha256": "d358bb8ef6378366d05bf2d5e4246c14402075b087d54441857d563b50c6d0a1"
-      },
+      "contentType": "pageImages",
+      "familyID": "weebcentral-v2",
       "icon": {
         "path": "modules/weebcentral/icon.png",
         "sha256": "9a684e14510979d6e45513efd43d5b421ca66c6d6f6c3ad3bcfb1fc259d8780f"
-      }
-    },
-    {
-      "id": "mangafire-v2",
-      "familyID": "mangafire-v2",
-      "name": "MangaFire",
-      "version": "2.0.5",
+      },
+      "id": "weebcentral-v2",
       "language": "en",
-      "contentType": "pageImages",
-      "contentRating": "suggestive",
+      "manifest": {
+        "path": "modules/weebcentral/manifest.json",
+        "sha256": "e02e2ce490edf5146cebb39c0405025f69b708fde34720cd594ae0d4781e343e"
+      },
+      "name": "WeebCentral",
       "releaseTrack": "stable",
       "status": "active",
-      "manifest": {
-        "path": "modules/mangafire/manifest.json",
-        "sha256": "5451dff2a22ebed4780642bbc58fd3cce2dee3953fedb14853ce040f47a0f749"
-      },
+      "version": "4.1.7",
+      "sortPriority": 1
+    },
+    {
+      "contentRating": "suggestive",
+      "contentType": "pageImages",
+      "familyID": "mangafire-v2",
       "icon": {
         "path": "modules/mangafire/icon.png",
         "sha256": "07c412838c50652996da91cb3cff1fa03293b778d8e0c3b5bd718096dc7eea05"
-      }
-    },
-    {
-      "id": "internet-archive",
-      "familyID": "internet-archive",
-      "name": "Internet Archive Open Texts",
-      "version": "1.0.1",
-      "language": "multi",
-      "contentType": "publication",
-      "contentRating": "unknown",
+      },
+      "id": "mangafire-v2",
+      "language": "en",
+      "manifest": {
+        "path": "modules/mangafire/manifest.json",
+        "sha256": "65843da25f927182ebc2ff8d38cf883c7c8ebed0be1b30bb61f26295c8047149"
+      },
+      "name": "MangaFire",
       "releaseTrack": "stable",
       "status": "active",
-      "manifest": {
-        "path": "modules/internet-archive/manifest.json",
-        "sha256": "bbf7278b0887a3d690ae26b09c6cde49d2473073190a1a94a524ce60b4a394c6"
-      },
+      "version": "2.0.6",
+      "sortPriority": 2
+    },
+    {
+      "contentRating": "unknown",
+      "contentType": "publication",
+      "familyID": "internet-archive",
       "icon": {
         "path": "modules/internet-archive/icon.png",
         "sha256": "8c5ddb7fba27a8d7b46a727f41e8c7bb14cbb6542a1bca8b35660c6caadff3a9"
-      }
+      },
+      "id": "internet-archive",
+      "language": "multi",
+      "manifest": {
+        "path": "modules/internet-archive/manifest.json",
+        "sha256": "4394bee5a294a58bfc5a2a06c0370d454bc7f876645082fcee1d42cde8ee5f78"
+      },
+      "name": "Internet Archive Open Texts",
+      "releaseTrack": "stable",
+      "status": "active",
+      "version": "1.0.1"
     },
     {
-      "id": "mangadex",
-      "familyID": "mangadex",
-      "name": "MangaDex",
-      "version": "1.0.0",
-      "language": "en",
-      "contentType": "pageImages",
       "contentRating": "suggestive",
-      "releaseTrack": "stable",
-      "status": "retired",
-      "manifest": {
-        "path": "modules/mangadex/manifest.json",
-        "sha256": "9bd886bf3d9355ddcd435cf6ca25ba2e66666478df6cae8dc3be698b7b447ab2"
-      },
+      "contentType": "pageImages",
+      "familyID": "mangadex",
       "icon": {
         "path": "modules/mangadex/icon.png",
         "sha256": "1e4c13fe2c1d055d56044425e878ad7a8e33acd836692100d2e9d40786373fad"
-      }
+      },
+      "id": "mangadex",
+      "language": "en",
+      "manifest": {
+        "path": "modules/mangadex/manifest.json",
+        "sha256": "f15266f2af9dc233b0f27f04ec4030b0f30ad2ccae578ce7342cf916e51feed7"
+      },
+      "name": "MangaDex",
+      "releaseTrack": "stable",
+      "status": "retired",
+      "version": "1.0.0"
     },
     {
-      "id": "mangakatana",
-      "familyID": "mangakatana",
-      "name": "MangaKatana",
-      "version": "1.0.1",
-      "language": "en",
-      "contentType": "pageImages",
       "contentRating": "suggestive",
+      "contentType": "pageImages",
+      "familyID": "mangadex-v2",
+      "icon": {
+        "path": "modules/mangadex-v2/icon.png",
+        "sha256": "1e4c13fe2c1d055d56044425e878ad7a8e33acd836692100d2e9d40786373fad"
+      },
+      "id": "mangadex-v2",
+      "language": "en",
+      "manifest": {
+        "path": "modules/mangadex-v2/manifest.json",
+        "sha256": "66ef2254ff11575dc85de096f2c65b57ce3c56af3880d0692e0cfbbe7b96f1da"
+      },
+      "name": "MangaDex",
       "releaseTrack": "beta",
       "status": "active",
-      "manifest": {
-        "path": "modules/mangakatana/manifest.json",
-        "sha256": "912bdf1cd15ed0cc4310f5ca612ed2e4fc725fba70a506efab1eb8578e5a4e72"
-      },
+      "version": "1.0.0"
+    },
+    {
+      "contentRating": "suggestive",
+      "contentType": "pageImages",
+      "familyID": "mangakatana",
       "icon": {
         "path": "modules/mangakatana/icon.png",
         "sha256": "b1fc0249caf13b4e5e7ca12beb9e8e32e5927d5d5b32d68c8b051b381af9c82d"
-      }
-    },
-    {
-      "id": "mgread",
-      "familyID": "mgread",
-      "name": "MGRead (LikeManga)",
-      "version": "1.0.1",
+      },
+      "id": "mangakatana",
       "language": "en",
-      "contentType": "pageImages",
-      "contentRating": "suggestive",
+      "manifest": {
+        "path": "modules/mangakatana/manifest.json",
+        "sha256": "09a71cd68dba76828f7bfd7ed1bfd6b454c5b56363100680103586b81b607030"
+      },
+      "name": "MangaKatana",
       "releaseTrack": "beta",
       "status": "active",
-      "manifest": {
-        "path": "modules/mgread/manifest.json",
-        "sha256": "711729d1f3fed78ea94bbd93f6231f873c321a40fbe3b970cc1bb8bf44505433"
-      },
+      "version": "1.0.3",
+      "sortPriority": 3
+    },
+    {
+      "contentRating": "suggestive",
+      "contentType": "pageImages",
+      "familyID": "mgread",
       "icon": {
         "path": "modules/mgread/icon.png",
         "sha256": "454ccf2602bb0d2960f911f87bd305b34835beb938a47ce43f1c8febd6743e75"
-      }
-    },
-    {
-      "id": "black-clover",
-      "familyID": "black-clover",
-      "name": "Black Clover Online",
-      "version": "1.0.2",
+      },
+      "id": "mgread",
       "language": "en",
-      "contentType": "pageImages",
-      "contentRating": "suggestive",
+      "manifest": {
+        "path": "modules/mgread/manifest.json",
+        "sha256": "7035870b3fa1a784ac85bbb3f51690b7ab83660f6057e145bfa63a91c409f0f7"
+      },
+      "name": "MGRead (LikeManga)",
       "releaseTrack": "beta",
       "status": "active",
-      "manifest": {
-        "path": "modules/black-clover/manifest.json",
-        "sha256": "d3c75a0445a95cd37bc0edf6b9d0d8da8ba8df490683e16d080eda5f991ed095"
-      },
+      "version": "1.0.3"
+    },
+    {
+      "contentRating": "suggestive",
+      "contentType": "pageImages",
+      "familyID": "black-clover",
       "icon": {
         "path": "modules/black-clover/icon.png",
         "sha256": "3bbbe114076c9db6a5c7382985758886521c2a4f4597bc0d48c9fb740bf8800f"
-      }
-    },
-    {
-      "id": "kagurabachi",
-      "familyID": "kagurabachi",
-      "name": "Kagurabachi",
-      "version": "1.0.2",
+      },
+      "id": "black-clover",
       "language": "en",
-      "contentType": "pageImages",
-      "contentRating": "suggestive",
+      "manifest": {
+        "path": "modules/black-clover/manifest.json",
+        "sha256": "7fb8e85221ca9f8850fd3b4e3bcf7d2a754e6ea25903c0a6eafb489553f084a6"
+      },
+      "name": "Black Clover Online",
       "releaseTrack": "beta",
       "status": "active",
-      "manifest": {
-        "path": "modules/kagurabachi/manifest.json",
-        "sha256": "db8f10d20407617b5f5f67c30642270f2bb151ff49e9420a79d8ca0c215a05cf"
-      },
+      "version": "1.0.2"
+    },
+    {
+      "contentRating": "suggestive",
+      "contentType": "pageImages",
+      "familyID": "kagurabachi",
       "icon": {
         "path": "modules/kagurabachi/icon.png",
         "sha256": "865c2fde6848e37bd60914fa7a7d0e6af0ba4a626aab50d4f28aff3f8858063e"
-      }
-    },
-    {
-      "id": "beginning-after-the-end",
-      "familyID": "beginning-after-the-end",
-      "name": "The Beginning After The End",
-      "version": "1.0.2",
+      },
+      "id": "kagurabachi",
       "language": "en",
-      "contentType": "pageImages",
-      "contentRating": "suggestive",
+      "manifest": {
+        "path": "modules/kagurabachi/manifest.json",
+        "sha256": "de6793b4f8b5f65f1fb8613e25dfb6ddb1be2c35b6df68f7b06210bfdd6c5f17"
+      },
+      "name": "Kagurabachi",
       "releaseTrack": "beta",
       "status": "active",
-      "manifest": {
-        "path": "modules/beginning-after-the-end/manifest.json",
-        "sha256": "fa59cf4ade0855c2aa338068dfc43bc77463cc86f12cd7523f01dfcc16b3a627"
-      },
+      "version": "1.0.3"
+    },
+    {
+      "contentRating": "suggestive",
+      "contentType": "pageImages",
+      "familyID": "beginning-after-the-end",
       "icon": {
         "path": "modules/beginning-after-the-end/icon.png",
         "sha256": "822eb0488badda510c87a0c24e4443fef2f428d918f44b4aac0c07973967a058"
-      }
-    },
-    {
-      "id": "solo-leveling",
-      "familyID": "solo-leveling",
-      "name": "Solo Leveling",
-      "version": "1.0.2",
+      },
+      "id": "beginning-after-the-end",
       "language": "en",
-      "contentType": "pageImages",
-      "contentRating": "suggestive",
+      "manifest": {
+        "path": "modules/beginning-after-the-end/manifest.json",
+        "sha256": "ac0c8eb5c8e51ee425d876886c5715217c8718af515c227d889cb3dee79ecc2b"
+      },
+      "name": "The Beginning After The End",
       "releaseTrack": "beta",
       "status": "active",
-      "manifest": {
-        "path": "modules/solo-leveling/manifest.json",
-        "sha256": "75d5926c146c8702eb4d780656301b09c2428fa0529eed2aab9f2eed66b29a7b"
-      },
+      "version": "1.0.2"
+    },
+    {
+      "contentRating": "suggestive",
+      "contentType": "pageImages",
+      "familyID": "solo-leveling",
       "icon": {
         "path": "modules/solo-leveling/icon.png",
         "sha256": "9dc87ed50f0bfc83a111f1b9e17db69e8f7e772e880253cdfcab15cc62b9adf1"
-      }
+      },
+      "id": "solo-leveling",
+      "language": "en",
+      "manifest": {
+        "path": "modules/solo-leveling/manifest.json",
+        "sha256": "ca0c2aeb5cd1615c9773f5ff473fb7f4728b010f71beb838233a12e3d84f7a60"
+      },
+      "name": "Solo Leveling",
+      "releaseTrack": "beta",
+      "status": "active",
+      "version": "1.0.2"
     },
     {
-      "id": "gachiakuta",
-      "familyID": "gachiakuta",
-      "name": "Gachiakuta",
-      "version": "1.0.1",
-      "language": "en",
-      "contentType": "pageImages",
       "contentRating": "suggestive",
-      "releaseTrack": "beta",
-      "status": "retired",
-      "manifest": {
-        "path": "modules/gachiakuta/manifest.json",
-        "sha256": "b403d883081e2508e437cfbc22854f2caef54b8734511af5dd1a37d8ad1165b4"
-      },
+      "contentType": "pageImages",
+      "familyID": "gachiakuta",
       "icon": {
         "path": "modules/gachiakuta/icon.png",
         "sha256": "90b6370e1883cd622d9cf4c64ab8f33efb9e1ad47704e92f47add1271a70c7e7"
-      }
+      },
+      "id": "gachiakuta",
+      "language": "en",
+      "manifest": {
+        "path": "modules/gachiakuta/manifest.json",
+        "sha256": "0ed9aad265a3d5af4c29b15f4dc3723bcff80130e199a796244e28b5f4c26922"
+      },
+      "name": "Gachiakuta",
+      "releaseTrack": "beta",
+      "status": "retired",
+      "version": "1.0.1"
     },
     {
-      "id": "haikyuu",
-      "familyID": "haikyuu",
-      "name": "Haikyuu",
-      "version": "1.0.2",
-      "language": "en",
-      "contentType": "pageImages",
       "contentRating": "suggestive",
-      "releaseTrack": "beta",
-      "status": "active",
-      "manifest": {
-        "path": "modules/haikyuu/manifest.json",
-        "sha256": "ace9eb42d8aadbf8a1f4e6d3ac501b00d5cee8bfa31512a2f2af48113306748c"
-      },
+      "contentType": "pageImages",
+      "familyID": "haikyuu",
       "icon": {
         "path": "modules/haikyuu/icon.png",
         "sha256": "f1e408839b2ff5d36eb1cf040f457d37b95903e6a2aa075ad173cbc97951f078"
-      }
+      },
+      "id": "haikyuu",
+      "language": "en",
+      "manifest": {
+        "path": "modules/haikyuu/manifest.json",
+        "sha256": "ff93ecd8555bd782c6185e251674be0a8fafb770a1ac1a5556edc44e320a0870"
+      },
+      "name": "Haikyuu",
+      "releaseTrack": "beta",
+      "status": "active",
+      "version": "1.0.2"
     },
     {
-      "id": "weeb-central",
-      "familyID": "weeb-central",
-      "name": "Weeb Central (Retired)",
-      "version": "1.0.1",
-      "language": "en",
-      "contentType": "pageImages",
       "contentRating": "suggestive",
-      "releaseTrack": "beta",
-      "status": "retired",
-      "manifest": {
-        "path": "modules/weeb-central/manifest.json",
-        "sha256": "27b50d4c51ad10fa3b3f1d8b41ba6021fb79db9a36ad907dc1db25c2c9d68bbe"
-      },
+      "contentType": "pageImages",
+      "familyID": "weeb-central",
       "icon": {
         "path": "modules/weeb-central/icon.png",
         "sha256": "961c7175cde3ba32c2ee46017576353f5fb77ed3c87e7d8f4e585c03d251772a"
-      }
+      },
+      "id": "weeb-central",
+      "language": "en",
+      "manifest": {
+        "path": "modules/weeb-central/manifest.json",
+        "sha256": "f75979146256ae87d899e686a03fb27b48e0e982ac8177ed6e59d0e95e854790"
+      },
+      "name": "Weeb Central (Retired)",
+      "releaseTrack": "beta",
+      "status": "retired",
+      "version": "1.0.1"
     },
     {
-      "id": "snafu",
-      "familyID": "snafu",
-      "name": "SNAFU Comics",
-      "version": "1.0.0",
-      "language": "en",
-      "contentType": "pageImages",
       "contentRating": "suggestive",
-      "releaseTrack": "beta",
-      "status": "active",
-      "manifest": {
-        "path": "modules/snafu/manifest.json",
-        "sha256": "1e57a60acccba99af0f9fdf5e534d0ab6207f9cd1a50996166b5f8a1b759db11"
-      },
+      "contentType": "pageImages",
+      "familyID": "snafu",
       "icon": {
         "path": "modules/snafu/icon.png",
         "sha256": "e5b048c4679b76cd9f5c7c9d2b88e0e6919a96c22d4f4de5e129fabe2fc3da6c"
-      }
+      },
+      "id": "snafu",
+      "language": "en",
+      "manifest": {
+        "path": "modules/snafu/manifest.json",
+        "sha256": "279d46155ab83421d3660c7973427ff956d2ad27c7efc0ad92e92f9769fcd3f5"
+      },
+      "name": "SNAFU Comics",
+      "releaseTrack": "beta",
+      "status": "active",
+      "version": "1.0.1"
+    },
+    {
+      "contentRating": "suggestive",
+      "contentType": "pageImages",
+      "familyID": "grabber-zone",
+      "icon": {
+        "path": "modules/grabber-zone/icon.png",
+        "sha256": "9fc21cb7c9067991c64179dee5f058a7675f9d311110a1f45610dead82c7378b"
+      },
+      "id": "grabber-zone",
+      "language": "en",
+      "manifest": {
+        "path": "modules/grabber-zone/manifest.json",
+        "sha256": "b383f7a51b322b98f75cf0504ea6c2e1450e13f2ba276744ea6c4ac457c64a8e"
+      },
+      "name": "Grabber Zone",
+      "releaseTrack": "beta",
+      "status": "active",
+      "version": "1.0.1"
+    },
+    {
+      "contentRating": "safe",
+      "contentType": "pageImages",
+      "familyID": "xkcd",
+      "icon": {
+        "path": "modules/xkcd/icon.png",
+        "sha256": "a6fd8d5ded35b29f8c21180464ce05dd6d56d777a1aad0ae0dd0f507328dff0d"
+      },
+      "id": "xkcd",
+      "language": "en",
+      "manifest": {
+        "path": "modules/xkcd/manifest.json",
+        "sha256": "ef9236c75b0f4542f727e5e986bcf438319f86324fc0b801141a2cc3a7f8a990"
+      },
+      "name": "xkcd",
+      "releaseTrack": "beta",
+      "status": "active",
+      "version": "1.0.0"
+    },
+    {
+      "contentRating": "suggestive",
+      "contentType": "pageImages",
+      "familyID": "comicgrowl",
+      "icon": {
+        "path": "modules/comicgrowl/icon.png",
+        "sha256": "b5f63a721ad71122eb06d0268d91a083444914d4ee8e2a90ff4a926a72332ceb"
+      },
+      "id": "comicgrowl",
+      "language": "ja",
+      "manifest": {
+        "path": "modules/comicgrowl/manifest.json",
+        "sha256": "03f467e8cbeacd8530f01c9cfdb1fddf256b3fbaf8395bdb74d24f99d6b3fe4b"
+      },
+      "name": "Comic Growl",
+      "releaseTrack": "beta",
+      "status": "active",
+      "version": "1.0.0"
+    },
+    {
+      "contentRating": "suggestive",
+      "contentType": "pageImages",
+      "familyID": "dbmultiverse",
+      "icon": {
+        "path": "modules/dbmultiverse/icon.png",
+        "sha256": "12f9cea629a6123e5d4ace2f4ceeb711a28d75c0cca3321b0b13fedc5a83a54f"
+      },
+      "id": "dbmultiverse",
+      "language": "en",
+      "manifest": {
+        "path": "modules/dbmultiverse/manifest.json",
+        "sha256": "28b77e7d7a8e2f1d5a0d43a2166fdcd36114b5c799960f9908e06b4df5841058"
+      },
+      "name": "Dragon Ball Multiverse",
+      "releaseTrack": "beta",
+      "status": "active",
+      "version": "1.0.0"
+    },
+    {
+      "contentRating": "safe",
+      "contentType": "pageImages",
+      "familyID": "comicfury",
+      "icon": {
+        "path": "modules/comicfury/icon.png",
+        "sha256": "d496efa9ea92e4f0b66d4ea25bc6c3e8ff6f47bff681cd0a628744075e5f68ec"
+      },
+      "id": "comicfury",
+      "language": "en",
+      "manifest": {
+        "path": "modules/comicfury/manifest.json",
+        "sha256": "7b9a0844bf1cd6b7f91fb1819e8b637555b2c4e7905b1427e55537f568d77aff"
+      },
+      "name": "Comic Fury",
+      "releaseTrack": "beta",
+      "status": "active",
+      "version": "1.0.0"
     },
     {
       "contentRating": "unknown",
@@ -313,5 +423,13 @@
       "status": "active",
       "version": "1.0.1"
     }
-  ]
+  ],
+  "repository": {
+    "homepage": "https://github.com/Synthetiq-HQ/synthetiq-manga-sources",
+    "id": "synthetiq.sources",
+    "name": "Synthetiq Manga Sources",
+    "owner": "Synthetiq-HQ",
+    "universalLink": "https://synthetiq.uk/manga/modules"
+  },
+  "schemaVersion": 1
 }

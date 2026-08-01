@@ -1,0 +1,19 @@
+{
+  "result": "ok",
+  "response": "entity",
+  "data": {
+    "id": "22222222-2222-4222-8222-222222222222",
+    "type": "manga",
+    "attributes": {
+      "title": { "en": "Fixture Excluded Title" },
+      "altTitles": [],
+      "description": { "en": "This fixture manga is rated erotica and must be excluded by the module's content policy." },
+      "status": "ongoing",
+      "contentRating": "erotica",
+      "tags": []
+    },
+    "relationships": [
+      { "id": "cover-2", "type": "cover_art", "attributes": { "fileName": "fixture-excluded-cover.jpg" } }
+    ]
+  }
+}

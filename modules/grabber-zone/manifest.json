@@ -1,0 +1,49 @@
+{
+  "allowedHosts": [
+    "grabber.zone",
+    "*.grabber.zone"
+  ],
+  "attribution": {
+    "author": "Synthetiq-HQ",
+    "website": "https://grabber.zone"
+  },
+  "baseURL": "https://grabber.zone",
+  "capabilities": [
+    "popular",
+    "latest",
+    "search",
+    "details",
+    "chapters",
+    "images",
+    "imageRequest",
+    "discovery"
+  ],
+  "contentRating": "suggestive",
+  "contentType": "pageImages",
+  "contractVersion": 1,
+  "entry": {
+    "path": "modules/grabber-zone/index.js",
+    "sha256": "28b251c65d14b780eeac204abb3a64a60de4cbe0c0c0cd68347b021fe4d3b123"
+  },
+  "familyID": "grabber-zone",
+  "icon": {
+    "path": "modules/grabber-zone/icon.png",
+    "sha256": "9fc21cb7c9067991c64179dee5f058a7675f9d311110a1f45610dead82c7378b"
+  },
+  "id": "grabber-zone",
+  "language": "en",
+  "legacyIDs": [],
+  "limits": {
+    "cacheTTLSeconds": 900,
+    "maxConcurrentRequests": 2,
+    "maxResponseBytes": 16777216,
+    "maxScriptBytes": 524288,
+    "timeoutMilliseconds": 30000
+  },
+  "minimumAppVersion": "1.0.0",
+  "name": "Grabber Zone",
+  "releaseTrack": "beta",
+  "status": "active",
+  "universalLink": "https://synthetiq.uk/manga/modules/grabber-zone",
+  "version": "1.0.1"
+}

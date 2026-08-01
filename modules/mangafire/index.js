@@ -15,7 +15,7 @@
   // pagev2 calls so a full reader walk stays under the burst budget.
   const MIN_REQUEST_SPACING = 500;
   let lastRequestAt = 0;
-  const protectionTokenCache = new Map();
+  let protectionRequired = false;
 
   function sleep(milliseconds) {
     return new Promise((resolve) => {
@@ -107,40 +107,68 @@
     };
   }
 
-  async function protectedAPIURL(value, forceRefresh = false) {
-    const request = protectionRequest(value);
-    if (forceRefresh) protectionTokenCache.delete(request.cacheKey);
-    let token = protectionTokenCache.get(request.cacheKey) || "";
-    if (!token) {
-      const pathLiteral = JSON.stringify(request.path);
-      const paramsLiteral = JSON.stringify(request.params);
-      const snapshot = await globalThis.pagev2({
-        url: `${BASE_URL}/`,
-        headers: { Accept: "text/html,application/xhtml+xml", Referer: `${BASE_URL}/` },
-        userAgent: null,
-        timeoutMilliseconds: 15_000,
-        settleMilliseconds: 350,
-        includeHTML: false,
-        captureResponseBodies: false,
-        maxEntries: 12,
-        maxResponseCharacters: 32_000,
-        actionScript: null,
-        returnScript: `typeof globalThis.getProtectionToken === "function" ? globalThis.getProtectionToken(${pathLiteral}, ${paramsLiteral}) : null`,
-        waitForSelector: "body",
-        waitForURLIncludes: null,
-        waitForRequestURLIncludes: null,
-        waitForResponseURLIncludes: null,
-        waitForResponseBodyIncludes: null,
-      });
-      token = String((snapshot && snapshot.evaluatedData) || "").trim();
-      if (!token) throw new Error("MangaFire could not prepare its protected API request.");
-      if (protectionTokenCache.size >= 64) {
-        protectionTokenCache.delete(protectionTokenCache.keys().next().value);
+  function protectedFetchScript(requests) {
+    const specs = requests.map((value) => {
+      const request = protectionRequest(value);
+      return {
+        path: request.path.replace(/^\/api/, ""),
+        params: request.params,
+      };
+    });
+    return `(async () => {
+      const moduleURL = Array.from(document.querySelectorAll('link[rel="modulepreload"]'))
+        .map((link) => link.href)
+        .find((href) => href.includes('/polyfill-') && href.endsWith('.js'));
+      if (!moduleURL) throw new Error('MangaFire protection module was not found.');
+      const protection = await import(moduleURL);
+      if (typeof protection.a !== 'function') throw new Error('MangaFire protection module changed.');
+      const interceptors = [];
+      protection.a({ interceptors: { request: { use(handler) { interceptors.push(handler); } } } });
+      if (!interceptors.length) throw new Error('MangaFire request interceptor was not registered.');
+      const output = [];
+      for (const spec of ${JSON.stringify(specs)}) {
+        const config = await interceptors[0]({ url: spec.path, params: spec.params, headers: {} });
+        const queryParams = new URLSearchParams();
+        for (const [key, value] of Object.entries(config.params || {})) {
+          if (Array.isArray(value)) value.forEach((entry) => queryParams.append(key + '[]', String(entry)));
+          else queryParams.append(key, String(value));
+        }
+        const query = queryParams.toString();
+        const response = await fetch('/api' + spec.path + (query ? '?' + query : ''), {
+          headers: { Accept: 'application/json,text/plain,*/*', 'X-Requested-With': 'XMLHttpRequest' }
+        });
+        const payload = await response.json();
+        if (!response.ok) throw new Error(payload.message || ('MangaFire HTTP ' + response.status));
+        output.push(payload);
       }
-      protectionTokenCache.set(request.cacheKey, token);
+      return output;
+    })()`;
+  }
+
+  async function protectedPageJSON(requests) {
+    const snapshot = await globalThis.pagev2({
+      url: `${BASE_URL}/`,
+      headers: { Accept: "text/html,application/xhtml+xml", Referer: `${BASE_URL}/` },
+      userAgent: null,
+      timeoutMilliseconds: 30_000,
+      settleMilliseconds: 100,
+      includeHTML: false,
+      captureResponseBodies: false,
+      maxEntries: 16,
+      maxResponseCharacters: 1_000_000,
+      actionScript: null,
+      returnScript: protectedFetchScript(requests),
+      waitForSelector: "body",
+      waitForURLIncludes: null,
+      waitForRequestURLIncludes: null,
+      waitForResponseURLIncludes: null,
+      waitForResponseBodyIncludes: null,
+    });
+    const payloads = snapshot && snapshot.evaluatedData;
+    if (!Array.isArray(payloads) || payloads.length !== requests.length) {
+      throw new Error("MangaFire protected request returned incomplete data.");
     }
-    request.target.searchParams.set("vrf", token);
-    return request.target.toString();
+    return payloads;
   }
 
   async function pageJSON(url, options = {}) {
@@ -149,7 +177,6 @@
     }
     let target = assertAPIURL(url);
     let lastError = null;
-    let refreshedProtection = false;
     // The API answers bursts and cold WebKit sessions with 429/challenge
     // bodies; retry with backoff instead of failing the whole stage.
     for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt += 1) {
@@ -189,10 +216,8 @@
         }
         const APIMessage = String((payload && (payload.error || payload.message)) || "");
         if (/token/i.test(APIMessage)) {
-          target = await protectedAPIURL(url, refreshedProtection);
-          refreshedProtection = true;
-          lastError = new Error(`MangaFire API authorization changed: ${APIMessage}`);
-          continue;
+          protectionRequired = true;
+          return (await protectedPageJSON([url]))[0];
         }
         if (payload.error) throw new Error(`MangaFire API error: ${String(payload.error)}`);
         return payload;
@@ -418,10 +443,19 @@
     }
 
     const responses = [first];
-    for (let page = 2; page <= lastPage; page += 1) {
-      responses.push(await pageJSON(chapterURL(hid, page)));
+    const remainingURLs = [];
+    for (let page = 2; page <= lastPage; page += 1) remainingURLs.push(chapterURL(hid, page));
+    if (protectionRequired && remainingURLs.length) {
+      responses.push(...await protectedPageJSON(remainingURLs));
       if (typeof globalThis.reportProgress === "function") {
-        await globalThis.reportProgress({ stage: "chapters", completed: page, total: lastPage });
+        await globalThis.reportProgress({ stage: "chapters", completed: lastPage, total: lastPage });
+      }
+    } else {
+      for (let page = 2; page <= lastPage; page += 1) {
+        responses.push(await pageJSON(chapterURL(hid, page)));
+        if (typeof globalThis.reportProgress === "function") {
+          await globalThis.reportProgress({ stage: "chapters", completed: page, total: lastPage });
+        }
       }
     }
 

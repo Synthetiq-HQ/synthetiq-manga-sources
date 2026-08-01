@@ -10,6 +10,7 @@
   const MAX_CHAPTER_PAGES = 200;
   const RETRYABLE_STATUS = new Set([403, 408, 425, 429, 500, 502, 503, 504]);
   const MAX_ATTEMPTS = 3;
+  const searchSeenByQuery = new Map();
   const GET_CACHE_TTL = 45_000;
   const getCache = new Map();
 
@@ -219,14 +220,15 @@
     };
   }
 
-  function parseChaptersHTML(html) {
+  function parseChaptersHTML(html, seriesURL) {
     const chapters = [];
     const seen = new Set();
+    const seriesPrefix = `${normalizedSeriesURL(seriesURL).replace(/\/+$/, "")}/`;
     const pattern = /href=(https:\/\/mgread\.io\/manga\/[a-z0-9-]+\/chapter-[0-9]+(?:\.[0-9]+)?\/?)/gi;
     let match;
     while ((match = pattern.exec(html)) !== null) {
       const href = absoluteURL(match[1]);
-      if (seen.has(href)) continue;
+      if (!href.startsWith(seriesPrefix) || seen.has(href)) continue;
       const number = chapterNumber("", href);
       const title = number == null ? "Chapter" : `Chapter ${number}`;
       chapters.push({
@@ -262,12 +264,12 @@
     const routes = chapterPageURLs(seriesURL);
     const firstHTML = await fetchDirect(routes.first, { maxBytesHint: 3 * 1024 * 1024 });
     const totalPages = Math.min(maxChapterPage(firstHTML), MAX_CHAPTER_PAGES);
-    const merged = parseChaptersHTML(firstHTML);
+    const merged = parseChaptersHTML(firstHTML, seriesURL);
     const seen = new Set(merged.map((entry) => entry.id));
 
     for (let page = 2; page <= totalPages; page += 1) {
       const html = await fetchDirect(routes.page(page), { maxBytesHint: 2 * 1024 * 1024 });
-      const batch = parseChaptersHTML(html);
+      const batch = parseChaptersHTML(html, seriesURL);
       for (const chapter of batch) {
         if (seen.has(chapter.id)) continue;
         merged.push(chapter);
@@ -337,7 +339,18 @@
   }
 
   async function searchResults(query, page = 1) {
-    return parseSearchHTML(await fetchDirect(searchURL(query, page), { maxBytesHint: 2 * 1024 * 1024 }));
+    const parsed = parseSearchHTML(
+      await fetchDirect(searchURL(query, page), { maxBytesHint: 2 * 1024 * 1024 }),
+    );
+    const key = String(query || "");
+    if (Number(page) <= 1 || !searchSeenByQuery.has(key)) searchSeenByQuery.set(key, new Set());
+    const seen = searchSeenByQuery.get(key);
+    parsed.items = parsed.items.filter((item) => {
+      if (seen.has(item.id)) return false;
+      seen.add(item.id);
+      return true;
+    });
+    return parsed;
   }
 
   async function extractDetails(id) {

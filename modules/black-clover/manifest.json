@@ -1,16 +1,19 @@
 {
-  "id": "black-clover",
-  "familyID": "black-clover",
-  "legacyIDs": [],
-  "name": "Black Clover Online",
-  "version": "1.0.2",
-  "contractVersion": 1,
-  "minimumAppVersion": "1.0.0",
-  "contentType": "pageImages",
-  "language": "en",
-  "contentRating": "suggestive",
-  "releaseTrack": "beta",
-  "status": "active",
+  "allowedHosts": [
+    "blackclover.com.lv",
+    "blackcloveronline.com",
+    "www.blackcloveronline.com",
+    "*.blackclover.com.lv",
+    "*.blackcloveronline.com"
+  ],
+  "attribution": {
+    "author": "Synthetiq-HQ",
+    "authorizationURL": null,
+    "licenseName": null,
+    "licenseURL": null,
+    "website": "https://blackcloveronline.com"
+  },
+  "baseURL": "https://blackcloveronline.com",
   "capabilities": [
     "popular",
     "latest",
@@ -21,35 +24,32 @@
     "imageRequest",
     "discovery"
   ],
-  "baseURL": "https://blackcloveronline.com",
-  "universalLink": "https://synthetiq.uk/manga/modules/black-clover",
+  "contentRating": "suggestive",
+  "contentType": "pageImages",
+  "contractVersion": 1,
   "entry": {
     "path": "modules/black-clover/index.js",
     "sha256": "47e078b51a6fd3c678d289a9cb36fc6e1dc1400c198b88c89c7051eaef283011"
   },
+  "familyID": "black-clover",
   "icon": {
     "path": "modules/black-clover/icon.png",
     "sha256": "3bbbe114076c9db6a5c7382985758886521c2a4f4597bc0d48c9fb740bf8800f"
   },
-  "allowedHosts": [
-    "blackclover.com.lv",
-    "blackcloveronline.com",
-    "www.blackcloveronline.com",
-    "*.blackclover.com.lv",
-    "*.blackcloveronline.com"
-  ],
+  "id": "black-clover",
+  "language": "en",
+  "legacyIDs": [],
   "limits": {
-    "timeoutMilliseconds": 25000,
+    "cacheTTLSeconds": 900,
     "maxConcurrentRequests": 2,
     "maxResponseBytes": 8388608,
     "maxScriptBytes": 262144,
-    "cacheTTLSeconds": 900
+    "timeoutMilliseconds": 25000
   },
-  "attribution": {
-    "author": "Synthetiq-HQ",
-    "website": "https://blackcloveronline.com",
-    "licenseName": null,
-    "licenseURL": null,
-    "authorizationURL": null
-  }
+  "minimumAppVersion": "1.0.0",
+  "name": "Black Clover Online",
+  "releaseTrack": "beta",
+  "status": "active",
+  "universalLink": "https://synthetiq.uk/manga/modules/black-clover",
+  "version": "1.0.2"
 }

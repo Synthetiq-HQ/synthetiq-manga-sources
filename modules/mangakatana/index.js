@@ -11,6 +11,7 @@
   // reliable search -> details -> chapters -> images walk.
   const RETRYABLE_STATUS = new Set([403, 408, 425, 429, 500, 502, 503, 504]);
   const MAX_ATTEMPTS = 3;
+  const searchSeenByQuery = new Map();
   const GET_CACHE_TTL = 45_000;
   const getCache = new Map();
   // Keep a floor between requests so normal walks never trip the window.
@@ -139,14 +140,14 @@
   function normalizedChapterURL(value) {
     const input = String(value || "").trim();
     const match = input.match(
-      /(?:https:\/\/mangakatana\.com)?\/?manga\/([a-z0-9][a-z0-9.-]*)\/(c[0-9]+(?:\.[0-9]+)?)/i,
+      /(?:https:\/\/mangakatana\.com)?\/?manga\/([a-z0-9][a-z0-9.-]*)\/(c[0-9]+(?:\.[0-9]+)?(?:-[a-z0-9-]+)?|v[0-9]+c[0-9]+(?:\.[0-9]+)?|fc)(?:[?#]|$)/i,
     );
     if (match) return `${BASE_URL}/manga/${match[1]}/${match[2].toLowerCase()}`;
     throw new Error("Invalid MangaKatana chapter identifier.");
   }
 
   function chapterNumber(title, href) {
-    const fromHref = String(href || "").match(/\/c([0-9]+(?:\.[0-9]+)?)$/i);
+    const fromHref = String(href || "").match(/\/(?:v[0-9]+)?c([0-9]+(?:\.[0-9]+)?)(?:-[a-z0-9-]+)?(?:[?#]|$)/i);
     if (fromHref) return Number(fromHref[1]);
     const fromTitle = String(title || "").match(/(?:chapter|ch\.?)[\s#:-]*([0-9]+(?:\.[0-9]+)?)/i);
     return fromTitle ? Number(fromTitle[1]) : null;
@@ -238,15 +239,32 @@
     };
   }
 
-  function parseChaptersHTML(html) {
+  function primaryChapterTableHTML(html) {
+    // MangaKatana also renders chapter links for related titles on a series
+    // page. The selected title's complete chapter list is the only table in a
+    // .chapters container; parsing the entire document mixes the two lists.
+    const match = String(html || "").match(
+      /<div\b[^>]*class=(["'])[^"']*\bchapters\b[^"']*\1[^>]*>\s*<table\b[^>]*>[\s\S]*?<tbody\b[^>]*>([\s\S]*?)<\/tbody>/i,
+    );
+    return match ? match[2] : "";
+  }
+
+  function parseChaptersHTML(html, seriesURL) {
     const chapters = [];
     const seen = new Set();
-    const pattern = /<div class="chapter">\s*<a href="([^"]+)"[^>]*>([\s\S]*?)<\/a>/gi;
+    const chapterMarkup = primaryChapterTableHTML(html);
+    if (!chapterMarkup) return chapters;
+
+    const seriesPrefix = `${normalizedSeriesURL(seriesURL).toLowerCase()}/`;
+    const pattern = /<div\b[^>]*class=(["'])[^"']*\bchapter\b[^"']*\1[^>]*>\s*<a\b[^>]*href=(["'])([\s\S]*?)\2[^>]*>([\s\S]*?)<\/a>/gi;
     let match;
-    while ((match = pattern.exec(html)) !== null) {
-      const href = absoluteURL(decodeEntities(match[1]));
-      if (!/\/manga\/[^/]+\/c[0-9]/i.test(href) || seen.has(href)) continue;
-      const title = stripHTML(match[2]);
+    while ((match = pattern.exec(chapterMarkup)) !== null) {
+      const href = absoluteURL(decodeEntities(match[3]));
+      if (!href.toLowerCase().startsWith(seriesPrefix) || seen.has(href)) continue;
+      if (!/\/(?:c[0-9]+(?:\.[0-9]+)?(?:-[a-z0-9-]+)?|v[0-9]+c[0-9]+(?:\.[0-9]+)?|fc)(?:[?#]|$)/i.test(href)) {
+        continue;
+      }
+      const title = stripHTML(match[4]);
       if (!title) continue;
       chapters.push({
         id: href,
@@ -326,9 +344,18 @@
 
   async function searchResults(query, page = 1) {
     const html = await fetchDirect(searchURL(query, page), { maxBytesHint: 2 * 1024 * 1024 });
-    return query === "__feed:popular" || query === "__feed:latest"
+    const parsed = query === "__feed:popular" || query === "__feed:latest"
       ? parseListHTML(html)
       : parseSearchHTML(html);
+    const key = String(query || "");
+    if (Number(page) <= 1 || !searchSeenByQuery.has(key)) searchSeenByQuery.set(key, new Set());
+    const seen = searchSeenByQuery.get(key);
+    parsed.items = parsed.items.filter((item) => {
+      if (seen.has(item.id)) return false;
+      seen.add(item.id);
+      return true;
+    });
+    return parsed;
   }
 
   async function extractDetails(id) {
@@ -338,7 +365,10 @@
 
   async function extractChapters(id) {
     const href = normalizedSeriesURL(id);
-    const chapters = parseChaptersHTML(await fetchDirect(href, { maxBytesHint: 8 * 1024 * 1024 }));
+    const chapters = parseChaptersHTML(
+      await fetchDirect(href, { maxBytesHint: 8 * 1024 * 1024 }),
+      href,
+    );
     if (!chapters.length) throw new Error("MangaKatana returned no chapters for this series.");
     return chapters;
   }

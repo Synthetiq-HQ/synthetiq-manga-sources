@@ -1,16 +1,16 @@
 {
-  "id": "weeb-central",
-  "familyID": "weeb-central",
-  "legacyIDs": [],
-  "name": "Weeb Central (Retired)",
-  "version": "1.0.1",
-  "contractVersion": 1,
-  "minimumAppVersion": "1.0.0",
-  "contentType": "pageImages",
-  "language": "en",
-  "contentRating": "suggestive",
-  "releaseTrack": "beta",
-  "status": "retired",
+  "allowedHosts": [
+    "weebcentral.com",
+    "*.weebcentral.com"
+  ],
+  "attribution": {
+    "author": "Synthetiq-HQ",
+    "authorizationURL": "https://weebcentral.com/",
+    "licenseName": null,
+    "licenseURL": null,
+    "website": "https://weebcentral.com"
+  },
+  "baseURL": "https://weebcentral.com",
   "capabilities": [
     "search",
     "tags",
@@ -18,32 +18,32 @@
     "chapters",
     "images"
   ],
-  "baseURL": "https://weebcentral.com",
-  "universalLink": "https://synthetiq.uk/manga/modules/weeb-central",
+  "contentRating": "suggestive",
+  "contentType": "pageImages",
+  "contractVersion": 1,
   "entry": {
     "path": "modules/weeb-central/index.js",
     "sha256": "4026f2e81c4455c7d10edee67c39f1b4a13915196ad08288bb167bbbc7677277"
   },
+  "familyID": "weeb-central",
   "icon": {
     "path": "modules/weeb-central/icon.png",
     "sha256": "961c7175cde3ba32c2ee46017576353f5fb77ed3c87e7d8f4e585c03d251772a"
   },
-  "allowedHosts": [
-    "weebcentral.com",
-    "*.weebcentral.com"
-  ],
+  "id": "weeb-central",
+  "language": "en",
+  "legacyIDs": [],
   "limits": {
-    "timeoutMilliseconds": 20000,
+    "cacheTTLSeconds": 900,
     "maxConcurrentRequests": 2,
     "maxResponseBytes": 8388608,
     "maxScriptBytes": 262144,
-    "cacheTTLSeconds": 900
+    "timeoutMilliseconds": 20000
   },
-  "attribution": {
-    "author": "Synthetiq-HQ",
-    "website": "https://weebcentral.com",
-    "licenseName": null,
-    "licenseURL": null,
-    "authorizationURL": "https://weebcentral.com/"
-  }
+  "minimumAppVersion": "1.0.0",
+  "name": "Weeb Central (Retired)",
+  "releaseTrack": "beta",
+  "status": "retired",
+  "universalLink": "https://synthetiq.uk/manga/modules/weeb-central",
+  "version": "1.0.1"
 }

@@ -1,0 +1,68 @@
+{
+  "search": {
+    "items": [
+      {
+        "id": "https://comicfury.com/comicprofile.php?url=gleaminghearts",
+        "href": "https://comicfury.com/comicprofile.php?url=gleaminghearts",
+        "title": "PMD: Gleaming Hearts",
+        "image": "https://comicfury.com/comicavatars/400/44503_1753106924b1c150d150f2024905982.webp"
+      }
+    ],
+    "hasMore": false
+  },
+  "details": {
+    "id": "https://gleaminghearts.thecomicseries.com/",
+    "href": "https://gleaminghearts.thecomicseries.com/",
+    "url": "https://gleaminghearts.thecomicseries.com/",
+    "title": "PMD: Gleaming Hearts",
+    "description": "A new soul is thrust into the world of Pokemon. Jake is a Riolu who is given a great deal of responsibility only minutes after he first awakens. To stop those with malicious intentions, he must harness a special power given to him by a saintly Diancie. Along his quest, Jake will meet a plethora of friends and foes, all while trying to discover his true purpose in this strange, new world.\nStory by: Fidchell, Aberdeen, ShadyHades, Noelram, and WhiteStripedScarf.\nLineart by: Fidchell / Coloring by: Fidchell, Meep and Bane\nComic will be updated every 3-5 days.\nYou can also see the webcomic on Tumblr! https://gleaminghearts.tumblr.com/\nStarted on Aug 2017 and still going strong!",
+    "image": "https://comicfury.com/comicbans/182/44503_1701534159.png",
+    "authors": [
+      "Fidchell"
+    ],
+    "author": "Fidchell",
+    "genres": [
+      "Fan Fiction",
+      "Pokémon",
+      "Pokémon Mystery Dungeon"
+    ],
+    "status": "Completed"
+  },
+  "chapters": {
+    "count": 12,
+    "first": {
+      "id": "https://gleaminghearts.thecomicseries.com/archive/#chapter-1",
+      "href": "https://gleaminghearts.thecomicseries.com/archive/#chapter-1",
+      "url": "https://gleaminghearts.thecomicseries.com/archive/#chapter-1",
+      "title": "Chapter 1: Inheritance",
+      "number": 1,
+      "releaseDate": null,
+      "language": "en"
+    },
+    "last": {
+      "id": "https://gleaminghearts.thecomicseries.com/archive/#chapter-12",
+      "href": "https://gleaminghearts.thecomicseries.com/archive/#chapter-12",
+      "url": "https://gleaminghearts.thecomicseries.com/archive/#chapter-12",
+      "title": "Extras",
+      "number": 12,
+      "releaseDate": null,
+      "language": "en"
+    }
+  },
+  "images": [
+    {
+      "url": "https://img.comicfury.com/comics/182/44503a1576564669f1243504617.png",
+      "headers": {
+        "Accept": "image/avif,image/webp,image/*,*/*",
+        "Referer": "https://gleaminghearts.thecomicseries.com/"
+      }
+    },
+    {
+      "url": "https://img.comicfury.com/comics/182/44503a1576566555f1589286090.png",
+      "headers": {
+        "Accept": "image/avif,image/webp,image/*,*/*",
+        "Referer": "https://gleaminghearts.thecomicseries.com/"
+      }
+    }
+  ]
+}

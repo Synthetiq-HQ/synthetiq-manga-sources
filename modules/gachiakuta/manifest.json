@@ -1,16 +1,17 @@
 {
-  "id": "gachiakuta",
-  "familyID": "gachiakuta",
-  "legacyIDs": [],
-  "name": "Gachiakuta",
-  "version": "1.0.1",
-  "contractVersion": 1,
-  "minimumAppVersion": "1.0.0",
-  "contentType": "pageImages",
-  "language": "en",
-  "contentRating": "suggestive",
-  "releaseTrack": "beta",
-  "status": "retired",
+  "allowedHosts": [
+    "gachiakuta.com.lv",
+    "www.gachiakuta.com.lv",
+    "*.gachiakuta.com.lv"
+  ],
+  "attribution": {
+    "author": "Synthetiq-HQ",
+    "authorizationURL": null,
+    "licenseName": null,
+    "licenseURL": null,
+    "website": "https://www.gachiakuta.com.lv"
+  },
+  "baseURL": "https://www.gachiakuta.com.lv",
   "capabilities": [
     "popular",
     "latest",
@@ -21,33 +22,32 @@
     "imageRequest",
     "discovery"
   ],
-  "baseURL": "https://www.gachiakuta.com.lv",
-  "universalLink": "https://synthetiq.uk/manga/modules/gachiakuta",
+  "contentRating": "suggestive",
+  "contentType": "pageImages",
+  "contractVersion": 1,
   "entry": {
     "path": "modules/gachiakuta/index.js",
     "sha256": "bfa8fddb5fc86c34f090737c8ff1ad75ff1a1b89765f249d9d3c87b59e8306b3"
   },
+  "familyID": "gachiakuta",
   "icon": {
     "path": "modules/gachiakuta/icon.png",
     "sha256": "90b6370e1883cd622d9cf4c64ab8f33efb9e1ad47704e92f47add1271a70c7e7"
   },
-  "allowedHosts": [
-    "gachiakuta.com.lv",
-    "www.gachiakuta.com.lv",
-    "*.gachiakuta.com.lv"
-  ],
+  "id": "gachiakuta",
+  "language": "en",
+  "legacyIDs": [],
   "limits": {
-    "timeoutMilliseconds": 25000,
+    "cacheTTLSeconds": 900,
     "maxConcurrentRequests": 2,
     "maxResponseBytes": 8388608,
     "maxScriptBytes": 262144,
-    "cacheTTLSeconds": 900
+    "timeoutMilliseconds": 25000
   },
-  "attribution": {
-    "author": "Synthetiq-HQ",
-    "website": "https://www.gachiakuta.com.lv",
-    "licenseName": null,
-    "licenseURL": null,
-    "authorizationURL": null
-  }
+  "minimumAppVersion": "1.0.0",
+  "name": "Gachiakuta",
+  "releaseTrack": "beta",
+  "status": "retired",
+  "universalLink": "https://synthetiq.uk/manga/modules/gachiakuta",
+  "version": "1.0.1"
 }

@@ -1,0 +1,44 @@
+{
+  "result": "ok",
+  "response": "collection",
+  "data": [
+    {
+      "id": "11111111-1111-4111-8111-111111111111",
+      "type": "manga",
+      "attributes": {
+        "title": { "en": "Fixture Chronicles" },
+        "altTitles": [{ "en": "Fixture Chronicles Alt" }],
+        "description": { "en": "A fictional manga used only for module fixture testing." },
+        "status": "ongoing",
+        "contentRating": "safe",
+        "tags": [
+          { "id": "tag-action", "type": "tag", "attributes": { "name": { "en": "Action" }, "group": "genre" } },
+          { "id": "tag-fantasy", "type": "tag", "attributes": { "name": { "en": "Fantasy" }, "group": "genre" } }
+        ]
+      },
+      "relationships": [
+        { "id": "author-1", "type": "author", "attributes": { "name": "Fixture Author" } },
+        { "id": "artist-1", "type": "artist", "attributes": { "name": "Fixture Artist" } },
+        { "id": "cover-1", "type": "cover_art", "attributes": { "fileName": "fixture-cover.jpg" } }
+      ]
+    },
+    {
+      "id": "22222222-2222-4222-8222-222222222222",
+      "type": "manga",
+      "attributes": {
+        "title": { "en": "Fixture Excluded Title" },
+        "altTitles": [],
+        "description": { "en": "This fixture manga is rated erotica and must be excluded by the module's content policy even if a misconfigured query returns it." },
+        "status": "ongoing",
+        "contentRating": "erotica",
+        "tags": []
+      },
+      "relationships": [
+        { "id": "cover-2", "type": "cover_art", "attributes": { "fileName": "fixture-excluded-cover.jpg" } }
+      ]
+    }
+  ],
+  "limit": 24,
+  "offset": 0,
+  "total": 2
+}

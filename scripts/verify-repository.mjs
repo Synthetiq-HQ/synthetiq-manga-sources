@@ -10,6 +10,7 @@ const expectedHandlers = {
   mangafire: ["searchResults", "extractDetails", "extractChapters", "extractImages"],
   weebcentral: ["searchResults", "extractDetails", "extractChapters", "extractImages"],
   mangadex: ["searchResults", "extractDetails", "extractChapters", "extractImages"],
+  "mangadex-v2": ["searchResults", "extractDetails", "extractChapters", "extractImages"],
   mangakatana: ["searchResults", "extractDetails", "extractChapters", "extractImages"],
   mgread: ["searchResults", "extractDetails", "extractChapters", "extractImages"],
   "haikyuu": ["searchResults", "extractDetails", "extractChapters", "extractImages"],

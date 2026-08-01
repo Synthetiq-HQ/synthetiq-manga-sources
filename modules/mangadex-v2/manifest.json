@@ -1,0 +1,53 @@
+{
+  "allowedHosts": [
+    "api.mangadex.org",
+    "uploads.mangadex.org",
+    "*.mangadex.network"
+  ],
+  "attribution": {
+    "author": "MangaDex",
+    "authorizationURL": "https://api.mangadex.org/docs/",
+    "licenseName": null,
+    "licenseURL": null,
+    "website": "https://mangadex.org"
+  },
+  "baseURL": "https://api.mangadex.org",
+  "capabilities": [
+    "popular",
+    "latest",
+    "search",
+    "details",
+    "chapters",
+    "images",
+    "imageRequest",
+    "discovery"
+  ],
+  "contentRating": "suggestive",
+  "contentType": "pageImages",
+  "contractVersion": 1,
+  "entry": {
+    "path": "modules/mangadex-v2/index.js",
+    "sha256": "ce16cb427199f6fbe1e19906f34562edee42b65bed338d29ab5c0e1bfebeec55"
+  },
+  "familyID": "mangadex-v2",
+  "icon": {
+    "path": "modules/mangadex-v2/icon.png",
+    "sha256": "1e4c13fe2c1d055d56044425e878ad7a8e33acd836692100d2e9d40786373fad"
+  },
+  "id": "mangadex-v2",
+  "language": "en",
+  "legacyIDs": [],
+  "limits": {
+    "cacheTTLSeconds": 900,
+    "maxConcurrentRequests": 2,
+    "maxResponseBytes": 8388608,
+    "maxScriptBytes": 262144,
+    "timeoutMilliseconds": 20000
+  },
+  "minimumAppVersion": "1.0.0",
+  "name": "MangaDex",
+  "releaseTrack": "beta",
+  "status": "active",
+  "universalLink": "https://synthetiq.uk/manga/modules/mangadex-v2",
+  "version": "1.0.0"
+}

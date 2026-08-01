@@ -1,0 +1,55 @@
+{
+  "search": {
+    "items": [
+      {
+        "id": "https://xkcd.com/",
+        "href": "https://xkcd.com/",
+        "title": "xkcd",
+        "image": "https://imgs.xkcd.com/comics/recursive_truckers_hitch.png"
+      }
+    ],
+    "hasMore": false
+  },
+  "noMatch": {
+    "items": [],
+    "hasMore": false
+  },
+  "details": {
+    "id": "https://xkcd.com/",
+    "href": "https://xkcd.com/",
+    "url": "https://xkcd.com/",
+    "title": "xkcd",
+    "description": "Daily stick-figure webcomic by Randall Munroe. Latest comic #3276 \"Recursive Trucker's Hitch\": As if the americium smoke detector incident wasn't enough, now nuclear regulators have ANOTHER reason to worry about the Boy Scouts.",
+    "image": "https://imgs.xkcd.com/comics/recursive_truckers_hitch.png",
+    "authors": ["Randall Munroe"],
+    "author": "Randall Munroe",
+    "genres": ["Comedy"],
+    "status": "Ongoing"
+  },
+  "chapters": {
+    "count": 3276,
+    "first": {
+      "id": "https://xkcd.com/3276/",
+      "href": "https://xkcd.com/3276/",
+      "title": "#3276",
+      "number": 3276,
+      "language": "en"
+    },
+    "last": {
+      "id": "https://xkcd.com/1/",
+      "href": "https://xkcd.com/1/",
+      "title": "#1",
+      "number": 1,
+      "language": "en"
+    }
+  },
+  "images": [
+    {
+      "url": "https://imgs.xkcd.com/comics/family_circus.jpg",
+      "headers": {
+        "Accept": "image/avif,image/webp,image/*,*/*",
+        "Referer": "https://xkcd.com/"
+      }
+    }
+  ]
+}

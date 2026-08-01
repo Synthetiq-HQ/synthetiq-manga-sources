@@ -318,7 +318,67 @@ test("MangaDex uses fetchv2 against the official API, paginates chapters, exclud
   assert.deepEqual(JSON.parse(JSON.stringify(images)), fixtures.expected.images);
 });
 
-test("MangaKatana parses search, details, complete chapter list, and thzq page images", async () => {
+test("MangaDex v2 uses the official API, sorts chapters deterministically, deduplicates across pages, and labels unnumbered specials correctly", async () => {
+  const fixtures = {
+    search: await json("modules/mangadex-v2/fixtures/search.json"),
+    details: await json("modules/mangadex-v2/fixtures/details.json"),
+    detailsExcluded: await json("modules/mangadex-v2/fixtures/details-excluded.json"),
+    chapters1: await json("modules/mangadex-v2/fixtures/chapters-page-1.json"),
+    chapters2: await json("modules/mangadex-v2/fixtures/chapters-page-2.json"),
+    images: await json("modules/mangadex-v2/fixtures/images.json"),
+    expected: await json("modules/mangadex-v2/fixtures/expected.json"),
+  };
+  const calls = [];
+  const module = await loadModule("modules/mangadex-v2/index.js", {
+    fetchv2: async (url, headers, method, body, options) => {
+      assert.equal(typeof url, "string");
+      assert.equal(method, "GET");
+      assert.equal(body, null);
+      calls.push({ url });
+      const u = new URL(url);
+      if (u.pathname === "/manga" && u.searchParams.get("title") === "fixture") return response(JSON.stringify(fixtures.search));
+      if (u.pathname === "/manga/11111111-1111-4111-8111-111111111111") return response(JSON.stringify(fixtures.details));
+      if (u.pathname === "/manga/22222222-2222-4222-8222-222222222222") return response(JSON.stringify(fixtures.detailsExcluded));
+      if (u.pathname === "/manga/11111111-1111-4111-8111-111111111111/feed") {
+        const offset = u.searchParams.get("offset") || "0";
+        if (offset === "0") return response(JSON.stringify(fixtures.chapters1));
+        if (offset === "500") return response(JSON.stringify(fixtures.chapters2));
+        return response(JSON.stringify({ result: "ok", data: [], total: 501, limit: 500, offset: Number(offset) }));
+      }
+      if (u.pathname === "/at-home/server/aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa") return response(JSON.stringify(fixtures.images));
+      throw new Error(`Unexpected URL: ${url}`);
+    },
+    reportProgress: async () => ({ ok: true }),
+  });
+
+  const search = await module.searchResults("fixture", 1);
+  assert.deepEqual(JSON.parse(JSON.stringify(search)), fixtures.expected.search);
+  assert.equal(search.items.length, 1, "the erotica-rated fixture entry must be excluded");
+
+  const details = await module.extractDetails(search.items[0].id);
+  assert.deepEqual(JSON.parse(JSON.stringify(details)), fixtures.expected.details);
+  await assert.rejects(
+    () => module.extractDetails("22222222-2222-4222-8222-222222222222"),
+    /excluded by the module content policy/,
+  );
+
+  const chapters = await module.extractChapters(search.items[0].id);
+  assert.deepEqual(JSON.parse(JSON.stringify(chapters)), fixtures.expected.chapters);
+  assert.equal(chapters.length, 5, "external, unavailable, and duplicate chapters must be filtered out");
+  assert.equal(chapters[4].title, "Special Side Story", "unnumbered chapters must sort last");
+  assert.equal(chapters[3].title, "Chapter 3.5: Interlude", "decimal chapters must be preserved and ordered");
+  assert.equal(
+    chapters.filter((chapter) => chapter.id.includes("aaaaaaaa")).length,
+    1,
+    "the cross-page duplicate chapter id must be dropped",
+  );
+  assert.equal(calls.filter((call) => call.url.includes("/feed")).length, 2, "must follow chapter feed pagination");
+
+  const images = await module.extractImages(chapters[0].id);
+  assert.deepEqual(JSON.parse(JSON.stringify(images)), fixtures.expected.images);
+});
+
+test("MangaKatana parses only the selected title's chapter table and thzq page images", async () => {
   const fixtures = {
     search: await text("modules/mangakatana/fixtures/search.html"),
     details: await text("modules/mangakatana/fixtures/details.html"),
@@ -378,6 +438,57 @@ test("MGRead (LikeManga) parses search, details, paginated chapters, and CDN pag
   assert.deepEqual(JSON.parse(JSON.stringify(pages)), fixtures.expected.images);
 });
 
+test("xkcd serves the single series from the official JSON API", async () => {
+  const fixtures = {
+    latest: await text("modules/xkcd/fixtures/info-latest.json"),
+    sample: await text("modules/xkcd/fixtures/info-sample.json"),
+    expected: await json("modules/xkcd/fixtures/expected.json"),
+  };
+  const module = await loadModule("modules/xkcd/index.js", {
+    fetchv2: async (url, headers, method, body) => {
+      assert.equal(typeof url, "string");
+      assert.equal(method, "GET");
+      assert.equal(body, null);
+      assert.equal(headers.Referer, "https://xkcd.com/");
+      if (url === "https://xkcd.com/info.0.json") return response(fixtures.latest);
+      if (url === "https://xkcd.com/100/info.0.json") return response(fixtures.sample);
+      throw new Error(`Unexpected xkcd URL: ${url}`);
+    },
+  });
+
+  const search = await module.searchResults("xkcd", 1);
+  assert.deepEqual(JSON.parse(JSON.stringify(search)), fixtures.expected.search);
+
+  const popular = await module.searchResults("__feed:popular", 1);
+  assert.deepEqual(JSON.parse(JSON.stringify(popular)), fixtures.expected.search);
+
+  const latest = await module.searchResults("__feed:latest", 1);
+  assert.deepEqual(JSON.parse(JSON.stringify(latest)), fixtures.expected.search);
+
+  const emptyQuery = await module.searchResults("", 1);
+  assert.deepEqual(JSON.parse(JSON.stringify(emptyQuery)), fixtures.expected.search);
+
+  const noMatch = await module.searchResults("zzz-no-match-token", 1);
+  assert.deepEqual(JSON.parse(JSON.stringify(noMatch)), fixtures.expected.noMatch);
+
+  const details = await module.extractDetails(fixtures.expected.details.id);
+  assert.deepEqual(JSON.parse(JSON.stringify(details)), fixtures.expected.details);
+
+  const chapters = await module.extractChapters(fixtures.expected.details.id);
+  assert.equal(chapters.length, fixtures.expected.chapters.count);
+  assert.deepEqual(JSON.parse(JSON.stringify(chapters[0])), fixtures.expected.chapters.first);
+  assert.deepEqual(JSON.parse(JSON.stringify(chapters[chapters.length - 1])), fixtures.expected.chapters.last);
+
+  const pages = await module.extractImages(chapters[chapters.length - 100].id);
+  assert.equal(chapters[chapters.length - 100].id, "https://xkcd.com/100/");
+  assert.deepEqual(JSON.parse(JSON.stringify(pages)), fixtures.expected.images);
+
+  const home = await module.discoveryHome();
+  assert.deepEqual(JSON.parse(JSON.stringify(home)), {
+    sections: [{ id: "latest", title: "Latest", items: fixtures.expected.search.items }],
+  });
+});
+
 const singleSeriesModules = [
   "black-clover",
   "kagurabachi",
@@ -428,6 +539,152 @@ test("SNAFU Comics parses catalogue, archive pages, and comic images", async () 
   const home = await module.discoveryHome();
   assert.ok(home.sections.some((s) => s.id === "popular" && s.items.length >= 1));
   assert.ok(home.sections.some((s) => s.id === "latest" && s.items.length >= 1));
+});
+
+test("Comic Growl parses search, series details, paginated chapters, and scrambled viewer pages", async () => {
+  const fixtures = {
+    home: await text("modules/comicgrowl/fixtures/home.html"),
+    search: await text("modules/comicgrowl/fixtures/search.html"),
+    series: await text("modules/comicgrowl/fixtures/series.html"),
+    seriesPage1: await text("modules/comicgrowl/fixtures/series-page-1.html"),
+    episode: await text("modules/comicgrowl/fixtures/episode.html"),
+    contents: await text("modules/comicgrowl/fixtures/contents.json"),
+    expected: await json("modules/comicgrowl/fixtures/expected.json"),
+  };
+  const module = await loadModule("modules/comicgrowl/index.js", {
+    fetchv2: async (url, headers, method, body, options) => {
+      assert.equal(typeof url, "string");
+      assert.equal(method, "GET");
+      assert.equal(body, null);
+      const u = String(url);
+      if (u === "https://comic-growl.com/" || u === "https://comic-growl.com") return response(fixtures.home);
+      if (u.startsWith("https://comic-growl.com/search")) return response(fixtures.search);
+      if (u === "https://comic-growl.com/series/02674f27ad178") return response(fixtures.series);
+      if (u === "https://comic-growl.com/series/02674f27ad178/1") return response(fixtures.seriesPage1);
+      if (u === "https://comic-growl.com/episodes/4c599dfd47b2f") return response(fixtures.episode);
+      if (u.includes("/api/book/contentsInfo")) return response(fixtures.contents, 200, "application/json");
+      throw new Error(`Unexpected Comic Growl URL: ${u}`);
+    },
+  });
+
+  const search = await module.searchResults("fixture", 1);
+  assert.deepEqual(JSON.parse(JSON.stringify(search)), fixtures.expected.search);
+
+  const details = await module.extractDetails(search.items[1].id);
+  assert.deepEqual(JSON.parse(JSON.stringify(details)), fixtures.expected.details);
+
+  const chapters = await module.extractChapters(details.id);
+  assert.equal(chapters.length, fixtures.expected.chapters.count);
+  assert.deepEqual(JSON.parse(JSON.stringify(chapters[0])), fixtures.expected.chapters.first);
+  assert.deepEqual(JSON.parse(JSON.stringify(chapters[chapters.length - 1])), fixtures.expected.chapters.last);
+
+  const pages = await module.extractImages(chapters[0].id);
+  assert.deepEqual(JSON.parse(JSON.stringify(pages)), fixtures.expected.images);
+  assert.equal(pages[0].scrambled, true);
+  assert.deepEqual(JSON.parse(JSON.stringify(pages[0].tiles)), fixtures.expected.images[0].tiles);
+
+  const home = await module.discoveryHome();
+  assert.ok(home.sections.some((s) => s.id === "popular" && s.items.length >= 1));
+  assert.ok(home.sections.some((s) => s.id === "latest" && s.items.length >= 1));
+});
+
+test("Comic Fury parses search profiles, external archive chapters, and comic page images", async () => {
+  const fixtures = {
+    search: await text("modules/comicfury/fixtures/search.html"),
+    details: await text("modules/comicfury/fixtures/details.html"),
+    archive: await text("modules/comicfury/fixtures/archive.html"),
+    page1: await text("modules/comicfury/fixtures/page-1.html"),
+    page2: await text("modules/comicfury/fixtures/page-2.html"),
+    expected: await json("modules/comicfury/fixtures/expected.json"),
+  };
+  const module = await loadModule("modules/comicfury/index.js", {
+    fetchv2: async (url, headers, method, body, options) => {
+      assert.equal(typeof url, "string");
+      assert.equal(method, "GET");
+      assert.equal(body, null);
+      const u = String(url);
+      if (u.includes("/search.php")) return response(fixtures.search);
+      if (u.includes("/comicprofile.php")) return response(fixtures.details);
+      if (u.includes("/goto.php")) {
+        return {
+          status: 302,
+          ok: true,
+          headers: { location: "https://gleaminghearts.thecomicseries.com" },
+          finalUrl: u,
+          body: "",
+          bodyDropped: false,
+          dropReason: null,
+          bodyBytes: 0,
+          contentType: "text/html",
+          error: null,
+          text: async () => "",
+          json: async () => { throw new Error("not json"); },
+        };
+      }
+      if (u.includes("/archive/")) return response(fixtures.archive);
+      if (u.includes("/comics/1/")) return response(fixtures.page1);
+      if (u.includes("/comics/2/")) return response(fixtures.page2);
+      if (u.match(/\/comics\/([0-9]+)\//)) return response(fixtures.page1);
+      throw new Error(`Unexpected Comic Fury URL: ${u}`);
+    },
+  });
+
+  const search = await module.searchResults("gleaming", 1);
+  assert.deepEqual(JSON.parse(JSON.stringify(search)), fixtures.expected.search);
+
+  const details = await module.extractDetails(search.items[0].id);
+  assert.deepEqual(JSON.parse(JSON.stringify(details)), fixtures.expected.details);
+
+  const chapters = await module.extractChapters(details.id);
+  assert.equal(chapters.length, fixtures.expected.chapters.count);
+  assert.deepEqual(JSON.parse(JSON.stringify(chapters[0])), fixtures.expected.chapters.first);
+  assert.deepEqual(JSON.parse(JSON.stringify(chapters[chapters.length - 1])), fixtures.expected.chapters.last);
+
+  const pages = await module.extractImages(chapters[0].id);
+  assert.deepEqual(JSON.parse(JSON.stringify(pages)), fixtures.expected.images);
+
+  const home = await module.discoveryHome();
+  assert.ok(home.sections.some((s) => s.id === "popular" && s.items.length >= 1));
+});
+
+test("Dragon Ball Multiverse single-series module parses accueil chapters and page images", async () => {
+  const fixtures = {
+    accueil: await text("modules/dbmultiverse/fixtures/accueil.html"),
+    page: await text("modules/dbmultiverse/fixtures/page-sample.html"),
+    expected: await json("modules/dbmultiverse/fixtures/expected.json"),
+  };
+  const module = await loadModule("modules/dbmultiverse/index.js", {
+    fetchv2: async (url) => {
+      assert.equal(typeof url, "string");
+      if (url.endsWith("/en/accueil.html")) return response(fixtures.accueil);
+      if (/\/en\/page-\d+\.html/.test(url)) return response(fixtures.page);
+      throw new Error(`Unexpected DBM URL: ${url}`);
+    },
+  });
+
+  const noMatch = await module.searchResults("zzz-no-match-token", 1);
+  assert.deepEqual(JSON.parse(JSON.stringify(noMatch)), { items: [], hasMore: false });
+
+  for (const query of ["dragon ball", "Multiverse", "dbm", "", "__feed:popular", "__feed:latest"]) {
+    const search = await module.searchResults(query, 1);
+    assert.deepEqual(JSON.parse(JSON.stringify(search)), fixtures.expected.search);
+  }
+
+  const details = await module.extractDetails(fixtures.expected.details.id);
+  assert.deepEqual(JSON.parse(JSON.stringify(details)), fixtures.expected.details);
+
+  const chapters = await module.extractChapters(fixtures.expected.details.id);
+  assert.equal(chapters.length, fixtures.expected.chapters.count);
+  assert.deepEqual(JSON.parse(JSON.stringify(chapters[0])), fixtures.expected.chapters.first);
+  assert.deepEqual(JSON.parse(JSON.stringify(chapters[chapters.length - 1])), fixtures.expected.chapters.last);
+
+  const pages = await module.extractImages(chapters[0].id);
+  assert.deepEqual(JSON.parse(JSON.stringify(pages)), fixtures.expected.images);
+
+  const home = await module.discoveryHome();
+  assert.deepEqual(JSON.parse(JSON.stringify(home)), {
+    sections: [{ id: "latest", title: "Latest", items: fixtures.expected.search.items }],
+  });
 });
 
 for (const slug of singleSeriesModules) {

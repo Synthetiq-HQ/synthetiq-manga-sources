@@ -1,0 +1,51 @@
+{
+  "allowedHosts": [
+    "comic-growl.com",
+    "*.comic-growl.com",
+    "cdn-public.comici.jp",
+    "*.comici.jp"
+  ],
+  "attribution": {
+    "author": "Synthetiq-HQ",
+    "website": "https://comic-growl.com"
+  },
+  "baseURL": "https://comic-growl.com",
+  "capabilities": [
+    "popular",
+    "latest",
+    "search",
+    "details",
+    "chapters",
+    "images",
+    "imageRequest",
+    "discovery"
+  ],
+  "contentRating": "suggestive",
+  "contentType": "pageImages",
+  "contractVersion": 1,
+  "entry": {
+    "path": "modules/comicgrowl/index.js",
+    "sha256": "d06549afb47d4ea4710d46494c23be1dbbf8c505e4facf834b31fe52251fa191"
+  },
+  "familyID": "comicgrowl",
+  "icon": {
+    "path": "modules/comicgrowl/icon.png",
+    "sha256": "b5f63a721ad71122eb06d0268d91a083444914d4ee8e2a90ff4a926a72332ceb"
+  },
+  "id": "comicgrowl",
+  "language": "ja",
+  "legacyIDs": [],
+  "limits": {
+    "cacheTTLSeconds": 900,
+    "maxConcurrentRequests": 2,
+    "maxResponseBytes": 16777216,
+    "maxScriptBytes": 524288,
+    "timeoutMilliseconds": 30000
+  },
+  "minimumAppVersion": "1.0.0",
+  "name": "Comic Growl",
+  "releaseTrack": "beta",
+  "status": "active",
+  "universalLink": "https://synthetiq.uk/manga/modules/comicgrowl",
+  "version": "1.0.0"
+}

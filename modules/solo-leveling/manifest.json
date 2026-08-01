@@ -1,16 +1,17 @@
 {
-  "id": "solo-leveling",
-  "familyID": "solo-leveling",
-  "legacyIDs": [],
-  "name": "Solo Leveling",
-  "version": "1.0.2",
-  "contractVersion": 1,
-  "minimumAppVersion": "1.0.0",
-  "contentType": "pageImages",
-  "language": "en",
-  "contentRating": "suggestive",
-  "releaseTrack": "beta",
-  "status": "active",
+  "allowedHosts": [
+    "thesololevelingmanga.com",
+    "www.thesololevelingmanga.com",
+    "*.thesololevelingmanga.com"
+  ],
+  "attribution": {
+    "author": "Synthetiq-HQ",
+    "authorizationURL": null,
+    "licenseName": null,
+    "licenseURL": null,
+    "website": "https://thesololevelingmanga.com"
+  },
+  "baseURL": "https://thesololevelingmanga.com",
   "capabilities": [
     "popular",
     "latest",
@@ -21,33 +22,32 @@
     "imageRequest",
     "discovery"
   ],
-  "baseURL": "https://thesololevelingmanga.com",
-  "universalLink": "https://synthetiq.uk/manga/modules/solo-leveling",
+  "contentRating": "suggestive",
+  "contentType": "pageImages",
+  "contractVersion": 1,
   "entry": {
     "path": "modules/solo-leveling/index.js",
     "sha256": "9aaeae9ff52c0b52797d22b6373c0ba5d8cf02dfd5349526d8be020aff5b1203"
   },
+  "familyID": "solo-leveling",
   "icon": {
     "path": "modules/solo-leveling/icon.png",
     "sha256": "9dc87ed50f0bfc83a111f1b9e17db69e8f7e772e880253cdfcab15cc62b9adf1"
   },
-  "allowedHosts": [
-    "thesololevelingmanga.com",
-    "www.thesololevelingmanga.com",
-    "*.thesololevelingmanga.com"
-  ],
+  "id": "solo-leveling",
+  "language": "en",
+  "legacyIDs": [],
   "limits": {
-    "timeoutMilliseconds": 25000,
+    "cacheTTLSeconds": 900,
     "maxConcurrentRequests": 2,
     "maxResponseBytes": 8388608,
     "maxScriptBytes": 262144,
-    "cacheTTLSeconds": 900
+    "timeoutMilliseconds": 25000
   },
-  "attribution": {
-    "author": "Synthetiq-HQ",
-    "website": "https://thesololevelingmanga.com",
-    "licenseName": null,
-    "licenseURL": null,
-    "authorizationURL": null
-  }
+  "minimumAppVersion": "1.0.0",
+  "name": "Solo Leveling",
+  "releaseTrack": "beta",
+  "status": "active",
+  "universalLink": "https://synthetiq.uk/manga/modules/solo-leveling",
+  "version": "1.0.2"
 }
