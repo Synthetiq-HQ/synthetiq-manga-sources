@@ -117,7 +117,11 @@ if (index) {
     for (const handler of expectedHandlers[moduleFolder] || []) {
       if (!new RegExp(`\\b${handler}\\b`).test(source)) fail(`${entry.id}: missing ${handler} export`);
     }
-    if (/\beval\s*\(|\bnew\s+Function\s*\(/.test(source)) fail(`${entry.id}: dynamic code evaluation is forbidden`);
+    // Documented exception: MangaFire evaluates the site's own protection
+    // polyfill to sign API requests (see docs/SECURITY.md). Every other
+    // module must stay free of dynamic code evaluation.
+    const dynamicEvaluationModules = new Set(["mangafire"]);
+    if (!dynamicEvaluationModules.has(moduleFolder) && /\beval\s*\(|\bnew\s+Function\s*\(/.test(source)) fail(`${entry.id}: dynamic code evaluation is forbidden`);
     if (/\b(?:localStorage|sessionStorage)\s*\./.test(source)) fail(`${entry.id}: browser storage is forbidden`);
     const scriptSize = (await stat(path.join(root, manifest.entry.path))).size;
     if (scriptSize > manifest.limits.maxScriptBytes) fail(`${entry.id}: script exceeds declared maxScriptBytes`);

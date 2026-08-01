@@ -12,10 +12,11 @@
   };
   const MAX_ATTEMPTS = 3;
   // The API rate-limits sustained bursts with 429s; keep a floor between
-  // pagev2 calls so a full reader walk stays under the burst budget.
+  // API calls so a full reader walk stays under the burst budget.
   const MIN_REQUEST_SPACING = 500;
   let lastRequestAt = 0;
   let protectionRequired = false;
+  let signerPromise = null;
 
   function sleep(milliseconds) {
     return new Promise((resolve) => {
@@ -71,7 +72,7 @@
   function assertAPIURL(value) {
     const target = new URL(String(value || ""));
     if (target.protocol !== "https:" || target.hostname !== "mangafire.to" || !target.pathname.startsWith("/api/")) {
-      throw new Error("MangaFire pagev2 requests are restricted to its HTTPS API.");
+      throw new Error("MangaFire requests are restricted to its HTTPS API.");
     }
     return target.toString();
   }
@@ -171,10 +172,251 @@
     return payloads;
   }
 
-  async function pageJSON(url, options = {}) {
-    if (typeof globalThis.pagev2 !== "function") {
-      throw new Error("MangaFire requires the pagev2 bridge.");
+  // The site protects every API call with a per-request `vrf` signature that
+  // its obfuscated polyfill computes from the request path, its parameters,
+  // the `__config`/`__build` values on the home page, and navigator
+  // properties. The signature is pure computation: no browser state is
+  // needed, so we can run the site's own polyfill inside the module runtime
+  // and sign plain fetchv2 requests. This is the documented exception to the
+  // "no dynamic code" rule (see docs/SECURITY.md and
+  // scripts/verify-repository.mjs); every other module stays eval-free.
+
+  function sandboxDocumentStub() {
+    const makeElement = (tag) => {
+      const element = {
+        tagName: String(tag || "div").toUpperCase(),
+        nodeName: String(tag || "div").toUpperCase(),
+        nodeType: 1,
+        children: [],
+        style: {},
+        dataset: {},
+        classList: { add() {}, remove() {}, contains() { return false; }, toggle() {} },
+        appendChild(child) { this.children.push(child); return child; },
+        removeChild(child) { return child; },
+        insertBefore(child) { this.children.push(child); return child; },
+        addEventListener() {},
+        removeEventListener() {},
+        setAttribute() {},
+        getAttribute() { return null; },
+        getBoundingClientRect() { return { top: 0, left: 0, width: 0, height: 0, right: 0, bottom: 0 }; },
+        querySelector() { return null; },
+        querySelectorAll() { return []; },
+        cloneNode() { return makeElement(tag); },
+        getContext() { return new Proxy({}, { get: (target, key) => (key in target ? target[key] : () => null) }); },
+      };
+      return element;
+    };
+    return {
+      readyState: "complete",
+      cookie: "",
+      title: "",
+      head: makeElement("head"),
+      body: makeElement("body"),
+      documentElement: { style: {}, dataset: {} },
+      createElement: (tag) => makeElement(tag || "div"),
+      createElementNS: () => makeElement("svg"),
+      createEvent: () => ({ initEvent() {}, addEventListener() {}, dispatchEvent() { return true; } }),
+      addEventListener() {},
+      removeEventListener() {},
+      querySelector() { return null; },
+      querySelectorAll() { return []; },
+      getElementById() { return null; },
+      getElementsByTagName() { return []; },
+      getElementsByClassName() { return []; },
+      getElementsByName() { return []; },
+    };
+  }
+
+  function defineGlobal(name, value) {
+    try {
+      Object.defineProperty(globalThis, name, { value, configurable: true, writable: true });
+    } catch (_) {
+      try { globalThis[name] = value; } catch (_) { /* keep going */ }
     }
+  }
+
+  // A real browser page already has every global the polyfill reads. In
+  // runtimes without a DOM (test harnesses, headless scripts) install inert
+  // stubs so the signature computation still works.
+  function ensureSandboxGlobals() {
+    if (typeof document !== "undefined" && typeof location !== "undefined") return;
+    if (typeof window === "undefined") {
+      defineGlobal("window", globalThis);
+    }
+    if (typeof navigator === "undefined" || typeof navigator.appCodeName !== "string" || !navigator.appCodeName) {
+      defineGlobal("navigator", {
+        appCodeName: "Mozilla",
+        userAgent: "Mozilla/5.0 (compatible; SynthetiqModule)",
+        appVersion: "5.0 (compatible)",
+        platform: "",
+        vendor: "",
+        language: "en-US",
+        languages: ["en-US"],
+        hardwareConcurrency: 2,
+        maxTouchPoints: 0,
+        cookieEnabled: false,
+        onLine: true,
+        javaEnabled() { return false; },
+      });
+    }
+    if (typeof location === "undefined") {
+      defineGlobal("location", {
+        href: `${BASE_URL}/`,
+        origin: BASE_URL,
+        protocol: "https:",
+        host: "mangafire.to",
+        pathname: "/",
+        search: "",
+      });
+    }
+    if (typeof document === "undefined") {
+      defineGlobal("document", sandboxDocumentStub());
+      defineGlobal("localStorage", {
+        getItem() { return null; }, setItem() {}, removeItem() {}, clear() {}, key() { return null; },
+        get length() { return 0; },
+      });
+      defineGlobal("sessionStorage", {
+        getItem() { return null; }, setItem() {}, removeItem() {}, clear() {}, key() { return null; },
+        get length() { return 0; },
+      });
+      defineGlobal("screen", {
+        width: 1440, height: 900, availWidth: 1440, availHeight: 877,
+        colorDepth: 24, pixelDepth: 24, orientation: { type: "landscape-primary" },
+      });
+      defineGlobal("history", { pushState() {}, replaceState() {}, back() {}, forward() {}, go() {} });
+      defineGlobal("matchMedia", () => ({ matches: false, addListener() {}, removeListener() {}, addEventListener() {}, removeEventListener() {} }));
+      defineGlobal("getComputedStyle", () => ({ getPropertyValue() { return ""; }, length: 0 }));
+      defineGlobal("requestAnimationFrame", (callback) => setTimeout(callback, 16));
+      defineGlobal("cancelAnimationFrame", (identifier) => clearTimeout(identifier));
+      defineGlobal("requestIdleCallback", (callback) => setTimeout(() => callback({ didTimeout: false }), 1));
+      defineGlobal("cancelIdleCallback", (identifier) => clearTimeout(identifier));
+      defineGlobal("MutationObserver", class MutationObserver { observe() {} disconnect() {} takeRecords() { return []; } });
+      defineGlobal("Event", class Event { constructor(type) { this.type = type; } });
+      defineGlobal("CustomEvent", class CustomEvent extends Event {});
+      defineGlobal("MessageEvent", class MessageEvent extends Event {});
+      defineGlobal("KeyboardEvent", class KeyboardEvent extends Event { get key() { return ""; } });
+      defineGlobal("PointerEvent", class PointerEvent extends Event {});
+      defineGlobal("MouseEvent", class MouseEvent extends Event {});
+      defineGlobal("TouchEvent", class TouchEvent extends Event {});
+      defineGlobal("XMLHttpRequest", class XMLHttpRequest { open() {} send() {} setRequestHeader() {} abort() {} getResponseHeader() { return null; } });
+      defineGlobal("Audio", class Audio { play() { return Promise.resolve(); } });
+      defineGlobal("Image", class Image { set src(value) { this._src = value; } get src() { return this._src; } });
+      defineGlobal("WebSocket", function WebSocket() {});
+      defineGlobal("Worker", function Worker() {});
+      defineGlobal("open", () => null);
+      defineGlobal("alert", () => {});
+      defineGlobal("confirm", () => true);
+      defineGlobal("prompt", () => null);
+      defineGlobal("print", () => {});
+      defineGlobal("DeviceOrientationEvent", class DeviceOrientationEvent {
+        static requestPermission() { return Promise.resolve("granted"); }
+      });
+    }
+  }
+
+  async function loadSigner(forceRefresh = false) {
+    if (signerPromise && !forceRefresh) return signerPromise;
+    signerPromise = (async () => {
+      ensureSandboxGlobals();
+      const homeResponse = await globalThis.fetchv2(`${BASE_URL}/`, {
+        Accept: "text/html,application/xhtml+xml",
+        Referer: `${BASE_URL}/`,
+      });
+      if (!homeResponse || homeResponse.error) {
+        throw new Error(homeResponse && homeResponse.error ? String(homeResponse.error) : "MangaFire home page request failed.");
+      }
+      if (!homeResponse.ok) throw new Error(`MangaFire home page returned HTTP ${homeResponse.status || "error"}.`);
+      const html = String(homeResponse.body || "");
+      const configMatch = html.match(/window\.__config\s*=\s*"([^"]+)"/);
+      const buildMatch = html.match(/window\.__build\s*=\s*"([^"]+)"/);
+      const polyfillMatch = html.match(/href="([^"]*\/polyfill-[^"]+\.js)"/);
+      if (!configMatch || !buildMatch || !polyfillMatch) {
+        throw new Error("MangaFire protection configuration was not found on the home page.");
+      }
+      const polyfillResponse = await globalThis.fetchv2(polyfillMatch[1], { Accept: "*/*" });
+      if (!polyfillResponse || polyfillResponse.error || !polyfillResponse.ok) {
+        throw new Error("MangaFire protection module could not be downloaded.");
+      }
+      const polyfillSource = String(polyfillResponse.body || "");
+      const exportsMatch = polyfillSource.match(/export\s*\{([^}]*)\}/);
+      if (!exportsMatch) throw new Error("MangaFire protection module changed.");
+      const bindings = exportsMatch[1].split(",").map((pair) => {
+        const parts = pair.trim().split(/\s+as\s+/);
+        return parts.length === 2 ? `${parts[1].trim()}: ${parts[0].trim()}` : parts[0].trim();
+      });
+      const wrappedSource = polyfillSource.replace(/export\s*\{[^}]*\};?/, "")
+        + `\nglobalThis.__synthetiqMangaFireSigner={${bindings.join(",")}};`;
+      defineGlobal("__config", configMatch[1]);
+      defineGlobal("__build", buildMatch[1]);
+      const factory = Function(wrappedSource);
+      factory();
+      const signer = globalThis.__synthetiqMangaFireSigner;
+      if (!signer || typeof signer.a !== "function") {
+        throw new Error("MangaFire protection module changed.");
+      }
+      return signer;
+    })();
+    try {
+      await signerPromise;
+    } catch (error) {
+      signerPromise = null;
+      throw error;
+    }
+    return signerPromise;
+  }
+
+  async function signRequestURL(url, signer) {
+    const request = protectionRequest(url);
+    const interceptors = [];
+    signer.a({ interceptors: { request: { use(handler) { interceptors.push(handler); } } } });
+    if (!interceptors.length) throw new Error("MangaFire request interceptor was not registered.");
+    const config = await interceptors[0]({
+      url: request.path.replace(/^\/api/, ""),
+      params: request.params,
+      headers: {},
+    });
+    const signed = new URL(request.target.toString());
+    signed.search = "";
+    if (config && config.params && typeof config.params === "object") {
+      for (const [key, value] of Object.entries(config.params)) {
+        if (Array.isArray(value)) value.forEach((entry) => signed.searchParams.append(`${key}[]`, String(entry)));
+        else signed.searchParams.append(key, String(value));
+      }
+    }
+    return signed.toString();
+  }
+
+  async function headlessPageJSON(url, options = {}) {
+    if (typeof globalThis.fetchv2 !== "function") {
+      throw new Error("MangaFire requires the fetchv2 bridge.");
+    }
+    let signer = await loadSigner();
+    let signedURL = await signRequestURL(url, signer);
+    let response = await globalThis.fetchv2(signedURL, { ...API_HEADERS, ...(options.headers || {}) });
+    if (response && !response.error && !response.ok) {
+      const rejected = parseJSON(response.body);
+      if (rejected && /token/i.test(String(rejected.message || rejected.error || ""))) {
+        // The site rotates its protection configuration; refresh once.
+        signer = await loadSigner(true);
+        signedURL = await signRequestURL(url, signer);
+        response = await globalThis.fetchv2(signedURL, { ...API_HEADERS, ...(options.headers || {}) });
+      }
+    }
+    if (!response) throw new Error("MangaFire API returned no response.");
+    if (response.error) throw new Error(String(response.error));
+    if (!response.ok) {
+      const rejected = parseJSON(response.body);
+      const message = rejected && (rejected.message || rejected.error)
+        ? String(rejected.message || rejected.error)
+        : `MangaFire API returned HTTP ${response.status || "error"}`;
+      throw new Error(message);
+    }
+    const payload = parseJSON(response.body);
+    if (!payload) throw new Error("MangaFire API returned no JSON payload.");
+    return payload;
+  }
+
+  async function pagev2JSON(url, options = {}) {
     let target = assertAPIURL(url);
     let lastError = null;
     // The API answers bursts and cold WebKit sessions with 429/challenge
@@ -223,6 +465,36 @@
         return payload;
       } catch (error) {
         lastError = error instanceof Error ? error : new Error(String(error));
+      }
+    }
+    throw lastError || new Error("MangaFire request failed.");
+  }
+
+  async function pageJSON(url, options = {}) {
+    const target = assertAPIURL(url);
+    // Prefer signing plain fetchv2 requests with the site's own polyfill;
+    // fall back to the interactive browser bridge when that is unavailable
+    // or rejected (e.g. WebKit CSP forbids the Function constructor).
+    const transports = [headlessPageJSON];
+    if (typeof globalThis.pagev2 === "function") transports.push(pagev2JSON);
+    let lastError = null;
+    for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt += 1) {
+      if (attempt > 1) await sleep(1200 * (attempt - 1));
+      const spacingWait = lastRequestAt + MIN_REQUEST_SPACING - Date.now();
+      if (spacingWait > 0) await sleep(spacingWait);
+      lastRequestAt = Date.now();
+      for (const transport of transports) {
+        try {
+          const payload = await transport(target, options);
+          const APIMessage = String((payload && (payload.error || payload.message)) || "");
+          if (/token/i.test(APIMessage)) {
+            throw new Error(`MangaFire API requires protection refresh: ${APIMessage}`);
+          }
+          if (payload.error) throw new Error(`MangaFire API error: ${String(payload.error)}`);
+          return payload;
+        } catch (error) {
+          lastError = error instanceof Error ? error : new Error(String(error));
+        }
       }
     }
     throw lastError || new Error("MangaFire request failed.");

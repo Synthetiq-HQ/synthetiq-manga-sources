@@ -154,7 +154,72 @@ test("Atsu uses direct APIs, keeps complete chapters, and filters source-marked 
   assert.ok(calls.every((call) => call.options.maxBytesHint <= 2 * 1024 * 1024));
 });
 
-test("MangaFire uses pagev2, paginates chapters, and keeps scramble markers", async () => {
+test("MangaFire signs requests headlessly via fetchv2 and paginates chapters", async () => {
+  const fixtures = {
+    search: await json("modules/mangafire/fixtures/search.json"),
+    details: await json("modules/mangafire/fixtures/details.json"),
+    firstChapters: await json("modules/mangafire/fixtures/chapters-page-1.json"),
+    secondChapters: await json("modules/mangafire/fixtures/chapters-page-2.json"),
+    chapter: await json("modules/mangafire/fixtures/chapter.json"),
+    structuredPages: await json("modules/mangafire/fixtures/pages.json"),
+    expected: await json("modules/mangafire/fixtures/expected.json"),
+  };
+  const homeHTML = [
+    "<html><head>",
+    '<script>window.__config = "cfg-fixture";</script>',
+    '<script>window.__build = "build-fixture";</script>',
+    '<link rel="modulepreload" href="https://s.mfcdn.nl/build/mf/assets/polyfill-fixture.js">',
+    "</head><body></body></html>",
+  ].join("\n");
+  const polyfillSource = [
+    "const d = (config) => {",
+    "  const interceptors = config.interceptors.request;",
+    "  interceptors.use(async (spec) => ({ url: spec.url, params: Object.assign({}, spec.params, { vrf: 'fixture' }), headers: {} }));",
+    "};",
+    "export { d as a, d as i, d as n, d as r, d as t };",
+  ].join("\n");
+  const calls = [];
+  const module = await loadModule("modules/mangafire/index.js", {
+    fetchv2: async (url, headers, method, body, options) => {
+      assert.equal(typeof url, "string");
+      calls.push(url);
+      if (url === "https://mangafire.to/") return response(homeHTML);
+      if (url.endsWith("/polyfill-fixture.js")) return response(polyfillSource);
+      const parsed = new URL(url);
+      assert.equal(parsed.searchParams.get("vrf"), "fixture", "every API request must carry the vrf signature");
+      let payload;
+      if (parsed.pathname === "/api/titles") payload = fixtures.search;
+      else if (parsed.pathname.endsWith("/api/titles/fixture")) payload = fixtures.details;
+      else if (parsed.pathname.endsWith("/api/titles/fixture/chapters") && parsed.searchParams.get("page") === "1") payload = fixtures.firstChapters;
+      else if (parsed.pathname.endsWith("/api/titles/fixture/chapters") && parsed.searchParams.get("page") === "2") payload = fixtures.secondChapters;
+      else if (parsed.pathname.endsWith("/api/chapters/9001")) payload = fixtures.chapter;
+      else if (parsed.pathname.endsWith("/api/chapters/9002")) payload = fixtures.structuredPages;
+      else throw new Error(`Unexpected URL: ${url}`);
+      return response(JSON.stringify(payload));
+    },
+    pagev2: async () => {
+      throw new Error("pagev2 must not run when headless signing succeeds");
+    },
+  });
+
+  const search = await module.searchResults("fixture", 1);
+  assert.deepEqual(JSON.parse(JSON.stringify(search)), fixtures.expected.search);
+  const details = await module.extractDetails(search.items[0].id);
+  assert.deepEqual(JSON.parse(JSON.stringify(details)), fixtures.expected.details);
+
+  const chapters = await module.extractChapters(search.items[0].id);
+  assert.deepEqual(JSON.parse(JSON.stringify(chapters)), fixtures.expected.chapters);
+  assert.equal(calls.filter((url) => url.includes("/chapters?")).length, 2);
+
+  const pages = await module.extractImages(chapters[0].id);
+  assert.deepEqual(JSON.parse(JSON.stringify(pages)), fixtures.expected.images);
+  const structured = await module.extractImages("9002");
+  assert.equal(structured[1].scrambled, true);
+  assert.equal(structured[1].scrambleKey, "fixture-key");
+  assert.deepEqual(JSON.parse(JSON.stringify(structured[1].tiles)), { rows: 4, columns: 4, order: [3, 0, 1, 2] });
+});
+
+test("MangaFire falls back to pagev2 when headless signing is unavailable", async () => {
   const fixtures = {
     search: await json("modules/mangafire/fixtures/search.json"),
     details: await json("modules/mangafire/fixtures/details.json"),
@@ -205,7 +270,7 @@ test("MangaFire uses pagev2, paginates chapters, and keeps scramble markers", as
       };
     },
     fetchv2: async () => {
-      throw new Error("fetchv2 fallback should not run when pagev2 succeeds");
+      throw new Error("fetchv2 headless signing must fall back to pagev2");
     },
   });
 

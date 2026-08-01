@@ -53,12 +53,12 @@
       "language": "en",
       "manifest": {
         "path": "modules/mangafire/manifest.json",
-        "sha256": "65843da25f927182ebc2ff8d38cf883c7c8ebed0be1b30bb61f26295c8047149"
+        "sha256": "92a3515e255c4fc899bdf6fd79e01b0d1f177b7442af51da28a1aaa984b55503"
       },
       "name": "MangaFire",
       "releaseTrack": "stable",
       "status": "active",
-      "version": "2.0.6",
+      "version": "2.1.0",
       "sortPriority": 2
     },
     {

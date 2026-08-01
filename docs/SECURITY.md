@@ -44,7 +44,14 @@ classification, so the module is rated `unknown`.
 ## Parser And Resource Rules
 
 - No `eval`, dynamic code download, script injection, filesystem access, or
-  process execution in module code.
+  process execution in module code. Sole documented exception: MangaFire
+  (mangafire-v2) runs the site's own protection polyfill
+  (`s.mfcdn.nl/build/mf/assets/polyfill-*.js`, selected by the home page's
+  `modulepreload` link) with the `Function` constructor inside the module
+  runtime, solely to compute per-request `vrf` API signatures. The polyfill
+  gets no network access beyond the module's own `fetchv2` policy and never
+  receives user data. `scripts/verify-repository.mjs` enforces this carve-out
+  by module folder name; all other modules remain eval-free.
 - Treat HTML and JSON as untrusted input; never execute strings from responses.
 - Deduplicate chapters and preserve source ordering.
 - Reject invalid or non-HTTPS image/resource URLs.

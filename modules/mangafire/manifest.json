@@ -30,7 +30,7 @@
   "contractVersion": 1,
   "entry": {
     "path": "modules/mangafire/index.js",
-    "sha256": "73c11604630fb1449206282a99f819fbd33705fe98fdf81be3e2b91fba7c9f52"
+    "sha256": "9c10143f5f13f7cfcac4d47dd8e4fd5a2e947f1c9256a5f3c57df8ae632dd8fe"
   },
   "familyID": "mangafire-v2",
   "icon": {
@@ -56,5 +56,5 @@
   "releaseTrack": "stable",
   "status": "active",
   "universalLink": "https://synthetiq.uk/manga/modules/mangafire-v2",
-  "version": "2.0.6"
+  "version": "2.1.0"
 }
