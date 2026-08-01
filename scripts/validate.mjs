@@ -266,9 +266,9 @@ async function testInternetArchive() {
   const module = await loadModule("internet-archive", { fetchv2 });
   equalJSON(await module.searchResults("fixture", 1), expected.search, "Internet Archive open-license search fixture");
   equalJSON(await module.extractDetails("open-fixture"), expected.details, "Internet Archive details fixture");
-  equalJSON(await module.extractChapters("open-fixture"), expected.chapters, "Internet Archive text-section fixture");
-  equalJSON(await module.extractResources("open-fixture"), expected.resources, "Internet Archive resources fixture");
-  assert.equal(await module.extractText(expected.chapters[0].url), fixtures.text, "Internet Archive text fixture");
+  equalJSON(await module.extractChapters("open-fixture"), expected.chapters, "Internet Archive chapter fixture");
+  equalJSON(await module.extractImages(expected.chapters[0].id), expected.images, "Internet Archive image fixture");
+  assert.equal(await module.extractText("https://archive.org/download/open-fixture/fixture_book_djvu.txt"), fixtures.text, "Internet Archive text fixture");
   await assert.rejects(() => module.extractDetails("closed-fixture"), /not explicitly open/i);
 }
 

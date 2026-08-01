@@ -63,7 +63,7 @@
     },
     {
       "contentRating": "unknown",
-      "contentType": "publication",
+      "contentType": "pageImages",
       "familyID": "internet-archive",
       "icon": {
         "path": "modules/internet-archive/icon.png",
@@ -73,12 +73,12 @@
       "language": "multi",
       "manifest": {
         "path": "modules/internet-archive/manifest.json",
-        "sha256": "4394bee5a294a58bfc5a2a06c0370d454bc7f876645082fcee1d42cde8ee5f78"
+        "sha256": "00aed1e4e365181feefb8e27ba5b7680fac39baa1f7b3b567bd1c8b1dce1b3f6"
       },
       "name": "Internet Archive Open Texts",
       "releaseTrack": "stable",
       "status": "active",
-      "version": "1.0.1"
+      "version": "1.1.0"
     },
     {
       "contentRating": "suggestive",

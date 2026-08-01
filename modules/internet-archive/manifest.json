@@ -1,7 +1,8 @@
 {
   "allowedHosts": [
-    "archive.org",
-    "*.archive.org"
+    "*.archive.org",
+    "*.us.archive.org",
+    "archive.org"
   ],
   "attribution": {
     "author": "Synthetiq-HQ",
@@ -15,16 +16,16 @@
     "search",
     "details",
     "chapters",
+    "images",
     "text",
-    "resources",
     "discovery"
   ],
   "contentRating": "unknown",
-  "contentType": "publication",
+  "contentType": "pageImages",
   "contractVersion": 1,
   "entry": {
     "path": "modules/internet-archive/index.js",
-    "sha256": "ea104be5b1f11df60ad6ccdda1889074b46534c42980ed6a013ff93502086a44"
+    "sha256": "87de287ab108982f6c063b425b7a8eb3cb244fe10716ecb9c171cc54eadb4466"
   },
   "familyID": "internet-archive",
   "icon": {
@@ -49,5 +50,5 @@
   "releaseTrack": "stable",
   "status": "active",
   "universalLink": "https://synthetiq.uk/manga/modules/internet-archive",
-  "version": "1.0.1"
+  "version": "1.1.0"
 }

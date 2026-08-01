@@ -3,6 +3,7 @@
 (() => {
   const BASE_URL = "https://archive.org";
   const SEARCH_ROWS = 50;
+  const MAX_PAGES = 5000;
   const MAX_TEXT_BYTES = 4 * 1024 * 1024;
   const DEFAULT_HEADERS = {
     Accept: "application/json,text/plain;q=0.9,*/*;q=0.5",
@@ -172,6 +173,27 @@
     return `${BASE_URL}/download/${encodeURIComponent(identifier)}/${encodedFileName(fileName)}`;
   }
 
+  function publicFile(file) {
+    return file && file.name && !flagIsTrue(file.private) && !flagIsTrue(file["access-restricted-item"]);
+  }
+
+  function textFiles(record) {
+    return (Array.isArray(record.files) ? record.files : [])
+      .filter(publicFile)
+      .filter((file) => {
+        const format = String(file.format || "").toLowerCase();
+        const name = String(file.name || "").toLowerCase();
+        const size = Number(file.size || 0);
+        return size > 0 && size <= MAX_TEXT_BYTES && name.endsWith(".txt")
+          && (format === "djvutxt" || format === "full text" || format === "text");
+      })
+      .sort((left, right) => {
+        const leftRank = /_djvu\.txt$/i.test(left.name) ? 0 : 1;
+        const rightRank = /_djvu\.txt$/i.test(right.name) ? 0 : 1;
+        return leftRank - rightRank || String(left.name).localeCompare(String(right.name));
+      });
+  }
+
   async function metadataFor(identifier) {
     const id = normalizeIdentifier(identifier);
     if (metadataCache.has(id)) return metadataCache.get(id);
@@ -258,57 +280,64 @@
     };
   }
 
-  function publicFile(file) {
-    return file && file.name && !flagIsTrue(file.private) && !flagIsTrue(file["access-restricted-item"]);
+  // Number of scannable pages: the item's declared image count, the JPEG-2000
+  // scan files, or the page list published by the OCR pipeline.
+  async function pageCount(record) {
+    const declared = Number(firstValue(record && record.metadata && record.metadata.imagecount));
+    if (Number.isFinite(declared) && declared > 0) return Math.min(declared, MAX_PAGES);
+    const files = Array.isArray(record && record.files) ? record.files : [];
+    const jp2Files = files.filter((file) => /_jp2\/.*\.jp2$/i.test(String(file && file.name || "")));
+    if (jp2Files.length) return Math.min(jp2Files.length, MAX_PAGES);
+    const identifier = String(firstValue(record && record.metadata && record.metadata.identifier) || "");
+    const pageNumbers = files.find((file) => /_page_numbers\.json$/i.test(String(file && file.name || "")));
+    if (identifier && pageNumbers) {
+      const payload = await fetchJSON(downloadURL(identifier, pageNumbers.name), 2 * 1024 * 1024);
+      if (Array.isArray(payload && payload.pages) && payload.pages.length) {
+        return Math.min(payload.pages.length, MAX_PAGES);
+      }
+    }
+    return 0;
   }
 
-  function textFiles(record) {
-    return (Array.isArray(record.files) ? record.files : [])
-      .filter(publicFile)
-      .filter((file) => {
-        const format = String(file.format || "").toLowerCase();
-        const name = String(file.name || "").toLowerCase();
-        const size = Number(file.size || 0);
-        return size > 0 && size <= MAX_TEXT_BYTES && name.endsWith(".txt")
-          && (format === "djvutxt" || format === "full text" || format === "text");
-      })
-      .sort((left, right) => {
-        const leftRank = /_djvu\.txt$/i.test(left.name) ? 0 : 1;
-        const rightRank = /_djvu\.txt$/i.test(right.name) ? 0 : 1;
-        return leftRank - rightRank || String(left.name).localeCompare(String(right.name));
-      });
-  }
-
-  function publicationFiles(record) {
-    return (Array.isArray(record.files) ? record.files : [])
-      .filter(publicFile)
-      .map((file) => {
-        const name = String(file.name || "");
-        const formatName = String(file.format || "").toLowerCase();
-        let format = null;
-        if (name.toLowerCase().endsWith(".epub") && formatName.includes("epub")) format = "epub";
-        if (name.toLowerCase().endsWith(".pdf") && formatName.includes("pdf")) format = "pdf";
-        return format ? { file, format } : null;
-      })
-      .filter(Boolean);
+  function pageServer(record) {
+    const server = String(record && record.server || "").trim();
+    const dir = String(record && record.dir || "").trim();
+    if (!server || !dir) return null;
+    return { server, dir };
   }
 
   async function extractChapters(id) {
     const identifier = normalizeIdentifier(id);
     const record = await metadataFor(identifier);
     const metadata = record.metadata;
-    return textFiles(record).map((file, index) => {
-      const href = downloadURL(identifier, file.name);
-      return {
-        id: href,
-        href,
-        url: href,
-        title: textFiles(record).length === 1 ? "Full text" : `Full text: ${file.name}`,
-        number: index + 1,
-        releaseDate: String(firstValue(metadata.publicdate) || "") || null,
-        language: String(firstValue(metadata.language) || "und"),
-      };
-    });
+    const count = await pageCount(record);
+    if (!count) return [];
+    const href = `${BASE_URL}/details/${encodeURIComponent(identifier)}`;
+    return [{
+      id: href,
+      href,
+      url: href,
+      title: count === 1 ? "Full book" : `Full book (${count} pages)`,
+      number: 1,
+      releaseDate: String(firstValue(metadata.publicdate) || "") || null,
+      language: String(firstValue(metadata.language) || "und"),
+    }];
+  }
+
+  async function extractImages(id) {
+    const identifier = normalizeIdentifier(id);
+    const record = await metadataFor(identifier);
+    const count = await pageCount(record);
+    if (!count) throw new Error("Internet Archive item has no readable page images.");
+    const pageHost = pageServer(record);
+    if (!pageHost) throw new Error("Internet Archive item has no page image server.");
+    const pages = [];
+    for (let pageIndex = 0; pageIndex < count; pageIndex += 1) {
+      pages.push({
+        url: `https://${pageHost.server}/BookReader/BookReaderImages.php?id=${encodeURIComponent(identifier)}&itemPath=${encodeURIComponent(pageHost.dir)}&server=${pageHost.server}&page=n${pageIndex}`,
+      });
+    }
+    return pages;
   }
 
   async function extractText(reference) {
@@ -327,18 +356,6 @@
     const text = await responseText(response);
     if (!text) throw new Error("Internet Archive text file was empty.");
     return text;
-  }
-
-  async function extractResources(id) {
-    const identifier = normalizeIdentifier(id);
-    const record = await metadataFor(identifier);
-    return publicationFiles(record).map(({ file, format }) => ({
-      format,
-      url: downloadURL(identifier, file.name),
-      fileName: String(file.name),
-      size: Number(file.size || 0) || null,
-      headers: { Referer: `${BASE_URL}/details/${encodeURIComponent(identifier)}` },
-    }));
   }
 
   async function discoveryHome() {
@@ -361,8 +378,8 @@
     searchResults,
     extractDetails,
     extractChapters,
+    extractImages,
     extractText,
-    extractResources,
     discoveryHome,
     discoveryFeed,
   };

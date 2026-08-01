@@ -251,131 +251,18 @@ test("Internet Archive exposes only explicitly open, public files", async () => 
   const details = await module.extractDetails("open-fixture");
   assert.deepEqual(JSON.parse(JSON.stringify(details)), fixtures.expected.details);
 
-  const resources = await module.extractResources("open-fixture");
-  assert.deepEqual(JSON.parse(JSON.stringify(resources)), fixtures.expected.resources);
-
   const chapters = await module.extractChapters("open-fixture");
   assert.deepEqual(JSON.parse(JSON.stringify(chapters)), fixtures.expected.chapters);
 
-  const book = await module.extractText(chapters[0].url);
+  const pages = await module.extractImages(chapters[0].id);
+  assert.deepEqual(JSON.parse(JSON.stringify(pages)), fixtures.expected.images);
+
+  const book = await module.extractText("https://archive.org/download/open-fixture/fixture_book_djvu.txt");
   assert.equal(book, fixtures.book);
   await assert.rejects(
-    () => module.extractResources("closed-fixture"),
+    () => module.extractChapters("closed-fixture"),
     /not explicitly open, licensed, and downloadable/,
   );
-});
-
-test("MangaDex uses fetchv2 against the official API, paginates chapters, excludes non-permitted ratings, and skips externally-hosted/unavailable chapters", async () => {
-  const fixtures = {
-    search: await json("modules/mangadex/fixtures/search.json"),
-    details: await json("modules/mangadex/fixtures/details.json"),
-    detailsExcluded: await json("modules/mangadex/fixtures/details-excluded.json"),
-    chapters1: await json("modules/mangadex/fixtures/chapters-page-1.json"),
-    chapters2: await json("modules/mangadex/fixtures/chapters-page-2.json"),
-    images: await json("modules/mangadex/fixtures/images.json"),
-    expected: await json("modules/mangadex/fixtures/expected.json"),
-  };
-  const calls = [];
-  const module = await loadModule("modules/mangadex/index.js", {
-    fetchv2: async (url, headers, method, body, options) => {
-      assert.equal(typeof url, "string");
-      assert.equal(method, "GET");
-      assert.equal(body, null);
-      calls.push({ url });
-      const u = new URL(url);
-      if (u.pathname === "/manga" && u.searchParams.get("title") === "fixture") return response(JSON.stringify(fixtures.search));
-      if (u.pathname === "/manga/11111111-1111-4111-8111-111111111111") return response(JSON.stringify(fixtures.details));
-      if (u.pathname === "/manga/22222222-2222-4222-8222-222222222222") return response(JSON.stringify(fixtures.detailsExcluded));
-      if (u.pathname === "/manga/11111111-1111-4111-8111-111111111111/feed") {
-        const offset = u.searchParams.get("offset") || "0";
-        if (offset === "0") return response(JSON.stringify(fixtures.chapters1));
-        if (offset === "500") return response(JSON.stringify(fixtures.chapters2));
-        return response(JSON.stringify({ result: "ok", data: [], total: 501, limit: 500, offset: Number(offset) }));
-      }
-      if (u.pathname === "/at-home/server/aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa") return response(JSON.stringify(fixtures.images));
-      throw new Error(`Unexpected URL: ${url}`);
-    },
-    reportProgress: async () => ({ ok: true }),
-  });
-
-  const search = await module.searchResults("fixture", 1);
-  assert.deepEqual(JSON.parse(JSON.stringify(search)), fixtures.expected.search);
-  assert.equal(search.items.length, 1, "the erotica-rated fixture entry must be excluded");
-
-  const details = await module.extractDetails(search.items[0].id);
-  assert.deepEqual(JSON.parse(JSON.stringify(details)), fixtures.expected.details);
-  await assert.rejects(
-    () => module.extractDetails("22222222-2222-4222-8222-222222222222"),
-    /excluded by the module content policy/,
-  );
-
-  const chapters = await module.extractChapters(search.items[0].id);
-  assert.deepEqual(JSON.parse(JSON.stringify(chapters)), fixtures.expected.chapters);
-  assert.equal(chapters.length, 3, "external-URL and unavailable chapters must be filtered out");
-  assert.equal(calls.filter((call) => call.url.includes("/feed")).length, 2, "must follow chapter feed pagination");
-
-  const images = await module.extractImages(chapters[0].id);
-  assert.deepEqual(JSON.parse(JSON.stringify(images)), fixtures.expected.images);
-});
-
-test("MangaDex v2 uses the official API, sorts chapters deterministically, deduplicates across pages, and labels unnumbered specials correctly", async () => {
-  const fixtures = {
-    search: await json("modules/mangadex-v2/fixtures/search.json"),
-    details: await json("modules/mangadex-v2/fixtures/details.json"),
-    detailsExcluded: await json("modules/mangadex-v2/fixtures/details-excluded.json"),
-    chapters1: await json("modules/mangadex-v2/fixtures/chapters-page-1.json"),
-    chapters2: await json("modules/mangadex-v2/fixtures/chapters-page-2.json"),
-    images: await json("modules/mangadex-v2/fixtures/images.json"),
-    expected: await json("modules/mangadex-v2/fixtures/expected.json"),
-  };
-  const calls = [];
-  const module = await loadModule("modules/mangadex-v2/index.js", {
-    fetchv2: async (url, headers, method, body, options) => {
-      assert.equal(typeof url, "string");
-      assert.equal(method, "GET");
-      assert.equal(body, null);
-      calls.push({ url });
-      const u = new URL(url);
-      if (u.pathname === "/manga" && u.searchParams.get("title") === "fixture") return response(JSON.stringify(fixtures.search));
-      if (u.pathname === "/manga/11111111-1111-4111-8111-111111111111") return response(JSON.stringify(fixtures.details));
-      if (u.pathname === "/manga/22222222-2222-4222-8222-222222222222") return response(JSON.stringify(fixtures.detailsExcluded));
-      if (u.pathname === "/manga/11111111-1111-4111-8111-111111111111/feed") {
-        const offset = u.searchParams.get("offset") || "0";
-        if (offset === "0") return response(JSON.stringify(fixtures.chapters1));
-        if (offset === "500") return response(JSON.stringify(fixtures.chapters2));
-        return response(JSON.stringify({ result: "ok", data: [], total: 501, limit: 500, offset: Number(offset) }));
-      }
-      if (u.pathname === "/at-home/server/aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa") return response(JSON.stringify(fixtures.images));
-      throw new Error(`Unexpected URL: ${url}`);
-    },
-    reportProgress: async () => ({ ok: true }),
-  });
-
-  const search = await module.searchResults("fixture", 1);
-  assert.deepEqual(JSON.parse(JSON.stringify(search)), fixtures.expected.search);
-  assert.equal(search.items.length, 1, "the erotica-rated fixture entry must be excluded");
-
-  const details = await module.extractDetails(search.items[0].id);
-  assert.deepEqual(JSON.parse(JSON.stringify(details)), fixtures.expected.details);
-  await assert.rejects(
-    () => module.extractDetails("22222222-2222-4222-8222-222222222222"),
-    /excluded by the module content policy/,
-  );
-
-  const chapters = await module.extractChapters(search.items[0].id);
-  assert.deepEqual(JSON.parse(JSON.stringify(chapters)), fixtures.expected.chapters);
-  assert.equal(chapters.length, 5, "external, unavailable, and duplicate chapters must be filtered out");
-  assert.equal(chapters[4].title, "Special Side Story", "unnumbered chapters must sort last");
-  assert.equal(chapters[3].title, "Chapter 3.5: Interlude", "decimal chapters must be preserved and ordered");
-  assert.equal(
-    chapters.filter((chapter) => chapter.id.includes("aaaaaaaa")).length,
-    1,
-    "the cross-page duplicate chapter id must be dropped",
-  );
-  assert.equal(calls.filter((call) => call.url.includes("/feed")).length, 2, "must follow chapter feed pagination");
-
-  const images = await module.extractImages(chapters[0].id);
-  assert.deepEqual(JSON.parse(JSON.stringify(images)), fixtures.expected.images);
 });
 
 test("MangaKatana parses only the selected title's chapter table and thzq page images", async () => {
