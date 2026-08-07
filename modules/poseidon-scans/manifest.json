@@ -1,0 +1,49 @@
+{
+  "allowedHosts": [
+    "poseidon-scans.net",
+    "*.poseidon-scans.net"
+  ],
+  "attribution": {
+    "author": "Synthetiq-HQ",
+    "website": "https://poseidon-scans.net"
+  },
+  "baseURL": "https://poseidon-scans.net",
+  "capabilities": [
+    "popular",
+    "latest",
+    "search",
+    "details",
+    "chapters",
+    "images",
+    "discovery"
+  ],
+  "contentRating": "suggestive",
+  "contentType": "pageImages",
+  "contractVersion": 1,
+  "entry": {
+    "path": "modules/poseidon-scans/index.js",
+    "sha256": "7894d54b1df30182383b99fa622a97f5a655c42c90d9a559cca43f20db21807f"
+  },
+  "familyID": "poseidon-scans",
+  "icon": {
+    "path": "modules/poseidon-scans/icon.png",
+    "sha256": "d3d8c1e4503fbfe0d2c21af890c66fce35bbb72e01152bf5badaee72d8ce577e"
+  },
+  "id": "poseidon-scans",
+  "isFlagship": false,
+  "language": "fr",
+  "legacyIDs": [],
+  "limits": {
+    "cacheTTLSeconds": 300,
+    "maxConcurrentRequests": 2,
+    "maxResponseBytes": 16777216,
+    "maxScriptBytes": 524288,
+    "timeoutMilliseconds": 30000
+  },
+  "minimumAppVersion": "1.0.0",
+  "name": "Poseidon Scans",
+  "releaseTrack": "beta",
+  "status": "active",
+  "universalLink": "https://synthetiq.uk/manga/modules/poseidon-scans",
+  "version": "1.0.0"
+}

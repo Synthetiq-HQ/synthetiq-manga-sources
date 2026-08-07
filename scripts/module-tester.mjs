@@ -265,6 +265,22 @@ async function createRuntime(slug, mode) {
           if (/\/book\//.test(u) && details) return fixtureResponse(details);
           if (home) return fixtureResponse(home);
         }
+        if (slug === "poseidon-scans") {
+          // Poseidon Scans is a JSON/Next-flight API source: /api/search and
+          // /api/manga/lastchapters for feeds, /serie/<slug> (flight data) for
+          // details+chapters, and /serie/<slug>/chapter/<n> (flight data) for
+          // pages. Resolve most-specific routes first, mirroring other API
+          // modules so the generic fixture runner exercises the same contract.
+          const flightDetails = await fixture("details.rsc");
+          const flightChapters = await fixture("chapters.rsc");
+          const flightPages = await fixture("pages.rsc");
+          const flightHome = await fixture("home.rsc") || search;
+          if (/\/api\/manga\/lastchapters/i.test(u) && flightHome) return fixtureResponse(flightHome);
+          if (/\/api\/search/i.test(u) && search) return fixtureResponse(search);
+          if (/\/chapter\/[0-9.]+/.test(u) && flightPages) return fixtureResponse(flightPages);
+          if (/\/serie\//i.test(u) && flightDetails) return fixtureResponse(flightDetails);
+          if (flightHome) return fixtureResponse(flightHome);
+        }
         // WeebCentral uses /series/<id> for details and
         // /series/<id>/full-chapter-list for chapters. Resolve the more
         // specific chapter route first so the generic fixture runner exercises

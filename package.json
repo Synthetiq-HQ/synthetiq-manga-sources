@@ -9,6 +9,7 @@
     "test:contracts": "node --test tests/chapter-ownership.test.mjs && node scripts/source-contract-audit.mjs",
     "test:live": "RUN_LIVE_TESTS=1 node scripts/live-smoke.mjs",
     "test:atsu:live": "RUN_LIVE_TESTS=1 node scripts/live-atsu-proof.mjs",
+    "test:poseidon:live": "RUN_LIVE_TESTS=1 node scripts/live-poseidon-proof.mjs",
     "test:module": "node scripts/module-tester.mjs",
     "test:module:fixtures": "node scripts/module-tester.mjs --fixtures",
     "test:module:report": "node scripts/module-tester.mjs --report",

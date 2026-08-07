@@ -1,0 +1,68 @@
+{
+  "search": {
+    "items": [
+      {
+        "id": "https://poseidon-scans.net/serie/fixture-one",
+        "href": "https://poseidon-scans.net/serie/fixture-one",
+        "url": "https://poseidon-scans.net/serie/fixture-one",
+        "title": "Fixture One",
+        "image": "https://poseidon-scans.net/api/covers/fixture-one.webp"
+      }
+    ],
+    "page": 1,
+    "hasMore": false
+  },
+  "details": {
+    "id": "https://poseidon-scans.net/serie/fixture-one",
+    "href": "https://poseidon-scans.net/serie/fixture-one",
+    "url": "https://poseidon-scans.net/serie/fixture-one",
+    "title": "Fixture One",
+    "description": "A deterministic source fixture.",
+    "image": "https://poseidon-scans.net/api/covers/fixture-one.webp",
+    "authors": [
+      "Fixture Author"
+    ],
+    "author": "Fixture Author",
+    "genres": [
+      "Action",
+      "Aventure"
+    ],
+    "status": "Ongoing"
+  },
+  "chapters": [
+    {
+      "id": "https://poseidon-scans.net/serie/fixture-one/chapter/2",
+      "href": "https://poseidon-scans.net/serie/fixture-one/chapter/2",
+      "url": "https://poseidon-scans.net/serie/fixture-one/chapter/2",
+      "title": "Chapitre 2",
+      "number": 2,
+      "releaseDate": "2026-01-01T00:00:00.000Z",
+      "language": "fr"
+    },
+    {
+      "id": "https://poseidon-scans.net/serie/fixture-one/chapter/1",
+      "href": "https://poseidon-scans.net/serie/fixture-one/chapter/1",
+      "url": "https://poseidon-scans.net/serie/fixture-one/chapter/1",
+      "title": "Chapitre 1 - Départ",
+      "number": 1,
+      "releaseDate": "2026-01-02T00:00:00.000Z",
+      "language": "fr"
+    }
+  ],
+  "images": [
+    {
+      "url": "https://poseidon-scans.net/api/chapters/fixture-one/cmc2/1.webp",
+      "headers": {
+        "Accept": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8",
+        "Referer": "https://poseidon-scans.net/serie/fixture-one/chapter/2"
+      }
+    },
+    {
+      "url": "https://poseidon-scans.net/api/chapters/fixture-one/cmc2/2.webp",
+      "headers": {
+        "Accept": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8",
+        "Referer": "https://poseidon-scans.net/serie/fixture-one/chapter/2"
+      }
+    }
+  ]
+}

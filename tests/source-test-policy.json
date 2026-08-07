@@ -76,6 +76,13 @@
         "function chaptersFromHTML(html, slug)",
         "match[3].toLowerCase() !== slug"
       ]
+    },
+    "poseidon-scans": {
+      "chapterScope": "api",
+      "requiredCodeFragments": [
+        "function parseChapters(body, seriesUrl)",
+        "chapterIsFree"
+      ]
     }
   }
 }

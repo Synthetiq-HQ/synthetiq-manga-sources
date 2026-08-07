@@ -390,6 +390,42 @@ test("MGRead (LikeManga) parses search, details, paginated chapters, and CDN pag
   assert.deepEqual(JSON.parse(JSON.stringify(pages)), fixtures.expected.images);
 });
 
+test("Poseidon Scans parses search, flight-data details, free-only chapters, and page images", async () => {
+  const fixtures = {
+    search: await text("modules/poseidon-scans/fixtures/search.json"),
+    details: await text("modules/poseidon-scans/fixtures/details.rsc"),
+    pages: await text("modules/poseidon-scans/fixtures/pages.rsc"),
+    expected: await json("modules/poseidon-scans/fixtures/expected.json"),
+  };
+  const module = await loadModule("modules/poseidon-scans/index.js", {
+    fetchv2: async (url) => {
+      assert.equal(typeof url, "string");
+      if (url.includes("/api/search")) return response(fixtures.search);
+      if (url.includes("/api/manga/lastchapters")) return response(fixtures.search);
+      if (url.includes("/chapter/")) return response(fixtures.pages);
+      if (url.includes("/serie/")) return response(fixtures.details);
+      if (url.endsWith("poseidon-scans.net/")) return response(fixtures.search);
+      throw new Error(`Unexpected URL: ${url}`);
+    },
+  });
+
+  const search = await module.searchResults("fixture", 1);
+  assert.deepEqual(JSON.parse(JSON.stringify(search)), fixtures.expected.search);
+
+  const details = await module.extractDetails(search.items[0].id);
+  assert.deepEqual(JSON.parse(JSON.stringify(details)), fixtures.expected.details);
+
+  const chapters = await module.extractChapters(search.items[0].id);
+  assert.deepEqual(JSON.parse(JSON.stringify(chapters)), fixtures.expected.chapters);
+
+  const pages = await module.extractImages(chapters[0].id);
+  assert.deepEqual(JSON.parse(JSON.stringify(pages)), fixtures.expected.images);
+
+  const discovery = await module.discoveryHome();
+  assert.ok(discovery.sections.length > 0);
+  assert.equal(discovery.sections[0].items[0].title, "Fixture One");
+});
+
 test("xkcd serves the single series from the official JSON API", async () => {
   const fixtures = {
     latest: await text("modules/xkcd/fixtures/info-latest.json"),

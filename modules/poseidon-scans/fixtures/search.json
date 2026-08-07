@@ -1,0 +1,1 @@
+{"success":true,"mangas":[{"id":"cmfixture0000000000000001","title":"Fixture One","slug":"fixture-one","coverImage":"storage/covers/fixture-one.webp","viewCount":12345,"categories":[{"id":"ca1","mangaId":"cmfixture0000000000000001","categoryId":"cg1"},{"id":"ca2","mangaId":"cmfixture0000000000000001","categoryId":"cg2"}],"_count":{"chapters":3}}],"total":1,"pages":1}

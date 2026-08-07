@@ -49,3 +49,17 @@ test("Grabber Zone only returns chapters owned by the requested series", async (
   assert.ok(chapters.every((chapter) => chapter.id.startsWith("https://grabber.zone/comics/fixture-alpha/")));
   assert.equal(chapters.some((chapter) => chapter.number === 99), false);
 });
+
+test("Poseidon Scans only returns chapters owned by the requested series and skips premium-locked chapters", async () => {
+  const details = await readFile(new URL("modules/poseidon-scans/fixtures/details.rsc", root), "utf8");
+  const module = await loadModule("modules/poseidon-scans/index.js", async (url) => {
+    if (url.includes("/serie/")) return response(details);
+    throw new Error(`Unexpected Poseidon Scans URL: ${url}`);
+  });
+
+  const chapters = await module.extractChapters("https://poseidon-scans.net/serie/fixture-one/");
+  assert.equal(chapters.length, 2);
+  assert.ok(chapters.every((chapter) => chapter.id.startsWith("https://poseidon-scans.net/serie/fixture-one/")));
+  // Premium-locked chapter 0.5 must not be listed for anonymous readers.
+  assert.equal(chapters.some((chapter) => chapter.number === 0.5), false);
+});

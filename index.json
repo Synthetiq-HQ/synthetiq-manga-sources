@@ -384,6 +384,26 @@
       "releaseTrack": "beta",
       "status": "active",
       "version": "1.0.1"
+    },
+    {
+      "contentRating": "suggestive",
+      "contentType": "pageImages",
+      "familyID": "poseidon-scans",
+      "icon": {
+        "path": "modules/poseidon-scans/icon.png",
+        "sha256": "d3d8c1e4503fbfe0d2c21af890c66fce35bbb72e01152bf5badaee72d8ce577e"
+      },
+      "id": "poseidon-scans",
+      "language": "fr",
+      "manifest": {
+        "path": "modules/poseidon-scans/manifest.json",
+        "sha256": "af1c48c9544d2d7fac88e3792e24210c200caab7875deb985182705dad3364cf"
+      },
+      "name": "Poseidon Scans",
+      "releaseTrack": "beta",
+      "status": "active",
+      "version": "1.0.0",
+      "sortPriority": 7
     }
   ],
   "repository": {
