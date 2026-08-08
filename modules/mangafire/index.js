@@ -108,7 +108,7 @@
     };
   }
 
-  function protectedFetchScript(requests) {
+  function protectedFetchActionScript(requests) {
     const specs = requests.map((value) => {
       const request = protectionRequest(value);
       return {
@@ -116,7 +116,21 @@
         params: request.params,
       };
     });
-    return `(async () => {
+    return `(() => {
+      const resultKey = '__synthetiqMangaFireProtectedResult';
+      const markerID = 'synthetiq-mangafire-protected-complete';
+      globalThis[resultKey] = null;
+      const finish = () => {
+        let marker = document.getElementById(markerID);
+        if (!marker) {
+          marker = document.createElement('div');
+          marker.id = markerID;
+          marker.hidden = true;
+          document.body.appendChild(marker);
+        }
+      };
+      void (async () => {
+      try {
       const moduleURL = Array.from(document.querySelectorAll('link[rel="modulepreload"]'))
         .map((link) => link.href)
         .find((href) => href.includes('/polyfill-') && href.endsWith('.js'));
@@ -142,7 +156,16 @@
         if (!response.ok) throw new Error(payload.message || ('MangaFire HTTP ' + response.status));
         output.push(payload);
       }
-      return output;
+      globalThis[resultKey] = JSON.stringify({ ok: true, payloads: output });
+      } catch (error) {
+        globalThis[resultKey] = JSON.stringify({
+          ok: false,
+          error: String(error && error.message ? error.message : error)
+        });
+      } finally {
+        finish();
+      }
+      })();
     })()`;
   }
 
@@ -157,15 +180,26 @@
       captureResponseBodies: false,
       maxEntries: 16,
       maxResponseCharacters: 1_000_000,
-      actionScript: null,
-      returnScript: protectedFetchScript(requests),
-      waitForSelector: "body",
+      // WKWebView.evaluateJavaScript cannot bridge a JavaScript Promise or an
+      // array of page-realm objects. Start the async work without returning
+      // its Promise, wait for a DOM marker, then bridge one JSON string.
+      actionScript: protectedFetchActionScript(requests),
+      returnScript: "globalThis.__synthetiqMangaFireProtectedResult || JSON.stringify({ ok: false, error: 'MangaFire protected request did not finish.' })",
+      waitForSelector: "#synthetiq-mangafire-protected-complete",
       waitForURLIncludes: null,
       waitForRequestURLIncludes: null,
       waitForResponseURLIncludes: null,
       waitForResponseBodyIncludes: null,
     });
-    const payloads = snapshot && snapshot.evaluatedData;
+    const result = parseJSON(snapshot && snapshot.evaluatedData);
+    if (!result || result.ok !== true) {
+      throw new Error(
+        result && result.error
+          ? String(result.error)
+          : "MangaFire protected request returned no result."
+      );
+    }
+    const payloads = result.payloads;
     if (!Array.isArray(payloads) || payloads.length !== requests.length) {
       throw new Error("MangaFire protected request returned incomplete data.");
     }

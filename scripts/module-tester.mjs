@@ -256,7 +256,7 @@ async function createRuntime(slug, mode) {
           if (/\/download\/open-fixture\//i.test(u) && special.text) return fixtureResponse(special.text);
           if (home) return fixtureResponse(home);
         }
-        if (slug === "novelfire") {
+if (slug === "novelfire") {
           if (/\/search\?keyword=.*(?:&|%26)page=2/.test(u) && special.novelfireSearchPage2) return fixtureResponse(special.novelfireSearchPage2);
           if (/\/search\?keyword=/.test(u) && search) return fixtureResponse(search);
           if (/\/book\/[^/]+\/chapters\?page=2/.test(u) && special.novelfireChaptersPage2) return fixtureResponse(special.novelfireChaptersPage2);

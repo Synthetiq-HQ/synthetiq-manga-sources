@@ -291,6 +291,45 @@ test("MangaFire falls back to pagev2 when headless signing is unavailable", asyn
   assert.deepEqual(JSON.parse(JSON.stringify(structured[1].tiles)), { rows: 4, columns: 4, order: [3, 0, 1, 2] });
 });
 
+test("MangaFire bridges protected browser results as JSON text", async () => {
+  const search = await json("modules/mangafire/fixtures/search.json");
+  let protectedCall = null;
+  const module = await loadModule("modules/mangafire/index.js", {
+    fetchv2: async () => {
+      throw new Error("headless signer unavailable");
+    },
+    pagev2: async (task) => {
+      if (task.url.includes("/api/titles?")) {
+        return {
+          finalURL: task.url,
+          title: "",
+          html: null,
+          cookies: {},
+          events: [],
+          evaluatedData: JSON.stringify({ message: "Missing token." }),
+        };
+      }
+
+      protectedCall = task;
+      return {
+        finalURL: task.url,
+        title: "",
+        html: null,
+        cookies: {},
+        events: [],
+        evaluatedData: JSON.stringify({ ok: true, payloads: [search] }),
+      };
+    },
+  });
+
+  const result = await module.searchResults("fixture", 1);
+  assert.ok(result.items.length > 0);
+  assert.equal(protectedCall.url, "https://mangafire.to/");
+  assert.equal(protectedCall.waitForSelector, "#synthetiq-mangafire-protected-complete");
+  assert.match(protectedCall.actionScript, /void \(async \(\) =>/);
+  assert.doesNotMatch(protectedCall.returnScript, /async|Promise/);
+});
+
 test("Internet Archive exposes only explicitly open, public files", async () => {
   const fixtures = {
     search: await text("modules/internet-archive/fixtures/search.json"),

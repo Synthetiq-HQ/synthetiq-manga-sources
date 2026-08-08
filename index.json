@@ -53,12 +53,12 @@
       "language": "en",
       "manifest": {
         "path": "modules/mangafire/manifest.json",
-        "sha256": "92a3515e255c4fc899bdf6fd79e01b0d1f177b7442af51da28a1aaa984b55503"
+        "sha256": "b01761d4e43c5300d3bac48d88545e466250a72f77b115e9a08907e3dfb243c5"
       },
       "name": "MangaFire",
       "releaseTrack": "stable",
       "status": "active",
-      "version": "2.1.0",
+      "version": "2.1.1",
       "sortPriority": 2
     },
     {
@@ -73,7 +73,7 @@
       "language": "multi",
       "manifest": {
         "path": "modules/internet-archive/manifest.json",
-        "sha256": "00aed1e4e365181feefb8e27ba5b7680fac39baa1f7b3b567bd1c8b1dce1b3f6"
+        "sha256": "04604e6a0693ed3694e0666eddc854882f0719e536e696cd8c6ca7743fecb046"
       },
       "name": "Internet Archive Open Texts",
       "releaseTrack": "stable",
@@ -283,7 +283,7 @@
       "language": "en",
       "manifest": {
         "path": "modules/grabber-zone/manifest.json",
-        "sha256": "d066824fe79922ecddab4b3968e9fd6c47f6a1ee3c12fc105c1e97bc070e5b30"
+        "sha256": "16848a49f665325a02f9e7dc71faddfba7969fffa9384d8dc77c3d53d4db96c2"
       },
       "name": "Grabber Zone",
       "releaseTrack": "beta",
@@ -359,7 +359,7 @@
       "language": "en",
       "manifest": {
         "path": "modules/comicfury/manifest.json",
-        "sha256": "457107cd6359be161a3a366cbc01890811d84d019086634c39097c403fad034b"
+        "sha256": "ac5adeece7a5b7c5f8e5fa5be4bb4c9a3be5c2cfac219d4fa8562a7a7a167e02"
       },
       "name": "Comic Fury",
       "releaseTrack": "beta",
@@ -397,12 +397,12 @@
       "language": "fr",
       "manifest": {
         "path": "modules/poseidon-scans/manifest.json",
-        "sha256": "af1c48c9544d2d7fac88e3792e24210c200caab7875deb985182705dad3364cf"
+        "sha256": "352bdcb99d2a74e2ab299844d67dd266f92c6b49ad97e3f735c94106a511bb47"
       },
       "name": "Poseidon Scans",
       "releaseTrack": "beta",
       "status": "active",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "sortPriority": 7
     }
   ],
