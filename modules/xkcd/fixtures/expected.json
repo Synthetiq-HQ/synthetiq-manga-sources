@@ -14,6 +14,32 @@
     "items": [],
     "hasMore": false
   },
+  "titleSearch": {
+    "items": [
+      {
+        "id": "https://xkcd.com/2504/",
+        "href": "https://xkcd.com/2504/",
+        "url": "https://xkcd.com/2504/",
+        "title": "Rotational Gravity",
+        "number": 2504
+      },
+      {
+        "id": "https://xkcd.com/2491/",
+        "href": "https://xkcd.com/2491/",
+        "url": "https://xkcd.com/2491/",
+        "title": "Artificial Gravity",
+        "number": 2491
+      },
+      {
+        "id": "https://xkcd.com/2400/",
+        "href": "https://xkcd.com/2400/",
+        "url": "https://xkcd.com/2400/",
+        "title": "Gravity",
+        "number": 2400
+      }
+    ],
+    "hasMore": false
+  },
   "details": {
     "id": "https://xkcd.com/",
     "href": "https://xkcd.com/",

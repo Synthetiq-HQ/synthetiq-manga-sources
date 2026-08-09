@@ -110,6 +110,24 @@ async function loadIndex() {
   return parseJSON(await readFile(path.join(root, "index.json"), "utf8"));
 }
 
+async function loadFlagshipMatrix() {
+  try {
+    return parseJSON(await readFile(path.join(root, "certification", "flagship-matrix.json"), "utf8"));
+  } catch {
+    return null;
+  }
+}
+
+// A module may require the app's real WKWebView pagev2 bridge (token signing,
+// interactive challenges). The node harness cannot exercise those flows, so a
+// live run reports them as "requires on-device" instead of a false FAIL.
+function requiresOnDeviceBridge(entry) {
+  if (!entry) return null;
+  return entry.nodeLive === false && typeof entry.requiresIOSReason === "string"
+    ? entry.requiresIOSReason
+    : null;
+}
+
 async function loadModuleScript(slug) {
   return readFile(path.join(root, "modules", slug, "index.js"), "utf8");
 }
@@ -888,9 +906,35 @@ const selected = positionals.length ? positionals : allSlugs;
 const mode = useFixtures ? "fixtures" : "live";
 const wallStarted = Date.now();
 
+const flagshipMatrix = await loadFlagshipMatrix();
+const matrixBySlug = new Map(
+  (flagshipMatrix?.modules || []).map((entry) => [entry.slug || entry.id, entry]),
+);
+
 const reports = [];
 for (const slug of selected) {
   process.stderr.write(`Testing ${slug} (${mode})...\n`);
+  const matrixEntry = matrixBySlug.get(slug);
+  const bridgeReason = mode === "live" ? requiresOnDeviceBridge(matrixEntry) : null;
+  if (bridgeReason) {
+    reports.push({
+      module: slug,
+      moduleID: indexBySlug.get(slug)?.id || slug,
+      name: indexBySlug.get(slug)?.name || slug,
+      version: indexBySlug.get(slug)?.version || null,
+      mode,
+      passed: true,
+      skipped: true,
+      skipReason: bridgeReason,
+      stages: {},
+      timingsMs: {},
+      lifecycle: [],
+      error: null,
+      durationMs: 0,
+    });
+    process.stderr.write(`  SKIP ${slug} in live mode — requires on-device: ${bridgeReason}\n`);
+    continue;
+  }
   // eslint-disable-next-line no-await-in-loop
   const report = await testModule(slug, mode, indexBySlug.get(slug));
   reports.push(report);
@@ -908,7 +952,8 @@ const summary = {
   query,
   itemLimit,
   passed: reports.filter((r) => r.passed).length,
-  failed: reports.filter((r) => !r.passed).length,
+  failed: reports.filter((r) => !r.passed && !r.skipped).length,
+  skipped: reports.filter((r) => r.skipped).length,
   total: reports.length,
   totalDurationMs: Date.now() - wallStarted,
   reports,

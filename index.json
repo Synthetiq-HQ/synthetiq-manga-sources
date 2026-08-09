@@ -302,7 +302,7 @@
       "language": "en",
       "manifest": {
         "path": "modules/xkcd/manifest.json",
-        "sha256": "ef9236c75b0f4542f727e5e986bcf438319f86324fc0b801141a2cc3a7f8a990"
+        "sha256": "176b85959d49d57a48d8379280a39f7b0e63ebd0b66387f6bf733b0da64a888c"
       },
       "name": "xkcd",
       "releaseTrack": "beta",

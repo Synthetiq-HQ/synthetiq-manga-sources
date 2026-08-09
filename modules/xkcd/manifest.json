@@ -24,7 +24,7 @@
   "contractVersion": 1,
   "entry": {
     "path": "modules/xkcd/index.js",
-    "sha256": "0a8971c59ed38007cda693d64a2128797e76b9f02fc62ad68353864dbbf4afcb"
+    "sha256": "19609edcb473e10a5d8410de9e2bad0ac274529594f2b897111f0a1640f197ca"
   },
   "familyID": "xkcd",
   "icon": {

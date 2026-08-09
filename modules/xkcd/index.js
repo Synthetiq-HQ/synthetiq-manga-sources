@@ -5,6 +5,9 @@
   const SERIES_ID = `${BASE_URL}/`;
   const SERIES_TITLE = "xkcd";
   const SERIES_DESCRIPTION = "Daily stick-figure webcomic by Randall Munroe.";
+  const ARCHIVE_URL = `${BASE_URL}/archive/`;
+  const SEARCH_PAGE_SIZE = 10;
+  const ARCHIVE_CACHE_TTL_MS = 6 * 60 * 60 * 1000;
   const DEFAULT_HEADERS = {
     Accept: "application/json",
     Referer: `${BASE_URL}/`,
@@ -147,13 +150,6 @@
     };
   }
 
-  function matchesQuery(query) {
-    const raw = String(query || "").trim().toLowerCase();
-    if (!raw) return true;
-    if (raw === "__feed:popular" || raw === "__feed:latest") return true;
-    return raw.split(/\s+/).includes(SERIES_TITLE);
-  }
-
   function normalizedComicNumber(value) {
     const input = String(value || "").trim();
     const match = input.match(/^(?:https:\/\/xkcd\.com)?\/?(\d+)\/?$/i);
@@ -161,9 +157,71 @@
     throw new Error("Invalid xkcd comic identifier.");
   }
 
-  async function searchResults(query) {
-    if (!matchesQuery(query)) return { items: [], hasMore: false };
-    return { items: [seriesItem(await latestComic())], hasMore: false };
+  const archiveCache = { fetchedAt: 0, comics: [] };
+
+  async function fetchTitleArchive() {
+    const now = Date.now();
+    if (archiveCache.comics.length && now - archiveCache.fetchedAt < ARCHIVE_CACHE_TTL_MS) {
+      return archiveCache.comics;
+    }
+    const body = await fetchDirect(ARCHIVE_URL, {
+      maxBytesHint: 4 * 1024 * 1024,
+      headers: { Accept: "text/html,application/xhtml+xml" },
+    });
+    const comics = [];
+    const linkPattern = /<a\s+href="\/(\d+)\/"[^>]*>([\s\S]*?)<\/a>/gi;
+    let match;
+    while ((match = linkPattern.exec(body))) {
+      const num = Number(match[1]);
+      const title = stripHTML(match[2]);
+      if (num >= 1 && title) comics.push({ num, title });
+    }
+    if (!comics.length) {
+      throw new Error("xkcd archive returned no comic links.");
+    }
+    archiveCache.comics = comics;
+    archiveCache.fetchedAt = now;
+    return comics;
+  }
+
+  function searchTokens(query) {
+    const raw = typeof query === "string"
+      ? query
+      : String((query && (query.text || query.query)) || "");
+    return raw
+      .trim()
+      .toLowerCase()
+      .split(/\s+/)
+      .filter(Boolean);
+  }
+
+  async function searchResults(query, page = 1) {
+    const tokens = searchTokens(query);
+    if (!tokens.length) return { items: [seriesItem(await latestComic())], hasMore: false };
+    if (tokens[0] === "__feed:popular" || tokens[0] === "__feed:latest") {
+      return { items: [seriesItem(await latestComic())], hasMore: false };
+    }
+    // The series name or a single character is too vague for title matching;
+    // surface the series itself.
+    if (tokens.includes(SERIES_TITLE.toLowerCase()) || (tokens.length === 1 && tokens[0].length <= 1)) {
+      return { items: [seriesItem(await latestComic())], hasMore: false };
+    }
+    const comics = await fetchTitleArchive();
+    const matches = [];
+    for (const comic of comics) {
+      const haystack = `${comic.num} ${comic.title}`.toLowerCase();
+      if (tokens.every((token) => haystack.includes(token))) matches.push(comic);
+    }
+    const requestedPage = Math.max(1, Number(page) || 1);
+    const start = (requestedPage - 1) * SEARCH_PAGE_SIZE;
+    const items = matches.slice(start, start + SEARCH_PAGE_SIZE).map((comic) => ({
+      id: `${BASE_URL}/${comic.num}/`,
+      href: `${BASE_URL}/${comic.num}/`,
+      url: `${BASE_URL}/${comic.num}/`,
+      title: comic.title,
+      number: comic.num,
+    }));
+    return { items, hasMore: start + SEARCH_PAGE_SIZE < matches.length };
   }
 
   async function extractDetails() {

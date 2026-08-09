@@ -469,6 +469,7 @@ test("xkcd serves the single series from the official JSON API", async () => {
   const fixtures = {
     latest: await text("modules/xkcd/fixtures/info-latest.json"),
     sample: await text("modules/xkcd/fixtures/info-sample.json"),
+    archive: await text("modules/xkcd/fixtures/archive.html"),
     expected: await json("modules/xkcd/fixtures/expected.json"),
   };
   const module = await loadModule("modules/xkcd/index.js", {
@@ -479,6 +480,7 @@ test("xkcd serves the single series from the official JSON API", async () => {
       assert.equal(headers.Referer, "https://xkcd.com/");
       if (url === "https://xkcd.com/info.0.json") return response(fixtures.latest);
       if (url === "https://xkcd.com/100/info.0.json") return response(fixtures.sample);
+      if (url === "https://xkcd.com/archive/") return response(fixtures.archive);
       throw new Error(`Unexpected xkcd URL: ${url}`);
     },
   });
@@ -497,6 +499,9 @@ test("xkcd serves the single series from the official JSON API", async () => {
 
   const noMatch = await module.searchResults("zzz-no-match-token", 1);
   assert.deepEqual(JSON.parse(JSON.stringify(noMatch)), fixtures.expected.noMatch);
+
+  const titleSearch = await module.searchResults("gravity", 1);
+  assert.deepEqual(JSON.parse(JSON.stringify(titleSearch)), fixtures.expected.titleSearch);
 
   const details = await module.extractDetails(fixtures.expected.details.id);
   assert.deepEqual(JSON.parse(JSON.stringify(details)), fixtures.expected.details);
