@@ -27,13 +27,13 @@
       "familyID": "synthetiq-manga",
       "icon": {
         "path": "modules/synthetiq-manga/icon.png",
-        "sha256": "67f400cc8c8712e706c1235166ea1ccf52cd41ee3c43374d3fecd3442080e8bd"
+        "sha256": "ff757a30db4de5632c7ca79b08ae064f1c41d02a883dac4e46ad4846cab1a962"
       },
       "id": "synthetiq-manga-v1",
       "language": "en",
       "manifest": {
         "path": "modules/synthetiq-manga/manifest.json",
-        "sha256": "2c279adb12e691845040661dd2060a91de54449aae6ce7ce30cdde356f8730ee"
+        "sha256": "d94dad1936ec6ee9ebf03ef1fdead6432958f3422a4abba9b5e337136d2b48e2"
       },
       "name": "Synthetiq Manga",
       "releaseTrack": "beta",
