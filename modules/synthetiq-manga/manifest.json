@@ -1,0 +1,58 @@
+{
+  "allowedHosts": [
+    "one.synthetiq.uk",
+    "weebcentral.com",
+    "*.weebcentral.com",
+    "*.compsci88.com",
+    "*.planeptune.us",
+    "*.lastation.us",
+    "*.lowee.us",
+    "*.lowee.space",
+    "*.akamaihd.net",
+    "*.cloudfront.net"
+  ],
+  "attribution": {
+    "author": "Synthetiq-HQ",
+    "website": "https://one.synthetiq.uk/manga"
+  },
+  "baseURL": "https://one.synthetiq.uk/manga",
+  "capabilities": [
+    "popular",
+    "latest",
+    "search",
+    "details",
+    "chapters",
+    "images",
+    "imageRequest",
+    "discovery"
+  ],
+  "contentRating": "suggestive",
+  "contentType": "pageImages",
+  "contractVersion": 1,
+  "entry": {
+    "path": "modules/synthetiq-manga/index.js",
+    "sha256": "1423daf0e5805d87af984aece36ed3ec837f09d5f23d4c5dccda6d517df3e8b4"
+  },
+  "familyID": "synthetiq-manga",
+  "icon": {
+    "path": "modules/synthetiq-manga/icon.png",
+    "sha256": "67f400cc8c8712e706c1235166ea1ccf52cd41ee3c43374d3fecd3442080e8bd"
+  },
+  "id": "synthetiq-manga-v1",
+  "isFlagship": false,
+  "language": "en",
+  "legacyIDs": [],
+  "limits": {
+    "cacheTTLSeconds": 300,
+    "maxConcurrentRequests": 2,
+    "maxResponseBytes": 16777216,
+    "maxScriptBytes": 524288,
+    "timeoutMilliseconds": 30000
+  },
+  "minimumAppVersion": "1.0.0",
+  "name": "Synthetiq Manga",
+  "releaseTrack": "beta",
+  "status": "active",
+  "universalLink": "https://synthetiq.uk/manga/modules/synthetiq-manga",
+  "version": "1.0.2"
+}

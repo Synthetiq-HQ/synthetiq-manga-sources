@@ -24,6 +24,26 @@
     {
       "contentRating": "suggestive",
       "contentType": "pageImages",
+      "familyID": "synthetiq-manga",
+      "icon": {
+        "path": "modules/synthetiq-manga/icon.png",
+        "sha256": "67f400cc8c8712e706c1235166ea1ccf52cd41ee3c43374d3fecd3442080e8bd"
+      },
+      "id": "synthetiq-manga-v1",
+      "language": "en",
+      "manifest": {
+        "path": "modules/synthetiq-manga/manifest.json",
+        "sha256": "2c279adb12e691845040661dd2060a91de54449aae6ce7ce30cdde356f8730ee"
+      },
+      "name": "Synthetiq Manga",
+      "releaseTrack": "beta",
+      "status": "active",
+      "version": "1.0.2",
+      "sortPriority": 5
+    },
+    {
+      "contentRating": "suggestive",
+      "contentType": "pageImages",
       "familyID": "weebcentral-v2",
       "icon": {
         "path": "modules/weebcentral/icon.png",

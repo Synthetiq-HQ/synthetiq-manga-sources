@@ -77,12 +77,15 @@
         "match[3].toLowerCase() !== slug"
       ]
     },
-    "poseidon-scans": {
-      "chapterScope": "api",
-      "requiredCodeFragments": [
-        "function parseChapters(body, seriesUrl)",
-        "chapterIsFree"
-      ]
-    }
+  "poseidon-scans": {
+    "chapterScope": "api",
+    "requiredCodeFragments": [
+      "function parseChapters(body, seriesUrl)",
+      "chapterIsFree"
+    ]
+  },
+  "synthetiq-manga-v1": {
+    "chapterScope": "api"
   }
+}
 }
