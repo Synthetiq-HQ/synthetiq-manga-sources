@@ -86,6 +86,12 @@
   },
   "synthetiq-manga-v1": {
     "chapterScope": "api"
+  },
+  "mangaworld": {
+    "chapterScope": "selected-series-dom",
+    "requiredCodeFragments": [
+      "function extractChapterObjects(html)"
+    ]
   }
 }
 }

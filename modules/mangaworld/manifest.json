@@ -1,0 +1,54 @@
+{
+  "allowedHosts": [
+    "www.mangaworld.mx",
+    "mangaworld.mx",
+    "cdn.mangaworld.mx"
+  ],
+  "attribution": {
+    "author": "Synthetiq-HQ",
+    "authorizationURL": null,
+    "licenseName": null,
+    "licenseURL": null,
+    "website": "https://www.mangaworld.mx"
+  },
+  "baseURL": "https://www.mangaworld.mx",
+  "capabilities": [
+    "popular",
+    "latest",
+    "search",
+    "details",
+    "chapters",
+    "images",
+    "imageRequest",
+    "discovery"
+  ],
+  "contentRating": "suggestive",
+  "contentType": "pageImages",
+  "contractVersion": 1,
+  "description": "Italian manga scanlation reader. Archive search, embedded-JSON series details, multi-chapter series with per-chapter CDN page images.",
+  "entry": {
+    "path": "modules/mangaworld/index.js",
+    "sha256": "c554e3d7c6a4a410e5d2ac734c9e8166a9ae1a7be94fb886132db33ecf9d42a0"
+  },
+  "familyID": "mangaworld",
+  "icon": {
+    "path": "modules/mangaworld/icon.png",
+    "sha256": "1d87e8706feae3caef5ca0e836ce6f4bc7a3147c709c5cc8fcae17961abcf4c2"
+  },
+  "id": "mangaworld",
+  "language": "it",
+  "legacyIDs": [],
+  "limits": {
+    "cacheTTLSeconds": 900,
+    "maxConcurrentRequests": 2,
+    "maxResponseBytes": 8388608,
+    "maxScriptBytes": 262144,
+    "timeoutMilliseconds": 25000
+  },
+  "minimumAppVersion": "1.0.0",
+  "name": "MangaWorld",
+  "releaseTrack": "beta",
+  "status": "active",
+  "universalLink": "https://www.mangaworld.mx",
+  "version": "1.0.0"
+}

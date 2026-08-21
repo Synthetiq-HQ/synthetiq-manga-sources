@@ -424,6 +424,26 @@
       "status": "active",
       "version": "1.0.1",
       "sortPriority": 7
+    },
+    {
+      "contentRating": "suggestive",
+      "contentType": "pageImages",
+      "familyID": "mangaworld",
+      "icon": {
+        "path": "modules/mangaworld/icon.png",
+        "sha256": "1d87e8706feae3caef5ca0e836ce6f4bc7a3147c709c5cc8fcae17961abcf4c2"
+      },
+      "id": "mangaworld",
+      "language": "it",
+      "manifest": {
+        "path": "modules/mangaworld/manifest.json",
+        "sha256": "cef658a5b49b51adb0c3094114bca855b82f16b417441455f131e0dd10000a02"
+      },
+      "name": "MangaWorld",
+      "releaseTrack": "beta",
+      "status": "active",
+      "version": "1.0.0",
+      "sortPriority": 82
     }
   ],
   "repository": {

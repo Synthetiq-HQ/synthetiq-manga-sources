@@ -830,3 +830,48 @@ test("NovelFire parses search, details, complete chapters, and chapter text", as
   assert.equal(home.sections.length, 2);
   assert.equal(home.sections[0].items.length, 1);
 });
+
+test("MangaWorld parses archive search, embedded details, chapter list, and reader page images", async () => {
+  const fixtures = {
+    search: await text("modules/mangaworld/fixtures/search.html"),
+    details: await text("modules/mangaworld/fixtures/details.html"),
+    reader: await text("modules/mangaworld/fixtures/chapter.html"),
+    home: await text("modules/mangaworld/fixtures/home.html"),
+    expected: await json("modules/mangaworld/fixtures/expected.json"),
+  };
+  const module = await loadModule("modules/mangaworld/index.js", {
+    fetchv2: async (url) => {
+      assert.equal(typeof url, "string");
+      if (/\/read\//.test(url)) return response(fixtures.reader);
+      if (/\/archive\?/.test(url)) return response(fixtures.search);
+      if (/mangaworld\.mx\/?$/.test(url)) return response(fixtures.home);
+      return response(fixtures.details);
+    },
+  });
+
+  const search = await module.searchResults("one piece", 1);
+  assert.deepEqual(JSON.parse(JSON.stringify(search)), fixtures.expected.search);
+
+  const feed = await module.searchResults("__feed:popular", 1);
+  assert.deepEqual(JSON.parse(JSON.stringify(feed)), fixtures.expected.feed);
+
+  const seriesURL = "https://www.mangaworld.mx/manga/1708/one-piece";
+  const details = await module.extractDetails(seriesURL);
+  assert.deepEqual(JSON.parse(JSON.stringify(details)), fixtures.expected.details);
+  assert.equal(details.title, "One Piece");
+  assert.ok(details.chapters === undefined || Array.isArray(details.genres));
+
+  const chapters = await module.extractChapters(seriesURL);
+  assert.deepEqual(JSON.parse(JSON.stringify(chapters)), fixtures.expected.chapters);
+  assert.equal(chapters.length, fixtures.expected.chapters.length);
+  assert.equal(chapters[0].number, 1191);
+
+  const pages = await module.extractImages(chapters[0].id);
+  assert.deepEqual(JSON.parse(JSON.stringify(pages)), fixtures.expected.images);
+  assert.ok(pages.length > 10, "chapter pages parsed");
+  assert.ok(pages.every((p) => /^https:\/\/cdn\.mangaworld\.mx\/chapters\//.test(p.url)));
+
+  const discovery = await module.discoveryHome();
+  assert.deepEqual(JSON.parse(JSON.stringify(discovery)), fixtures.expected.discovery);
+  assert.ok(discovery.sections.length >= 2, "home rails parsed");
+});

@@ -299,6 +299,12 @@ if (slug === "novelfire") {
           if (/\/serie\//i.test(u) && flightDetails) return fixtureResponse(flightDetails);
           if (flightHome) return fixtureResponse(flightHome);
         }
+        if (slug === "mangaworld") {
+          if (/\/read\/[0-9a-f]+/.test(u) && chapter) return fixtureResponse(chapter);
+          if (/archive\?/.test(u) && search) return fixtureResponse(search);
+          if (/mangaworld\.mx\/?$/.test(u) && home) return fixtureResponse(home);
+          if (details) return fixtureResponse(details);
+        }
         // WeebCentral uses /series/<id> for details and
         // /series/<id>/full-chapter-list for chapters. Resolve the more
         // specific chapter route first so the generic fixture runner exercises
