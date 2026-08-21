@@ -19,7 +19,7 @@
       "releaseTrack": "beta",
       "status": "active",
       "version": "1.0.5",
-      "sortPriority": 4
+      "sortPriority": 5
     },
     {
       "contentRating": "suggestive",
@@ -39,7 +39,7 @@
       "releaseTrack": "beta",
       "status": "active",
       "version": "1.0.2",
-      "sortPriority": 5
+      "sortPriority": 2
     },
     {
       "contentRating": "suggestive",
@@ -79,7 +79,7 @@
       "releaseTrack": "stable",
       "status": "active",
       "version": "2.1.1",
-      "sortPriority": 2
+      "sortPriority": 3
     },
     {
       "contentRating": "unknown",
@@ -118,7 +118,7 @@
       "releaseTrack": "beta",
       "status": "active",
       "version": "1.0.3",
-      "sortPriority": 3
+      "sortPriority": 4
     },
     {
       "contentRating": "suggestive",
