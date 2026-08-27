@@ -261,6 +261,17 @@ async function createRuntime(slug, mode) {
       fetchv2: async (url, headers, method, body, options) => {
         calls.push({ kind: "fetchv2", url: String(url) });
         const u = String(url);
+        if (slug === "yskcomics") {
+          const homeFixture = await fixture("home.html");
+          const imagesFixture = await fixture("images.json");
+          const chaptersFixture = await fixture("chapters.json");
+          if (u.includes("/search-comics-home") && search) return fixtureResponse(search);
+          if (u.includes("/chapters/") && u.includes("/images") && imagesFixture) return fixtureResponse(imagesFixture);
+          if (u.includes("/comics/") && u.includes("/chapters") && chaptersFixture) return fixtureResponse(chaptersFixture);
+          if (u.includes("pages_by_index") && pages) return fixtureResponse(pages);
+          if (u.includes("ysk-comics.com/en") && homeFixture) return fixtureResponse(homeFixture);
+          if (details) return fixtureResponse(details);
+        }
         if (slug === "atsu") {
           if (/\/api\/read\/chapter/i.test(u) && sourcePages) return fixtureResponse(sourcePages);
           if (/\/api\/manga\/info/i.test(u) && sourceInfo) return fixtureResponse(sourceInfo);

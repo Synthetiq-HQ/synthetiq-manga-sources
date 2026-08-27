@@ -875,3 +875,35 @@ test("MangaWorld parses archive search, embedded details, chapter list, and read
   assert.deepEqual(JSON.parse(JSON.stringify(discovery)), fixtures.expected.discovery);
   assert.ok(discovery.sections.length >= 2, "home rails parsed");
 });
+
+test("YSK Comics parses JSON search, detail chapters, and CDN page images", async () => {
+  const fixtures = {
+    search: await text("modules/yskcomics/fixtures/search.json"),
+    details: await text("modules/yskcomics/fixtures/details.json"),
+    chapters: await text("modules/yskcomics/fixtures/chapters.json"),
+    images: await text("modules/yskcomics/fixtures/images.json"),
+    expected: await json("modules/yskcomics/fixtures/expected.json"),
+  };
+  const module = await loadModule("modules/yskcomics/index.js", {
+    fetchv2: async (url) => {
+      assert.equal(typeof url, "string");
+      if (url.includes("/search-comics-home")) return response(fixtures.search);
+      if (url.includes("/chapters/") && url.includes("/images")) return response(fixtures.images);
+      if (url.includes("/comics/") && url.includes("/chapters")) return response(fixtures.chapters);
+      if (url.includes("/comics/")) return response(fixtures.details);
+      return response(fixtures.details);
+    },
+  });
+
+  const search = await module.searchResults("moon knight", 1);
+  assert.deepEqual(JSON.parse(JSON.stringify(search)), fixtures.expected.search);
+
+  const details = await module.extractDetails("moon-knight-2016");
+  assert.deepEqual(JSON.parse(JSON.stringify(details)), fixtures.expected.details);
+
+  const chapters = await module.extractChapters(details.id);
+  assert.deepEqual(JSON.parse(JSON.stringify(chapters)), fixtures.expected.chapters);
+
+  const pages = await module.extractImages(chapters[0].id);
+  assert.deepEqual(JSON.parse(JSON.stringify(pages)), fixtures.expected.images);
+});
