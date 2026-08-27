@@ -224,50 +224,61 @@
     return pages;
   }
 
+  // The home page embeds discovery rails as schema.org JSON-LD:
+  // @graph -> CollectionPage {name: "The Most Reading"|"Latest Comics",
+  // hasPart: [ComicSeries...]}. Both feed rails are read from there.
+  async function homeRails() {
+    if (!homeRails.cache) {
+      const html = await fetchDirectHTML(`${SITE_URL}/en`);
+      const popular = [];
+      const latest = [];
+      const seen = new Set();
+      const pattern = /<script[^>]*type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/gi;
+      let match;
+      while ((match = pattern.exec(html)) !== null) {
+        let data = null;
+        try {
+          data = JSON.parse(match[1].trim());
+        } catch {
+          continue;
+        }
+        const nodes = Array.isArray(data?.["@graph"]) ? data["@graph"] : [data];
+        for (const node of nodes) {
+          if (node?.["@type"] !== "CollectionPage") continue;
+          const railName = nonEmpty(node?.name);
+          const rail = /latest/i.test(railName) ? latest : popular;
+          const entries = Array.isArray(node?.hasPart) ? node.hasPart : [];
+          for (const entry of entries) {
+            const itemName = nonEmpty(entry?.name);
+            const itemURL = nonEmpty(entry?.url || entry?.["@id"]);
+            if (!itemName || !itemURL || !/\/comic\//.test(itemURL) || seen.has(itemURL)) continue;
+            seen.add(itemURL);
+            rail.push({ id: itemURL, href: itemURL, title: itemName, image: "" });
+          }
+        }
+      }
+      homeRails.cache = { popular: popular.slice(0, 20), latest: latest.slice(0, 20) };
+    }
+    return homeRails.cache;
+  }
+
   async function discoveryHome() {
-    const html = await fetchDirectHTML(`${SITE_URL}/en`);
+    const rails = await homeRails();
     const sections = [];
-    const seenURLs = new Set();
-    // The home page embeds named rails as schema.org ItemList JSON-LD.
-    const pattern = /<script[^>]*type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/gi;
-    let match;
-    const fallback = [];
-    while ((match = pattern.exec(html)) !== null) {
-      let data = null;
-      try {
-        data = JSON.parse(match[1].trim());
-      } catch {
-        continue;
-      }
-      const nodes = Array.isArray(data?.["@graph"]) ? data["@graph"] : [data];
-      for (const node of nodes) {
-        const entries = Array.isArray(node?.hasPart)
-          ? node.hasPart
-          : Array.isArray(node?.itemListElement)
-            ? node.itemListElement
-            : [];
-        if (!entries.length) continue;
-        const items = [];
-        for (const entry of entries) {
-          const name = nonEmpty(entry?.name);
-          const url = nonEmpty(entry?.url || entry?.["@id"]);
-          if (!name || !url || !/\/comic\//.test(url)) continue;
-          items.push({ id: url, href: url, title: name, image: "" });
-        }
-        const fresh = items.filter((item) => !seenURLs.has(item.id));
-        fresh.forEach((item) => seenURLs.add(item.id));
-        const title = nonEmpty(node?.name) || "Featured";
-        if (title && fresh.length >= 3) {
-          sections.push({ id: title.toLowerCase().replace(/[^a-z0-9]+/g, "-"), title, items: fresh });
-        } else if (fresh.length) {
-          fallback.push(...fresh);
-        }
-      }
+    if (rails.popular.length >= 3) {
+      sections.push({ id: "most-reading", title: "The Most Reading", items: rails.popular });
     }
-    if (!sections.length && fallback.length) {
-      sections.push({ id: "featured", title: "Featured", items: fallback });
+    if (rails.latest.length >= 3) {
+      sections.push({ id: "latest-comics", title: "Latest Comics", items: rails.latest });
     }
+    if (!sections.length) throw new Error("YSK Comics home page returned no discovery rails.");
     return { sections };
+  }
+
+  async function discoveryFeed(feedID, page = 1) {
+    const rails = await homeRails();
+    const items = String(feedID || "").toLowerCase() === "popular" ? rails.popular : rails.latest;
+    return { items, hasMore: false };
   }
 
   async function fetchDirectHTML(url) {

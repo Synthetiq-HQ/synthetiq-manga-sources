@@ -458,7 +458,7 @@
    "sortPriority": 87,
    "manifest": {
     "path": "modules/yskcomics/manifest.json",
-    "sha256": "703f193a65533a69e1f558be02f5664010a6a25ee3e86b7c7777a5c43b0040ee"
+    "sha256": "66a9c3e373064ab3d53a5629358f092b6145b7b1165475d0003ec90034699ce5"
    },
    "icon": {
     "path": "modules/yskcomics/icon.png",
