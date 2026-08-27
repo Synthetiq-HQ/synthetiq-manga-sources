@@ -252,7 +252,12 @@
             const itemURL = nonEmpty(entry?.url || entry?.["@id"]);
             if (!itemName || !itemURL || !/\/comic\//.test(itemURL) || seen.has(itemURL)) continue;
             seen.add(itemURL);
-            rail.push({ id: itemURL, href: itemURL, title: itemName, image: "" });
+            rail.push({
+              id: itemURL,
+              href: itemURL,
+              title: itemName,
+              image: nonEmpty(entry?.image),
+            });
           }
         }
       }

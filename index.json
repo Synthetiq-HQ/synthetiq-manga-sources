@@ -449,7 +449,7 @@
    "id": "yskcomics",
    "familyID": "yskcomics",
    "name": "YSK Comics",
-   "version": "1.0.2",
+   "version": "1.0.3",
    "language": "en",
    "contentType": "pageImages",
    "contentRating": "safe",
@@ -458,7 +458,7 @@
    "sortPriority": 87,
    "manifest": {
     "path": "modules/yskcomics/manifest.json",
-    "sha256": "ee29c285f4d5ccb89f3c7cd0a75e40e63bc336aa330caa5ce05c08bcbbcd6e4a"
+    "sha256": "764b257548bd0e529efbca1910bca0fe78b757b82750407f2675382aa60e128d"
    },
    "icon": {
     "path": "modules/yskcomics/icon.png",
