@@ -121,10 +121,9 @@
   async function searchResults(query, page = 1) {
     const text = nonEmpty(typeof query === "string" ? query : query?.text || query?.query);
     if (text.startsWith("__feed:")) {
-      // The catalogue API has no rails endpoint; series discovery comes from
-      // search and the home page. An empty query feeds the whole catalogue.
-      const payload = await requestJSON(`${API_URL}/search-comics-home?name=${encodeURIComponent(text === "__feed:popular" ? "*" : "a")}`);
-      return { items: parseSearch(payload), hasMore: false };
+      const home = await homeRails();
+      const items = text === "__feed:popular" ? home.popular : home.latest;
+      return { items, hasMore: false };
     }
     const offset = (Math.max(1, Number(page) || 1) - 1) * 10;
     const payload = await requestJSON(`${API_URL}/search-comics-home?name=${encodeURIComponent(text)}&offset=${offset}`);
@@ -292,12 +291,6 @@
     const body = await responseText(response);
     if (!body) throw new Error("YSK Comics returned an empty page.");
     return body;
-  }
-
-  async function discoveryFeed(feedID, page = 1) {
-    const offset = (Math.max(1, Number(page) || 1) - 1) * 10;
-    const payload = await requestJSON(`${API_URL}/search-comics-home?name=${encodeURIComponent(String(feedID || ""))}&offset=${offset}`);
-    return { items: parseSearch(payload), hasMore: false };
   }
 
   const handlers = {
