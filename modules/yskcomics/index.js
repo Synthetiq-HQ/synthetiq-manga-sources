@@ -15,6 +15,7 @@
   const RETRYABLE_STATUS = new Set([403, 408, 425, 429, 500, 502, 503, 504]);
   const MAX_ATTEMPTS = 3;
   const CHAPTERS_PER_PAGE = 12;
+  const DISCOVERY_PAGE_SIZE = 20;
 
   function sleep(milliseconds) {
     return new Promise((resolve) => {
@@ -121,9 +122,7 @@
   async function searchResults(query, page = 1) {
     const text = nonEmpty(typeof query === "string" ? query : query?.text || query?.query);
     if (text.startsWith("__feed:")) {
-      const home = await homeRails();
-      const items = text === "__feed:popular" ? home.popular : home.latest;
-      return { items, hasMore: false };
+      return discoveryFeed(text === "__feed:popular" ? "popular" : "latest", page);
     }
     const offset = (Math.max(1, Number(page) || 1) - 1) * 10;
     const payload = await requestJSON(`${API_URL}/search-comics-home?name=${encodeURIComponent(text)}&offset=${offset}`);
@@ -266,6 +265,40 @@
     return homeRails.cache;
   }
 
+  async function sitemapComics(page = 1) {
+    if (!sitemapComics.cache) {
+      const xml = await fetchDirectHTML("https://www.ysk-comics.com/__sitemap__/en-US.xml");
+      const urls = [...xml.matchAll(/<loc>(https:\/\/www\.ysk-comics\.com\/en\/comic\/[^<]+)<\/loc>/gi)]
+        .map((match) => match[1].trim())
+        .filter((url, index, values) => values.indexOf(url) === index);
+      sitemapComics.cache = urls;
+    }
+    const offset = (Math.max(1, Number(page) || 1) - 1) * DISCOVERY_PAGE_SIZE;
+    const urls = sitemapComics.cache.slice(offset, offset + DISCOVERY_PAGE_SIZE);
+    const items = [];
+    for (const url of urls) {
+      const slug = url.split("/comic/")[1] || "";
+      if (!slug) continue;
+      try {
+        const payload = await requestJSON(`${API_URL}/comics/${encodeURIComponent(slug)}`);
+        const data = payload?.data;
+        if (!data?.full_name) continue;
+        items.push({
+          id: String(data.slug || slug).toLowerCase(),
+          href: `${SITE_URL}/en/comic/${String(data.slug || slug).toLowerCase()}`,
+          title: nonEmpty(data.full_name),
+          image: nonEmpty(data.image),
+        });
+      } catch (_) {
+        // A single stale sitemap entry must not remove the remaining page.
+      }
+    }
+    return {
+      items,
+      hasMore: offset + DISCOVERY_PAGE_SIZE < sitemapComics.cache.length,
+    };
+  }
+
   async function discoveryHome() {
     const rails = await homeRails();
     const sections = [];
@@ -281,8 +314,12 @@
 
   async function discoveryFeed(feedID, page = 1) {
     const rails = await homeRails();
-    const items = String(feedID || "").toLowerCase() === "popular" ? rails.popular : rails.latest;
-    return { items, hasMore: false };
+    const currentPage = Math.max(1, Number(page) || 1);
+    if (currentPage === 1) {
+      const items = String(feedID || "").toLowerCase() === "popular" ? rails.popular : rails.latest;
+      return { items, hasMore: true };
+    }
+    return sitemapComics(currentPage - 1);
   }
 
   async function fetchDirectHTML(url) {

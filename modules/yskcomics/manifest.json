@@ -29,7 +29,7 @@
  "description": "Mainstream comics reader (Marvel, DC, indie) with a JSON API: keyword search, issue lists, and direct CDN page images.",
  "entry": {
   "path": "modules/yskcomics/index.js",
-  "sha256": "2d65703a3d4e110e378074938e49e03f0aa197811934c4453cae648249c2840b"
+  "sha256": "be5fd2ffdab1daf738686f6f3e47965815cd2c397186c8a8b38f94dee1ac01ea"
  },
  "familyID": "yskcomics",
  "icon": {
@@ -51,5 +51,5 @@
  "releaseTrack": "beta",
  "status": "active",
  "universalLink": "https://www.ysk-comics.com",
- "version": "1.0.3"
+ "version": "1.0.4"
 }
