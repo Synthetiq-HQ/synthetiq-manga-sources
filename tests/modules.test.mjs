@@ -1063,6 +1063,7 @@ test("MangaBall uses title-scoped CSRF APIs and preserves translated chapter ima
     details: await text("modules/mangaball/fixtures/details.html"),
     chapters: await text("modules/mangaball/fixtures/chapters.json"),
     chapter: await text("modules/mangaball/fixtures/chapter.html"),
+    discovery: JSON.parse(await text("modules/mangaball/fixtures/discovery.json")),
     expected: await json("modules/mangaball/fixtures/expected.json"),
   };
   const calls = [];
@@ -1083,6 +1084,14 @@ test("MangaBall uses title-scoped CSRF APIs and preserves translated chapter ima
         assert.match(body, /userSettingsEnabled=false/);
         assert.equal(options.maxBytesHint, 16 * 1024 * 1024);
         return response(fixtures.chapters);
+      }
+      if (parsed.pathname === "/api/v1/title/search/" && method === "POST") {
+        const params = new URLSearchParams(body);
+        const type = params.get("search_type");
+        assert.ok(["getRecommend", "getLatestTable"].includes(type));
+        assert.equal(params.get("search_limit"), "24");
+        assert.equal(headers["X-CSRF-TOKEN"], "fixture-csrf-token");
+        return response(JSON.stringify(fixtures.discovery[type === "getLatestTable" ? "latest" : "popular"]));
       }
       if (parsed.pathname.startsWith("/title-detail/")) return response(fixtures.details);
       if (parsed.pathname.startsWith("/chapter-detail/")) return response(fixtures.chapter);
@@ -1108,6 +1117,16 @@ test("MangaBall uses title-scoped CSRF APIs and preserves translated chapter ima
   const pages = await module.extractImages(chapters[0].id);
   assert.deepEqual(JSON.parse(JSON.stringify(pages)), fixtures.expected.images);
   assert.ok(pages.every((page) => /(?:poke-black-and-white|red-and-blue)\.net\/storage\/|dmd-image-content-sng-1\.imggo\.net\/books\//.test(page.url)));
+  const discovery = await module.discoveryHome();
+  assert.deepEqual(JSON.parse(JSON.stringify(discovery)), fixtures.expected.discovery);
+  assert.deepEqual(
+    JSON.parse(JSON.stringify(await module.discoveryFeed("popular", 1))),
+    { items: fixtures.expected.discovery.sections[0].items, hasMore: false },
+  );
+  assert.deepEqual(
+    JSON.parse(JSON.stringify(await module.searchResults("__feed:latest", 1))),
+    { items: fixtures.expected.discovery.sections[1].items, hasMore: false },
+  );
   assert.equal(calls.some((call) => call.url.includes("ads.example.invalid")), false);
   await assert.rejects(
     () => module.extractDetails("https://example.invalid/title-detail/not-a-source-aaaaaaaaaaaaaaaaaaaaaaaa/"),

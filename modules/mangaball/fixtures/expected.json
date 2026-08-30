@@ -92,5 +92,53 @@
         "Referer": "https://mangaball.net/"
       }
     }
-  ]
+  ],
+  "discovery": {
+    "sections": [
+      {
+        "id": "recommended",
+        "title": "Titles Recommended",
+        "items": [
+          {
+            "id": "https://mangaball.net/title-detail/fixture-recommend-aaaaaaaaaaaaaaaaaaaaaaaa/",
+            "href": "https://mangaball.net/title-detail/fixture-recommend-aaaaaaaaaaaaaaaaaaaaaaaa/",
+            "url": "https://mangaball.net/title-detail/fixture-recommend-aaaaaaaaaaaaaaaaaaaaaaaa/",
+            "title": "Fixture Recommendation",
+            "image": "https://bulbasaur.poke-black-and-white.net/covers/recommend.webp",
+            "status": "Ongoing"
+          },
+          {
+            "id": "https://mangaball.net/title-detail/second-recommendation-bbbbbbbbbbbbbbbbbbbbbbbb/",
+            "href": "https://mangaball.net/title-detail/second-recommendation-bbbbbbbbbbbbbbbbbbbbbbbb/",
+            "url": "https://mangaball.net/title-detail/second-recommendation-bbbbbbbbbbbbbbbbbbbbbbbb/",
+            "title": "Second Recommendation",
+            "image": "https://bulbasaur.poke-black-and-white.net/covers/recommend-two.webp",
+            "status": "Completed"
+          }
+        ]
+      },
+      {
+        "id": "latest-updates",
+        "title": "Latest Updates",
+        "items": [
+          {
+            "id": "https://mangaball.net/title-detail/fixture-latest-cccccccccccccccccccccccc/",
+            "href": "https://mangaball.net/title-detail/fixture-latest-cccccccccccccccccccccccc/",
+            "url": "https://mangaball.net/title-detail/fixture-latest-cccccccccccccccccccccccc/",
+            "title": "Fixture Latest",
+            "image": "https://bulbasaur.poke-black-and-white.net/covers/latest.webp",
+            "status": "Ongoing"
+          },
+          {
+            "id": "https://mangaball.net/title-detail/second-latest-dddddddddddddddddddddddd/",
+            "href": "https://mangaball.net/title-detail/second-latest-dddddddddddddddddddddddd/",
+            "url": "https://mangaball.net/title-detail/second-latest-dddddddddddddddddddddddd/",
+            "title": "Second Latest",
+            "image": "https://bulbasaur.poke-black-and-white.net/covers/latest-two.webp",
+            "status": "Completed"
+          }
+        ]
+      }
+    ]
+  }
 }

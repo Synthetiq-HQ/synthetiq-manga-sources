@@ -285,6 +285,7 @@ async function createRuntime(slug, mode) {
       novelfireSearchPage2: await fixture("search-page-2.html"),
       imagesJSON: await fixture("images.json"),
       chapterJSON: await fixture("chapter.json"),
+      discoveryJSON: await fixture("discovery.json"),
     };
 
     bridges = {
@@ -349,6 +350,11 @@ if (slug === "novelfire") {
         if (slug === "mangaball") {
           if (/\/api\/v1\/smart-search\/search\//i.test(u) && search) return fixtureResponse(search);
           if (/\/api\/v1\/chapter\/chapter-listing-by-title-id\//i.test(u) && chapterList) return fixtureResponse(chapterList);
+          if (/\/api\/v1\/title\/search\//i.test(u) && special.discoveryJSON) {
+            const type = new URLSearchParams(body || "").get("search_type");
+            const discoveryPayload = JSON.parse(special.discoveryJSON);
+            return fixtureResponse(JSON.stringify(discoveryPayload[type === "getLatestTable" ? "latest" : "popular"]));
+          }
           if (/\/title-detail\//i.test(u) && details) return fixtureResponse(details);
           if (/\/chapter-detail\//i.test(u) && chapter) return fixtureResponse(chapter);
           if (home) return fixtureResponse(home);

@@ -10,7 +10,9 @@
   ];
   const FIXED_IMAGE_HOSTS = new Set(["dmd-image-content-sng-1.imggo.net"]);
   const SEARCH_ENDPOINT = `${BASE_URL}/api/v1/smart-search/search/`;
+  const TITLE_SEARCH_ENDPOINT = `${BASE_URL}/api/v1/title/search/`;
   const CHAPTER_ENDPOINT = `${BASE_URL}/api/v1/chapter/chapter-listing-by-title-id/`;
+  const DISCOVERY_LIMIT = 24;
   const DEFAULT_HEADERS = {
     Accept: "text/html,application/xhtml+xml",
     Referer: HOME_URL,
@@ -28,6 +30,8 @@
   const MAX_ATTEMPTS = 3;
   const MAX_HTML_BYTES = 2 * 1024 * 1024;
   const MAX_API_BYTES = 16 * 1024 * 1024;
+  let homePagePromise = null;
+  const discoveryCache = new Map();
 
   function sleep(milliseconds) {
     return new Promise((resolve) => {
@@ -247,12 +251,25 @@
     return token;
   }
 
+  async function homePage() {
+    if (!homePagePromise) {
+      homePagePromise = fetchHTML(HOME_URL).catch((error) => {
+        homePagePromise = null;
+        throw error;
+      });
+    }
+    return homePagePromise;
+  }
+
+  function payloadEntries(payload) {
+    if (Array.isArray(payload?.data)) return payload.data;
+    if (Array.isArray(payload?.data?.manga)) return payload.data.manga;
+    if (Array.isArray(payload?.manga)) return payload.manga;
+    return [];
+  }
+
   function parseSearchPayload(payload) {
-    const items = payload && payload.data && Array.isArray(payload.data.manga)
-      ? payload.data.manga
-      : payload && Array.isArray(payload.manga)
-        ? payload.manga
-        : [];
+    const items = payloadEntries(payload);
     const output = [];
     const seen = new Set();
     for (const item of items) {
@@ -286,8 +303,10 @@
     if (requestedPage !== 1) return { items: [], hasMore: false };
     const text = queryText(query);
     if (!text) return { items: [], hasMore: false };
+    if (text === "__feed:popular") return discoveryFeed("popular", requestedPage);
+    if (text === "__feed:latest") return discoveryFeed("latest", requestedPage);
 
-    const home = await fetchHTML(HOME_URL);
+    const home = await homePage();
     const payload = await postJSON(
       SEARCH_ENDPOINT,
       formEncode({ search_input: text }),
@@ -296,6 +315,46 @@
     );
     const items = parseSearchPayload(payload);
     return { items, hasMore: false };
+  }
+
+  function discoveryType(feedID) {
+    return /latest|recent|new/i.test(String(feedID || "")) ? "latest" : "popular";
+  }
+
+  async function discoveryItems(feedID) {
+    const type = discoveryType(feedID);
+    if (discoveryCache.has(type)) return discoveryCache.get(type);
+
+    const home = await homePage();
+    const payload = await postJSON(
+      TITLE_SEARCH_ENDPOINT,
+      formEncode({
+        search_type: type === "latest" ? "getLatestTable" : "getRecommend",
+        search_limit: DISCOVERY_LIMIT,
+      }),
+      csrfToken(home.body),
+      home.finalUrl || HOME_URL,
+    );
+    const items = parseSearchPayload(payload);
+    if (!items.length) throw new Error(`MangaBall ${type} discovery feed returned no titles.`);
+    discoveryCache.set(type, items);
+    return items;
+  }
+
+  async function discoveryHome() {
+    const sections = [];
+    const popular = await discoveryItems("popular");
+    if (popular.length) sections.push({ id: "recommended", title: "Titles Recommended", items: popular });
+    const latest = await discoveryItems("latest");
+    if (latest.length) sections.push({ id: "latest-updates", title: "Latest Updates", items: latest });
+    if (!sections.length) throw new Error("MangaBall home page returned no discovery feeds.");
+    return { sections };
+  }
+
+  async function discoveryFeed(feedID, page = 1) {
+    const requestedPage = Math.max(1, Number(page) || 1);
+    if (requestedPage !== 1) return { items: [], hasMore: false };
+    return { items: await discoveryItems(feedID), hasMore: false };
   }
 
   function valuesFromDataAttribute(html, attributeName) {
@@ -469,6 +528,8 @@
     extractDetails,
     extractChapters,
     extractImages,
+    discoveryHome,
+    discoveryFeed,
   };
   Object.assign(globalThis, handlers);
   globalThis.SynthetiqModule = handlers;

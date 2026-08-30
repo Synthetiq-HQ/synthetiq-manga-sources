@@ -1,0 +1,36 @@
+{
+  "popular": {
+    "code": 200,
+    "data": [
+      {
+        "name": "Fixture Recommendation",
+        "cover": "https://bulbasaur.poke-black-and-white.net/covers/recommend.webp",
+        "status": "<span>Ongoing</span>",
+        "url": "http://mangaball.net/title-detail/fixture-recommend-aaaaaaaaaaaaaaaaaaaaaaaa/"
+      },
+      {
+        "name": "Second Recommendation",
+        "cover": "https://bulbasaur.poke-black-and-white.net/covers/recommend-two.webp",
+        "status": "<span>Completed</span>",
+        "url": "/title-detail/second-recommendation-bbbbbbbbbbbbbbbbbbbbbbbb/"
+      }
+    ]
+  },
+  "latest": {
+    "code": 200,
+    "data": [
+      {
+        "name": "Fixture Latest",
+        "cover": "https://bulbasaur.poke-black-and-white.net/covers/latest.webp",
+        "status": "<span>Ongoing</span>",
+        "url": "/title-detail/fixture-latest-cccccccccccccccccccccccc/"
+      },
+      {
+        "name": "Second Latest",
+        "cover": "https://bulbasaur.poke-black-and-white.net/covers/latest-two.webp",
+        "status": "<span>Completed</span>",
+        "url": "https://mangaball.net/title-detail/second-latest-dddddddddddddddddddddddd/"
+      }
+    ]
+  }
+}

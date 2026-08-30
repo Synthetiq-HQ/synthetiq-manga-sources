@@ -14,11 +14,14 @@
   },
   "baseURL": "https://mangaball.net",
   "capabilities": [
+    "popular",
+    "latest",
     "search",
     "details",
     "chapters",
     "images",
-    "imageRequest"
+    "imageRequest",
+    "discovery"
   ],
   "contentRating": "suggestive",
   "contentType": "pageImages",
@@ -26,7 +29,7 @@
   "description": "MangaBall catalogue with multi-language chapter translations and direct reader page images.",
   "entry": {
     "path": "modules/mangaball/index.js",
-    "sha256": "b56a2079a20dbc03650718df5b679999e63b48b2bf9c1c67af131eabda001ba3"
+    "sha256": "b7dd17e3d0392ba377ce5eea7f65d79bb6530494b439bb7b23364d28aa4bc94b"
   },
   "familyID": "mangaball",
   "icon": {
@@ -48,5 +51,5 @@
   "releaseTrack": "beta",
   "status": "active",
   "universalLink": "https://synthetiq.uk/manga/modules/mangaball",
-  "version": "1.0.0"
+  "version": "1.0.1"
 }
