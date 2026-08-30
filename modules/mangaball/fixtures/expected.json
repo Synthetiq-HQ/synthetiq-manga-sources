@@ -38,25 +38,16 @@
       "id": "https://mangaball.net/chapter-detail/111111111111111111111111/",
       "href": "https://mangaball.net/chapter-detail/111111111111111111111111/",
       "url": "https://mangaball.net/chapter-detail/111111111111111111111111/",
-      "title": "Ch. 10 — English · Fixture Group",
+      "title": "Chapter 10 — English · Fixture Group",
       "number": 10,
       "releaseDate": "2026-08-30",
       "language": "en"
     },
     {
-      "id": "https://mangaball.net/chapter-detail/222222222222222222222222/",
-      "href": "https://mangaball.net/chapter-detail/222222222222222222222222/",
-      "url": "https://mangaball.net/chapter-detail/222222222222222222222222/",
-      "title": "Ch. 10 — Spanish · Grupo Fixture",
-      "number": 10,
-      "releaseDate": "2026-08-29",
-      "language": "es"
-    },
-    {
       "id": "https://mangaball.net/chapter-detail/333333333333333333333333/",
       "href": "https://mangaball.net/chapter-detail/333333333333333333333333/",
       "url": "https://mangaball.net/chapter-detail/333333333333333333333333/",
-      "title": "Ch. 9.5 — English · Fixture Group",
+      "title": "Chapter 9.5 — English · Fixture Group",
       "number": 9.5,
       "releaseDate": "2026-08-28",
       "language": "en"
@@ -72,24 +63,24 @@
   ],
   "images": [
     {
-      "url": "https://jigglypuff.poke-black-and-white.net/storage/fixture/001.webp",
+      "url": "https://jigglypuff.poke-black-and-white.net/storage/fixture/001.webp#scrambled_7",
       "headers": {
         "Accept": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8",
-        "Referer": "https://mangaball.net/"
+        "Referer": "https://mangaball.net/chapter-detail/111111111111111111111111/"
       }
     },
     {
       "url": "https://chikorita.red-and-blue.net/storage/fixture/002.jpg",
       "headers": {
         "Accept": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8",
-        "Referer": "https://mangaball.net/"
+        "Referer": "https://mangaball.net/chapter-detail/111111111111111111111111/"
       }
     },
     {
       "url": "https://dmd-image-content-sng-1.imggo.net/books/fixture/002.jpg",
       "headers": {
         "Accept": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8",
-        "Referer": "https://mangaball.net/"
+        "Referer": "https://mangaball.net/chapter-detail/111111111111111111111111/"
       }
     }
   ],

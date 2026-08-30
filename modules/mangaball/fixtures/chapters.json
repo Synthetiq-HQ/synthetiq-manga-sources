@@ -42,6 +42,28 @@
       ]
     },
     {
+      "number": "Ch. 0",
+      "number_float": 0,
+      "translations": [
+        {
+          "id": "555555555555555555555555",
+          "name": "Vol. 1 Ch. 0",
+          "language": "en",
+          "languageName": "English",
+          "group": { "_id": "volume-fixture", "name": "Volume Fixture" },
+          "url": "/chapter-detail/555555555555555555555555/"
+        },
+        {
+          "id": "666666666666666666666666",
+          "name": "Chapter 0",
+          "language": "en",
+          "languageName": "English",
+          "group": { "_id": "another-volume-fixture", "name": "Another Volume Fixture" },
+          "url": "/chapter-detail/666666666666666666666666/"
+        }
+      ]
+    },
+    {
       "number": "Special",
       "number_float": null,
       "translations": [

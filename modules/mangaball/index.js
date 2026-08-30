@@ -89,13 +89,14 @@
     return "";
   }
 
-  function absoluteURL(value, base = BASE_URL) {
+  function absoluteURL(value, base = BASE_URL, preserveFragment = false) {
     const input = nonEmpty(value);
     if (!input) return "";
     try {
       const url = new URL(input, base);
       if (url.protocol === "http:") url.protocol = "https:";
-      return url.toString().split("#")[0];
+      if (!preserveFragment) url.hash = "";
+      return url.toString();
     } catch (_) {
       return "";
     }
@@ -137,7 +138,7 @@
   }
 
   function imageURL(value, allowCover = false) {
-    const candidate = absoluteURL(value, BASE_URL);
+    const candidate = absoluteURL(value, BASE_URL, true);
     if (!candidate) return "";
     let parsed;
     try {
@@ -152,7 +153,8 @@
       ? path.startsWith("/covers/")
       : path.startsWith("/storage/") || (FIXED_IMAGE_HOSTS.has(host) && path.startsWith("/books/"));
     if (!allowedPath || !/\.(?:avif|gif|jpe?g|png|webp)$/i.test(path)) return "";
-    return parsed.toString().split("#")[0];
+    if (parsed.hash && !/^#scrambled_[1-9]\d*$/i.test(parsed.hash)) parsed.hash = "";
+    return parsed.toString();
   }
 
   function isChallengePage(body) {
@@ -464,14 +466,87 @@
     return parseDetailsHTML(page.body, title.url, title.url);
   }
 
+  function languageCode(translation) {
+    return nonEmpty(translation && translation.language).toLowerCase().replace(/_/g, "-");
+  }
+
+  function isEnglishTranslation(translation) {
+    const language = languageCode(translation);
+    const languageName = stripHTML(translation && translation.languageName);
+    return language === "en" || language.startsWith("en-") || /\benglish\b/i.test(languageName);
+  }
+
+  function pageCount(translation) {
+    if (Array.isArray(translation && translation.pages)) return translation.pages.length;
+    const value = Number(translation && translation.pages);
+    return Number.isFinite(value) && value > 0 ? value : 0;
+  }
+
+  function dateValue(translation) {
+    const value = Date.parse(nonEmpty(translation && (translation.date || translation.createdAt)));
+    return Number.isFinite(value) ? value : 0;
+  }
+
+  function compareTranslations(left, right) {
+    const englishDifference = Number(isEnglishTranslation(right.translation))
+      - Number(isEnglishTranslation(left.translation));
+    if (englishDifference) return englishDifference;
+
+    const pagesDifference = pageCount(right.translation) - pageCount(left.translation);
+    if (pagesDifference) return pagesDifference;
+
+    const viewsDifference = (Number(right.translation && right.translation.views) || 0)
+      - (Number(left.translation && left.translation.views) || 0);
+    if (viewsDifference) return viewsDifference;
+
+    const dateDifference = dateValue(right.translation) - dateValue(left.translation);
+    if (dateDifference) return dateDifference;
+    return left.chapterURL.localeCompare(right.chapterURL);
+  }
+
+  function formatChapterNumber(number) {
+    if (Number.isInteger(number)) return String(number);
+    return String(number).replace(/(\.\d*?[1-9])0+$/, "$1");
+  }
+
   function chapterLabel(group, translation, number) {
-    const base = stripHTML(translation && (translation.name || translation.title))
-      || stripHTML(group && (group.number || group.title))
-      || (number == null ? "Chapter" : `Chapter ${number}`);
+    const base = number == null
+      ? stripHTML(translation && (translation.name || translation.title))
+        || stripHTML(group && group.title)
+        || "Special"
+      : `Chapter ${formatChapterNumber(number)}`;
     const language = stripHTML(translation && (translation.languageName || translation.language));
     const groupName = stripHTML(translation && translation.group && (translation.group.name || translation.group._id));
     const qualifiers = [language, groupName].filter(Boolean);
     return qualifiers.length ? `${base} — ${qualifiers.join(" · ")}` : base;
+  }
+
+  function compareChapters(left, right) {
+    const leftHasNumber = Number.isFinite(left.number);
+    const rightHasNumber = Number.isFinite(right.number);
+    if (leftHasNumber && rightHasNumber && left.number !== right.number) return right.number - left.number;
+    if (leftHasNumber !== rightHasNumber) return leftHasNumber ? -1 : 1;
+
+    const releaseDifference = Date.parse(nonEmpty(right.releaseDate)) - Date.parse(nonEmpty(left.releaseDate));
+    if (Number.isFinite(releaseDifference) && releaseDifference) return releaseDifference;
+    return left.id.localeCompare(right.id);
+  }
+
+  function chapterNumber(group) {
+    const rawNumber = nonEmpty(group && group.number_float);
+    const parsedNumber = rawNumber ? Number(rawNumber) : NaN;
+    return Number.isFinite(parsedNumber) ? parsedNumber : null;
+  }
+
+  function contiguousChapterCeiling(groups) {
+    const integers = new Set(
+      groups
+        .map(chapterNumber)
+        .filter((number) => Number.isInteger(number) && number > 0),
+    );
+    let ceiling = 0;
+    while (integers.has(ceiling + 1)) ceiling += 1;
+    return { integers, ceiling };
   }
 
   function parseChaptersPayload(payload) {
@@ -479,11 +554,21 @@
     if (!groups) throw new Error("MangaBall did not return a chapter list.");
     const output = [];
     const seen = new Set();
+    const { integers, ceiling } = contiguousChapterCeiling(groups);
     for (const group of groups) {
-      const rawNumber = nonEmpty(group && group.number_float);
-      const parsedNumber = rawNumber ? Number(rawNumber) : NaN;
-      const number = Number.isFinite(parsedNumber) ? parsedNumber : null;
+      const number = chapterNumber(group);
+      // MangaBall uses chapter zero for volume/placeholder uploads. Showing every
+      // translation here creates a misleading list of repeated "Chapter 0" items.
+      if (number === 0) continue;
+      // Decimal uploads are commonly bonus pages or full-volume scans attached to
+      // an existing integer chapter. Keep a decimal only when it has no integer
+      // counterpart, so legitimate fractional numbering still remains available.
+      if (!Number.isInteger(number) && integers.has(Math.floor(number))) continue;
+      // A long, uninterrupted run gives us a safe boundary for obvious importer
+      // errors such as Ch. 277 and Ch. 606 appearing after Ch. 232.
+      if (Number.isInteger(number) && ceiling >= 20 && number > ceiling + 20) continue;
       const translations = Array.isArray(group && group.translations) ? group.translations : [];
+      const candidates = [];
       for (const translation of translations) {
         const chapterID = nonEmpty(translation && translation.id);
         if (!chapterID) continue;
@@ -491,22 +576,26 @@
           translation && (translation.url || translation.href),
           "chapter",
         ) || siteURL(`/chapter-detail/${chapterID}/`, "chapter");
-        if (!chapterURL || seen.has(chapterURL)) continue;
-        seen.add(chapterURL);
-        const language = nonEmpty(translation && translation.language).toLowerCase();
-        const releaseDate = nonEmpty(translation && (translation.date || translation.createdAt));
-        output.push({
-          id: chapterURL,
-          href: chapterURL,
-          url: chapterURL,
-          title: chapterLabel(group, translation, number),
-          number,
-          ...(releaseDate ? { releaseDate } : {}),
-          ...(language ? { language } : {}),
-        });
+        if (!chapterURL) continue;
+        candidates.push({ chapterURL, translation });
       }
+      const selected = candidates.sort(compareTranslations).find((candidate) => !seen.has(candidate.chapterURL));
+      if (!selected) continue;
+      seen.add(selected.chapterURL);
+      const translation = selected.translation;
+      const language = languageCode(translation);
+      const releaseDate = nonEmpty(translation && (translation.date || translation.createdAt));
+      output.push({
+        id: selected.chapterURL,
+        href: selected.chapterURL,
+        url: selected.chapterURL,
+        title: chapterLabel(group, translation, number),
+        number,
+        ...(releaseDate ? { releaseDate } : {}),
+        ...(language ? { language } : {}),
+      });
     }
-    return output;
+    return output.sort(compareChapters);
   }
 
   async function extractChapters(value) {
@@ -524,7 +613,7 @@
     return parseChaptersPayload(payload);
   }
 
-  function parseChapterImages(html) {
+  function parseChapterImages(html, referer = HOME_URL) {
     const source = String(html || "");
     const embedded = source.match(/chapterImages\s*=\s*JSON\.parse\(\s*`([\s\S]*?)`\s*\)/i);
     let candidates = [];
@@ -550,11 +639,12 @@
     }
     const output = [];
     const seen = new Set();
+    const headers = { ...IMAGE_HEADERS, Referer: referer || HOME_URL };
     for (const candidate of candidates) {
       const url = imageURL(decodeEntities(candidate), false);
       if (!url || seen.has(url)) continue;
       seen.add(url);
-      output.push({ url, headers: IMAGE_HEADERS });
+      output.push({ url, headers: { ...headers } });
     }
     if (!output.length) throw new Error("MangaBall chapter did not contain readable page images.");
     return output;
@@ -563,7 +653,7 @@
   async function extractImages(value) {
     const chapter = chapterParts(value);
     const page = await fetchHTML(chapter.url, { headers: { Referer: chapter.url } });
-    return parseChapterImages(page.body);
+    return parseChapterImages(page.body, chapter.url);
   }
 
   const handlers = {

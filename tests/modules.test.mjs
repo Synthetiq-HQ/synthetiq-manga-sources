@@ -1056,7 +1056,7 @@ test("YSK Comics parses JSON search, detail chapters, and CDN page images", asyn
   assert.deepEqual(JSON.parse(JSON.stringify(pages)), fixtures.expected.images);
 });
 
-test("MangaBall uses title-scoped CSRF APIs and preserves translated chapter images", async () => {
+test("MangaBall deduplicates chapter translations and preserves reader image metadata", async () => {
   const fixtures = {
     home: await text("modules/mangaball/fixtures/home.html"),
     search: await text("modules/mangaball/fixtures/search.json"),
@@ -1117,11 +1117,13 @@ test("MangaBall uses title-scoped CSRF APIs and preserves translated chapter ima
 
   const chapters = await module.extractChapters(details.id);
   assert.deepEqual(JSON.parse(JSON.stringify(chapters)), fixtures.expected.chapters);
-  assert.equal(chapters[2].number, 9.5, "decimal chapter number is preserved");
-  assert.equal(chapters.length, 4, "duplicate and malformed translations are removed");
+  assert.equal(chapters[1].number, 9.5, "decimal chapter number is preserved");
+  assert.equal(chapters.length, 3, "one canonical translation is returned per numbered chapter");
+  assert.equal(chapters.some((chapter) => chapter.number === 0), false, "volume placeholders are not exposed as chapters");
 
   const pages = await module.extractImages(chapters[0].id);
   assert.deepEqual(JSON.parse(JSON.stringify(pages)), fixtures.expected.images);
+  assert.match(pages[0].url, /#scrambled_7$/, "supported image scramble metadata is preserved");
   assert.ok(pages.every((page) => /(?:poke-black-and-white|red-and-blue)\.net\/storage\/|dmd-image-content-sng-1\.imggo\.net\/books\//.test(page.url)));
   const discovery = await module.discoveryHome();
   assert.deepEqual(JSON.parse(JSON.stringify(discovery)), fixtures.expected.discovery);
@@ -1138,4 +1140,68 @@ test("MangaBall uses title-scoped CSRF APIs and preserves translated chapter ima
     () => module.extractDetails("https://example.invalid/title-detail/not-a-source-aaaaaaaaaaaaaaaaaaaaaaaa/"),
     /Invalid MangaBall title identifier/,
   );
+});
+
+test("MangaBall removes decimal volume aliases and isolated numeric outliers", async () => {
+  const details = await text("modules/mangaball/fixtures/details.html");
+  const titleURL = "https://mangaball.net/title-detail/fixture-ball-aaaaaaaaaaaaaaaaaaaaaaaa/";
+  const chapterID = (number) => Number(number).toString(16).padStart(24, "0");
+  const translation = (number, suffix = "") => {
+    const id = chapterID(number) + suffix;
+    return {
+      id,
+      name: `Chapter ${number}`,
+      language: "en",
+      languageName: "English",
+      group: { _id: "fixture-group", name: "Fixture Group" },
+      pages: 20,
+      url: `/chapter-detail/${id}/`,
+    };
+  };
+  const chaptersPayload = {
+    ALL_CHAPTERS: [
+      ...Array.from({ length: 20 }, (_, index) => {
+        const number = index + 1;
+        return {
+          number: `Ch. ${number}`,
+          number_float: number,
+          translations: [translation(number)],
+        };
+      }),
+      {
+        number: "Ch. 1.1",
+        number_float: 1.1,
+        translations: [{ ...translation(1, "1"), name: "Volume 1 scan", pages: 375 }],
+      },
+      {
+        number: "Ch. 99",
+        number_float: 99,
+        translations: [translation(99)],
+      },
+      {
+        number: "Ch. 0",
+        number_float: 0,
+        translations: [translation(0, "1")],
+      },
+    ],
+  };
+  const module = await loadModule("modules/mangaball/index.js", {
+    fetchv2: async (url, headers, method) => {
+      const parsed = new URL(url);
+      if (parsed.pathname.startsWith("/title-detail/")) return response(details);
+      if (parsed.pathname === "/api/v1/chapter/chapter-listing-by-title-id/" && method === "POST") {
+        return response(JSON.stringify(chaptersPayload));
+      }
+      throw new Error(`Unexpected MangaBall outlier fixture URL: ${url}`);
+    },
+  });
+
+  const chapters = await module.extractChapters(titleURL);
+  assert.deepEqual(
+    JSON.parse(JSON.stringify(chapters.map((chapter) => chapter.number))),
+    Array.from({ length: 20 }, (_, index) => 20 - index),
+  );
+  assert.equal(chapters.some((chapter) => chapter.number === 1.1), false);
+  assert.equal(chapters.some((chapter) => chapter.number === 99), false);
+  assert.equal(chapters.some((chapter) => chapter.number === 0), false);
 });

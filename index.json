@@ -508,7 +508,7 @@
    "id": "mangaball",
    "familyID": "mangaball",
    "name": "MangaBall",
-   "version": "1.0.2",
+   "version": "1.0.3",
    "language": "multi",
    "contentType": "pageImages",
    "contentRating": "suggestive",
@@ -517,7 +517,7 @@
    "sortPriority": 89,
    "manifest": {
     "path": "modules/mangaball/manifest.json",
-    "sha256": "584867ae502e543904575b6f3e8431dff3b149fe2f9ec353fc1ef6b4355ba03d"
+    "sha256": "7487385a453418813472efbca2149c4363a846953e4f7c4d7b4ae2388aaa466b"
    },
    "icon": {
     "path": "modules/mangaball/icon.png",

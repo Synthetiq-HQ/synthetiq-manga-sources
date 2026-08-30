@@ -26,10 +26,10 @@
   "contentRating": "suggestive",
   "contentType": "pageImages",
   "contractVersion": 1,
-  "description": "MangaBall catalogue with multi-language chapter translations and direct reader page images.",
+  "description": "MangaBall catalogue with canonical numbered chapters and direct reader page images.",
   "entry": {
     "path": "modules/mangaball/index.js",
-    "sha256": "7bffb4080eb71ba382de749a933da74fc4001ae8ffc4d743d7fd040527e2d7cc"
+    "sha256": "c22a4cd32e65f5a22db2f225ec0551a7381d6127c37d4441b5d3d5a3c5543366"
   },
   "familyID": "mangaball",
   "icon": {
@@ -51,5 +51,5 @@
   "releaseTrack": "beta",
   "status": "active",
   "universalLink": "https://synthetiq.uk/manga/modules/mangaball",
-  "version": "1.0.2"
+  "version": "1.0.3"
 }
