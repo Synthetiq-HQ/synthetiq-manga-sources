@@ -14,19 +14,6 @@
                     "Public domain"
                 ],
                 "status": "Completed"
-            },
-            {
-                "id": "rights-fixture",
-                "href": "https://archive.org/details/rights-fixture",
-                "url": "https://archive.org/details/rights-fixture",
-                "title": "Rights Fixture Book",
-                "image": "https://archive.org/services/img/rights-fixture",
-                "description": "Rights metadata is explicitly public domain.",
-                "author": "Rights Author",
-                "genres": [
-                    "Fixtures"
-                ],
-                "status": "Completed"
             }
         ],
         "hasMore": false
@@ -52,9 +39,9 @@
     },
     "chapters": [
         {
-            "id": "https://archive.org/details/open-fixture",
-            "href": "https://archive.org/details/open-fixture",
-            "url": "https://archive.org/details/open-fixture",
+            "id": "https://archive.org/download/open-fixture/fixture_book_scandata.xml",
+            "href": "https://archive.org/download/open-fixture/fixture_book_scandata.xml",
+            "url": "https://archive.org/download/open-fixture/fixture_book_scandata.xml",
             "title": "Full book (2 pages)",
             "number": 1,
             "releaseDate": "2026-01-01T00:00:00Z",
@@ -63,10 +50,10 @@
     ],
     "images": [
         {
-            "url": "https://ia800108.us.archive.org/BookReader/BookReaderImages.php?id=open-fixture&itemPath=%2F1%2Fitems%2Fopen-fixture&server=ia800108.us.archive.org&page=n0"
+            "url": "https://ia800108.us.archive.org/BookReader/BookReaderImages.php?id=open-fixture&scale=4&rotate=0&zip=%2F1%2Fitems%2Fopen-fixture%2Ffixture_book_jp2.zip&file=fixture_book_jp2%2Ffixture_book_0000.jp2"
         },
         {
-            "url": "https://ia800108.us.archive.org/BookReader/BookReaderImages.php?id=open-fixture&itemPath=%2F1%2Fitems%2Fopen-fixture&server=ia800108.us.archive.org&page=n1"
+            "url": "https://ia800108.us.archive.org/BookReader/BookReaderImages.php?id=open-fixture&scale=4&rotate=0&zip=%2F1%2Fitems%2Fopen-fixture%2Ffixture_book_jp2.zip&file=fixture_book_jp2%2Ffixture_book_0001.jp2"
         }
     ]
 }

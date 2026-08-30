@@ -330,42 +330,127 @@ test("MangaFire bridges protected browser results as JSON text", async () => {
   assert.doesNotMatch(protectedCall.returnScript, /async|Promise/);
 });
 
-test("Internet Archive exposes only explicitly open, public files", async () => {
+test("Internet Archive format modules expose only safe, supported files", async () => {
   const fixtures = {
     search: await text("modules/internet-archive/fixtures/search.json"),
     open: await text("modules/internet-archive/fixtures/metadata-open.json"),
     closed: await text("modules/internet-archive/fixtures/metadata-closed.json"),
+    unsupported: await text("modules/internet-archive/fixtures/metadata-unsupported.json"),
+    oversized: await text("modules/internet-archive/fixtures/metadata-oversized.json"),
     book: await text("modules/internet-archive/fixtures/text.txt"),
+    scandata: await text("modules/internet-archive/fixtures/scandata.xml"),
     expected: await json("modules/internet-archive/fixtures/expected.json"),
   };
-  const module = await loadModule("modules/internet-archive/index.js", {
+  const fetchv2 = async (url) => {
+    assert.equal(typeof url, "string");
+    if (url.includes("/advancedsearch.php?")) return response(fixtures.search);
+    if (url.includes("/metadata/open-fixture")) return response(fixtures.open);
+    if (url.includes("/metadata/closed-fixture")) return response(fixtures.closed);
+    if (url.includes("/metadata/unsupported-fixture")) return response(fixtures.unsupported);
+    if (url.includes("/metadata/oversized-fixture")) return response(fixtures.oversized);
+    if (url.endsWith("/open-fixture/fixture_book_scandata.xml")) return response(fixtures.scandata);
+    if (url.endsWith("/open-fixture/fixture_book_djvu.txt")) return response(fixtures.book);
+    throw new Error(`Unexpected URL: ${url}`);
+  };
+
+  const scans = await loadModule("modules/internet-archive/index.js", {
+    fetchv2,
+  });
+  const scanSearch = await scans.searchResults("fixture", 1);
+  assert.deepEqual(JSON.parse(JSON.stringify(scanSearch)), fixtures.expected.search);
+  const scanDetails = await scans.extractDetails("open-fixture");
+  assert.deepEqual(JSON.parse(JSON.stringify(scanDetails)), fixtures.expected.details);
+  const scanChapters = await scans.extractChapters("open-fixture");
+  assert.deepEqual(JSON.parse(JSON.stringify(scanChapters)), fixtures.expected.chapters);
+  const scanPages = await scans.extractImages(scanChapters[0].id);
+  assert.deepEqual(JSON.parse(JSON.stringify(scanPages)), fixtures.expected.images);
+  assert.equal(typeof scans.extractText, "undefined");
+  await assert.rejects(
+    () => scans.extractChapters("closed-fixture"),
+    /not explicitly open, licensed, and downloadable/,
+  );
+  assert.deepEqual(JSON.parse(JSON.stringify(await scans.extractChapters("unsupported-fixture"))), []);
+
+  const publications = await loadModule("modules/internet-archive-publications/index.js", {
+    fetchv2,
+  });
+  const publicationSearch = await publications.searchResults("fixture", 1);
+  assert.deepEqual(
+    JSON.parse(JSON.stringify(publicationSearch.items.map((item) => item.id))),
+    ["open-fixture", "rights-fixture"],
+  );
+  const resources = await publications.extractResources("open-fixture");
+  assert.deepEqual(JSON.parse(JSON.stringify(resources.map((resource) => resource.format))), ["pdf", "epub"]);
+  assert.ok(resources.every((resource) => !resource.url.includes("Private")));
+  assert.ok(resources.every((resource) => resource.headers.Referer.endsWith("/open-fixture")));
+  await assert.rejects(
+    () => publications.extractResources("closed-fixture"),
+    /not explicitly open, licensed, and downloadable/,
+  );
+  assert.deepEqual(JSON.parse(JSON.stringify(await publications.extractResources("unsupported-fixture"))), []);
+
+  const textModule = await loadModule("modules/internet-archive-text/index.js", {
+    fetchv2,
+  });
+  const textSearch = await textModule.searchResults("fixture", 1);
+  assert.deepEqual(
+    JSON.parse(JSON.stringify(textSearch.items.map((item) => item.id))),
+    ["open-fixture", "rights-fixture"],
+  );
+  const textChapters = await textModule.extractChapters("open-fixture");
+  assert.equal(textChapters.length, 1);
+  assert.equal(await textModule.extractText(textChapters[0].id), fixtures.book);
+  await assert.rejects(
+    () => textModule.extractChapters("closed-fixture"),
+    /not explicitly open, licensed, and downloadable/,
+  );
+  assert.deepEqual(JSON.parse(JSON.stringify(await textModule.extractChapters("unsupported-fixture"))), []);
+  assert.deepEqual(JSON.parse(JSON.stringify(await textModule.extractChapters("oversized-fixture"))), []);
+});
+
+test("Internet Archive rejects invalid direct file references", async () => {
+  const module = await loadModule("modules/internet-archive-text/index.js", {
     fetchv2: async (url) => {
       assert.equal(typeof url, "string");
-      if (url.includes("/advancedsearch.php?")) return response(fixtures.search);
-      if (url.includes("/metadata/open-fixture")) return response(fixtures.open);
-      if (url.includes("/metadata/closed-fixture")) return response(fixtures.closed);
-      if (url.endsWith("/open-fixture/fixture_book_djvu.txt")) return response(fixtures.book);
       throw new Error(`Unexpected URL: ${url}`);
     },
   });
+  await assert.rejects(() => module.extractText("https://archive.org/download/open-fixture/../secret.txt"), /Invalid Internet Archive file path/);
+});
 
-  const search = await module.searchResults("fixture", 1);
-  assert.deepEqual(JSON.parse(JSON.stringify(search)), fixtures.expected.search);
+test("Internet Archive retries transient text requests and rejects dropped bodies", async () => {
+  const fixtures = {
+    open: await text("modules/internet-archive/fixtures/metadata-open.json"),
+    book: await text("modules/internet-archive/fixtures/text.txt"),
+  };
+  let attempts = 0;
+  const module = await loadModule("modules/internet-archive-text/index.js", {
+    setTimeout: (callback) => callback(),
+    fetchv2: async (url) => {
+      if (url.includes("/metadata/open-fixture")) return response(fixtures.open);
+      if (url.endsWith("/open-fixture/fixture_book_djvu.txt")) {
+        attempts += 1;
+        if (attempts === 1) return response(fixtures.book, 429);
+        return response(fixtures.book);
+      }
+      throw new Error(`Unexpected URL: ${url}`);
+    },
+  });
+  assert.equal(await module.extractText("https://archive.org/download/open-fixture/fixture_book_djvu.txt"), fixtures.book);
+  assert.equal(attempts, 2);
 
-  const details = await module.extractDetails("open-fixture");
-  assert.deepEqual(JSON.parse(JSON.stringify(details)), fixtures.expected.details);
-
-  const chapters = await module.extractChapters("open-fixture");
-  assert.deepEqual(JSON.parse(JSON.stringify(chapters)), fixtures.expected.chapters);
-
-  const pages = await module.extractImages(chapters[0].id);
-  assert.deepEqual(JSON.parse(JSON.stringify(pages)), fixtures.expected.images);
-
-  const book = await module.extractText("https://archive.org/download/open-fixture/fixture_book_djvu.txt");
-  assert.equal(book, fixtures.book);
+  const dropped = await loadModule("modules/internet-archive-text/index.js", {
+    fetchv2: async (url) => {
+      if (url.includes("/metadata/open-fixture")) return response(fixtures.open);
+      const result = response(fixtures.book);
+      result.bodyDropped = true;
+      result.dropReason = "maxResponseBytes";
+      return result;
+    },
+  });
   await assert.rejects(
-    () => module.extractChapters("closed-fixture"),
-    /not explicitly open, licensed, and downloadable/,
+    () => dropped.extractText("https://archive.org/download/open-fixture/fixture_book_djvu.txt"),
+    /response was dropped/i,
   );
 });
 

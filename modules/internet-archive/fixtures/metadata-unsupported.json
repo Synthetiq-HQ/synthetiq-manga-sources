@@ -1,0 +1,33 @@
+{
+  "created": 1767225600,
+  "metadata": {
+    "identifier": "unsupported-fixture",
+    "mediatype": "texts",
+    "title": "Unsupported Fixture Book",
+    "rights": "Public domain.",
+    "access-restricted-item": false
+  },
+  "files": [
+    {
+      "name": "Private.pdf",
+      "format": "PDF",
+      "size": "4096",
+      "private": "true"
+    },
+    {
+      "name": "Protected.epub",
+      "format": "LCP Encrypted EPUB",
+      "size": "4096"
+    },
+    {
+      "name": "Empty.pdf",
+      "format": "PDF",
+      "size": "0"
+    },
+    {
+      "name": "Notes.html",
+      "format": "Full Text",
+      "size": "1024"
+    }
+  ]
+}

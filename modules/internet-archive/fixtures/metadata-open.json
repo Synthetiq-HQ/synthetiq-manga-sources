@@ -43,6 +43,18 @@
             "size": "128"
         },
         {
+            "name": "fixture_book_scandata.xml",
+            "source": "original",
+            "format": "Scandata",
+            "size": "512"
+        },
+        {
+            "name": "fixture_book_jp2.zip",
+            "source": "original",
+            "format": "Single Page Processed JP2 ZIP",
+            "size": "1024"
+        },
+        {
             "name": "Private.pdf",
             "source": "original",
             "format": "PDF",

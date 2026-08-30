@@ -1,8 +1,8 @@
 {
   "allowedHosts": [
+    "archive.org",
     "*.archive.org",
-    "*.us.archive.org",
-    "archive.org"
+    "*.us.archive.org"
   ],
   "attribution": {
     "author": "Synthetiq-HQ",
@@ -16,26 +16,25 @@
     "search",
     "details",
     "chapters",
-    "images",
+    "text",
     "discovery"
   ],
   "contentRating": "unknown",
-  "contentType": "pageImages",
+  "contentType": "text",
   "contractVersion": 1,
   "entry": {
-    "path": "modules/internet-archive/index.js",
-    "sha256": "0e64b244365b511f48603b46ff21d2d37c701c76d165e2c9498a804f8b272a5f"
+    "path": "modules/internet-archive-text/index.js",
+    "sha256": "04312f4d1fc1ca3a4583042925744c45b774275e4ce5c81cee2f6f332c5b39a3"
   },
-  "familyID": "internet-archive",
+  "familyID": "internet-archive-text",
   "icon": {
-    "path": "modules/internet-archive/icon.png",
+    "path": "modules/internet-archive-text/icon.png",
     "sha256": "8c5ddb7fba27a8d7b46a727f41e8c7bb14cbb6542a1bca8b35660c6caadff3a9"
   },
-  "id": "internet-archive",
+  "id": "internet-archive-text",
   "language": "multi",
   "legacyIDs": [
-    "archive.org",
-    "internetarchive"
+    "internetarchive-text"
   ],
   "limits": {
     "cacheTTLSeconds": 3600,
@@ -45,9 +44,9 @@
     "timeoutMilliseconds": 30000
   },
   "minimumAppVersion": "1.0.0",
-  "name": "Internet Archive Scans",
+  "name": "Internet Archive Text",
   "releaseTrack": "stable",
   "status": "active",
-  "universalLink": "https://synthetiq.uk/manga/modules/internet-archive",
-  "version": "1.2.0"
+  "universalLink": "https://synthetiq.uk/manga/modules/internet-archive-text",
+  "version": "1.0.0"
 }

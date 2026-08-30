@@ -128,11 +128,6 @@ async function validateCatalogue() {
       assert.ok(manifest.capabilities.includes(capability), `${entry.id} missing ${capability} capability`);
     }
     if (entry.id === "mangafire-v2") assert.ok(manifest.capabilities.includes("interactivePage"));
-    if (entry.id === "internet-archive") {
-      assert.ok(manifest.capabilities.includes("text"));
-      assert.ok(manifest.capabilities.includes("chapters"));
-    }
-
     for (const asset of [manifest.entry, manifest.icon, entry.manifest, entry.icon]) {
       assert.ok(!asset.path.startsWith("/") && !asset.path.includes(".."), `unsafe asset path ${asset.path}`);
       assert.ok(hashPattern.test(asset.sha256), `invalid hash for ${asset.path}`);
@@ -249,7 +244,10 @@ async function testInternetArchive() {
     search: await textFile("modules/internet-archive/fixtures/search.json"),
     open: await textFile("modules/internet-archive/fixtures/metadata-open.json"),
     closed: await textFile("modules/internet-archive/fixtures/metadata-closed.json"),
+    unsupported: await textFile("modules/internet-archive/fixtures/metadata-unsupported.json"),
+    oversized: await textFile("modules/internet-archive/fixtures/metadata-oversized.json"),
     text: await textFile("modules/internet-archive/fixtures/text.txt"),
+    scandata: await textFile("modules/internet-archive/fixtures/scandata.xml"),
   };
   const expected = await JSONFile("modules/internet-archive/fixtures/expected.json");
   const fetchv2 = async (url, headers, method, body, options) => {
@@ -260,16 +258,64 @@ async function testInternetArchive() {
     if (url.includes("/advancedsearch.php?")) return mockResponse(fixtures.search, "application/json");
     if (url.includes("/metadata/open-fixture")) return mockResponse(fixtures.open, "application/json");
     if (url.includes("/metadata/closed-fixture")) return mockResponse(fixtures.closed, "application/json");
+    if (url.includes("/metadata/unsupported-fixture")) return mockResponse(fixtures.unsupported, "application/json");
+    if (url.includes("/metadata/oversized-fixture")) return mockResponse(fixtures.oversized, "application/json");
+    if (url.includes("/download/open-fixture/fixture_book_scandata.xml")) return mockResponse(fixtures.scandata, "application/xml");
     if (url.includes("/download/open-fixture/fixture_book_djvu.txt")) return mockResponse(fixtures.text, "text/plain");
     throw new Error(`Unexpected Internet Archive URL: ${url}`);
   };
-  const module = await loadModule("internet-archive", { fetchv2 });
-  equalJSON(await module.searchResults("fixture", 1), expected.search, "Internet Archive open-license search fixture");
-  equalJSON(await module.extractDetails("open-fixture"), expected.details, "Internet Archive details fixture");
-  equalJSON(await module.extractChapters("open-fixture"), expected.chapters, "Internet Archive chapter fixture");
-  equalJSON(await module.extractImages(expected.chapters[0].id), expected.images, "Internet Archive image fixture");
-  assert.equal(await module.extractText("https://archive.org/download/open-fixture/fixture_book_djvu.txt"), fixtures.text, "Internet Archive text fixture");
-  await assert.rejects(() => module.extractDetails("closed-fixture"), /not explicitly open/i);
+  const scans = await loadModule("internet-archive", { fetchv2 });
+  equalJSON(await scans.searchResults("fixture", 1), expected.search, "Internet Archive scan search fixture");
+  equalJSON(await scans.extractDetails("open-fixture"), expected.details, "Internet Archive scan details fixture");
+  equalJSON(await scans.extractChapters("open-fixture"), expected.chapters, "Internet Archive scan chapter fixture");
+  equalJSON(await scans.extractImages(expected.chapters[0].id), expected.images, "Internet Archive scan image fixture");
+  assert.equal(typeof scans.extractText, "undefined", "Internet Archive scan module must not expose text");
+  await assert.rejects(() => scans.extractDetails("closed-fixture"), /not explicitly open/i);
+  equalJSON(await scans.extractChapters("unsupported-fixture"), [], "Internet Archive scan unsupported asset filter");
+
+  const publications = await loadModule("internet-archive-publications", { fetchv2 });
+  equalJSON(
+    (await publications.searchResults("fixture", 1)).items.map((item) => item.id),
+    ["open-fixture", "rights-fixture"],
+    "Internet Archive publication search filter",
+  );
+  equalJSON(await publications.extractDetails("open-fixture"), expected.details, "Internet Archive publication details fixture");
+  equalJSON(
+    await publications.extractResources("open-fixture"),
+    [
+      {
+        format: "pdf",
+        url: "https://archive.org/download/open-fixture/Fixture%20Book.pdf",
+        fileName: "Fixture Book.pdf",
+        size: 4096,
+        headers: { Referer: "https://archive.org/details/open-fixture" },
+      },
+      {
+        format: "epub",
+        url: "https://archive.org/download/open-fixture/Fixture%20Book.epub",
+        fileName: "Fixture Book.epub",
+        size: 2048,
+        headers: { Referer: "https://archive.org/details/open-fixture" },
+      },
+    ],
+    "Internet Archive publication resources",
+  );
+  await assert.rejects(() => publications.extractResources("closed-fixture"), /not explicitly open/i);
+  equalJSON(await publications.extractResources("unsupported-fixture"), [], "Internet Archive publication unsupported asset filter");
+
+  const text = await loadModule("internet-archive-text", { fetchv2 });
+  equalJSON(
+    (await text.searchResults("fixture", 1)).items.map((item) => item.id),
+    ["open-fixture", "rights-fixture"],
+    "Internet Archive text search filter",
+  );
+  equalJSON(await text.extractDetails("open-fixture"), expected.details, "Internet Archive text details fixture");
+  const chapters = await text.extractChapters("open-fixture");
+  assert.equal(chapters.length, 1, "Internet Archive text chapter count");
+  assert.equal(await text.extractText(chapters[0].id), fixtures.text, "Internet Archive text fixture");
+  await assert.rejects(() => text.extractChapters("closed-fixture"), /not explicitly open/i);
+  equalJSON(await text.extractChapters("unsupported-fixture"), [], "Internet Archive text unsupported asset filter");
+  equalJSON(await text.extractChapters("oversized-fixture"), [], "Internet Archive oversized text filter");
 }
 
 const index = await validateCatalogue();

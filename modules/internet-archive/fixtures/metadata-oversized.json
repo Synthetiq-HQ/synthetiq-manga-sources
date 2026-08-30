@@ -1,0 +1,17 @@
+{
+  "created": 1767225600,
+  "metadata": {
+    "identifier": "oversized-fixture",
+    "mediatype": "texts",
+    "title": "Oversized Fixture Book",
+    "rights": "Public domain.",
+    "access-restricted-item": false
+  },
+  "files": [
+    {
+      "name": "oversized_djvu.txt",
+      "format": "DjVuTXT",
+      "size": "4194305"
+    }
+  ]
+}

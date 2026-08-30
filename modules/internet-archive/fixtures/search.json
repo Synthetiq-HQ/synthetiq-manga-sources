@@ -14,7 +14,15 @@
         "publicdate": "2026-01-01T00:00:00Z",
         "subject": ["Fixtures", "Public domain"],
         "downloads": 100,
-        "mediatype": "texts"
+        "mediatype": "texts",
+        "format": [
+          "Page Numbers JSON",
+          "Scandata",
+          "Single Page Processed JP2 ZIP",
+          "EPUB",
+          "Text PDF",
+          "DjVuTXT"
+        ]
       },
       {
         "identifier": "rights-fixture",
@@ -26,7 +34,8 @@
         "publicdate": "2025-12-01T00:00:00Z",
         "subject": "Fixtures",
         "downloads": 50,
-        "mediatype": "texts"
+        "mediatype": "texts",
+        "format": ["EPUB", "Text PDF", "DjVuTXT"]
       },
       {
         "identifier": "closed-fixture",
@@ -36,6 +45,31 @@
         "rights": "All rights reserved.",
         "language": "eng",
         "publicdate": "2025-11-01T00:00:00Z",
+        "downloads": 1,
+        "mediatype": "texts"
+      },
+      {
+        "identifier": "encrypted-fixture",
+        "title": "Encrypted Fixture Book",
+        "description": "A supported-looking record whose only publication is protected.",
+        "creator": "Encrypted Author",
+        "licenseurl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "language": "eng",
+        "publicdate": "2025-10-01T00:00:00Z",
+        "subject": "Fixtures",
+        "downloads": 2,
+        "mediatype": "texts",
+        "format": ["LCP Encrypted EPUB"]
+      },
+      {
+        "identifier": "missing-format-fixture",
+        "title": "Missing Format Fixture Book",
+        "description": "An open record without a supported format declaration.",
+        "creator": "Missing Format Author",
+        "licenseurl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "language": "eng",
+        "publicdate": "2025-09-01T00:00:00Z",
+        "subject": "Fixtures",
         "downloads": 1,
         "mediatype": "texts"
       }

@@ -93,12 +93,50 @@
    "language": "multi",
    "manifest": {
     "path": "modules/internet-archive/manifest.json",
-    "sha256": "04604e6a0693ed3694e0666eddc854882f0719e536e696cd8c6ca7743fecb046"
+    "sha256": "759cd525c0501c30cd27ab1344210c3af514d7e63f277c9167305d1d014789de"
    },
-   "name": "Internet Archive Open Texts",
+   "name": "Internet Archive Scans",
    "releaseTrack": "stable",
    "status": "active",
-   "version": "1.1.0"
+   "version": "1.2.0"
+  },
+  {
+   "contentRating": "unknown",
+   "contentType": "publication",
+   "familyID": "internet-archive-publications",
+   "icon": {
+    "path": "modules/internet-archive-publications/icon.png",
+    "sha256": "8c5ddb7fba27a8d7b46a727f41e8c7bb14cbb6542a1bca8b35660c6caadff3a9"
+   },
+   "id": "internet-archive-publications",
+   "language": "multi",
+   "manifest": {
+    "path": "modules/internet-archive-publications/manifest.json",
+    "sha256": "3e973601703790fbd90bf63b10bd2d1fefb3f0ddb3d21746eabcb8700afe5b4d"
+   },
+   "name": "Internet Archive Publications",
+   "releaseTrack": "stable",
+   "status": "active",
+   "version": "1.0.0"
+  },
+  {
+   "contentRating": "unknown",
+   "contentType": "text",
+   "familyID": "internet-archive-text",
+   "icon": {
+    "path": "modules/internet-archive-text/icon.png",
+    "sha256": "8c5ddb7fba27a8d7b46a727f41e8c7bb14cbb6542a1bca8b35660c6caadff3a9"
+   },
+   "id": "internet-archive-text",
+   "language": "multi",
+   "manifest": {
+    "path": "modules/internet-archive-text/manifest.json",
+    "sha256": "918878453560edc6624e89e5252de36eca108d20a088de3ebad41fd02a3c655d"
+   },
+   "name": "Internet Archive Text",
+   "releaseTrack": "stable",
+   "status": "active",
+   "version": "1.0.0"
   },
   {
    "contentRating": "suggestive",

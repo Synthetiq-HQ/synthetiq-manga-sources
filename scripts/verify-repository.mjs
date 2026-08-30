@@ -6,7 +6,9 @@ import { fileURLToPath } from "node:url";
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const failures = [];
 const expectedHandlers = {
-  "internet-archive": ["searchResults", "extractDetails", "extractChapters", "extractImages", "extractText"],
+  "internet-archive": ["searchResults", "extractDetails", "extractChapters", "extractImages"],
+  "internet-archive-publications": ["searchResults", "extractDetails", "extractResources"],
+  "internet-archive-text": ["searchResults", "extractDetails", "extractChapters", "extractText"],
   mangafire: ["searchResults", "extractDetails", "extractChapters", "extractImages"],
   weebcentral: ["searchResults", "extractDetails", "extractChapters", "extractImages"],
   mangakatana: ["searchResults", "extractDetails", "extractChapters", "extractImages"],
