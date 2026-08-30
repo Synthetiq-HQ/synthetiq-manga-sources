@@ -13,13 +13,16 @@
   const TITLE_SEARCH_ENDPOINT = `${BASE_URL}/api/v1/title/search/`;
   const CHAPTER_ENDPOINT = `${BASE_URL}/api/v1/chapter/chapter-listing-by-title-id/`;
   const DISCOVERY_LIMIT = 24;
+  const USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36";
   const DEFAULT_HEADERS = {
     Accept: "text/html,application/xhtml+xml",
     Referer: HOME_URL,
+    "User-Agent": USER_AGENT,
   };
   const API_HEADERS = {
     Accept: "application/json, text/javascript, */*; q=0.01",
     "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+    Origin: BASE_URL,
     "X-Requested-With": "XMLHttpRequest",
   };
   const IMAGE_HEADERS = {
@@ -165,6 +168,40 @@
     return typeof response.body === "string" ? response.body : "";
   }
 
+  const sessionCookies = new Map();
+
+  function headerValue(headers, name) {
+    if (!headers || typeof headers !== "object") return "";
+    const key = Object.keys(headers).find((candidate) => candidate.toLowerCase() === name.toLowerCase());
+    const value = key ? headers[key] : "";
+    return Array.isArray(value) ? value.join(", ") : String(value || "");
+  }
+
+  function captureSessionCookies(response, requestURL) {
+    let host = "";
+    try {
+      host = new URL(requestURL).hostname.toLowerCase();
+    } catch (_) {
+      return;
+    }
+    if (host !== SOURCE_HOST) return;
+    const setCookie = headerValue(response && response.headers, "set-cookie");
+    const match = setCookie.match(/(?:^|,\s*)PHPSESSID=([^;,\s]+)/i);
+    if (!match) return;
+    if (/max-age\s*=\s*0/i.test(setCookie)) sessionCookies.delete("PHPSESSID");
+    else sessionCookies.set("PHPSESSID", match[1]);
+  }
+
+  function sessionCookieHeader(requestURL) {
+    if (!sessionCookies.size) return "";
+    try {
+      if (new URL(requestURL).hostname.toLowerCase() !== SOURCE_HOST) return "";
+    } catch (_) {
+      return "";
+    }
+    return [...sessionCookies.entries()].map(([name, value]) => `${name}=${value}`).join("; ");
+  }
+
   async function request(url, options = {}) {
     if (typeof globalThis.fetchv2 !== "function") {
       throw new Error("MangaBall requires the fetchv2 bridge.");
@@ -175,9 +212,14 @@
     for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt += 1) {
       if (attempt > 1) await sleep(1000 * (attempt - 1));
       try {
+        const requestHeaders = { ...DEFAULT_HEADERS, ...(options.headers || {}) };
+        if (!Object.keys(requestHeaders).some((name) => name.toLowerCase() === "cookie")) {
+          const cookie = sessionCookieHeader(url);
+          if (cookie) requestHeaders.Cookie = cookie;
+        }
         const response = await globalThis.fetchv2(
           url,
-          { ...DEFAULT_HEADERS, ...(options.headers || {}) },
+          requestHeaders,
           method,
           options.body || null,
           {
@@ -186,6 +228,7 @@
             responseClass: options.responseClass || "html",
           },
         );
+        captureSessionCookies(response, url);
         const status = Number(response && response.status);
         if (!response || response.ok === false || (status && (status < 200 || status >= 300))) {
           lastError = new Error(`MangaBall request failed with HTTP ${status || "error"}.`);

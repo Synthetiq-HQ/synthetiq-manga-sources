@@ -20,8 +20,8 @@ async function loadModule(path, bridges) {
   return context;
 }
 
-function response(body, status = 200) {
-  return { ok: status >= 200 && status < 300, status, body };
+function response(body, status = 200, headers = {}) {
+  return { ok: status >= 200 && status < 300, status, headers, body };
 }
 
 test("WeebCentral parses direct HTTP fixtures and preserves every chapter", async () => {
@@ -1071,15 +1071,19 @@ test("MangaBall uses title-scoped CSRF APIs and preserves translated chapter ima
     fetchv2: async (url, headers, method, body, options) => {
       const parsed = new URL(url);
       calls.push({ url, headers, method, body, options });
-      if (parsed.pathname === "/" && method === "GET") return response(fixtures.home);
+      if (parsed.pathname === "/" && method === "GET") {
+        return response(fixtures.home, 200, { "Set-Cookie": "PHPSESSID=fixture-session; Path=/" });
+      }
       if (parsed.pathname === "/api/v1/smart-search/search/" && method === "POST") {
         assert.equal(headers["X-CSRF-TOKEN"], "fixture-csrf-token");
+        assert.equal(headers.Cookie, "PHPSESSID=fixture-session");
         assert.match(body, /search_input=fixture/);
         assert.equal(options.responseClass, "json");
         return response(fixtures.search);
       }
       if (parsed.pathname === "/api/v1/chapter/chapter-listing-by-title-id/" && method === "POST") {
         assert.equal(headers["X-CSRF-TOKEN"], "fixture-csrf-token");
+        assert.equal(headers.Cookie, "PHPSESSID=fixture-session");
         assert.match(body, /title_id=aaaaaaaaaaaaaaaaaaaaaaaa/);
         assert.match(body, /userSettingsEnabled=false/);
         assert.equal(options.maxBytesHint, 16 * 1024 * 1024);
@@ -1091,6 +1095,8 @@ test("MangaBall uses title-scoped CSRF APIs and preserves translated chapter ima
         assert.ok(["getRecommend", "getLatestTable"].includes(type));
         assert.equal(params.get("search_limit"), "24");
         assert.equal(headers["X-CSRF-TOKEN"], "fixture-csrf-token");
+        assert.equal(headers.Cookie, "PHPSESSID=fixture-session");
+        assert.match(headers["User-Agent"], /^Mozilla\/5\.0 /);
         return response(JSON.stringify(fixtures.discovery[type === "getLatestTable" ? "latest" : "popular"]));
       }
       if (parsed.pathname.startsWith("/title-detail/")) return response(fixtures.details);

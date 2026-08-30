@@ -29,7 +29,7 @@
   "description": "MangaBall catalogue with multi-language chapter translations and direct reader page images.",
   "entry": {
     "path": "modules/mangaball/index.js",
-    "sha256": "b7dd17e3d0392ba377ce5eea7f65d79bb6530494b439bb7b23364d28aa4bc94b"
+    "sha256": "7bffb4080eb71ba382de749a933da74fc4001ae8ffc4d743d7fd040527e2d7cc"
   },
   "familyID": "mangaball",
   "icon": {
@@ -51,5 +51,5 @@
   "releaseTrack": "beta",
   "status": "active",
   "universalLink": "https://synthetiq.uk/manga/modules/mangaball",
-  "version": "1.0.1"
+  "version": "1.0.2"
 }

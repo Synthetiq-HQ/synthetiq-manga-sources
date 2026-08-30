@@ -165,7 +165,10 @@ async function networkResponse(url, headers = {}, method = "GET", body = null, o
   const started = Date.now();
   const requestURL = new URL(url);
   const requestHeaders = new Headers(headers || {});
-  if (options.cookieJar && requestURL.hostname.toLowerCase() === options.cookieJar.host && !requestHeaders.has("Cookie")) {
+  if (options.implicitCookies !== false
+      && options.cookieJar
+      && requestURL.hostname.toLowerCase() === options.cookieJar.host
+      && !requestHeaders.has("Cookie")) {
     const cookieHeader = [...options.cookieJar.values.entries()]
       .map(([name, value]) => `${name}=${value}`)
       .join("; ");
@@ -417,7 +420,14 @@ if (slug === "novelfire") {
     bridges = {
       fetchv2: (url, headers, method, body, options = {}) => {
         calls.push({ kind: "fetchv2", url: String(url) });
-        return networkResponse(url, headers, method, body, { ...options, cookieJar });
+        // MangaBall must work even when the app's native cookie store does not
+        // implicitly attach cookies to a request. Its module now propagates the
+        // session cookie explicitly, so exercise that stricter bridge here.
+        return networkResponse(url, headers, method, body, {
+          ...options,
+          cookieJar,
+          implicitCookies: false,
+        });
       },
       pagev2: async (task) => {
         calls.push({ kind: "pagev2", url: String(task && task.url) });
