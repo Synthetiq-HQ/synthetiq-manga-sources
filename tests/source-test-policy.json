@@ -19,9 +19,6 @@
   "internet-archive-publications": {
    "chapterScope": "resource-derived"
   },
-  "internet-archive-text": {
-   "chapterScope": "resource-derived"
-  },
   "mangakatana": {
    "chapterScope": "selected-series-dom",
    "requiredCodeFragments": [

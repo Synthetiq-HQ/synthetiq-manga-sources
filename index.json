@@ -120,25 +120,6 @@
    "version": "1.0.0"
   },
   {
-   "contentRating": "unknown",
-   "contentType": "text",
-   "familyID": "internet-archive-text",
-   "icon": {
-    "path": "modules/internet-archive-text/icon.png",
-    "sha256": "8c5ddb7fba27a8d7b46a727f41e8c7bb14cbb6542a1bca8b35660c6caadff3a9"
-   },
-   "id": "internet-archive-text",
-   "language": "multi",
-   "manifest": {
-    "path": "modules/internet-archive-text/manifest.json",
-    "sha256": "918878453560edc6624e89e5252de36eca108d20a088de3ebad41fd02a3c655d"
-   },
-   "name": "Internet Archive Text",
-   "releaseTrack": "stable",
-   "status": "active",
-   "version": "1.0.0"
-  },
-  {
    "contentRating": "suggestive",
    "contentType": "pageImages",
    "familyID": "mangakatana",
