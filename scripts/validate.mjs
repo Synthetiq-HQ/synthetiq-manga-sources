@@ -243,6 +243,7 @@ async function testInternetArchive() {
   const fixtures = {
     search: await textFile("modules/internet-archive/fixtures/search.json"),
     open: await textFile("modules/internet-archive/fixtures/metadata-open.json"),
+    statusOpen: await textFile("modules/internet-archive/fixtures/metadata-status-open.json"),
     closed: await textFile("modules/internet-archive/fixtures/metadata-closed.json"),
     unsupported: await textFile("modules/internet-archive/fixtures/metadata-unsupported.json"),
     oversized: await textFile("modules/internet-archive/fixtures/metadata-oversized.json"),
@@ -257,6 +258,7 @@ async function testInternetArchive() {
     assert.ok(options.maxBytesHint > 0);
     if (url.includes("/advancedsearch.php?")) return mockResponse(fixtures.search, "application/json");
     if (url.includes("/metadata/open-fixture")) return mockResponse(fixtures.open, "application/json");
+    if (url.includes("/metadata/status-open-fixture")) return mockResponse(fixtures.statusOpen, "application/json");
     if (url.includes("/metadata/closed-fixture")) return mockResponse(fixtures.closed, "application/json");
     if (url.includes("/metadata/unsupported-fixture")) return mockResponse(fixtures.unsupported, "application/json");
     if (url.includes("/metadata/oversized-fixture")) return mockResponse(fixtures.oversized, "application/json");
@@ -269,6 +271,13 @@ async function testInternetArchive() {
   equalJSON(await scans.extractDetails("open-fixture"), expected.details, "Internet Archive scan details fixture");
   equalJSON(await scans.extractChapters("open-fixture"), expected.chapters, "Internet Archive scan chapter fixture");
   equalJSON(await scans.extractImages(expected.chapters[0].id), expected.images, "Internet Archive scan image fixture");
+  const statusChapters = await scans.extractChapters("status-open-fixture");
+  assert.equal(statusChapters.length, 1, "Internet Archive status-open chapter count");
+  assert.equal(statusChapters[0].title, "Full book (3 pages)", "Internet Archive uses JP2 filecount for page numbers metadata");
+  const statusImages = await scans.extractImages(statusChapters[0].id);
+  assert.equal(statusImages.length, 3, "Internet Archive status-open image count");
+  assert.match(statusImages[0].url, /status_open_fixture_0001\.jp2/);
+  assert.match(statusImages[2].url, /status_open_fixture_0003\.jp2/);
   assert.equal(typeof scans.extractText, "undefined", "Internet Archive scan module must not expose text");
   await assert.rejects(() => scans.extractDetails("closed-fixture"), /not explicitly open/i);
   equalJSON(await scans.extractChapters("unsupported-fixture"), [], "Internet Archive scan unsupported asset filter");

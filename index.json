@@ -93,12 +93,12 @@
    "language": "multi",
    "manifest": {
     "path": "modules/internet-archive/manifest.json",
-    "sha256": "759cd525c0501c30cd27ab1344210c3af514d7e63f277c9167305d1d014789de"
+    "sha256": "fa54c1f2aba337de9e2d34169d10934d02edf521003387e9c42c5e3cede9f075"
    },
    "name": "Internet Archive Scans",
    "releaseTrack": "stable",
    "status": "active",
-   "version": "1.2.0"
+   "version": "1.2.1"
   },
   {
    "contentRating": "unknown",

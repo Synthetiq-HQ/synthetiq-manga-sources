@@ -334,6 +334,7 @@ test("Internet Archive format modules expose only safe, supported files", async 
   const fixtures = {
     search: await text("modules/internet-archive/fixtures/search.json"),
     open: await text("modules/internet-archive/fixtures/metadata-open.json"),
+    statusOpen: await text("modules/internet-archive/fixtures/metadata-status-open.json"),
     closed: await text("modules/internet-archive/fixtures/metadata-closed.json"),
     unsupported: await text("modules/internet-archive/fixtures/metadata-unsupported.json"),
     oversized: await text("modules/internet-archive/fixtures/metadata-oversized.json"),
@@ -345,6 +346,7 @@ test("Internet Archive format modules expose only safe, supported files", async 
     assert.equal(typeof url, "string");
     if (url.includes("/advancedsearch.php?")) return response(fixtures.search);
     if (url.includes("/metadata/open-fixture")) return response(fixtures.open);
+    if (url.includes("/metadata/status-open-fixture")) return response(fixtures.statusOpen);
     if (url.includes("/metadata/closed-fixture")) return response(fixtures.closed);
     if (url.includes("/metadata/unsupported-fixture")) return response(fixtures.unsupported);
     if (url.includes("/metadata/oversized-fixture")) return response(fixtures.oversized);
@@ -364,6 +366,13 @@ test("Internet Archive format modules expose only safe, supported files", async 
   assert.deepEqual(JSON.parse(JSON.stringify(scanChapters)), fixtures.expected.chapters);
   const scanPages = await scans.extractImages(scanChapters[0].id);
   assert.deepEqual(JSON.parse(JSON.stringify(scanPages)), fixtures.expected.images);
+  const statusChapters = await scans.extractChapters("status-open-fixture");
+  assert.equal(statusChapters.length, 1);
+  assert.equal(statusChapters[0].title, "Full book (3 pages)");
+  const statusPages = await scans.extractImages(statusChapters[0].id);
+  assert.equal(statusPages.length, 3);
+  assert.match(statusPages[0].url, /status_open_fixture_0001\.jp2/);
+  assert.match(statusPages[2].url, /status_open_fixture_0003\.jp2/);
   assert.equal(typeof scans.extractText, "undefined");
   await assert.rejects(
     () => scans.extractChapters("closed-fixture"),

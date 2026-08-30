@@ -1,0 +1,32 @@
+{
+  "created": 1767225600,
+  "dir": "/1/items/status-open-fixture",
+  "is_dark": false,
+  "metadata": {
+    "identifier": "status-open-fixture",
+    "mediatype": "texts",
+    "title": "Status Open Fixture Book",
+    "description": "An openly readable item identified by Archive copyright status.",
+    "creator": "Status Author",
+    "possible-copyright-status": "NOT_IN_COPYRIGHT",
+    "language": "eng",
+    "publicdate": "2026-01-01T00:00:00Z",
+    "access-restricted-item": false
+  },
+  "files": [
+    {
+      "name": "status_open_fixture_page_numbers.json",
+      "source": "original",
+      "format": "Page Numbers JSON",
+      "size": "256"
+    },
+    {
+      "name": "status_open_fixture_jp2.zip",
+      "source": "original",
+      "format": "Single Page Processed JP2 ZIP",
+      "size": "1024",
+      "filecount": "3"
+    }
+  ],
+  "server": "ia800108.us.archive.org"
+}

@@ -125,7 +125,15 @@
       || /^https?:\/\/(?:www\.)?usa\.gov\/government-works\/?$/.test(license)
     ))) return true;
     const rights = String(firstValue(metadata && metadata.rights) || "").trim().toLowerCase();
-    if (!rights || /not (?:in )?(?:the )?public domain|all rights reserved|copyrighted/.test(rights)) return false;
+    if (/all rights reserved|copyrighted|permission required/.test(rights)) return false;
+    const copyrightStatus = String(
+      firstValue(metadata && (metadata["possible-copyright-status"] || metadata.possibleCopyrightStatus)) || "",
+    )
+      .trim()
+      .toLowerCase()
+      .replace(/[\s-]+/g, "_");
+    if (copyrightStatus === "not_in_copyright" || copyrightStatus === "public_domain") return true;
+    if (!rights) return false;
     return /\bpublic domain\b|creative commons|\bcc0\b|\bcc[- ]by(?:[- ](?:nc|nd|sa))*\b/.test(rights);
   }
 
@@ -199,7 +207,7 @@
 
   function openSearchClause(query) {
     const text = String(query || "").trim().slice(0, 200);
-    const open = '(licenseurl:* OR rights:"Public Domain" OR rights:"Creative Commons" OR rights:CC0)';
+    const open = '(licenseurl:* OR rights:"Public Domain" OR rights:"Creative Commons" OR rights:CC0 OR possible-copyright-status:"NOT_IN_COPYRIGHT" OR possible-copyright-status:"PUBLIC_DOMAIN")';
     const format = '((format:"Page Numbers JSON" AND format:"Single Page Processed JP2 ZIP") OR (format:"Scandata" AND format:"Single Page Processed JP2 ZIP"))';
     if (!text || text.startsWith("__feed:")) return `mediatype:texts AND -access-restricted-item:true AND ${open} AND ${format}`;
     const phrase = text.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
@@ -209,7 +217,7 @@
   function advancedSearchURL(query, page) {
     const currentPage = Math.max(1, Number(page) || 1);
     const params = [["q", openSearchClause(query)]];
-    ["identifier", "title", "description", "creator", "licenseurl", "rights", "language", "publicdate", "subject", "downloads", "mediatype", "format"].forEach((field) => params.push(["fl[]", field]));
+    ["identifier", "title", "description", "creator", "licenseurl", "rights", "possible-copyright-status", "language", "publicdate", "subject", "downloads", "mediatype", "format"].forEach((field) => params.push(["fl[]", field]));
     params.push(["rows", String(SEARCH_ROWS)], ["page", String(currentPage)], ["output", "json"], ["sort[]", query === "__feed:latest" ? "publicdate desc" : "downloads desc"]);
     return `${BASE_URL}/advancedsearch.php?${params.map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`).join("&")}`;
   }
@@ -265,7 +273,7 @@
       if (!base || !fileFormat(file).includes("scandata")) continue;
       const zip = zipFor(base);
       if (!zip) continue;
-      sets.push({ sourceFile: name, zipFile: String(zip.name), base, sourceKind: "scandata", count: null });
+      sets.push({ sourceFile: name, zipFile: String(zip.name), base, sourceKind: "scandata", count: null, archiveFileCount: Number(zip.filecount) || 0 });
       usedBases.add(base.toLowerCase());
     }
 
@@ -275,7 +283,7 @@
       if (!base || usedBases.has(base.toLowerCase()) || !fileFormat(file).includes("page numbers json")) continue;
       const zip = zipFor(base);
       if (!zip) continue;
-      sets.push({ sourceFile: name, zipFile: String(zip.name), base, sourceKind: "pageNumbers", count: null });
+      sets.push({ sourceFile: name, zipFile: String(zip.name), base, sourceKind: "pageNumbers", count: null, archiveFileCount: Number(zip.filecount) || 0 });
       usedBases.add(base.toLowerCase());
     }
 
@@ -291,6 +299,13 @@
   async function countForScanSet(record, set) {
     if (Number.isFinite(set.count) && set.count > 0) return Math.min(set.count, MAX_PAGES);
     if (set.sourceKind === "item") return Math.min(Number(set.count) || 0, MAX_PAGES);
+    // Archive's page_numbers.json can describe only labelled leaves, while
+    // the JP2 ZIP filecount describes the actual image files. Prefer the
+    // latter so the generated reader paths cover the complete scan.
+    if (Number.isFinite(set.archiveFileCount) && set.archiveFileCount > 0) {
+      set.count = set.archiveFileCount;
+      return Math.min(set.count, MAX_PAGES);
+    }
     const identifier = String(firstValue(record && record.metadata && record.metadata.identifier) || "");
     if (!identifier || !set.sourceFile) return 0;
     if (set.sourceKind === "pageNumbers") {
@@ -369,7 +384,8 @@
   }
 
   function pageNumber(index, count) {
-    return String(index).padStart(Math.max(4, String(Math.max(0, count - 1)).length), "0");
+    const oneBasedIndex = Math.max(1, Number(index) + 1);
+    return String(oneBasedIndex).padStart(Math.max(4, String(Math.max(1, count)).length), "0");
   }
 
   function imageURL(record, identifier, set, index) {

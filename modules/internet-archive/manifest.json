@@ -24,7 +24,7 @@
   "contractVersion": 1,
   "entry": {
     "path": "modules/internet-archive/index.js",
-    "sha256": "0e64b244365b511f48603b46ff21d2d37c701c76d165e2c9498a804f8b272a5f"
+    "sha256": "09faf8cb97da482f404d0164ab28f619b5541ed0a2082e8f6efb442eb73b13be"
   },
   "familyID": "internet-archive",
   "icon": {
@@ -49,5 +49,5 @@
   "releaseTrack": "stable",
   "status": "active",
   "universalLink": "https://synthetiq.uk/manga/modules/internet-archive",
-  "version": "1.2.0"
+  "version": "1.2.1"
 }
