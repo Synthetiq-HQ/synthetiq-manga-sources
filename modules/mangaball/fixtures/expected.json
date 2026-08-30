@@ -1,0 +1,96 @@
+{
+  "search": {
+    "items": [
+      {
+        "id": "https://mangaball.net/title-detail/fixture-ball-aaaaaaaaaaaaaaaaaaaaaaaa/",
+        "href": "https://mangaball.net/title-detail/fixture-ball-aaaaaaaaaaaaaaaaaaaaaaaa/",
+        "url": "https://mangaball.net/title-detail/fixture-ball-aaaaaaaaaaaaaaaaaaaaaaaa/",
+        "title": "Fixture Ball",
+        "image": "https://bulbasaur.poke-black-and-white.net/covers/fixture-ball.webp",
+        "status": "Ongoing"
+      },
+      {
+        "id": "https://mangaball.net/title-detail/fixture-ball-es-bbbbbbbbbbbbbbbbbbbbbbbb/",
+        "href": "https://mangaball.net/title-detail/fixture-ball-es-bbbbbbbbbbbbbbbbbbbbbbbb/",
+        "url": "https://mangaball.net/title-detail/fixture-ball-es-bbbbbbbbbbbbbbbbbbbbbbbb/",
+        "title": "Fixture Ball: Español",
+        "image": "https://bulbasaur.poke-black-and-white.net/covers/fixture-ball-es.webp",
+        "status": "Completed"
+      }
+    ],
+    "hasMore": false
+  },
+  "details": {
+    "id": "https://mangaball.net/title-detail/fixture-ball-aaaaaaaaaaaaaaaaaaaaaaaa/",
+    "href": "https://mangaball.net/title-detail/fixture-ball-aaaaaaaaaaaaaaaaaaaaaaaa/",
+    "url": "https://mangaball.net/title-detail/fixture-ball-aaaaaaaaaaaaaaaaaaaaaaaa/",
+    "title": "Fixture Ball",
+    "description": "A synthetic fixture description.",
+    "image": "https://bulbasaur.poke-black-and-white.net/covers/fixture-ball.webp",
+    "authors": ["Sample Author"],
+    "author": "Sample Author",
+    "genres": ["Action", "Adventure"],
+    "status": "Ongoing",
+    "published": "2024"
+  },
+  "chapters": [
+    {
+      "id": "https://mangaball.net/chapter-detail/111111111111111111111111/",
+      "href": "https://mangaball.net/chapter-detail/111111111111111111111111/",
+      "url": "https://mangaball.net/chapter-detail/111111111111111111111111/",
+      "title": "Ch. 10 — English · Fixture Group",
+      "number": 10,
+      "releaseDate": "2026-08-30",
+      "language": "en"
+    },
+    {
+      "id": "https://mangaball.net/chapter-detail/222222222222222222222222/",
+      "href": "https://mangaball.net/chapter-detail/222222222222222222222222/",
+      "url": "https://mangaball.net/chapter-detail/222222222222222222222222/",
+      "title": "Ch. 10 — Spanish · Grupo Fixture",
+      "number": 10,
+      "releaseDate": "2026-08-29",
+      "language": "es"
+    },
+    {
+      "id": "https://mangaball.net/chapter-detail/333333333333333333333333/",
+      "href": "https://mangaball.net/chapter-detail/333333333333333333333333/",
+      "url": "https://mangaball.net/chapter-detail/333333333333333333333333/",
+      "title": "Ch. 9.5 — English · Fixture Group",
+      "number": 9.5,
+      "releaseDate": "2026-08-28",
+      "language": "en"
+    },
+    {
+      "id": "https://mangaball.net/chapter-detail/444444444444444444444444/",
+      "href": "https://mangaball.net/chapter-detail/444444444444444444444444/",
+      "url": "https://mangaball.net/chapter-detail/444444444444444444444444/",
+      "title": "Extra — English · Fixture Group",
+      "number": null,
+      "language": "en"
+    }
+  ],
+  "images": [
+    {
+      "url": "https://jigglypuff.poke-black-and-white.net/storage/fixture/001.webp",
+      "headers": {
+        "Accept": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8",
+        "Referer": "https://mangaball.net/"
+      }
+    },
+    {
+      "url": "https://chikorita.red-and-blue.net/storage/fixture/002.jpg",
+      "headers": {
+        "Accept": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8",
+        "Referer": "https://mangaball.net/"
+      }
+    },
+    {
+      "url": "https://dmd-image-content-sng-1.imggo.net/books/fixture/002.jpg",
+      "headers": {
+        "Accept": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8",
+        "Referer": "https://mangaball.net/"
+      }
+    }
+  ]
+}

@@ -1046,3 +1046,62 @@ test("YSK Comics parses JSON search, detail chapters, and CDN page images", asyn
   const pages = await module.extractImages(chapters[0].id);
   assert.deepEqual(JSON.parse(JSON.stringify(pages)), fixtures.expected.images);
 });
+
+test("MangaBall uses title-scoped CSRF APIs and preserves translated chapter images", async () => {
+  const fixtures = {
+    home: await text("modules/mangaball/fixtures/home.html"),
+    search: await text("modules/mangaball/fixtures/search.json"),
+    details: await text("modules/mangaball/fixtures/details.html"),
+    chapters: await text("modules/mangaball/fixtures/chapters.json"),
+    chapter: await text("modules/mangaball/fixtures/chapter.html"),
+    expected: await json("modules/mangaball/fixtures/expected.json"),
+  };
+  const calls = [];
+  const module = await loadModule("modules/mangaball/index.js", {
+    fetchv2: async (url, headers, method, body, options) => {
+      const parsed = new URL(url);
+      calls.push({ url, headers, method, body, options });
+      if (parsed.pathname === "/" && method === "GET") return response(fixtures.home);
+      if (parsed.pathname === "/api/v1/smart-search/search/" && method === "POST") {
+        assert.equal(headers["X-CSRF-TOKEN"], "fixture-csrf-token");
+        assert.match(body, /search_input=fixture/);
+        assert.equal(options.responseClass, "json");
+        return response(fixtures.search);
+      }
+      if (parsed.pathname === "/api/v1/chapter/chapter-listing-by-title-id/" && method === "POST") {
+        assert.equal(headers["X-CSRF-TOKEN"], "fixture-csrf-token");
+        assert.match(body, /title_id=aaaaaaaaaaaaaaaaaaaaaaaa/);
+        assert.match(body, /userSettingsEnabled=false/);
+        assert.equal(options.maxBytesHint, 16 * 1024 * 1024);
+        return response(fixtures.chapters);
+      }
+      if (parsed.pathname.startsWith("/title-detail/")) return response(fixtures.details);
+      if (parsed.pathname.startsWith("/chapter-detail/")) return response(fixtures.chapter);
+      throw new Error(`Unexpected MangaBall fixture URL: ${url}`);
+    },
+  });
+
+  const search = await module.searchResults("fixture", 1);
+  assert.deepEqual(JSON.parse(JSON.stringify(search)), fixtures.expected.search);
+  assert.deepEqual(
+    JSON.parse(JSON.stringify(await module.searchResults("fixture", 2))),
+    { items: [], hasMore: false },
+  );
+
+  const details = await module.extractDetails(search.items[0].id);
+  assert.deepEqual(JSON.parse(JSON.stringify(details)), fixtures.expected.details);
+
+  const chapters = await module.extractChapters(details.id);
+  assert.deepEqual(JSON.parse(JSON.stringify(chapters)), fixtures.expected.chapters);
+  assert.equal(chapters[2].number, 9.5, "decimal chapter number is preserved");
+  assert.equal(chapters.length, 4, "duplicate and malformed translations are removed");
+
+  const pages = await module.extractImages(chapters[0].id);
+  assert.deepEqual(JSON.parse(JSON.stringify(pages)), fixtures.expected.images);
+  assert.ok(pages.every((page) => /(?:poke-black-and-white|red-and-blue)\.net\/storage\/|dmd-image-content-sng-1\.imggo\.net\/books\//.test(page.url)));
+  assert.equal(calls.some((call) => call.url.includes("ads.example.invalid")), false);
+  await assert.rejects(
+    () => module.extractDetails("https://example.invalid/title-detail/not-a-source-aaaaaaaaaaaaaaaaaaaaaaaa/"),
+    /Invalid MangaBall title identifier/,
+  );
+});

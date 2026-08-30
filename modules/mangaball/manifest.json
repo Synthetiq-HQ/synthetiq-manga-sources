@@ -1,0 +1,52 @@
+{
+  "allowedHosts": [
+    "mangaball.net",
+    "*.poke-black-and-white.net",
+    "*.red-and-blue.net",
+    "dmd-image-content-sng-1.imggo.net"
+  ],
+  "attribution": {
+    "author": "Synthetiq-HQ",
+    "authorizationURL": null,
+    "licenseName": null,
+    "licenseURL": null,
+    "website": "https://mangaball.net"
+  },
+  "baseURL": "https://mangaball.net",
+  "capabilities": [
+    "search",
+    "details",
+    "chapters",
+    "images",
+    "imageRequest"
+  ],
+  "contentRating": "suggestive",
+  "contentType": "pageImages",
+  "contractVersion": 1,
+  "description": "MangaBall catalogue with multi-language chapter translations and direct reader page images.",
+  "entry": {
+    "path": "modules/mangaball/index.js",
+    "sha256": "b56a2079a20dbc03650718df5b679999e63b48b2bf9c1c67af131eabda001ba3"
+  },
+  "familyID": "mangaball",
+  "icon": {
+    "path": "modules/mangaball/icon.png",
+    "sha256": "eeeacb45c7710193a674ac462106550f6e1d27ddc7c7940e32952eebbabfb2fc"
+  },
+  "id": "mangaball",
+  "language": "multi",
+  "legacyIDs": [],
+  "limits": {
+    "cacheTTLSeconds": 300,
+    "maxConcurrentRequests": 2,
+    "maxResponseBytes": 16777216,
+    "maxScriptBytes": 262144,
+    "timeoutMilliseconds": 30000
+  },
+  "minimumAppVersion": "1.0.0",
+  "name": "MangaBall",
+  "releaseTrack": "beta",
+  "status": "active",
+  "universalLink": "https://synthetiq.uk/manga/modules/mangaball",
+  "version": "1.0.0"
+}

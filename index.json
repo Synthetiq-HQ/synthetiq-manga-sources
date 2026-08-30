@@ -522,6 +522,26 @@
     "path": "modules/onepiece-manga-online/icon.png",
     "sha256": "fc21cc099c09728c3cce848bb50b8e42ef3c2df4139a0e07a41c3a54e5b1aa65"
    }
+  },
+  {
+   "id": "mangaball",
+   "familyID": "mangaball",
+   "name": "MangaBall",
+   "version": "1.0.0",
+   "language": "multi",
+   "contentType": "pageImages",
+   "contentRating": "suggestive",
+   "releaseTrack": "beta",
+   "status": "active",
+   "sortPriority": 89,
+   "manifest": {
+    "path": "modules/mangaball/manifest.json",
+    "sha256": "acbffbb3373f22286e6e6304a8aa8eab04b8e2a3ec1c42a72cbfe2618b3721ef"
+   },
+   "icon": {
+    "path": "modules/mangaball/icon.png",
+    "sha256": "eeeacb45c7710193a674ac462106550f6e1d27ddc7c7940e32952eebbabfb2fc"
+   }
   }
  ],
  "repository": {

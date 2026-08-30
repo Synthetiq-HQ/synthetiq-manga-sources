@@ -1,6 +1,9 @@
 {
  "schemaVersion": 1,
  "modules": {
+  "mangaball": {
+   "chapterScope": "api"
+  },
   "atsu": {
    "chapterScope": "api"
   },

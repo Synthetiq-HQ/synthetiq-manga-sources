@@ -1,0 +1,68 @@
+{
+  "code": 200,
+  "message": "Success",
+  "ALL_CHAPTERS": [
+    {
+      "number": "Ch. 10",
+      "number_float": 10,
+      "translations": [
+        {
+          "id": "111111111111111111111111",
+          "name": "Ch. 10",
+          "language": "en",
+          "languageName": "English",
+          "group": { "_id": "fixture-group", "name": "Fixture Group" },
+          "date": "2026-08-30",
+          "url": "http://mangaball.net/chapter-detail/111111111111111111111111/"
+        },
+        {
+          "id": "222222222222222222222222",
+          "name": "Ch. 10",
+          "language": "es",
+          "languageName": "Spanish",
+          "group": { "_id": "grupo-fixture", "name": "Grupo Fixture" },
+          "date": "2026-08-29",
+          "url": "/chapter-detail/222222222222222222222222/"
+        }
+      ]
+    },
+    {
+      "number": "Ch. 9.5",
+      "number_float": 9.5,
+      "translations": [
+        {
+          "id": "333333333333333333333333",
+          "name": "Ch. 9.5",
+          "language": "en",
+          "languageName": "English",
+          "group": { "_id": "fixture-group", "name": "Fixture Group" },
+          "date": "2026-08-28",
+          "url": "/chapter-detail/333333333333333333333333/"
+        }
+      ]
+    },
+    {
+      "number": "Special",
+      "number_float": null,
+      "translations": [
+        {
+          "id": "444444444444444444444444",
+          "name": "Extra",
+          "language": "en",
+          "languageName": "English",
+          "group": { "_id": "fixture-group", "name": "Fixture Group" },
+          "url": "/chapter-detail/444444444444444444444444/"
+        },
+        {
+          "id": "111111111111111111111111",
+          "name": "Duplicate",
+          "language": "en",
+          "languageName": "English",
+          "group": { "_id": "fixture-group", "name": "Fixture Group" },
+          "url": "/chapter-detail/111111111111111111111111/"
+        },
+        {}
+      ]
+    }
+  ]
+}

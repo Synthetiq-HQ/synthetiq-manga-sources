@@ -1,0 +1,28 @@
+{
+  "code": 200,
+  "message": "Success",
+  "data": {
+    "manga": [
+      {
+        "img": "https://bulbasaur.poke-black-and-white.net/covers/fixture-ball.webp",
+        "title": "Fixture Ball",
+        "status": "<span> Ongoing </span>",
+        "url": "/title-detail/fixture-ball-aaaaaaaaaaaaaaaaaaaaaaaa/"
+      },
+      {
+        "img": "https://bulbasaur.poke-black-and-white.net/covers/fixture-ball-es.webp",
+        "title": "Fixture Ball: Español",
+        "status": "<span>Completed</span>",
+        "url": "http://mangaball.net/title-detail/fixture-ball-es-bbbbbbbbbbbbbbbbbbbbbbbb/"
+      },
+      {
+        "title": "Missing URL should be ignored",
+        "url": ""
+      },
+      {
+        "title": "Duplicate should be ignored",
+        "url": "/title-detail/fixture-ball-aaaaaaaaaaaaaaaaaaaaaaaa/"
+      }
+    ]
+  }
+}

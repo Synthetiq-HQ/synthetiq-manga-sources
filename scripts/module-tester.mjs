@@ -140,15 +140,45 @@ async function loadManifest(slug) {
   }
 }
 
+function createCookieJar(host) {
+  return { host: String(host || "").toLowerCase(), values: new Map() };
+}
+
+function updateCookieJar(response, requestURL, jar) {
+  if (!jar || !requestURL || requestURL.hostname.toLowerCase() !== jar.host) return;
+  const setCookies = typeof response.headers.getSetCookie === "function"
+    ? response.headers.getSetCookie()
+    : [];
+  for (const setCookie of setCookies) {
+    const pair = String(setCookie).split(";", 1)[0];
+    const separator = pair.indexOf("=");
+    if (separator <= 0) continue;
+    const name = pair.slice(0, separator).trim();
+    const value = pair.slice(separator + 1).trim();
+    if (!name) continue;
+    if (/max-age\s*=\s*0/i.test(setCookie)) jar.values.delete(name);
+    else jar.values.set(name, value);
+  }
+}
+
 async function networkResponse(url, headers = {}, method = "GET", body = null, options = {}) {
   const started = Date.now();
+  const requestURL = new URL(url);
+  const requestHeaders = new Headers(headers || {});
+  if (options.cookieJar && requestURL.hostname.toLowerCase() === options.cookieJar.host && !requestHeaders.has("Cookie")) {
+    const cookieHeader = [...options.cookieJar.values.entries()]
+      .map(([name, value]) => `${name}=${value}`)
+      .join("; ");
+    if (cookieHeader) requestHeaders.set("Cookie", cookieHeader);
+  }
   const response = await fetch(url, {
     method,
-    headers,
+    headers: requestHeaders,
     body,
     redirect: options.followRedirects === false ? "manual" : "follow",
     signal: AbortSignal.timeout(Math.max(10_000, Number(options.timeoutMilliseconds) || 25_000)),
   });
+  updateCookieJar(response, requestURL, options.cookieJar);
   const bytes = new Uint8Array(await response.arrayBuffer());
   const limit = Number(options.maxBytesHint) || 16 * 1024 * 1024;
   const dropped = bytes.length > limit;
@@ -316,6 +346,13 @@ if (slug === "novelfire") {
           if (/mangaworld\.mx\/?$/.test(u) && home) return fixtureResponse(home);
           if (details) return fixtureResponse(details);
         }
+        if (slug === "mangaball") {
+          if (/\/api\/v1\/smart-search\/search\//i.test(u) && search) return fixtureResponse(search);
+          if (/\/api\/v1\/chapter\/chapter-listing-by-title-id\//i.test(u) && chapterList) return fixtureResponse(chapterList);
+          if (/\/title-detail\//i.test(u) && details) return fixtureResponse(details);
+          if (/\/chapter-detail\//i.test(u) && chapter) return fixtureResponse(chapter);
+          if (home) return fixtureResponse(home);
+        }
         // WeebCentral uses /series/<id> for details and
         // /series/<id>/full-chapter-list for chapters. Resolve the more
         // specific chapter route first so the generic fixture runner exercises
@@ -370,10 +407,11 @@ if (slug === "novelfire") {
       },
     };
   } else {
+    const cookieJar = createCookieJar("mangaball.net");
     bridges = {
-      fetchv2: (url, headers, method, body, options) => {
+      fetchv2: (url, headers, method, body, options = {}) => {
         calls.push({ kind: "fetchv2", url: String(url) });
-        return networkResponse(url, headers, method, body, options);
+        return networkResponse(url, headers, method, body, { ...options, cookieJar });
       },
       pagev2: async (task) => {
         calls.push({ kind: "pagev2", url: String(task && task.url) });
