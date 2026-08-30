@@ -1,0 +1,82 @@
+{
+  "search": {
+    "items": [
+      {
+        "id": "https://w76.onepiece-manga-online.net/",
+        "href": "https://w76.onepiece-manga-online.net/",
+        "url": "https://w76.onepiece-manga-online.net/",
+        "title": "One Piece",
+        "image": "https://onepiece-manga-online.net/fixture/one-piece-cover.jpg",
+        "description": "Fixture listing for the One Piece source."
+      }
+    ],
+    "hasMore": false
+  },
+  "details": {
+    "id": "https://w76.onepiece-manga-online.net/",
+    "href": "https://w76.onepiece-manga-online.net/",
+    "url": "https://w76.onepiece-manga-online.net/",
+    "title": "One Piece",
+    "image": "https://onepiece-manga-online.net/fixture/one-piece-cover.jpg",
+    "description": "Fixture listing for the One Piece source.",
+    "status": "Ongoing",
+    "genres": ["Action", "Adventure", "Fantasy"]
+  },
+  "chapters": [
+    {
+      "id": "https://w76.onepiece-manga-online.net/manga/one-piece-chapter-1192/",
+      "href": "https://w76.onepiece-manga-online.net/manga/one-piece-chapter-1192/",
+      "url": "https://w76.onepiece-manga-online.net/manga/one-piece-chapter-1192/",
+      "title": "One Piece Chapter 1192",
+      "number": 1192,
+      "language": "en"
+    },
+    {
+      "id": "https://w76.onepiece-manga-online.net/manga/one-piece-chapter-1054.5/",
+      "href": "https://w76.onepiece-manga-online.net/manga/one-piece-chapter-1054.5/",
+      "url": "https://w76.onepiece-manga-online.net/manga/one-piece-chapter-1054.5/",
+      "title": "One Piece Chapter 1054.5",
+      "number": 1054.5,
+      "language": "en"
+    },
+    {
+      "id": "https://w76.onepiece-manga-online.net/manga/one-piece-chapter-1000/",
+      "href": "https://w76.onepiece-manga-online.net/manga/one-piece-chapter-1000/",
+      "url": "https://w76.onepiece-manga-online.net/manga/one-piece-chapter-1000/",
+      "title": "One Piece Chapter 1000",
+      "number": 1000,
+      "language": "en"
+    },
+    {
+      "id": "https://w76.onepiece-manga-online.net/manga/one-piece-chapter-1/",
+      "href": "https://w76.onepiece-manga-online.net/manga/one-piece-chapter-1/",
+      "url": "https://w76.onepiece-manga-online.net/manga/one-piece-chapter-1/",
+      "title": "One Piece Chapter 1",
+      "number": 1,
+      "language": "en"
+    }
+  ],
+  "images": [
+    {
+      "url": "https://cdn.mangagoa.xyz/fixture/one-piece-1000-001.jpg",
+      "headers": {
+        "Accept": "image/avif,image/webp,image/*,*/*",
+        "Referer": "https://w76.onepiece-manga-online.net/"
+      }
+    },
+    {
+      "url": "https://cdn.mangagoa.xyz/fixture/one-piece-1000-002.jpg",
+      "headers": {
+        "Accept": "image/avif,image/webp,image/*,*/*",
+        "Referer": "https://w76.onepiece-manga-online.net/"
+      }
+    },
+    {
+      "url": "https://cdn.mangagoa.xyz/fixture/one-piece-1000-003.jpg",
+      "headers": {
+        "Accept": "image/avif,image/webp,image/*,*/*",
+        "Referer": "https://w76.onepiece-manga-online.net/"
+      }
+    }
+  ]
+}

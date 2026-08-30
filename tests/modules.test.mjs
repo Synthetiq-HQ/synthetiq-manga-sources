@@ -528,7 +528,61 @@ const singleSeriesModules = [
   "solo-leveling",
   "gachiakuta",
   "haikyuu",
+  "onepiece-manga-online",
 ];
+
+test("One Piece preserves decimal chapters, excludes unrelated links, and rejects unavailable pages", async () => {
+  const fixtures = {
+    home: await text("modules/onepiece-manga-online/fixtures/home.html"),
+    chapter: await text("modules/onepiece-manga-online/fixtures/chapter.html"),
+    emptyChapter: await text("modules/onepiece-manga-online/fixtures/chapter-empty.html"),
+    challenge: await text("modules/onepiece-manga-online/fixtures/challenge.html"),
+    expected: await json("modules/onepiece-manga-online/fixtures/expected.json"),
+  };
+  const module = await loadModule("modules/onepiece-manga-online/index.js", {
+    fetchv2: async (url) => {
+      assert.equal(typeof url, "string");
+      if (/\/manga\//i.test(url)) return response(fixtures.chapter);
+      return response(fixtures.home);
+    },
+  });
+
+  assert.deepEqual(JSON.parse(JSON.stringify(await module.searchResults("one piece", 1))), fixtures.expected.search);
+  assert.deepEqual(JSON.parse(JSON.stringify(await module.extractDetails(fixtures.expected.details.id))), fixtures.expected.details);
+  const chapters = await module.extractChapters(fixtures.expected.details.id);
+  assert.deepEqual(JSON.parse(JSON.stringify(chapters)), fixtures.expected.chapters);
+  assert.equal(chapters.some((chapter) => chapter.number === 1054.5), true);
+  assert.equal(chapters.some((chapter) => chapter.number === 99), false);
+  assert.equal(chapters.filter((chapter) => chapter.number === 1000).length, 1);
+  assert.deepEqual(JSON.parse(JSON.stringify(await module.extractImages(chapters[2].id))), fixtures.expected.images);
+  assert.deepEqual(JSON.parse(JSON.stringify(await module.discoveryHome())), {
+    sections: [{ id: "latest", title: "Latest", items: fixtures.expected.search.items }],
+  });
+
+  const emptyChapterModule = await loadModule("modules/onepiece-manga-online/index.js", {
+    fetchv2: async (url) => response(/\/manga\//i.test(url) ? fixtures.emptyChapter : fixtures.home),
+  });
+  await assert.rejects(
+    () => emptyChapterModule.extractImages(fixtures.expected.chapters[0].id),
+    /chapter 1192 is not available yet/i,
+  );
+
+  const emptyHomeModule = await loadModule("modules/onepiece-manga-online/index.js", {
+    fetchv2: async () => response("<html><body></body></html>"),
+  });
+  await assert.rejects(
+    () => emptyHomeModule.extractChapters(fixtures.expected.details.id),
+    /returned no owned chapter links/i,
+  );
+
+  const challengeModule = await loadModule("modules/onepiece-manga-online/index.js", {
+    fetchv2: async () => response(fixtures.challenge),
+  });
+  await assert.rejects(
+    () => challengeModule.searchResults("one piece", 1),
+    /challenge or access-denied/i,
+  );
+});
 
 test("SNAFU Comics parses catalogue, archive pages, and comic images", async () => {
   const fixtures = {

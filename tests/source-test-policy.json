@@ -98,6 +98,9 @@
    "requiredCodeFragments": [
     "function fetchAllChapters(slug)"
    ]
+  },
+  "onepiece-manga-online": {
+   "chapterScope": "fixed-series-dom"
   }
  }
 }

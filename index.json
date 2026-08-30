@@ -464,6 +464,26 @@
     "path": "modules/yskcomics/icon.png",
     "sha256": "7138abc897b077a00df63066aa5ccd76593132b00b2ec6a8ababde982083a8c6"
    }
+  },
+  {
+   "id": "onepiece-manga-online",
+   "familyID": "onepiece-manga-online",
+   "name": "One Piece Manga Online",
+   "version": "1.0.0",
+   "language": "en",
+   "contentType": "pageImages",
+   "contentRating": "suggestive",
+   "releaseTrack": "beta",
+   "status": "active",
+   "sortPriority": 88,
+   "manifest": {
+    "path": "modules/onepiece-manga-online/manifest.json",
+    "sha256": "1843dc06972fcb9607d1c1d41be0707dd872e509116941f108cf5af982dbc315"
+   },
+   "icon": {
+    "path": "modules/onepiece-manga-online/icon.png",
+    "sha256": "fc21cc099c09728c3cce848bb50b8e42ef3c2df4139a0e07a41c3a54e5b1aa65"
+   }
   }
  ],
  "repository": {

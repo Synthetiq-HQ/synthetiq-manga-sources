@@ -1,0 +1,54 @@
+{
+  "allowedHosts": [
+    "w76.onepiece-manga-online.net",
+    "w64.onepiece-manga-online.net",
+    "onepiece-manga-online.net",
+    "cdn.mangagoa.xyz"
+  ],
+  "attribution": {
+    "author": "Synthetiq-HQ",
+    "authorizationURL": null,
+    "licenseName": null,
+    "licenseURL": null,
+    "website": "https://w76.onepiece-manga-online.net"
+  },
+  "baseURL": "https://w76.onepiece-manga-online.net",
+  "capabilities": [
+    "popular",
+    "latest",
+    "search",
+    "details",
+    "chapters",
+    "images",
+    "imageRequest",
+    "discovery"
+  ],
+  "contentRating": "suggestive",
+  "contentType": "pageImages",
+  "contractVersion": 1,
+  "entry": {
+    "path": "modules/onepiece-manga-online/index.js",
+    "sha256": "43c92c020f5403da1dd228b8254c7524e657ce8edc159f3795ace85fded18ec7"
+  },
+  "familyID": "onepiece-manga-online",
+  "icon": {
+    "path": "modules/onepiece-manga-online/icon.png",
+    "sha256": "fc21cc099c09728c3cce848bb50b8e42ef3c2df4139a0e07a41c3a54e5b1aa65"
+  },
+  "id": "onepiece-manga-online",
+  "language": "en",
+  "legacyIDs": [],
+  "limits": {
+    "cacheTTLSeconds": 900,
+    "maxConcurrentRequests": 2,
+    "maxResponseBytes": 8388608,
+    "maxScriptBytes": 262144,
+    "timeoutMilliseconds": 25000
+  },
+  "minimumAppVersion": "1.0.0",
+  "name": "One Piece Manga Online",
+  "releaseTrack": "beta",
+  "status": "active",
+  "universalLink": "https://synthetiq.uk/manga/modules/onepiece-manga-online",
+  "version": "1.0.0"
+}
