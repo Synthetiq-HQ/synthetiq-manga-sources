@@ -7,7 +7,10 @@
   const IMAGE_HOST_SUFFIXES = [".wowpic1.store", ".wowpic2.store"];
   const MAX_CHAPTER_PAGES = 64;
   const MAX_CHAPTERS = 20_000;
+  const BROWSE_PAGE_SIZE = 28;
   const MAX_ATTEMPTS = 2;
+  const CACHE_TTL_MILLISECONDS = 5 * 60 * 1000;
+  const MAX_CACHED_TITLES = 32;
   const DEFAULT_HEADERS = {
     Accept: "text/html,application/xhtml+xml",
     Referer: HOME_URL,
@@ -16,12 +19,46 @@
     Accept: "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8",
     Referer: HOME_URL,
   };
+  const detailsCache = new Map();
+  const detailsLoads = new Map();
+  const chaptersCache = new Map();
+  const chaptersLoads = new Map();
 
   function sleep(milliseconds) {
     return new Promise((resolve) => {
       if (typeof globalThis.setTimeout === "function") globalThis.setTimeout(resolve, milliseconds);
       else Promise.resolve().then(resolve);
     });
+  }
+
+  function cachedValue(cache, key) {
+    const entry = cache.get(key);
+    if (!entry) return null;
+    if (entry.expiresAt <= Date.now()) {
+      cache.delete(key);
+      return null;
+    }
+    return entry.value;
+  }
+
+  function remember(cache, key, value) {
+    cache.delete(key);
+    cache.set(key, { value, expiresAt: Date.now() + CACHE_TTL_MILLISECONDS });
+    while (cache.size > MAX_CACHED_TITLES) cache.delete(cache.keys().next().value);
+    return value;
+  }
+
+  function loadCached(cache, loads, key, loader) {
+    const cached = cachedValue(cache, key);
+    if (cached !== null) return Promise.resolve(cached);
+    const pending = loads.get(key);
+    if (pending) return pending;
+    const request = Promise.resolve()
+      .then(loader)
+      .then((value) => remember(cache, key, value))
+      .finally(() => loads.delete(key));
+    loads.set(key, request);
+    return request;
   }
 
   function nonEmpty(value) {
@@ -293,7 +330,7 @@
       headers: { ...DEFAULT_HEADERS, ...(options.headers || {}) },
       userAgent: null,
       timeoutMilliseconds: options.timeoutMilliseconds || 30_000,
-      settleMilliseconds: options.settleMilliseconds ?? 400,
+      settleMilliseconds: options.settleMilliseconds ?? 250,
       includeHTML: false,
       captureResponseBodies: false,
       maxEntries: 32,
@@ -309,7 +346,8 @@
     return parsePagev2Result(snapshot, options.label || "page");
   }
 
-  function searchReturnScript() {
+  function listingReturnScript(skip = 0) {
+    const offset = Math.max(0, Number(skip) || 0);
     return `(() => {
       const items = [];
       const seen = new Set();
@@ -336,8 +374,19 @@
         });
         seen.add(path);
       }
-      return JSON.stringify({ items, hasMore: false });
+      const nav = Array.from(document.querySelectorAll("nav"))
+        .find((candidate) => candidate.getAttribute("aria-label") === "Pagination");
+      const currentPage = Number(nav?.querySelector("[aria-current=\\"page\\"]")?.textContent?.trim() || 1);
+      const nextButton = nav?.querySelector("button[aria-label=\\"Next page\\"]");
+      const laterNumber = nav && Array.from(nav.querySelectorAll("button.npager__num"))
+        .some((button) => Number(button.textContent) > currentPage);
+      const hasMore = Boolean((nextButton && !nextButton.disabled) || laterNumber);
+      return JSON.stringify({ items: items.slice(${offset}), hasMore });
     })()`;
+  }
+
+  function searchReturnScript() {
+    return listingReturnScript(0);
   }
 
   function chapterActionScript(titlePrefix) {
@@ -394,16 +443,15 @@
           const seen = new Set();
           let pagesVisited = 0;
           let ready = false;
-          for (let attempt = 0; attempt < 80; attempt += 1) {
+          for (let attempt = 0; attempt < 120; attempt += 1) {
             if (readPage().length > 0) {
               ready = true;
               break;
             }
-            await delay(75);
+            await delay(50);
           }
           if (!ready) throw new Error("Comix title chapter list did not load.");
           for (let guard = 0; guard < ${MAX_CHAPTER_PAGES}; guard += 1) {
-            await delay(90);
             for (const entry of readPage()) {
               if (seen.has(entry.id)) continue;
               seen.add(entry.id);
@@ -420,13 +468,21 @@
                 .sort((left, right) => Number(left.textContent) - Number(right.textContent))[0] || null;
             }
             if (!next || next.disabled) break;
-            const before = currentPage() + "|" + (readPage()[0]?.id || "");
+            const beforePage = currentPage();
+            const beforeFirst = readPage()[0]?.id || "";
             next.click();
             let changed = false;
-            for (let attempt = 0; attempt < 60; attempt += 1) {
-              await delay(75);
-              const after = currentPage() + "|" + (readPage()[0]?.id || "");
-              if (after !== before && readPage().length > 0) { changed = true; break; }
+            for (let attempt = 0; attempt < 90; attempt += 1) {
+              await delay(50);
+              const afterPage = currentPage();
+              const afterEntries = readPage();
+              const afterFirst = afterEntries[0]?.id || "";
+              const firstChanged = afterFirst !== beforeFirst;
+              const pageChangedWithoutRows = !beforeFirst && afterPage !== beforePage;
+              if ((firstChanged || pageChangedWithoutRows) && afterEntries.length > 0) {
+                changed = true;
+                break;
+              }
             }
             if (!changed) throw new Error("Comix chapter pagination did not advance.");
           }
@@ -580,7 +636,7 @@
     return homeCache.body;
   }
 
-  function homeFeed(body, feed) {
+  function homeFeedResult(body, feed) {
     const data = initialData(body);
     const candidates = [];
     for (const [key, value] of Object.entries(data.queries || {})) {
@@ -592,10 +648,38 @@
         : (options.scope === "hot" || options.scope === "new" || options.order?.chapter_updated_at);
       if (!matches) continue;
       const items = normalizeSearchItems(itemArray(value));
-      if (items.length) candidates.push({ score: options.type === "trending" || options.scope === "hot" ? 0 : 1, items });
+      if (items.length) {
+        const meta = value && typeof value === "object" && !Array.isArray(value) ? value.meta : null;
+        const hasMore = Boolean(
+          meta && (meta.hasNext === true || meta.has_next === true)
+            || (feed === "popular" && items.length >= 50)
+            || (feed === "latest" && items.length >= 31),
+        );
+        candidates.push({
+          score: options.type === "trending" || options.scope === "hot" ? 0 : 1,
+          items,
+          hasMore,
+        });
+      }
     }
     candidates.sort((left, right) => left.score - right.score);
-    return candidates[0]?.items || [];
+    return candidates[0] || { items: [], hasMore: false };
+  }
+
+  function browseFeedURL(feed, page) {
+    const currentPage = Math.max(1, Number(page) || 1);
+    if (feed === "popular") return `${BASE_URL}/browse?sort=views_7d%3Adesc&page=${currentPage}`;
+    return `${BASE_URL}/browse?page=${currentPage}`;
+  }
+
+  async function browseFeedPage(feed, page, skip = 0) {
+    const payload = await pageJSON(browseFeedURL(feed, page), {
+      label: `${feed} discovery page`,
+      settleMilliseconds: 150,
+      returnScript: listingReturnScript(skip),
+    });
+    const items = normalizeSearchItems(payload.items);
+    return { items, hasMore: Boolean(payload.hasMore && items.length) };
   }
 
   async function searchResults(query, page = 1) {
@@ -618,27 +702,31 @@
 
   async function extractDetails(id) {
     const path = titlePath(id);
-    const body = await fetchHTML(`${BASE_URL}${path}`);
-    const data = initialData(body);
-    const item = queryData(data, ["manga", "detail", titleHID(id)]);
-    return detailsObject(item, path);
+    return loadCached(detailsCache, detailsLoads, path, async () => {
+      const body = await fetchHTML(`${BASE_URL}${path}`);
+      const data = initialData(body);
+      const item = queryData(data, ["manga", "detail", titleHID(id)]);
+      return detailsObject(item, path);
+    });
   }
 
   async function extractChapters(id) {
     const path = titlePath(id);
-    const payload = await pageJSON(`${BASE_URL}${path}`, {
-      label: "chapters",
-      actionScript: chapterActionScript(path),
-      returnScript: "globalThis.__synthetiqComixChapters || JSON.stringify({ ok: false, error: 'Comix chapter pagination did not finish.' })",
-      waitForSelector: "#synthetiq-comix-chapters-complete",
-      settleMilliseconds: 500,
+    return loadCached(chaptersCache, chaptersLoads, path, async () => {
+      const payload = await pageJSON(`${BASE_URL}${path}`, {
+        label: "chapters",
+        actionScript: chapterActionScript(path),
+        returnScript: "globalThis.__synthetiqComixChapters || JSON.stringify({ ok: false, error: 'Comix chapter pagination did not finish.' })",
+        waitForSelector: "#synthetiq-comix-chapters-complete",
+        settleMilliseconds: 150,
+      });
+      const chapters = normalizeChapters(payload.chapters || payload.items);
+      if (!chapters.length) throw new Error("Comix title returned no readable chapters.");
+      if (typeof globalThis.reportProgress === "function" && payload.pagesVisited) {
+        await globalThis.reportProgress({ stage: "chapters", completed: payload.pagesVisited, total: payload.pagesVisited });
+      }
+      return chapters;
     });
-    const chapters = normalizeChapters(payload.chapters || payload.items);
-    if (!chapters.length) throw new Error("Comix title returned no readable chapters.");
-    if (typeof globalThis.reportProgress === "function" && payload.pagesVisited) {
-      await globalThis.reportProgress({ stage: "chapters", completed: payload.pagesVisited, total: payload.pagesVisited });
-    }
-    return chapters;
   }
 
   async function extractImages(id) {
@@ -656,20 +744,26 @@
 
   async function discoveryHome() {
     const body = await loadHome();
+    const popular = homeFeedResult(body, "popular");
+    const latest = homeFeedResult(body, "latest");
     return {
       sections: [
-        { id: "popular", title: "Popular", items: homeFeed(body, "popular") },
-        { id: "latest", title: "Latest", items: homeFeed(body, "latest") },
+        { id: "popular", title: "Popular", items: popular.items },
+        { id: "latest", title: "Latest", items: latest.items },
       ],
     };
   }
 
   async function discoveryFeed(feedID, page = 1) {
     const currentPage = Math.max(1, Number(page) || 1);
-    if (currentPage > 1) return { items: [], hasMore: false };
     const body = await loadHome();
     const feed = /latest|new/i.test(String(feedID || "")) ? "latest" : "popular";
-    return { items: homeFeed(body, feed), hasMore: false };
+    const firstPage = homeFeedResult(body, feed);
+    if (currentPage === 1) return { items: firstPage.items, hasMore: firstPage.hasMore };
+    const skip = currentPage === 2
+      ? Math.max(0, firstPage.items.length - BROWSE_PAGE_SIZE)
+      : 0;
+    return browseFeedPage(feed, currentPage, skip);
   }
 
   const handlers = {

@@ -3,7 +3,7 @@
 **Product:** Synthetiq Books module repository  
 **Audit date:** 2026-08-31  
 **Current queue item:** Comix (`https://comix.to/`)  
-**Publication state:** Local only; not pushed or published
+**Publication state:** Public beta release; 1.0.4 performance and pagination update published
 
 ## Evidence labels
 
@@ -26,7 +26,7 @@ This is a triage log, not a claim that every reachable site is suitable for a mo
 | 4 | Kagane | BLOCKED | HTTP 403 Cloudflare challenge; no module started. |
 | 5 | AquaReader | BLOCKED | HTTP 403 challenge; no bypass attempted. |
 | 6 | Comick | BLOCKED | HTTP 403 challenge; no bypass attempted. |
-| 7 | Comix | LOCAL BUILD | Implemented and tested below; not published. |
+| 7 | Comix | PUBLISHED BETA | Implemented, tested, and published; current release is being verified. |
 | 8 | MangaDot | BLOCKED | HTTP 403 challenge; no bypass attempted. |
 | 9 | MangaBuddy | REACHABLE / UNASSESSED | HTTP 200; queued for a separate bounded evaluation. |
 | 10 | QToon | REACHABLE / UNASSESSED | HTTP 200; queued for a separate bounded evaluation. |
@@ -49,7 +49,7 @@ This is a triage log, not a claim that every reachable site is suitable for a mo
 ## Comix module
 
 **Module:** `comix`  
-**Version:** `1.0.0`  
+**Version:** `1.0.4`
 **Track:** beta  
 **Type:** `pageImages`  
 **Source:** `https://comix.to/`  
@@ -79,6 +79,8 @@ Checks were performed against the public site in a normal browser session and di
 - First, middle, and last sampled image requests returned 200 with `image/webp` and non-zero bodies: 427,632 bytes, 239,154 bytes, and 287,164 bytes.
 - Sampled first/last reader pages were visually readable; no cropping or tile-jumbling was observed in the checked pages.
 - Direct module parsing of the live home page and Chainsaw Man details returned 50 Popular items, 31 Latest items, the correct title, a 297-character synopsis, and genres.
+- The Good Student's title HTML returned in roughly 0.13–0.34 seconds; the module-generated chapter action collected 147 unique chapters across eight browser pages in roughly 1.9 seconds once the title page was available.
+- The live browse continuation returned 28 items on page 2 and exposed an active next page, so discovery feeds no longer stop after the first home batch.
 - After the timing fix, the actual module-generated reader action returned 116/116 image URLs for the `wowpic2.store` A Sibling's POV chapter.
 
 The first cross-title sweep exposed that the reader CDN rotates between `wowpic1.store` and `wowpic2.store`. The module was corrected to declare and recognize both observed families, and the same sweep was rerun:
@@ -103,6 +105,7 @@ Cross-title result: **5/5 passed**, 456/456 page resources observed. The sampled
 ## Files changed for this candidate
 
 - `modules/comix/manifest.json`
+- `modules/comix/manifest-1.0.4.json`
 - `modules/comix/index.js`
 - `modules/comix/icon.png`
 - `modules/comix/fixtures/`
@@ -111,4 +114,4 @@ Cross-title result: **5/5 passed**, 456/456 page resources observed. The sampled
 - `scripts/module-tester.mjs`
 - `tests/modules.test.mjs`
 
-The candidate remains local until the owner explicitly requests publication.
+The 1.0.4 beta is ready for public update testing. Runtime and iPad/device acceptance remain separate checks because this audit environment cannot execute the installed Books bridge.

@@ -1262,15 +1262,34 @@ test("Comix uses browser-owned pagination and lazy reader evidence", async () =>
     JSON.parse(JSON.stringify(await module.discoveryFeed("latest", 1))),
     { items: fixtures.expected.discovery.sections[1].items, hasMore: false },
   );
+  assert.deepEqual(
+    JSON.parse(JSON.stringify(await module.discoveryFeed("latest", 2))),
+    { items: fixtures.expected.search.items, hasMore: false },
+  );
+  assert.ok(calls.some((call) => call.kind === "pagev2" && call.task.url.endsWith("/browse?page=2")));
 
   const details = await module.extractDetails(fixtures.expected.details.id);
   assert.deepEqual(JSON.parse(JSON.stringify(details)), fixtures.expected.details);
+  const detailCallCount = calls.filter((call) => call.kind === "fetchv2" && call.url.includes("/title/fx123-fixture-alpha")).length;
+  assert.deepEqual(JSON.parse(JSON.stringify(await module.extractDetails(details.id))), fixtures.expected.details);
+  assert.equal(
+    calls.filter((call) => call.kind === "fetchv2" && call.url.includes("/title/fx123-fixture-alpha")).length,
+    detailCallCount,
+    "details are reused during the short cache window",
+  );
 
   const chapters = await module.extractChapters(details.id);
   assert.deepEqual(JSON.parse(JSON.stringify(chapters)), fixtures.expected.chapters);
   assert.equal(chapters.length, 3, "duplicate chapter releases are deduplicated by URL, not number");
   assert.equal(chapters[0].number, 12.5, "decimal chapter numbers remain sortable");
   assert.equal(progress[0].stage, "chapters");
+  const chapterCallCount = calls.filter((call) => call.kind === "pagev2" && call.task.waitForSelector === "#synthetiq-comix-chapters-complete").length;
+  assert.deepEqual(JSON.parse(JSON.stringify(await module.extractChapters(details.id))), fixtures.expected.chapters);
+  assert.equal(
+    calls.filter((call) => call.kind === "pagev2" && call.task.waitForSelector === "#synthetiq-comix-chapters-complete").length,
+    chapterCallCount,
+    "chapters are reused during the short cache window",
+  );
 
   const pages = await module.extractImages(chapters[0].id);
   assert.deepEqual(JSON.parse(JSON.stringify(pages)), fixtures.expected.images);
