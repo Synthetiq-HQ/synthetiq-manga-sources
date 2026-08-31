@@ -289,6 +289,9 @@ async function createRuntime(slug, mode) {
       imagesJSON: await fixture("images.json"),
       chapterJSON: await fixture("chapter.json"),
       discoveryJSON: await fixture("discovery.json"),
+      kingofshojoSearchPage2: await fixture("search-page-2.html"),
+      kingofshojoChallenge: await fixture("challenge.html"),
+      kingofshojoEmptyReader: await fixture("empty-reader.html"),
     };
 
     bridges = {
@@ -361,6 +364,31 @@ if (slug === "novelfire") {
           if (/\/title-detail\//i.test(u) && details) return fixtureResponse(details);
           if (/\/chapter-detail\//i.test(u) && chapter) return fixtureResponse(chapter);
           if (home) return fixtureResponse(home);
+        }
+        if (slug === "kingofshojo") {
+          if (/\/page\/\d+\/?\?s=/i.test(u) && special.kingofshojoSearchPage2) {
+            return fixtureResponse(special.kingofshojoSearchPage2, 200);
+          }
+          if (/\/?\?s=/i.test(u)) {
+            const parsed = new URL(u);
+            if (parsed.searchParams.get("s") === "challenge" && special.kingofshojoChallenge) {
+              return fixtureResponse(special.kingofshojoChallenge, 200);
+            }
+            if (search) return fixtureResponse(search, 200);
+          }
+          if (/\/empty-chapter-/i.test(u) && special.kingofshojoEmptyReader) {
+            return fixtureResponse(special.kingofshojoEmptyReader, 200);
+          }
+          if (/-chapter-[0-9]+(?:\.[0-9]+)?\/?$/i.test(u) && chapter) {
+            return fixtureResponse(chapter, 200);
+          }
+          if (/\/manga\/[^/]+\/?$/i.test(u) && details) {
+            return fixtureResponse(details, 200);
+          }
+          if (/kingofshojo\.com\/?$/i.test(u) && home) {
+            return fixtureResponse(home, 200);
+          }
+          if (home) return fixtureResponse(home, 200);
         }
         // WeebCentral uses /series/<id> for details and
         // /series/<id>/full-chapter-list for chapters. Resolve the more

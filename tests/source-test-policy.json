@@ -107,6 +107,14 @@
   },
   "onepiece-manga-online": {
    "chapterScope": "fixed-series-dom"
+  },
+  "kingofshojo": {
+   "chapterScope": "selected-series-dom",
+   "requiredCodeFragments": [
+    "function parseChapters(html, manga)",
+    "chapter.slug !== manga.slug",
+    "readerarea"
+   ]
   }
  }
 }
