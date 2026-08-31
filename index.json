@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-08-31T22:17:02Z",
+ "generatedAt": "2026-08-31T22:19:14Z",
  "modules": [
   {
    "contentRating": "suggestive",
@@ -528,7 +528,7 @@
    "id": "comix",
    "familyID": "comix",
    "name": "Comix",
-   "version": "1.0.2",
+   "version": "1.0.3",
    "language": "en",
    "contentType": "pageImages",
    "contentRating": "suggestive",
@@ -536,8 +536,8 @@
    "status": "active",
    "sortPriority": 90,
    "manifest": {
-    "path": "modules/comix/manifest.json",
-    "sha256": "007d894fcde69d95e16ca40ef57f38a3ab13631a05d3d4d29fe1501c4c22724d"
+    "path": "modules/comix/manifest-1.0.3.json",
+    "sha256": "ecb099476861d64daaff64b22bc011cef619bd6f1e1d9b61944e1049223ef99e"
    },
    "icon": {
     "path": "modules/comix/icon.png",

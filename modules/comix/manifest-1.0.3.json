@@ -1,0 +1,53 @@
+{
+  "allowedHosts": [
+    "comix.to",
+    "*.comix.to",
+    "jloo.wowpic1.store",
+    "*.wowpic1.store",
+    "*.wowpic2.store"
+  ],
+  "attribution": {
+    "author": "Synthetiq-HQ",
+    "website": "https://comix.to"
+  },
+  "baseURL": "https://comix.to",
+  "capabilities": [
+    "popular",
+    "latest",
+    "search",
+    "details",
+    "chapters",
+    "images",
+    "imageRequest",
+    "discovery",
+    "interactivePage"
+  ],
+  "contentRating": "suggestive",
+  "contentType": "pageImages",
+  "contractVersion": 1,
+  "entry": {
+    "path": "modules/comix/index.js",
+    "sha256": "7937c2796d680f38b299e7ac74b7c7cfe7de36a9b5d3ccf1740c8cf2ebf80cbd"
+  },
+  "familyID": "comix",
+  "icon": {
+    "path": "modules/comix/icon.png",
+    "sha256": "9d692cb5b15b7bc220a96bdb9a60ecb8bb33e3651e85b9c4754ce09fb443a002"
+  },
+  "id": "comix",
+  "language": "en",
+  "limits": {
+    "cacheTTLSeconds": 300,
+    "maxConcurrentRequests": 1,
+    "maxResponseBytes": 16777216,
+    "maxScriptBytes": 524288,
+    "timeoutMilliseconds": 30000
+  },
+  "minimumAppVersion": "1.0.0",
+  "name": "Comix",
+  "releaseTrack": "beta",
+  "status": "active",
+  "universalLink": "https://synthetiq.uk/manga/modules/comix",
+  "legacyIDs": [],
+  "version": "1.0.3"
+}
