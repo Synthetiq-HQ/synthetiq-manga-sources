@@ -374,6 +374,23 @@ if (slug === "novelfire") {
       },
       pagev2: async (task) => {
         calls.push({ kind: "pagev2", url: String(task.url) });
+        if (slug === "comix") {
+          const u = String(task.url);
+          let payload = null;
+          if (/\/browse\?/.test(u) && search) payload = search;
+          else if (/\/title\/fx123-fixture-alpha\/\d+-chapter-/i.test(u) && sourcePages) payload = sourcePages;
+          else if (/\/title\/fx123-fixture-alpha(?:\?|$)/i.test(u) && chapterList) payload = chapterList;
+          if (payload) {
+            return {
+              finalURL: u,
+              title: "",
+              html: null,
+              cookies: {},
+              events: [],
+              evaluatedData: typeof payload === "string" ? payload : JSON.stringify(payload),
+            };
+          }
+        }
         if (slug === "mangafire") {
           const u = String(task.url);
           let payload = null;

@@ -1,0 +1,119 @@
+{
+  "search": {
+    "items": [
+      {
+        "id": "https://comix.to/title/fx123-fixture-alpha",
+        "href": "https://comix.to/title/fx123-fixture-alpha",
+        "url": "https://comix.to/title/fx123-fixture-alpha",
+        "title": "Fixture Alpha",
+        "image": "https://static.comix.to/fixture/alpha.jpg",
+        "status": "Ongoing"
+      },
+      {
+        "id": "https://comix.to/title/fx456-fixture-beta",
+        "href": "https://comix.to/title/fx456-fixture-beta",
+        "url": "https://comix.to/title/fx456-fixture-beta",
+        "title": "Fixture Beta",
+        "image": "https://static.comix.to/fixture/beta.jpg",
+        "status": "Completed"
+      }
+    ],
+    "hasMore": false
+  },
+  "details": {
+    "id": "https://comix.to/title/fx123-fixture-alpha",
+    "href": "https://comix.to/title/fx123-fixture-alpha",
+    "url": "https://comix.to/title/fx123-fixture-alpha",
+    "title": "Fixture Alpha",
+    "image": "https://static.comix.to/fixture/alpha.jpg",
+    "status": "Ongoing",
+    "description": "Fixture description.\nA safe fixture.",
+    "author": "Fixture Author, Fixture Artist",
+    "authors": ["Fixture Author", "Fixture Artist"],
+    "genres": ["Action", "Shounen", "Award-Winning"]
+  },
+  "chapters": [
+    {
+      "id": "https://comix.to/title/fx123-fixture-alpha/7001-chapter-12-5",
+      "href": "https://comix.to/title/fx123-fixture-alpha/7001-chapter-12-5",
+      "url": "https://comix.to/title/fx123-fixture-alpha/7001-chapter-12-5",
+      "title": "Chapter 12.5: Interlude (Fixture Group)",
+      "number": 12.5,
+      "releaseDate": null,
+      "language": "en"
+    },
+    {
+      "id": "https://comix.to/title/fx123-fixture-alpha/7002-chapter-12",
+      "href": "https://comix.to/title/fx123-fixture-alpha/7002-chapter-12",
+      "url": "https://comix.to/title/fx123-fixture-alpha/7002-chapter-12",
+      "title": "Chapter 12 (Fixture Group)",
+      "number": 12,
+      "releaseDate": null,
+      "language": "en"
+    },
+    {
+      "id": "https://comix.to/title/fx123-fixture-alpha/7003-chapter-11",
+      "href": "https://comix.to/title/fx123-fixture-alpha/7003-chapter-11",
+      "url": "https://comix.to/title/fx123-fixture-alpha/7003-chapter-11",
+      "title": "Chapter 11: First Fixture",
+      "number": 11,
+      "releaseDate": null,
+      "language": "en"
+    }
+  ],
+  "images": [
+    {
+      "url": "https://jloo.wowpic1.store/i5/fixture-page-001.webp",
+      "headers": {
+        "Accept": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8",
+        "Referer": "https://comix.to/"
+      }
+    },
+    {
+      "url": "https://jloo.wowpic1.store/i5/fixture-page-002.webp",
+      "headers": {
+        "Accept": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8",
+        "Referer": "https://comix.to/"
+      }
+    },
+    {
+      "url": "https://80pd.wowpic2.store/i5/fixture-page-003.webp",
+      "headers": {
+        "Accept": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8",
+        "Referer": "https://comix.to/"
+      }
+    }
+  ],
+  "discovery": {
+    "sections": [
+      {
+        "id": "popular",
+        "title": "Popular",
+        "items": [
+          {
+            "id": "https://comix.to/title/fx123-fixture-alpha",
+            "href": "https://comix.to/title/fx123-fixture-alpha",
+            "url": "https://comix.to/title/fx123-fixture-alpha",
+            "title": "Fixture Alpha",
+            "image": "https://static.comix.to/fixture/alpha.jpg",
+            "status": "Ongoing"
+          }
+        ]
+      },
+      {
+        "id": "latest",
+        "title": "Latest",
+        "items": [
+          {
+            "id": "https://comix.to/title/fx456-fixture-beta",
+            "href": "https://comix.to/title/fx456-fixture-beta",
+            "url": "https://comix.to/title/fx456-fixture-beta",
+            "title": "Fixture Beta",
+            "image": "https://static.comix.to/fixture/beta.jpg",
+            "status": "Completed"
+          }
+        ]
+      }
+    ]
+  }
+}

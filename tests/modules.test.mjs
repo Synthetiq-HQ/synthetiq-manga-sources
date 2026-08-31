@@ -1205,3 +1205,85 @@ test("MangaBall removes decimal volume aliases and isolated numeric outliers", a
   assert.equal(chapters.some((chapter) => chapter.number === 99), false);
   assert.equal(chapters.some((chapter) => chapter.number === 0), false);
 });
+
+test("Comix uses browser-owned pagination and lazy reader evidence", async () => {
+  const fixtures = {
+    home: await text("modules/comix/fixtures/home.html"),
+    search: await json("modules/comix/fixtures/search.json"),
+    details: await text("modules/comix/fixtures/details.html"),
+    chapters: await json("modules/comix/fixtures/chapters.json"),
+    pages: await json("modules/comix/fixtures/pages.json"),
+    expected: await json("modules/comix/fixtures/expected.json"),
+  };
+  const calls = [];
+  const progress = [];
+  const module = await loadModule("modules/comix/index.js", {
+    fetchv2: async (url, headers, method, body, options) => {
+      assert.equal(method, "GET");
+      assert.equal(body, null);
+      assert.equal(headers.Referer, "https://comix.to/");
+      assert.equal(options.responseClass, "html");
+      calls.push({ kind: "fetchv2", url });
+      if (url === "https://comix.to/") return response(fixtures.home);
+      if (url.includes("/title/fx123-fixture-alpha")) return response(fixtures.details);
+      throw new Error(`Unexpected Comix fetch URL: ${url}`);
+    },
+    pagev2: async (task) => {
+      assert.equal(new URL(task.url).hostname, "comix.to");
+      assert.equal(task.captureResponseBodies, false);
+      calls.push({ kind: "pagev2", task });
+      if (task.url.includes("/browse?")) {
+        assert.match(task.returnScript, /lrow__title-link/);
+        return { evaluatedData: JSON.stringify(fixtures.search), events: [], cookies: {} };
+      }
+      if (/\/title\/fx123-fixture-alpha\/\d+-chapter-/i.test(task.url)) {
+        assert.match(task.actionScript, /synthetiq-comix-images-complete/);
+        return { evaluatedData: JSON.stringify(fixtures.pages), events: [], cookies: {} };
+      }
+      if (task.url.includes("/title/fx123-fixture-alpha")) {
+        assert.match(task.actionScript, /synthetiq-comix-chapters-complete/);
+        assert.match(task.actionScript, /button\[aria-label/);
+        return { evaluatedData: JSON.stringify(fixtures.chapters), events: [], cookies: {} };
+      }
+      throw new Error(`Unexpected Comix page URL: ${task.url}`);
+    },
+    reportProgress: async (payload) => {
+      progress.push(payload);
+      return { ok: true };
+    },
+  });
+
+  assert.deepEqual(JSON.parse(JSON.stringify(await module.searchResults("fixture", 1))), fixtures.expected.search);
+  assert.deepEqual(JSON.parse(JSON.stringify(await module.searchResults("fixture", 2))), { items: [], hasMore: false });
+
+  const discovery = await module.discoveryHome();
+  assert.deepEqual(JSON.parse(JSON.stringify(discovery)), fixtures.expected.discovery);
+  assert.deepEqual(
+    JSON.parse(JSON.stringify(await module.discoveryFeed("latest", 1))),
+    { items: fixtures.expected.discovery.sections[1].items, hasMore: false },
+  );
+
+  const details = await module.extractDetails(fixtures.expected.details.id);
+  assert.deepEqual(JSON.parse(JSON.stringify(details)), fixtures.expected.details);
+
+  const chapters = await module.extractChapters(details.id);
+  assert.deepEqual(JSON.parse(JSON.stringify(chapters)), fixtures.expected.chapters);
+  assert.equal(chapters.length, 3, "duplicate chapter releases are deduplicated by URL, not number");
+  assert.equal(chapters[0].number, 12.5, "decimal chapter numbers remain sortable");
+  assert.equal(progress[0].stage, "chapters");
+
+  const pages = await module.extractImages(chapters[0].id);
+  assert.deepEqual(JSON.parse(JSON.stringify(pages)), fixtures.expected.images);
+  assert.ok(pages.every((page) => {
+    const host = new URL(page.url).hostname;
+    return host.endsWith(".wowpic1.store") || host.endsWith(".wowpic2.store");
+  }));
+  const imageCall = calls.find((call) => call.kind === "pagev2" && call.task.waitForSelector === "#synthetiq-comix-images-complete");
+  assert.ok(imageCall);
+  assert.match(imageCall.task.actionScript, /wowpic1\.store/);
+  assert.match(imageCall.task.actionScript, /wowpic2\.store/);
+  await assert.rejects(
+    () => module.extractDetails("https://example.invalid/title/fx123-fixture-alpha"),
+    /Invalid Comix title identifier/,
+  );
+});

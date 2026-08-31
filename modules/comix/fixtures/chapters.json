@@ -1,0 +1,42 @@
+{
+  "ok": true,
+  "pagesVisited": 2,
+  "chapters": [
+    {
+      "id": "https://comix.to/title/fx123-fixture-alpha/7001-chapter-12-5",
+      "href": "https://comix.to/title/fx123-fixture-alpha/7001-chapter-12-5",
+      "url": "https://comix.to/title/fx123-fixture-alpha/7001-chapter-12-5",
+      "title": "Chapter 12.5: Interlude (Fixture Group)",
+      "number": 12.5,
+      "releaseDate": null,
+      "language": "en"
+    },
+    {
+      "id": "https://comix.to/title/fx123-fixture-alpha/7002-chapter-12",
+      "href": "https://comix.to/title/fx123-fixture-alpha/7002-chapter-12",
+      "url": "https://comix.to/title/fx123-fixture-alpha/7002-chapter-12",
+      "title": "Chapter 12 (Fixture Group)",
+      "number": 12,
+      "releaseDate": null,
+      "language": "en"
+    },
+    {
+      "id": "https://comix.to/title/fx123-fixture-alpha/7003-chapter-11",
+      "href": "https://comix.to/title/fx123-fixture-alpha/7003-chapter-11",
+      "url": "https://comix.to/title/fx123-fixture-alpha/7003-chapter-11",
+      "title": "Chapter 11: First Fixture",
+      "number": 11,
+      "releaseDate": null,
+      "language": "en"
+    },
+    {
+      "id": "https://comix.to/title/fx123-fixture-alpha/7003-chapter-11",
+      "href": "https://comix.to/title/fx123-fixture-alpha/7003-chapter-11",
+      "url": "https://comix.to/title/fx123-fixture-alpha/7003-chapter-11",
+      "title": "Duplicate Chapter",
+      "number": 11,
+      "releaseDate": null,
+      "language": "en"
+    }
+  ]
+}

@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-08-01T00:00:00Z",
+ "generatedAt": "2026-08-31T18:06:11Z",
  "modules": [
   {
    "contentRating": "suggestive",
@@ -522,6 +522,26 @@
    "icon": {
     "path": "modules/mangaball/icon.png",
     "sha256": "eeeacb45c7710193a674ac462106550f6e1d27ddc7c7940e32952eebbabfb2fc"
+   }
+  },
+  {
+   "id": "comix",
+   "familyID": "comix",
+   "name": "Comix",
+   "version": "1.0.0",
+   "language": "en",
+   "contentType": "pageImages",
+   "contentRating": "suggestive",
+   "releaseTrack": "beta",
+   "status": "active",
+   "sortPriority": 90,
+   "manifest": {
+    "path": "modules/comix/manifest.json",
+    "sha256": "cb0a25860647a7546dace3fd2cd606ae9db654a7b1ea370b373fdde3fcd70b5a"
+   },
+   "icon": {
+    "path": "modules/comix/icon.png",
+    "sha256": "9d692cb5b15b7bc220a96bdb9a60ecb8bb33e3651e85b9c4754ce09fb443a002"
    }
   }
  ],

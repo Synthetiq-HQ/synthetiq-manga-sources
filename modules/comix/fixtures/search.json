@@ -1,0 +1,21 @@
+{
+  "items": [
+    {
+      "id": "https://comix.to/title/fx123-fixture-alpha",
+      "href": "https://comix.to/title/fx123-fixture-alpha",
+      "url": "https://comix.to/title/fx123-fixture-alpha",
+      "title": "Fixture Alpha",
+      "image": "https://static.comix.to/fixture/alpha.jpg",
+      "status": "Ongoing"
+    },
+    {
+      "id": "https://comix.to/title/fx456-fixture-beta",
+      "href": "https://comix.to/title/fx456-fixture-beta",
+      "url": "https://comix.to/title/fx456-fixture-beta",
+      "title": "Fixture Beta",
+      "image": "https://static.comix.to/fixture/beta.jpg",
+      "status": "Completed"
+    }
+  ],
+  "hasMore": false
+}
