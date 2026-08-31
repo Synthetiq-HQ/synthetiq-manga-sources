@@ -1266,7 +1266,9 @@ test("Comix uses browser-owned pagination and lazy reader evidence", async () =>
     JSON.parse(JSON.stringify(await module.discoveryFeed("latest", 2))),
     { items: fixtures.expected.search.items, hasMore: false },
   );
-  assert.ok(calls.some((call) => call.kind === "pagev2" && call.task.url.endsWith("/browse?page=2")));
+  const discoveryPageCall = calls.find((call) => call.kind === "pagev2" && call.task.url.endsWith("/browse?page=2"));
+  assert.ok(discoveryPageCall);
+  assert.doesNotMatch(discoveryPageCall.task.returnScript, /slice\(/, "discovery pages are not arbitrarily trimmed");
 
   const details = await module.extractDetails(fixtures.expected.details.id);
   assert.deepEqual(JSON.parse(JSON.stringify(details)), fixtures.expected.details);
@@ -1290,6 +1292,11 @@ test("Comix uses browser-owned pagination and lazy reader evidence", async () =>
     chapterCallCount,
     "chapters are reused during the short cache window",
   );
+  const chapterCall = calls.find((call) => call.kind === "pagev2" && call.task.waitForSelector === "#synthetiq-comix-chapters-complete");
+  assert.match(chapterCall.task.actionScript, /iframe/);
+  assert.match(chapterCall.task.actionScript, /Promise\.all/);
+  assert.match(chapterCall.task.actionScript, /Last page/);
+  assert.match(chapterCall.task.actionScript, /marker\.hidden = false/);
 
   const pages = await module.extractImages(chapters[0].id);
   assert.deepEqual(JSON.parse(JSON.stringify(pages)), fixtures.expected.images);

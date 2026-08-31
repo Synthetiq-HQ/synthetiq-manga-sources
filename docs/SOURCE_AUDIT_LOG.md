@@ -3,7 +3,7 @@
 **Product:** Synthetiq Books module repository  
 **Audit date:** 2026-08-31  
 **Current queue item:** Comix (`https://comix.to/`)  
-**Publication state:** Public beta release; 1.0.4 performance and pagination update published
+**Publication state:** Public beta release; 1.0.5 performance and pagination update published
 
 ## Evidence labels
 
@@ -26,7 +26,7 @@ This is a triage log, not a claim that every reachable site is suitable for a mo
 | 4 | Kagane | BLOCKED | HTTP 403 Cloudflare challenge; no module started. |
 | 5 | AquaReader | BLOCKED | HTTP 403 challenge; no bypass attempted. |
 | 6 | Comick | BLOCKED | HTTP 403 challenge; no bypass attempted. |
-| 7 | Comix | PUBLISHED BETA | Implemented, tested, and published; current release is being verified. |
+| 7 | Comix | PUBLISHED BETA | Implemented, tested, and published; 1.0.5 performance update is being verified. |
 | 8 | MangaDot | BLOCKED | HTTP 403 challenge; no bypass attempted. |
 | 9 | MangaBuddy | REACHABLE / UNASSESSED | HTTP 200; queued for a separate bounded evaluation. |
 | 10 | QToon | REACHABLE / UNASSESSED | HTTP 200; queued for a separate bounded evaluation. |
@@ -49,7 +49,7 @@ This is a triage log, not a claim that every reachable site is suitable for a mo
 ## Comix module
 
 **Module:** `comix`  
-**Version:** `1.0.4`
+**Version:** `1.0.5`
 **Track:** beta  
 **Type:** `pageImages`  
 **Source:** `https://comix.to/`  
@@ -57,7 +57,7 @@ This is a triage log, not a claim that every reachable site is suitable for a mo
 
 The module uses direct server-rendered HTML for the home feed and title details. Search, chapter pagination, and reader-page discovery use the app's normal `pagev2` browser bridge so the source's own browser session owns its client-side state. The module does not call the source's protected API directly, extract its token, decrypt its responses, or bypass a challenge.
 
-The chapter parser is title-scoped, deduplicates by full chapter URL rather than chapter number, preserves decimal chapter numbers, and follows both the arrow and numbered pagination controls. The reader parser walks the source's lazy page containers and returns only the source's own loaded image resources. Page images are returned with the source-page `Referer` header.
+The chapter parser is title-scoped, deduplicates by full chapter URL rather than chapter number, preserves decimal chapter numbers, and follows both the arrow and numbered pagination controls. The 1.0.5 path uses the source's Last page control, then collects ordinary source title pages in bounded same-origin browser-frame batches, with sequential fallback if a frame cannot load. The reader parser walks the source's lazy page containers and returns only the source's own loaded image resources. Page images are returned with the source-page `Referer` header.
 
 ## Comix evidence
 
@@ -80,7 +80,9 @@ Checks were performed against the public site in a normal browser session and di
 - Sampled first/last reader pages were visually readable; no cropping or tile-jumbling was observed in the checked pages.
 - Direct module parsing of the live home page and Chainsaw Man details returned 50 Popular items, 31 Latest items, the correct title, a 297-character synopsis, and genres.
 - The Good Student's title HTML returned in roughly 0.13–0.34 seconds; the module-generated chapter action collected 147 unique chapters across eight browser pages in roughly 1.9 seconds once the title page was available.
-- The live browse continuation returned 28 items on page 2 and exposed an active next page, so discovery feeds no longer stop after the first home batch.
+- The 1.0.5 generated action returned 147 unique chapters across eight pages in roughly 1.7 seconds in a real browser, including the bounded frame collection and completion marker.
+- The live browse continuation returned a full 28-item page 2 and exposed an active next page, so discovery feeds no longer stop after the first home batch or return an artificially trimmed six-card page.
+- A real-browser reproduction of the same bounded frame strategy returned all 1,190 Chainsaw Man chapter links across 60 pages in roughly 8.1 seconds; this metadata check did not load reader images.
 - After the timing fix, the actual module-generated reader action returned 116/116 image URLs for the `wowpic2.store` A Sibling's POV chapter.
 
 The first cross-title sweep exposed that the reader CDN rotates between `wowpic1.store` and `wowpic2.store`. The module was corrected to declare and recognize both observed families, and the same sweep was rerun:
@@ -106,6 +108,7 @@ Cross-title result: **5/5 passed**, 456/456 page resources observed. The sampled
 
 - `modules/comix/manifest.json`
 - `modules/comix/manifest-1.0.4.json`
+- `modules/comix/manifest-1.0.5.json`
 - `modules/comix/index.js`
 - `modules/comix/icon.png`
 - `modules/comix/fixtures/`
@@ -114,4 +117,4 @@ Cross-title result: **5/5 passed**, 456/456 page resources observed. The sampled
 - `scripts/module-tester.mjs`
 - `tests/modules.test.mjs`
 
-The 1.0.4 beta is ready for public update testing. Runtime and iPad/device acceptance remain separate checks because this audit environment cannot execute the installed Books bridge.
+The 1.0.5 beta is ready for public update testing. Runtime and iPad/device acceptance remain separate checks because this audit environment cannot execute the installed Books bridge.

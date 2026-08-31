@@ -7,10 +7,10 @@
   const IMAGE_HOST_SUFFIXES = [".wowpic1.store", ".wowpic2.store"];
   const MAX_CHAPTER_PAGES = 64;
   const MAX_CHAPTERS = 20_000;
-  const BROWSE_PAGE_SIZE = 28;
+  const CHAPTER_FRAME_CONCURRENCY = 4;
   const MAX_ATTEMPTS = 2;
   const CACHE_TTL_MILLISECONDS = 5 * 60 * 1000;
-  const MAX_CACHED_TITLES = 32;
+  const MAX_CACHE_ENTRIES = 32;
   const DEFAULT_HEADERS = {
     Accept: "text/html,application/xhtml+xml",
     Referer: HOME_URL,
@@ -23,6 +23,8 @@
   const detailsLoads = new Map();
   const chaptersCache = new Map();
   const chaptersLoads = new Map();
+  const discoveryCache = new Map();
+  const discoveryLoads = new Map();
 
   function sleep(milliseconds) {
     return new Promise((resolve) => {
@@ -44,7 +46,7 @@
   function remember(cache, key, value) {
     cache.delete(key);
     cache.set(key, { value, expiresAt: Date.now() + CACHE_TTL_MILLISECONDS });
-    while (cache.size > MAX_CACHED_TITLES) cache.delete(cache.keys().next().value);
+    while (cache.size > MAX_CACHE_ENTRIES) cache.delete(cache.keys().next().value);
     return value;
   }
 
@@ -346,8 +348,7 @@
     return parsePagev2Result(snapshot, options.label || "page");
   }
 
-  function listingReturnScript(skip = 0) {
-    const offset = Math.max(0, Number(skip) || 0);
+  function listingReturnScript() {
     return `(() => {
       const items = [];
       const seen = new Set();
@@ -381,12 +382,12 @@
       const laterNumber = nav && Array.from(nav.querySelectorAll("button.npager__num"))
         .some((button) => Number(button.textContent) > currentPage);
       const hasMore = Boolean((nextButton && !nextButton.disabled) || laterNumber);
-      return JSON.stringify({ items: items.slice(${offset}), hasMore });
+      return JSON.stringify({ items, hasMore });
     })()`;
   }
 
   function searchReturnScript() {
-    return listingReturnScript(0);
+    return listingReturnScript();
   }
 
   function chapterActionScript(titlePrefix) {
@@ -400,15 +401,18 @@
         let marker = document.getElementById(markerID);
         if (!marker) {
           marker = document.createElement("div");
-          marker.id = markerID;
-          marker.hidden = true;
-          document.body.appendChild(marker);
         }
+        marker.id = markerID;
+        marker.hidden = false;
+        marker.textContent = "ready";
+        marker.setAttribute("aria-hidden", "true");
+        marker.style.cssText = "position:fixed;left:-10000px;top:-10000px;width:1px;height:1px;opacity:0;pointer-events:none;overflow:hidden";
+        if (!marker.parentNode && document.body) document.body.appendChild(marker);
       };
-      const currentPage = () => document.querySelector("nav[aria-label=\\"Pagination\\"] [aria-current=\\"page\\"]")?.textContent?.trim() || "";
-      const readPage = () => {
+      const currentPage = (root = document) => root.querySelector("nav[aria-label=\\"Pagination\\"] [aria-current=\\"page\\"]")?.textContent?.trim() || "";
+      const readPage = (root = document) => {
         const entries = [];
-        for (const link of Array.from(document.querySelectorAll("a[href]"))) {
+        for (const link of Array.from(root.querySelectorAll("a[href]"))) {
           const raw = link.getAttribute("href") || "";
           let url;
           try { url = new URL(raw, location.origin); } catch (_) { continue; }
@@ -437,64 +441,142 @@
         }
         return entries;
       };
+      const waitForRows = async (root, label) => {
+        for (let attempt = 0; attempt < 240; attempt += 1) {
+          let documentRoot = root;
+          try {
+            if (root && root.contentDocument) documentRoot = root.contentDocument;
+          } catch (_) {}
+          const entries = documentRoot ? readPage(documentRoot) : [];
+          if (entries.length) return entries;
+          await delay(25);
+        }
+        throw new Error("Comix " + label + " chapter page did not load.");
+      };
+      const waitForPageChange = async (beforePage, beforeFirst, label) => {
+        for (let attempt = 0; attempt < 240; attempt += 1) {
+          const entries = readPage();
+          const pageChanged = currentPage() !== beforePage;
+          const firstChanged = entries[0]?.id !== beforeFirst;
+          if (entries.length > 0 && pageChanged && firstChanged) return entries;
+          await delay(25);
+        }
+        throw new Error("Comix " + label + " pagination did not advance.");
+      };
+      const nextButton = () => {
+        const nav = document.querySelector("nav[aria-label=\\"Pagination\\"]");
+        let next = nav?.querySelector("button[aria-label=\\"Next page\\"]");
+        if (!next && nav) {
+          const page = Number(currentPage());
+          next = Array.from(nav.querySelectorAll("button.npager__num"))
+            .filter((button) => Number(button.textContent) > page)
+            .sort((left, right) => Number(left.textContent) - Number(right.textContent))[0] || null;
+        }
+        return next;
+      };
+      const collectSequential = async (initialEntries) => {
+        const pageEntries = new Map([[1, initialEntries]]);
+        let pagesVisited = 1;
+        for (let guard = 1; guard < ${MAX_CHAPTER_PAGES}; guard += 1) {
+          const next = nextButton();
+          if (!next || next.disabled) break;
+          const beforePage = currentPage();
+          const beforeFirst = readPage()[0]?.id || "";
+          next.click();
+          const entries = await waitForPageChange(beforePage, beforeFirst, "chapter");
+          const page = Number(currentPage()) || pagesVisited + 1;
+          pageEntries.set(page, entries);
+          pagesVisited += 1;
+        }
+        const finalNav = document.querySelector("nav[aria-label=\\"Pagination\\"]");
+        const finalPage = Number(currentPage()) || pagesVisited;
+        const finalArrow = finalNav?.querySelector("button[aria-label=\\"Next page\\"]");
+        const finalNumber = finalNav && Array.from(finalNav.querySelectorAll("button.npager__num"))
+          .some((button) => Number(button.textContent) > finalPage);
+        if ((finalArrow && !finalArrow.disabled) || finalNumber) {
+          throw new Error("Comix chapter list exceeded its page safety limit.");
+        }
+        return { pageEntries, pagesVisited };
+      };
+      const collectParallel = async (initialEntries) => {
+        const last = document.querySelector("nav[aria-label=\\"Pagination\\"] button[aria-label=\\"Last page\\"]");
+        if (!last || last.disabled) return collectSequential(initialEntries);
+        const beforePage = currentPage();
+        const beforeFirst = initialEntries[0]?.id || "";
+        last.click();
+        let lastEntries;
+        try {
+          lastEntries = await waitForPageChange(beforePage, beforeFirst, "last-page");
+        } catch (error) {
+          const first = document.querySelector("nav[aria-label=\\"Pagination\\"] button[aria-label=\\"First page\\"]");
+          if (!first || first.disabled) throw error;
+          const resetBeforePage = currentPage();
+          const resetBeforeFirst = readPage()[0]?.id || "";
+          first.click();
+          const resetEntries = await waitForPageChange(resetBeforePage, resetBeforeFirst, "first-page");
+          return collectSequential(resetEntries);
+        }
+        const lastPage = Number(currentPage());
+        if (!Number.isInteger(lastPage) || lastPage < 1 || lastPage > ${MAX_CHAPTER_PAGES}) {
+          throw new Error("Comix chapter list exceeded its page safety limit.");
+        }
+        const pageEntries = new Map([[1, initialEntries], [lastPage, lastEntries]]);
+        const pageNumbers = [];
+        for (let page = 2; page < lastPage; page += 1) pageNumbers.push(page);
+        const collectFrame = async (page) => {
+          const frame = document.createElement("iframe");
+          const frameURL = new URL(location.href);
+          frameURL.searchParams.set("page", String(page));
+          frameURL.hash = "";
+          frame.src = frameURL.href;
+          frame.loading = "eager";
+          frame.tabIndex = -1;
+          frame.setAttribute("aria-hidden", "true");
+          frame.style.cssText = "position:fixed;left:-10000px;top:-10000px;width:1px;height:1px;border:0;opacity:0;pointer-events:none";
+          document.body.appendChild(frame);
+          try {
+            return { page, entries: await waitForRows(frame, "iframe page " + page) };
+          } catch (error) {
+            return { page, error };
+          } finally {
+            frame.remove();
+          }
+        };
+        for (let offset = 0; offset < pageNumbers.length; offset += ${CHAPTER_FRAME_CONCURRENCY}) {
+          const batch = await Promise.all(pageNumbers.slice(offset, offset + ${CHAPTER_FRAME_CONCURRENCY}).map(collectFrame));
+          const failed = batch.find((result) => result.error);
+          if (failed) {
+            const first = document.querySelector("nav[aria-label=\\"Pagination\\"] button[aria-label=\\"First page\\"]");
+            if (!first || first.disabled) throw failed.error;
+            const resetBeforePage = currentPage();
+            const resetBeforeFirst = readPage()[0]?.id || "";
+            first.click();
+            const resetEntries = await waitForPageChange(resetBeforePage, resetBeforeFirst, "first-page");
+            return collectSequential(resetEntries);
+          }
+          for (const result of batch) pageEntries.set(result.page, result.entries);
+        }
+        for (let page = 1; page <= lastPage; page += 1) {
+          if (!pageEntries.has(page)) throw new Error("Comix chapter pagination returned an incomplete page set.");
+        }
+        return { pageEntries, pagesVisited: lastPage };
+      };
       void (async () => {
         try {
+          const initialEntries = await waitForRows(document, "title");
+          const collected = await collectParallel(initialEntries);
           const chapters = [];
           const seen = new Set();
-          let pagesVisited = 0;
-          let ready = false;
-          for (let attempt = 0; attempt < 120; attempt += 1) {
-            if (readPage().length > 0) {
-              ready = true;
-              break;
-            }
-            await delay(50);
-          }
-          if (!ready) throw new Error("Comix title chapter list did not load.");
-          for (let guard = 0; guard < ${MAX_CHAPTER_PAGES}; guard += 1) {
-            for (const entry of readPage()) {
+          for (let page = 1; page <= collected.pagesVisited; page += 1) {
+            for (const entry of collected.pageEntries.get(page) || []) {
               if (seen.has(entry.id)) continue;
               seen.add(entry.id);
               chapters.push(entry);
               if (chapters.length > ${MAX_CHAPTERS}) throw new Error("Comix chapter list exceeds its safety limit.");
             }
-            pagesVisited += 1;
-            const nav = document.querySelector("nav[aria-label=\\"Pagination\\"]");
-            let next = nav?.querySelector("button[aria-label=\\"Next page\\"]");
-            if (!next && nav) {
-              const page = Number(currentPage());
-              next = Array.from(nav.querySelectorAll("button.npager__num"))
-                .filter((button) => Number(button.textContent) > page)
-                .sort((left, right) => Number(left.textContent) - Number(right.textContent))[0] || null;
-            }
-            if (!next || next.disabled) break;
-            const beforePage = currentPage();
-            const beforeFirst = readPage()[0]?.id || "";
-            next.click();
-            let changed = false;
-            for (let attempt = 0; attempt < 90; attempt += 1) {
-              await delay(50);
-              const afterPage = currentPage();
-              const afterEntries = readPage();
-              const afterFirst = afterEntries[0]?.id || "";
-              const firstChanged = afterFirst !== beforeFirst;
-              const pageChangedWithoutRows = !beforeFirst && afterPage !== beforePage;
-              if ((firstChanged || pageChangedWithoutRows) && afterEntries.length > 0) {
-                changed = true;
-                break;
-              }
-            }
-            if (!changed) throw new Error("Comix chapter pagination did not advance.");
           }
-          const finalNav = document.querySelector("nav[aria-label=\\"Pagination\\"]");
-          const finalPage = Number(currentPage());
-          const finalArrow = finalNav?.querySelector("button[aria-label=\\"Next page\\"]");
-          const finalNumber = finalNav && Array.from(finalNav.querySelectorAll("button.npager__num"))
-            .some((button) => Number(button.textContent) > finalPage);
-          const hasNext = Boolean((finalArrow && !finalArrow.disabled) || finalNumber);
-          if (hasNext) throw new Error("Comix chapter list exceeded its page safety limit.");
           if (!chapters.length) throw new Error("Comix title returned no chapters.");
-          globalThis[resultKey] = JSON.stringify({ ok: true, chapters, pagesVisited });
+          globalThis[resultKey] = JSON.stringify({ ok: true, chapters, pagesVisited: collected.pagesVisited });
         } catch (error) {
           globalThis[resultKey] = JSON.stringify({ ok: false, error: String(error && error.message ? error.message : error) });
         } finally {
@@ -672,14 +754,18 @@
     return `${BASE_URL}/browse?page=${currentPage}`;
   }
 
-  async function browseFeedPage(feed, page, skip = 0) {
-    const payload = await pageJSON(browseFeedURL(feed, page), {
-      label: `${feed} discovery page`,
-      settleMilliseconds: 150,
-      returnScript: listingReturnScript(skip),
+  async function browseFeedPage(feed, page) {
+    const currentPage = Math.max(1, Number(page) || 1);
+    const key = `${feed}:${currentPage}`;
+    return loadCached(discoveryCache, discoveryLoads, key, async () => {
+      const payload = await pageJSON(browseFeedURL(feed, currentPage), {
+        label: `${feed} discovery page`,
+        settleMilliseconds: 150,
+        returnScript: listingReturnScript(),
+      });
+      const items = normalizeSearchItems(payload.items);
+      return { items, hasMore: Boolean(payload.hasMore && items.length) };
     });
-    const items = normalizeSearchItems(payload.items);
-    return { items, hasMore: Boolean(payload.hasMore && items.length) };
   }
 
   async function searchResults(query, page = 1) {
@@ -718,7 +804,7 @@
         actionScript: chapterActionScript(path),
         returnScript: "globalThis.__synthetiqComixChapters || JSON.stringify({ ok: false, error: 'Comix chapter pagination did not finish.' })",
         waitForSelector: "#synthetiq-comix-chapters-complete",
-        settleMilliseconds: 150,
+        settleMilliseconds: 50,
       });
       const chapters = normalizeChapters(payload.chapters || payload.items);
       if (!chapters.length) throw new Error("Comix title returned no readable chapters.");
@@ -756,14 +842,11 @@
 
   async function discoveryFeed(feedID, page = 1) {
     const currentPage = Math.max(1, Number(page) || 1);
-    const body = await loadHome();
     const feed = /latest|new/i.test(String(feedID || "")) ? "latest" : "popular";
+    if (currentPage > 1) return browseFeedPage(feed, currentPage);
+    const body = await loadHome();
     const firstPage = homeFeedResult(body, feed);
-    if (currentPage === 1) return { items: firstPage.items, hasMore: firstPage.hasMore };
-    const skip = currentPage === 2
-      ? Math.max(0, firstPage.items.length - BROWSE_PAGE_SIZE)
-      : 0;
-    return browseFeedPage(feed, currentPage, skip);
+    return { items: firstPage.items, hasMore: firstPage.hasMore };
   }
 
   const handlers = {
