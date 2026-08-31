@@ -523,26 +523,6 @@
     "path": "modules/mangaball/icon.png",
     "sha256": "eeeacb45c7710193a674ac462106550f6e1d27ddc7c7940e32952eebbabfb2fc"
    }
-  },
-  {
-   "id": "kingofshojo",
-   "familyID": "kingofshojo",
-   "name": "KingOfShojo",
-   "version": "1.0.0",
-   "language": "en",
-   "contentType": "pageImages",
-   "contentRating": "suggestive",
-   "releaseTrack": "beta",
-   "status": "active",
-   "sortPriority": 94,
-   "manifest": {
-    "path": "modules/kingofshojo/manifest.json",
-    "sha256": "4c09b3d43d82c2838f8051db4062e40e1e7c8f2b84f4eeb7d9cf448332a6a5c8"
-   },
-   "icon": {
-    "path": "modules/kingofshojo/icon.png",
-    "sha256": "b7daf1a9b56a212a81574927810f6b8b4976cf9b562154fb8773b1ddae5e9527"
-   }
   }
  ],
  "repository": {
