@@ -537,7 +537,7 @@
    "sortPriority": 90,
    "manifest": {
     "path": "modules/comix/manifest.json",
-    "sha256": "cb0a25860647a7546dace3fd2cd606ae9db654a7b1ea370b373fdde3fcd70b5a"
+    "sha256": "cfe881a3607e2ff4531f5ea492ee69a87d4c87cc6eae4bf92958c5aeae2304df"
    },
    "icon": {
     "path": "modules/comix/icon.png",
