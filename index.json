@@ -528,7 +528,7 @@
    "id": "comix",
    "familyID": "comix",
    "name": "Comix",
-   "version": "1.0.0",
+   "version": "1.0.1",
    "language": "en",
    "contentType": "pageImages",
    "contentRating": "suggestive",
@@ -537,7 +537,7 @@
    "sortPriority": 90,
    "manifest": {
     "path": "modules/comix/manifest.json",
-    "sha256": "cfe881a3607e2ff4531f5ea492ee69a87d4c87cc6eae4bf92958c5aeae2304df"
+    "sha256": "c040997a60e273e2626cf4fec13410bc1a91cda0ede4b5aa49efc955c3f2975d"
    },
    "icon": {
     "path": "modules/comix/icon.png",
