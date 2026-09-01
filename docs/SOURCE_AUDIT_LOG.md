@@ -2,8 +2,8 @@
 
 **Product:** Synthetiq Books module repository  
 **Audit date:** 2026-09-01
-**Current queue item:** Batcave (`https://batcave.biz/`, priority #1; blocked by ordinary-access challenge)
-**Queue override:** The owner moved Batcave from its original TBCPL position to priority #1; the original source position remains noted below for traceability.
+**Current queue item:** AllManga (`https://allmanga.to/`, pending API/interactive audit)
+**Queue override:** The owner temporarily moved Batcave to priority #1; it was deferred after ordinary HTTP returned a Cloudflare challenge and the browser session had no member access.
 **Publication state:** Comix and MangaBuddy removed from the active catalogue; their files/history are retained for recovery
 
 ## Evidence labels
@@ -37,7 +37,7 @@ This is a triage log, not a claim that every reachable site is suitable for a mo
 | 14 | AllManga | REACHABLE / CURRENT | HTTP 200 shell; pending API/interactive audit before any module work. |
 | 15 | MangaKakalot | REACHABLE / UNASSESSED | HTTP 200; queued for a separate bounded evaluation. |
 | 16 | Asura | REACHABLE / UNASSESSED | HTTP 200; queued for a separate bounded evaluation. |
-| 17 | Batcave | BLOCKED / PRIORITY #1 | Owner moved this source to the front of the queue; HTTPS, `www`, and HTTP all returned HTTP 403 with `Cf-Mitigated: challenge`. No module was started and no bypass was attempted. |
+| 17 | Batcave | BLOCKED / DEFERRED | Owner moved this source to priority #1, but HTTPS, `www`, and HTTP returned HTTP 403 with `Cf-Mitigated: challenge`; the browser also showed members-only access without an existing login. No module was started and no bypass was attempted. |
 | 18 | ReadComicsOnline | BLOCKED | HTTP 403 challenge; no bypass attempted. |
 | 19 | MangaHub | BLOCKED | HTTP 403 challenge; no bypass attempted. |
 | 20 | WeebCentral | EXISTING | Existing module; no duplicate created. |

@@ -1,12 +1,12 @@
 # Project Goal and Scope
 
 _Last updated: 2026-09-01_  
-_Status: MangaBuddy retired; Batcave is priority #1 but blocked by ordinary-access protection_
+_Status: MangaBuddy retired; Batcave deferred, AllManga is the current candidate_
 _Implementation confidence: 92%_
 
 ## 1. Current Goal Summary
 
-Evaluate Batcave first for a reliable, policy-appropriate Synthetiq Books module, subject to ordinary public access.
+Evaluate AllManga for a reliable, policy-appropriate Synthetiq Books module after Batcave was deferred for blocked access.
 
 ## 2. Primary Users
 
@@ -16,18 +16,19 @@ Evaluate Batcave first for a reliable, policy-appropriate Synthetiq Books module
 
 - The previous MangaBuddy/Comizy source was too adult/suggestive for the app and has been removed from the active catalogue.
 - QToon and Specter Scans were evaluated and skipped because their live catalogues expose adult-marked content without a reliable safe exclusion path.
-- Batcave was rechecked through ordinary public access and returned a Cloudflare 403/challenge from HTTPS, `www`, and HTTP. There is no implementation basis until the source exposes a supported public response.
+- Batcave was rechecked through ordinary HTTP and the available browser sessions; it returned a Cloudflare challenge and members-only sign-in, so it is deferred without a bypass.
+- AllManga must be audited before any implementation or publication decision.
 
 ## 4. Desired Outcome
 
-- Establish whether Batcave is reachable, policy-appropriate, and technically reliable through ordinary public access.
+- Establish whether AllManga is reachable, policy-appropriate, and technically reliable through ordinary public access.
 - Keep the source unpublished until its contract, tests, content policy, and bounded live evidence pass.
 
 ## 5. MVP Definition
 
-The smallest useful version is a Batcave module only if ordinary access exposes stable search/discovery, title, chapter, and reader data that passes deterministic and bounded live checks.
+The smallest useful version is an AllManga module only if ordinary access exposes stable search/discovery, title, chapter, and reader data that passes deterministic and bounded live checks.
 
-> The detailed MangaBuddy/Comix material below is retained as historical context; QToon and Specter Scans were skipped for content-policy reasons, and the current queue scope is Batcave.
+> The detailed MangaBuddy/Comix material below is retained as historical context; QToon and Specter Scans were skipped for content-policy reasons, Batcave was deferred for blocked access, and the current queue scope is AllManga.
 
 ## 6. Confirmed Decisions
 
@@ -74,11 +75,9 @@ The smallest useful version is a Batcave module only if ordinary access exposes 
 
 ## 10. Open Questions
 
-- [ ] Whether Batcave's owner makes a supported public response available without a challenge.
-  - Why it matters: The module cannot discover titles or reader data from a Cloudflare challenge page.
+- [ ] Whether AllManga's JavaScript shell exposes a stable supported API or interactive browser flow.
+  - Why it matters: A shell without catalogue data cannot support a reliable module.
   - Blocking: Yes
-  - Why it matters: The module can remove its own overhead, but only the installed app can prove bridge/device latency.
-  - Blocking: No
 
 ## 11. Assumptions
 
@@ -131,6 +130,7 @@ The smallest useful version is a Batcave module only if ordinary access exposes 
 | 2026-09-01 | Make Comix chapter loading faster and fix the short homepage continuation | In scope | Implement now | User reported the current release still fails the quality bar. |
 | 2026-09-01 | Move Batcave to queue priority #1 | In scope | Audit now | Recheck ordinary access first; do not bypass a 403/challenge. |
 | 2026-09-01 | Batcave ordinary-access recheck returned a Cloudflare challenge | Blocked | No module started | HTTPS, `www`, and HTTP all returned 403; wait for a supported public path or defer. |
+| 2026-09-01 | Defer Batcave after ordinary and browser access remained blocked | Useful but deferred | Continue with AllManga | No credentials or cookies were entered or extracted. |
 
 ## 17. Implementation Readiness Checklist
 
