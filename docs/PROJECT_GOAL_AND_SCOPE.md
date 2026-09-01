@@ -1,12 +1,12 @@
 # Project Goal and Scope
 
 _Last updated: 2026-09-01_  
-_Status: MangaBuddy retired; Batcave and AllManga deferred, Asura Scans is the current candidate_
+_Status: MangaBuddy retired; Batcave and AllManga deferred, Asura Scans beta published for device testing_
 _Implementation confidence: 92%_
 
 ## 1. Current Goal Summary
 
-Evaluate Asura Scans for a reliable, policy-appropriate Synthetiq Books module after Batcave and AllManga were deferred for blocked reader access.
+Validate the published Asura Scans beta on device and confirm its `suggestive` content rating is handled correctly after Batcave and AllManga were deferred for blocked reader access.
 
 ## 2. Primary Users
 
@@ -23,7 +23,7 @@ Evaluate Asura Scans for a reliable, policy-appropriate Synthetiq Books module a
 ## 4. Desired Outcome
 
 - Establish whether Asura Scans is reachable, policy-appropriate, and technically reliable through ordinary public access.
-- Keep the source unpublished until its contract, tests, content policy, and bounded live evidence pass.
+- Keep the source in beta until iOS/device behavior and content controls are confirmed.
 
 ## 5. MVP Definition
 
@@ -95,7 +95,7 @@ The smallest useful version is an Asura Scans module only if ordinary access exp
 | Authentication | None | Confirmed | Use the source's public browser session. |
 | APIs/Integrations | `fetchv2` for Asura's public APIs, series pages, and CDN resources | Confirmed | No direct protected API/decryption or browser challenge bypass. |
 | Caching/Refresh | Five-minute title cache with bounded size | Confirmed | Avoid repeated detail/chapter work during navigation. |
-| Deployment | Public `synthetiq-manga-sources` repository | Confirmed | Release beta after tests and hash verification. |
+| Deployment | Public `synthetiq-manga-sources` repository | Confirmed | Asura beta published at `ab56e9f`; device testing remains. |
 | Testing | Fixtures, repository checks, and bounded live browser checks | Confirmed | Device pass remains separate. |
 | Security/Privacy | Ordinary public requests only | Confirmed | No bypass or hidden credentials. |
 

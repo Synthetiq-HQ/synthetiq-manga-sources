@@ -4,7 +4,7 @@
 **Audit date:** 2026-09-01
 **Current queue item:** Asura Scans (`https://asurascans.com/`, beta candidate)
 **Queue overrides:** The owner temporarily moved Batcave to priority #1; it was deferred after ordinary HTTP returned a Cloudflare challenge and the browser sessions had no member access. AllManga was then audited: catalogue, details, and chapter metadata were reachable, but the reader redirected to `mkissa.to`, which returned the same Cloudflare challenge. The queue therefore advanced to Asura Scans.
-**Publication state:** Comix and MangaBuddy removed from the active catalogue; their files/history are retained for recovery. Asura Scans is being prepared as a beta release.
+**Publication state:** Comix and MangaBuddy removed from the active catalogue; their files/history are retained for recovery. Asura Scans beta is published at commit `ab56e9f` for owner/device testing.
 
 ## Evidence labels
 
@@ -38,7 +38,7 @@ This is a triage log, not a claim that every reachable site is suitable for a mo
 | 13 | MangaFire | EXISTING | Existing module; no duplicate created. |
 | 14 | AllManga | PARTIAL / DEFERRED | Public API exposed catalogue, details, and chapter metadata, but the reader redirected to `mkissa.to`, which returned HTTP 403 with `Cf-Mitigated: challenge`; no bypass or cookie extraction attempted. |
 | 15 | MangaKakalot | PARTIAL / DEFERRED | Public response was HTTP 200 but contained challenge/captcha signals; no bypass attempted. |
-| 16 | Asura | LOCAL_COMPLETE / CURRENT | Local module; fixture suite and bounded live quality proof passed 100% (79/79 checks) across six titles. Beta publication follows final repository validation. |
+| 16 | Asura | PUBLISHED_BETA / CURRENT | Public beta at commit `ab56e9f`; fixture, contract/hash, and bounded live quality proof passed 100% (79/79 checks) across six titles. Device/content-control testing remains. |
 | 17 | Batcave | BLOCKED / DEFERRED | Owner moved this source to priority #1, but HTTPS, `www`, and HTTP returned HTTP 403 with `Cf-Mitigated: challenge`; the browser also showed members-only access without an existing login. No module was started and no bypass was attempted. |
 | 18 | ReadComicsOnline | BLOCKED | HTTP 403 challenge; no bypass attempted. |
 | 19 | MangaHub | BLOCKED | HTTP 403 challenge; no bypass attempted. |
@@ -165,7 +165,7 @@ returned an HTTP 403 Cloudflare challenge. No login, cookie extraction, or
 challenge bypass was attempted, so AllManga remains deferred rather than being
 released with a broken reader.
 
-Asura Scans is now the current candidate. Its module uses the source's public
+Asura Scans is now the current published candidate. Its module uses the source's public
 catalogue/search APIs, selected-series chapter manifest, chapter API, and
 declared CDN page images. It rejects challenge responses, mismatched series,
 locked chapters, malformed page manifests, and off-host media. The beta
@@ -181,5 +181,7 @@ app's content controls handle that rating as intended.
 - `LIVE_NODE_PASS`: six representative titles, five evenly spaced public
   chapters per title, every returned page URL, and first/middle/last image
   delivery passed 79/79 checks (100%).
+- `PUBLIC_BETA`: released to `origin/main` in commit `ab56e9f` after the full
+  repository validation passed.
 - `IOS_RUNTIME_PASS` and `DEVICE_PASS`: not claimed; installation and the real
   Books/WebKit bridge still require the owner's iPad test.
