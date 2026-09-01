@@ -5,6 +5,7 @@
   const SERIES_URL = `${BASE_URL}/manga/kingdom/`;
   const SERIES_TITLE = "Kingdom";
   const SERIES_SLUG = "kingdom";
+  const COVER_ASSET_URL = "https://raw.githubusercontent.com/Synthetiq-HQ/synthetiq-manga-sources/main/modules/kingdom/icon.png";
   const SOURCE_HOSTS = new Set([
     "readkingdom.com",
     "ww5.readkingdom.com",
@@ -221,28 +222,7 @@
   }
 
   function parseCover(html, base = BASE_URL) {
-    const page = String(html || "");
-    const metaTags = [...page.matchAll(/<meta\b[^>]*>/gi)].map((match) => match[0]);
-    for (const tag of metaTags) {
-      const property = attribute(tag, "property").toLowerCase();
-      const name = attribute(tag, "name").toLowerCase();
-      if (property === "og:image" || name === "twitter:image") {
-        const image = coverURL(attribute(tag, "content"), base);
-        if (image) return image;
-      }
-    }
-    for (const match of page.matchAll(/<img\b[^>]*>/gi)) {
-      const tag = match[0];
-      if (/\bjs-page\b/i.test(attribute(tag, "class"))) continue;
-      const image = coverURL(
-        attribute(tag, "src")
-          || attribute(tag, "data-src")
-          || attribute(tag, "data-lazy-src"),
-        base,
-      );
-      if (image) return image;
-    }
-    return "";
+    return COVER_ASSET_URL;
   }
 
   function parseDescription(html) {

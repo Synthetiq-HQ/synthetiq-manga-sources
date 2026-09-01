@@ -5,6 +5,7 @@
   const SERIES_URL = `${BASE_URL}/manga/blue-lock/`;
   const SERIES_TITLE = "Blue Lock";
   const SERIES_SLUG = "blue-lock";
+  const COVER_ASSET_URL = "https://raw.githubusercontent.com/Synthetiq-HQ/synthetiq-manga-sources/main/modules/blue-lock/icon.png";
   const IMAGE_HOST = "cdn.bluelockread.com";
   const COVER_HOST = "i.imgur.com";
   const DEFAULT_HEADERS = {
@@ -206,30 +207,7 @@
   }
 
   function parseCover(html, base) {
-    for (const match of String(html || "").matchAll(/<meta\b[^>]*>/gi)) {
-      const tag = match[0];
-      if (attribute(tag, "property").toLowerCase() !== "og:image") continue;
-      const cover = coverURL(attribute(tag, "content"), base || SERIES_URL);
-      if (cover) return cover;
-    }
-
-    for (const match of String(html || "").matchAll(/<img\b[^>]*>/gi)) {
-      const tag = match[0];
-      const classes = attribute(tag, "class");
-      const alt = attribute(tag, "alt").trim().toLowerCase();
-      if (!/(^|\s)(border-8|series-cover)(\s|$)/i.test(classes) && alt !== SERIES_TITLE.toLowerCase()) continue;
-      const candidates = [
-        attribute(tag, "data-src"),
-        attribute(tag, "data-lazy-src"),
-        attribute(tag, "data-original"),
-        attribute(tag, "src"),
-      ];
-      for (const candidate of candidates) {
-        const cover = coverURL(candidate, base || SERIES_URL);
-        if (cover) return cover;
-      }
-    }
-    return "";
+    return COVER_ASSET_URL;
   }
 
   function parseDescription(html) {

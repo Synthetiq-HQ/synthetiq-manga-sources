@@ -139,6 +139,7 @@ test("Ichi the Witch manifest declares complete hashed module metadata", async (
   assert.ok(manifest.allowedHosts.includes("ww2.readichithewitch.com"));
   assert.ok(manifest.allowedHosts.includes("cdn.readichithewitch.com"));
   assert.ok(manifest.allowedHosts.includes("i.imgur.com"));
+  assert.ok(manifest.allowedHosts.includes("raw.githubusercontent.com"));
   assert.equal(
     createHash("sha256").update(await read("index.js")).digest("hex"),
     manifest.entry.sha256,

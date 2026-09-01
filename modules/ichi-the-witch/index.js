@@ -6,6 +6,7 @@
   const SERIES_URL = `https://${CANONICAL_HOST}/manga/ichi-the-witch/`;
   const SERIES_TITLE = "Ichi the Witch";
   const SERIES_SLUG = "ichi-the-witch";
+  const COVER_ASSET_URL = "https://raw.githubusercontent.com/Synthetiq-HQ/synthetiq-manga-sources/main/modules/ichi-the-witch/icon.png";
   const SOURCE_HOSTS = new Set([
     "readichithewitch.com",
     "www.readichithewitch.com",
@@ -229,8 +230,7 @@
   }
 
   function parseCover(html, base) {
-    return coverURL(parseMeta(html, "og:image", "property"), base || SERIES_URL)
-      || coverURL(parseMeta(html, "twitter:image", "name"), base || SERIES_URL);
+    return COVER_ASSET_URL;
   }
 
   function parseDescription(html) {

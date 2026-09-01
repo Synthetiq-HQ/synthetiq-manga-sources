@@ -6,7 +6,7 @@
         "href": "https://bluelockread.com/manga/blue-lock/",
         "url": "https://bluelockread.com/manga/blue-lock/",
         "title": "Blue Lock",
-        "image": "https://i.imgur.com/fixture-blue-lock.png",
+        "image": "https://raw.githubusercontent.com/Synthetiq-HQ/synthetiq-manga-sources/main/modules/blue-lock/icon.png",
         "description": "Fixture listing for Blue Lock."
       }
     ],
@@ -17,7 +17,7 @@
     "href": "https://bluelockread.com/manga/blue-lock/",
     "url": "https://bluelockread.com/manga/blue-lock/",
     "title": "Blue Lock",
-    "image": "https://i.imgur.com/fixture-blue-lock.png",
+    "image": "https://raw.githubusercontent.com/Synthetiq-HQ/synthetiq-manga-sources/main/modules/blue-lock/icon.png",
     "description": "Fixture listing for Blue Lock.",
     "status": "Ongoing",
     "genres": ["Action", "Sports", "Shounen"]

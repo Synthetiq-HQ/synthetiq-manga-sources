@@ -6,7 +6,7 @@
         "href": "https://ww2.readsakadays.com/manga/sakamoto-days/",
         "url": "https://ww2.readsakadays.com/manga/sakamoto-days/",
         "title": "Sakamoto Days",
-        "image": "https://i.imgur.com/fixture-sakamoto-cover.png",
+        "image": "https://raw.githubusercontent.com/Synthetiq-HQ/synthetiq-manga-sources/main/modules/sakamoto-days/icon.png",
         "description": "A retired assassin protects his family while running a neighborhood store."
       }
     ],
@@ -17,7 +17,7 @@
     "href": "https://ww2.readsakadays.com/manga/sakamoto-days/",
     "url": "https://ww2.readsakadays.com/manga/sakamoto-days/",
     "title": "Sakamoto Days",
-    "image": "https://i.imgur.com/fixture-sakamoto-cover.png",
+    "image": "https://raw.githubusercontent.com/Synthetiq-HQ/synthetiq-manga-sources/main/modules/sakamoto-days/icon.png",
     "description": "A retired assassin protects his family while running a neighborhood store.",
     "status": "Ongoing",
     "authors": [],

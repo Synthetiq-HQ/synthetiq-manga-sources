@@ -6,6 +6,7 @@
   const SERIES_URL = BASE_URL + SERIES_PATH;
   const SERIES_TITLE = "Sakamoto Days";
   const SERIES_SLUG = "sakamoto-days";
+  const COVER_ASSET_URL = "https://raw.githubusercontent.com/Synthetiq-HQ/synthetiq-manga-sources/main/modules/sakamoto-days/icon.png";
   const SERIES_HOSTS = new Set([
     "readsakadays.com",
     "www.readsakadays.com",
@@ -223,33 +224,7 @@
   }
 
   function parseCover(html, base) {
-    for (const match of String(html || "").matchAll(/<meta\b[^>]*>/gi)) {
-      const tag = match[0];
-      if (attribute(tag, "property").toLowerCase() !== "og:image") continue;
-      const cover = coverURL(attribute(tag, "content"), base || BASE_URL);
-      if (cover) return cover;
-    }
-    for (const match of String(html || "").matchAll(/<meta\b[^>]*>/gi)) {
-      const tag = match[0];
-      if (attribute(tag, "name").toLowerCase() !== "twitter:image") continue;
-      const cover = coverURL(attribute(tag, "content"), base || BASE_URL);
-      if (cover) return cover;
-    }
-    for (const match of String(html || "").matchAll(/<img\b[^>]*>/gi)) {
-      const tag = match[0];
-      if (!/sakamoto\s*days/i.test(attribute(tag, "alt"))) continue;
-      const candidates = [
-        attribute(tag, "data-src"),
-        attribute(tag, "data-lazy-src"),
-        attribute(tag, "data-original"),
-        attribute(tag, "src"),
-      ];
-      for (const candidate of candidates) {
-        const cover = coverURL(candidate, base || BASE_URL);
-        if (cover) return cover;
-      }
-    }
-    return "";
+    return COVER_ASSET_URL;
   }
 
   function parseDescription(html) {

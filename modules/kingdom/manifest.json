@@ -4,7 +4,8 @@
     "ww5.readkingdom.com",
     "ww6.readkingdom.com",
     "cdn.readkingdom.com",
-    "i.imgur.com"
+    "i.imgur.com",
+    "raw.githubusercontent.com"
   ],
   "attribution": {
     "author": "Synthetiq-HQ",
@@ -29,12 +30,12 @@
   "contractVersion": 1,
   "entry": {
     "path": "modules/kingdom/index.js",
-    "sha256": "0a09b9021c665f8194e381a9f2e2a6db62be780e93f874595882473d31c3243d"
+    "sha256": "5813904a0f711a20919bcd24f5f92b92b5af9a5ffaf3cf3db70b40922770ffaa"
   },
   "familyID": "kingdom",
   "icon": {
     "path": "modules/kingdom/icon.png",
-    "sha256": "faa24ec881e6040655c187a681d6dc496eb8aa41e1bd0652a180b3a40b457187"
+    "sha256": "8c3353928a9ae2df7b866c7ccd85d426f03a7bf42ea79f9189696f223a72f8eb"
   },
   "id": "kingdom",
   "language": "en",
@@ -51,5 +52,5 @@
   "releaseTrack": "beta",
   "status": "active",
   "universalLink": "https://synthetiq.uk/manga/modules/kingdom",
-  "version": "1.0.0"
+  "version": "1.0.1"
 }
