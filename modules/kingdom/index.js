@@ -5,7 +5,7 @@
   const SERIES_URL = `${BASE_URL}/manga/kingdom/`;
   const SERIES_TITLE = "Kingdom";
   const SERIES_SLUG = "kingdom";
-  const COVER_ASSET_URL = "https://raw.githubusercontent.com/Synthetiq-HQ/synthetiq-manga-sources/main/modules/kingdom/icon.png";
+  const COVER_ASSET_URL = "https://raw.githubusercontent.com/Synthetiq-HQ/synthetiq-manga-sources/main/modules/kingdom/icon-v1.0.2.png";
   const SOURCE_HOSTS = new Set([
     "readkingdom.com",
     "ww5.readkingdom.com",

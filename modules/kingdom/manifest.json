@@ -30,11 +30,11 @@
   "contractVersion": 1,
   "entry": {
     "path": "modules/kingdom/index.js",
-    "sha256": "5813904a0f711a20919bcd24f5f92b92b5af9a5ffaf3cf3db70b40922770ffaa"
+    "sha256": "da51d43b669040686b0aa702ef623e66dc4a5d2ec78cddd0b388c5b66f531b7a"
   },
   "familyID": "kingdom",
   "icon": {
-    "path": "modules/kingdom/icon.png",
+    "path": "modules/kingdom/icon-v1.0.2.png",
     "sha256": "8c3353928a9ae2df7b866c7ccd85d426f03a7bf42ea79f9189696f223a72f8eb"
   },
   "id": "kingdom",
@@ -52,5 +52,5 @@
   "releaseTrack": "beta",
   "status": "active",
   "universalLink": "https://synthetiq.uk/manga/modules/kingdom",
-  "version": "1.0.1"
+  "version": "1.0.2"
 }

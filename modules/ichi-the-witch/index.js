@@ -6,7 +6,7 @@
   const SERIES_URL = `https://${CANONICAL_HOST}/manga/ichi-the-witch/`;
   const SERIES_TITLE = "Ichi the Witch";
   const SERIES_SLUG = "ichi-the-witch";
-  const COVER_ASSET_URL = "https://raw.githubusercontent.com/Synthetiq-HQ/synthetiq-manga-sources/main/modules/ichi-the-witch/icon.png";
+  const COVER_ASSET_URL = "https://raw.githubusercontent.com/Synthetiq-HQ/synthetiq-manga-sources/main/modules/ichi-the-witch/icon-v1.0.2.png";
   const SOURCE_HOSTS = new Set([
     "readichithewitch.com",
     "www.readichithewitch.com",

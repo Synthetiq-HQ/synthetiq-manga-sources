@@ -568,7 +568,7 @@
    "id": "ichi-the-witch",
    "familyID": "ichi-the-witch",
    "name": "Ichi the Witch",
-   "version": "1.0.1",
+   "version": "1.0.2",
    "language": "en",
    "contentType": "pageImages",
    "contentRating": "suggestive",
@@ -577,10 +577,10 @@
    "sortPriority": 93,
    "manifest": {
     "path": "modules/ichi-the-witch/manifest.json",
-    "sha256": "fd07d6b3e9850649f73578725951403cd5176ba1fecb70940c1505ab70815196"
+    "sha256": "73128c2d11b3e403d7837b559ef8581d2178c852c729d2517644b87ecd1f4c0d"
    },
    "icon": {
-    "path": "modules/ichi-the-witch/icon.png",
+    "path": "modules/ichi-the-witch/icon-v1.0.2.png",
     "sha256": "cb7b2c6c54021e4dac5ba0d016c627929911d9b665791cf949e24f24d53ea70a"
    }
   },
@@ -588,7 +588,7 @@
    "id": "sakamoto-days",
    "familyID": "sakamoto-days",
    "name": "Sakamoto Days",
-   "version": "1.0.1",
+   "version": "1.0.2",
    "language": "en",
    "contentType": "pageImages",
    "contentRating": "suggestive",
@@ -597,10 +597,10 @@
    "sortPriority": 94,
    "manifest": {
     "path": "modules/sakamoto-days/manifest.json",
-    "sha256": "0d73a3d8a68516cb05653b25410f602c4ab99c6fbef766213a99c36c10bd18a2"
+    "sha256": "c85f0cc10360d7c63e6059dbd499b6bb4e38952f3c343410e995916ef6c7c9f4"
    },
    "icon": {
-    "path": "modules/sakamoto-days/icon.png",
+    "path": "modules/sakamoto-days/icon-v1.0.2.png",
     "sha256": "fcd11baf14b31f738bf93d0aa26f74c0be131879082bfb6ba6ca55593145021b"
    }
   },
@@ -608,7 +608,7 @@
    "id": "blue-lock",
    "familyID": "blue-lock",
    "name": "Blue Lock",
-   "version": "1.0.1",
+   "version": "1.0.2",
    "language": "en",
    "contentType": "pageImages",
    "contentRating": "suggestive",
@@ -617,10 +617,10 @@
    "sortPriority": 95,
    "manifest": {
     "path": "modules/blue-lock/manifest.json",
-    "sha256": "cb2bd1211a959bb8686e275a6c29fa8c854cdc89bbff07082e5842ebf6635be2"
+    "sha256": "b8504f45141ff60f458503245801cd9ed06628719eb384284303ac5ce6184b32"
    },
    "icon": {
-    "path": "modules/blue-lock/icon.png",
+    "path": "modules/blue-lock/icon-v1.0.2.png",
     "sha256": "074b4d8add62c23c8fa5a936f8ba5ac9fd4eeafd59ba2c5a837b9c615db6e7a4"
    }
   },
@@ -648,7 +648,7 @@
    "id": "kingdom",
    "familyID": "kingdom",
    "name": "Kingdom",
-   "version": "1.0.1",
+   "version": "1.0.2",
    "language": "en",
    "contentType": "pageImages",
    "contentRating": "suggestive",
@@ -657,10 +657,10 @@
    "sortPriority": 97,
    "manifest": {
     "path": "modules/kingdom/manifest.json",
-    "sha256": "b572e41812d4ea2bb9c053e7f4f13ebc17dafc265a64fff692b46b0a8a222263"
+    "sha256": "2c49a4f356de4643a3cf6bfb84b77f86ebc2df0f4e0d46f174a812f65197372c"
    },
    "icon": {
-    "path": "modules/kingdom/icon.png",
+    "path": "modules/kingdom/icon-v1.0.2.png",
     "sha256": "8c3353928a9ae2df7b866c7ccd85d426f03a7bf42ea79f9189696f223a72f8eb"
    }
   }

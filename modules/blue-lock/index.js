@@ -5,7 +5,7 @@
   const SERIES_URL = `${BASE_URL}/manga/blue-lock/`;
   const SERIES_TITLE = "Blue Lock";
   const SERIES_SLUG = "blue-lock";
-  const COVER_ASSET_URL = "https://raw.githubusercontent.com/Synthetiq-HQ/synthetiq-manga-sources/main/modules/blue-lock/icon.png";
+  const COVER_ASSET_URL = "https://raw.githubusercontent.com/Synthetiq-HQ/synthetiq-manga-sources/main/modules/blue-lock/icon-v1.0.2.png";
   const IMAGE_HOST = "cdn.bluelockread.com";
   const COVER_HOST = "i.imgur.com";
   const DEFAULT_HEADERS = {

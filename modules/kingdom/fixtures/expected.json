@@ -5,7 +5,7 @@
         "id": "https://readkingdom.com/manga/kingdom/",
         "href": "https://readkingdom.com/manga/kingdom/",
         "title": "Kingdom",
-        "image": "https://raw.githubusercontent.com/Synthetiq-HQ/synthetiq-manga-sources/main/modules/kingdom/icon.png"
+        "image": "https://raw.githubusercontent.com/Synthetiq-HQ/synthetiq-manga-sources/main/modules/kingdom/icon-v1.0.2.png"
       }
     ],
     "hasMore": false
@@ -15,7 +15,7 @@
     "href": "https://readkingdom.com/manga/kingdom/",
     "url": "https://readkingdom.com/manga/kingdom/",
     "title": "Kingdom",
-    "image": "https://raw.githubusercontent.com/Synthetiq-HQ/synthetiq-manga-sources/main/modules/kingdom/icon.png",
+        "image": "https://raw.githubusercontent.com/Synthetiq-HQ/synthetiq-manga-sources/main/modules/kingdom/icon-v1.0.2.png",
     "description": "Read Kingdom manga for free online",
     "authors": [],
     "author": "",

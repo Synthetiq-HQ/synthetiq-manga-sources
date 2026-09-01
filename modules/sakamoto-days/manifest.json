@@ -31,11 +31,11 @@
   "contractVersion": 1,
   "entry": {
     "path": "modules/sakamoto-days/index.js",
-    "sha256": "8b9122e6ef05e123a2d40ffa1077d7ec45da8c4bca93efc5e67e43ff30b51f91"
+    "sha256": "c6005bc84326f70c9c0ab5517bf0dd0ee28bd409a37c4c355acf66eb6194d4e1"
   },
   "familyID": "sakamoto-days",
   "icon": {
-    "path": "modules/sakamoto-days/icon.png",
+    "path": "modules/sakamoto-days/icon-v1.0.2.png",
     "sha256": "fcd11baf14b31f738bf93d0aa26f74c0be131879082bfb6ba6ca55593145021b"
   },
   "id": "sakamoto-days",
@@ -53,5 +53,5 @@
   "releaseTrack": "beta",
   "status": "active",
   "universalLink": "https://synthetiq.uk/manga/modules/sakamoto-days",
-  "version": "1.0.1"
+  "version": "1.0.2"
 }

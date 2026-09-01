@@ -30,11 +30,11 @@
   "contractVersion": 1,
   "entry": {
     "path": "modules/ichi-the-witch/index.js",
-    "sha256": "7e6d5bd5f062fbf9e9ddbdbebf780136634b881597995f42a8f7d333b4b852a1"
+    "sha256": "ec4b953c5b305bc7d1d02da2a913278997263bab0e2ac3b068ca9d03da45dd5d"
   },
   "familyID": "ichi-the-witch",
   "icon": {
-    "path": "modules/ichi-the-witch/icon.png",
+    "path": "modules/ichi-the-witch/icon-v1.0.2.png",
     "sha256": "cb7b2c6c54021e4dac5ba0d016c627929911d9b665791cf949e24f24d53ea70a"
   },
   "id": "ichi-the-witch",
@@ -52,5 +52,5 @@
   "releaseTrack": "beta",
   "status": "active",
   "universalLink": "https://synthetiq.uk/manga/modules/ichi-the-witch",
-  "version": "1.0.1"
+  "version": "1.0.2"
 }

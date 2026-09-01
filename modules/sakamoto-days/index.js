@@ -6,7 +6,7 @@
   const SERIES_URL = BASE_URL + SERIES_PATH;
   const SERIES_TITLE = "Sakamoto Days";
   const SERIES_SLUG = "sakamoto-days";
-  const COVER_ASSET_URL = "https://raw.githubusercontent.com/Synthetiq-HQ/synthetiq-manga-sources/main/modules/sakamoto-days/icon.png";
+  const COVER_ASSET_URL = "https://raw.githubusercontent.com/Synthetiq-HQ/synthetiq-manga-sources/main/modules/sakamoto-days/icon-v1.0.2.png";
   const SERIES_HOSTS = new Set([
     "readsakadays.com",
     "www.readsakadays.com",
