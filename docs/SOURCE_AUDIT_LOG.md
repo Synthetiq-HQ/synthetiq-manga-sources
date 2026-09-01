@@ -2,7 +2,7 @@
 
 **Product:** Synthetiq Books module repository  
 **Audit date:** 2026-09-01
-**Current queue item:** QToon (`https://qtoon.com/`, pending bounded evaluation)
+**Current queue item:** AllManga (`https://allmanga.to/`, pending API/interactive audit)
 **Publication state:** Comix and MangaBuddy removed from the active catalogue; their files/history are retained for recovery
 
 ## Evidence labels
@@ -29,11 +29,11 @@ This is a triage log, not a claim that every reachable site is suitable for a mo
 | 7 | Comix | REMOVED | Removed from the active catalogue after the owner reported a title-specific Bleach failure; historical files retained for recovery. |
 | 8 | MangaDot | BLOCKED | HTTP 403 challenge; no bypass attempted. |
 | 9 | MangaBuddy | REMOVED | Removed from the active catalogue after the owner rejected its adult/suggestive content; historical files retained for recovery. |
-| 10 | QToon | REACHABLE / CURRENT | HTTP 200; next source for bounded evaluation. |
-| 11 | Specter Scans | REACHABLE / UNASSESSED | HTTP 200; queued for a separate bounded evaluation. |
+| 10 | QToon | SKIPPED | Live catalogue includes source-marked `UNCENSORED`, `Smut`, `Mature`, and `Ecchi` titles; no module published. |
+| 11 | Specter Scans | SKIPPED | Public catalogue exposes an `Adult` genre, but cards do not carry reliable content tags for safe exclusion; no module published. |
 | 12 | Mangago | BLOCKED | HTTP 403 challenge; no bypass attempted. |
 | 13 | MangaFire | EXISTING | Existing module; no duplicate created. |
-| 14 | AllManga | REACHABLE / UNASSESSED | HTTP 200; queued for a separate bounded evaluation. |
+| 14 | AllManga | REACHABLE / CURRENT | HTTP 200 shell; pending API/interactive audit before any module work. |
 | 15 | MangaKakalot | REACHABLE / UNASSESSED | HTTP 200; queued for a separate bounded evaluation. |
 | 16 | Asura | REACHABLE / UNASSESSED | HTTP 200; queued for a separate bounded evaluation. |
 | 17 | Batcave | BLOCKED | HTTP 403 challenge; no bypass attempted. |

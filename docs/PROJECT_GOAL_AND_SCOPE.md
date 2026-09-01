@@ -1,12 +1,12 @@
 # Project Goal and Scope
 
 _Last updated: 2026-09-01_  
-_Status: MangaBuddy retired; QToon is the next queued source_
+_Status: MangaBuddy retired; AllManga is the next viable queued candidate_
 _Implementation confidence: 92%_
 
 ## 1. Current Goal Summary
 
-Evaluate the next queued QToon source for a reliable, policy-appropriate Synthetiq Books module.
+Evaluate the next viable AllManga source for a reliable, policy-appropriate Synthetiq Books module.
 
 ## 2. Primary Users
 
@@ -15,18 +15,19 @@ Evaluate the next queued QToon source for a reliable, policy-appropriate Synthet
 ## 3. Problem Being Solved
 
 - The previous MangaBuddy/Comizy source was too adult/suggestive for the app and has been removed from the active catalogue.
-- QToon must be evaluated before any implementation or publication decision.
+- QToon and Specter Scans were evaluated and skipped because their live catalogues expose adult-marked content without a reliable safe exclusion path.
+- AllManga must be audited before any implementation or publication decision.
 
 ## 4. Desired Outcome
 
-- Establish whether QToon is reachable, policy-appropriate, and technically reliable through ordinary public access.
+- Establish whether AllManga is reachable, policy-appropriate, and technically reliable through ordinary public access.
 - Keep the source unpublished until its contract, tests, content policy, and bounded live evidence pass.
 
 ## 5. MVP Definition
 
-The smallest useful version is a QToon module only if ordinary access exposes stable search/discovery, title, chapter, and reader data that passes deterministic and bounded live checks.
+The smallest useful version is an AllManga module only if ordinary access exposes stable search/discovery, title, chapter, and reader data that passes deterministic and bounded live checks.
 
-> The detailed MangaBuddy/Comix material below is retained as historical context; the current queue scope is QToon.
+> The detailed MangaBuddy/Comix material below is retained as historical context; QToon and Specter Scans were skipped for content-policy reasons, and the current queue scope is AllManga.
 
 ## 6. Confirmed Decisions
 
@@ -73,7 +74,7 @@ The smallest useful version is a QToon module only if ordinary access exposes st
 
 ## 10. Open Questions
 
-- [ ] Whether the remaining cold-start time is caused by the app's pagev2/WebKit startup cost or Comix client hydration.
+- [ ] Whether AllManga's JavaScript shell exposes a stable supported API or interactive browser flow.
   - Why it matters: The module can remove its own overhead, but only the installed app can prove bridge/device latency.
   - Blocking: No
 
