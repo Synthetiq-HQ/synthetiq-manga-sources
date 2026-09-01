@@ -4,7 +4,7 @@
 **Audit date:** 2026-09-01
 **Current queue item:** Ichi the Witch (#27) is next after the Attack on Titan beta (`https://w47.read-attackontitan-manga.com/`) was implemented and published for owner testing.
 **Queue overrides:** The owner temporarily moved Batcave to priority #1; it was deferred after ordinary HTTP returned a Cloudflare challenge and the browser sessions had no member access. AllManga was then audited: catalogue, details, and chapter metadata were reachable, but the reader redirected to `mkissa.to`, which returned the same Cloudflare challenge. The queue advanced to Asura Scans, then briefly to MangaXo; MangaXo was removed at the owner's request. KingOfShojo was checked next and rejected for adult/mature catalogue labels. Attack on Titan was implemented as the next title-focused beta after its URL-family, reader, and content review. The queue now advances to Ichi the Witch, followed by the remaining inventoried candidates in fixed order. This queue does not create or publish modules until each candidate passes its checks.
-**Publication state:** Comix, MangaBuddy, and MangaXo are removed from the active catalogue; their files/history are retained in Git history for recovery. Asura Scans beta is published at commit `ab56e9f`. Attack on Titan is published as a `suggestive` beta for owner/device testing.
+**Publication state:** Comix, MangaBuddy, and MangaXo are removed from the active catalogue; their files/history are retained in Git history for recovery. Asura Scans beta is published at commit `ab56e9f`. Attack on Titan is published as a `suggestive` beta at commit `2992536` for owner/device testing.
 
 ## Evidence labels
 
@@ -115,7 +115,7 @@ tags without changing page order.
   pages, and first/middle/last image deliveries returned HTTP 200 from the
   declared CDN with image/jpeg content.
 - **PUBLIC_BETA** — the module is active in `index.json` on the beta track
-  for owner testing.
+  for owner testing; this release is commit `2992536`.
 - **IOS_RUNTIME_PASS / DEVICE_PASS** — not claimed; the installed Books app and
   real iOS bridge still require the owner's test.
 

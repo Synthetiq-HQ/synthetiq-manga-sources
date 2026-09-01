@@ -106,7 +106,7 @@ The current candidate is the published Attack on Titan beta. The next candidate 
 | Authentication | None | Confirmed | Use the source's public browser session. |
 | APIs/Integrations | `fetchv2` for the queued source's public HTML and declared image resources | Confirmed | No direct protected API/decryption or browser challenge bypass. |
 | Caching/Refresh | Five-minute title cache with bounded size | Confirmed | Avoid repeated detail/chapter work during navigation. |
-| Deployment | Public `synthetiq-manga-sources` repository | Confirmed | Asura beta published at `ab56e9f`; Attack on Titan beta is now active in `index.json` for owner testing. |
+| Deployment | Public `synthetiq-manga-sources` repository | Confirmed | Asura beta published at `ab56e9f`; Attack on Titan beta is active in `index.json` at commit `2992536` for owner testing. |
 | Testing | Fixtures, repository checks, and bounded live browser checks | Confirmed | Device pass remains separate. |
 | Security/Privacy | Ordinary public requests only | Confirmed | No bypass or hidden credentials. |
 
@@ -150,7 +150,7 @@ The current candidate is the published Attack on Titan beta. The next candidate 
 | 2026-09-01 | Add pre-add content suitability gate | In scope | Apply before every future module | Review genres, labels, ratings, and sample titles before implementation or publication. |
 | 2026-09-01 | Safety-check KingOfShojo | Rejected / content policy | Do not implement | Current public pages expose `Adult`, `Mature`, `Smut`, `Ecchi`, `Yaoi`, and `Manhwa Hot` labels plus an 18+/mature-content warning. |
 | 2026-09-01 | Queue Attack on Titan single-series source | In scope | Audit URL family and content suitability before implementation | Supplied URL is third-party rather than official Crunchyroll; rotating hosts and external CDN require discovery and bounded testing. |
-| 2026-09-01 | Implement and publish Attack on Titan beta | In scope | Release for owner/device testing and advance queue to Ichi the Witch | Fixture, contract/hash, and bounded live checks passed; five spaced chapters and both observed reader CDNs returned valid image deliveries. |
+| 2026-09-01 | Implement and publish Attack on Titan beta | In scope | Release for owner/device testing and advance queue to Ichi the Witch | Public commit `2992536`; fixture, contract/hash, and bounded live checks passed; five spaced chapters and both observed reader CDNs returned valid image deliveries. |
 | 2026-09-01 | Inventory title-focused sites linked by the Manga Goat network | In scope | Record reachable, duplicate, redirected, and unavailable sources; keep Attack on Titan first | No module code or active index entry was created; non-duplicate candidates remain safety and technical review items. |
 | 2026-09-01 | Queue the 12 non-duplicate title-site candidates | In scope | Process Ichi the Witch through Berserk one at a time after Attack on Titan | Fixed order recorded in `docs/SOURCE_AUDIT_LOG.md`; duplicate, redirected, parked, and unavailable sources remain out of the module queue. |
 
