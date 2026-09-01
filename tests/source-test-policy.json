@@ -107,9 +107,6 @@
   },
   "onepiece-manga-online": {
    "chapterScope": "fixed-series-dom"
-  },
-  "mangabuddy": {
-   "chapterScope": "api"
   }
  }
 }

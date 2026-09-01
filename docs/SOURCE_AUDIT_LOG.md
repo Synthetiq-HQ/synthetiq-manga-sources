@@ -2,8 +2,8 @@
 
 **Product:** Synthetiq Books module repository  
 **Audit date:** 2026-09-01
-**Current queue item:** MangaBuddy (`https://mangabuddy.com/`, currently Comizy)  
-**Publication state:** Comix removed from the active catalogue; MangaBuddy 1.0.1 published as beta after deterministic and bounded live checks
+**Current queue item:** QToon (`https://qtoon.com/`, pending bounded evaluation)
+**Publication state:** Comix and MangaBuddy removed from the active catalogue; their files/history are retained for recovery
 
 ## Evidence labels
 
@@ -28,8 +28,8 @@ This is a triage log, not a claim that every reachable site is suitable for a mo
 | 6 | Comick | BLOCKED | HTTP 403 challenge; no bypass attempted. |
 | 7 | Comix | REMOVED | Removed from the active catalogue after the owner reported a title-specific Bleach failure; historical files retained for recovery. |
 | 8 | MangaDot | BLOCKED | HTTP 403 challenge; no bypass attempted. |
-| 9 | MangaBuddy | PUBLISHED BETA / CURRENT | HTTP 200; 1.0.1 published after unit, fixture, repository, and bounded live checks. |
-| 10 | QToon | REACHABLE / UNASSESSED | HTTP 200; queued for a separate bounded evaluation. |
+| 9 | MangaBuddy | REMOVED | Removed from the active catalogue after the owner rejected its adult/suggestive content; historical files retained for recovery. |
+| 10 | QToon | REACHABLE / CURRENT | HTTP 200; next source for bounded evaluation. |
 | 11 | Specter Scans | REACHABLE / UNASSESSED | HTTP 200; queued for a separate bounded evaluation. |
 | 12 | Mangago | BLOCKED | HTTP 403 challenge; no bypass attempted. |
 | 13 | MangaFire | EXISTING | Existing module; no duplicate created. |
@@ -46,14 +46,14 @@ This is a triage log, not a claim that every reachable site is suitable for a mo
 | 24 | AllManga (duplicate) | DUPLICATE | Same queue source as item 14. |
 | 25 | KingOfShojo | REACHABLE / UNASSESSED | HTTP 200; queued for a separate bounded evaluation. |
 
-## MangaBuddy / Comizy module (published beta)
+## MangaBuddy / Comizy module (historical release; removed from catalogue)
 
 **Module:** `mangabuddy`
 **Version:** `1.0.1`
 **Track:** beta
 **Type:** `pageImages`
 **Source:** `https://mangabuddy.com/` (currently redirects to `https://comizy.io/`)
-**Catalogue status:** Active in `index.json` after publication on 2026-09-01.
+**Catalogue status:** Removed from `index.json` on 2026-09-01 at the owner's request because the source was too adult/suggestive for the app. The source files and historical tests remain in the repository so the removal is recoverable.
 
 The module uses ordinary public `fetchv2` requests against Comizy's observed
 search API, server-rendered discovery/title pages, and declared `cmzcdn.org`

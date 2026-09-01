@@ -1,12 +1,12 @@
 # Project Goal and Scope
 
 _Last updated: 2026-09-01_  
-_Status: MangaBuddy 1.0.1 beta published; device testing pending_
+_Status: MangaBuddy retired; QToon is the next queued source_
 _Implementation confidence: 92%_
 
 ## 1. Current Goal Summary
 
-Release the MangaBuddy/Comizy module with reliable search, discovery, title details, ordered chapters, and reader images in Synthetiq Books.
+Evaluate the next queued QToon source for a reliable, policy-appropriate Synthetiq Books module.
 
 ## 2. Primary Users
 
@@ -14,19 +14,19 @@ Release the MangaBuddy/Comizy module with reliable search, discovery, title deta
 
 ## 3. Problem Being Solved
 
-- The next queue source needs a reliable module before wider user testing.
-- The source redirects MangaBuddy to Comizy, so the module must follow the current public endpoint while keeping the queue identity.
+- The previous MangaBuddy/Comizy source was too adult/suggestive for the app and has been removed from the active catalogue.
+- QToon must be evaluated before any implementation or publication decision.
 
 ## 4. Desired Outcome
 
-- Return complete, ordered, source-owned content with bounded retries, short-lived caching, and clear failures for unsafe or malformed responses.
-- Keep the public release beta until device testing and broader quality sampling are complete.
+- Establish whether QToon is reachable, policy-appropriate, and technically reliable through ordinary public access.
+- Keep the source unpublished until its contract, tests, content policy, and bounded live evidence pass.
 
 ## 5. MVP Definition
 
-The smallest useful version is a MangaBuddy/Comizy page-image module that passes deterministic tests, repository validation, and a bounded live quality proof before publication.
+The smallest useful version is a QToon module only if ordinary access exposes stable search/discovery, title, chapter, and reader data that passes deterministic and bounded live checks.
 
-> The detailed Comix-specific material below is retained as historical context; the current release scope is MangaBuddy/Comizy.
+> The detailed MangaBuddy/Comix material below is retained as historical context; the current queue scope is QToon.
 
 ## 6. Confirmed Decisions
 
