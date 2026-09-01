@@ -1,7 +1,7 @@
 # Project Goal and Scope
 
 _Last updated: 2026-09-01_  
-_Status: MangaBuddy, Comix, and MangaXo removed; Batcave and AllManga deferred; KingOfShojo rejected by the content gate; Asura Scans beta remains published; Attack on Titan remains first in the queue; title-site inventory recorded_
+_Status: MangaBuddy, Comix, and MangaXo removed; Batcave and AllManga deferred; KingOfShojo rejected by the content gate; Asura Scans beta remains published; Attack on Titan remains first; 12 additional title-site candidates queued in order_
 _Implementation confidence: 92%_
 
 ## 1. Current Goal Summary
@@ -28,7 +28,7 @@ Audit the queued Attack on Titan single-series source first, then work through t
 ## 4. Desired Outcome
 
 - Determine whether the queued Attack on Titan source is technically reusable, policy-appropriate, and reliable through ordinary public access.
-- Preserve the title-site inventory and process its non-duplicate candidates in queue order; discovery does not create an active module.
+- Preserve the title-site inventory and process its 12 non-duplicate candidates in queue order after Attack on Titan; discovery does not create an active module.
 - Confirm that the published Asura Scans beta remains reachable, policy-appropriate, and technically reliable in the Books app.
 - Keep the source in beta until iOS/device behavior and content controls are confirmed.
 
@@ -151,6 +151,7 @@ The next candidate is an Attack on Titan module only if ordinary access exposes 
 | 2026-09-01 | Safety-check KingOfShojo | Rejected / content policy | Do not implement | Current public pages expose `Adult`, `Mature`, `Smut`, `Ecchi`, `Yaoi`, and `Manhwa Hot` labels plus an 18+/mature-content warning. |
 | 2026-09-01 | Queue Attack on Titan single-series source | In scope | Audit URL family and content suitability before implementation | Supplied URL is third-party rather than official Crunchyroll; rotating hosts and external CDN require discovery and bounded testing. |
 | 2026-09-01 | Inventory title-focused sites linked by the Manga Goat network | In scope | Record reachable, duplicate, redirected, and unavailable sources; keep Attack on Titan first | No module code or active index entry was created; non-duplicate candidates remain safety and technical review items. |
+| 2026-09-01 | Queue the 12 non-duplicate title-site candidates | In scope | Process Ichi the Witch through Berserk one at a time after Attack on Titan | Fixed order recorded in `docs/SOURCE_AUDIT_LOG.md`; duplicate, redirected, parked, and unavailable sources remain out of the module queue. |
 
 ## 17. Implementation Readiness Checklist
 
