@@ -1,0 +1,120 @@
+{
+  "search": {
+    "items": [
+      {
+        "id": "https://ww2.readichithewitch.com/manga/ichi-the-witch/",
+        "href": "https://ww2.readichithewitch.com/manga/ichi-the-witch/",
+        "url": "https://ww2.readichithewitch.com/manga/ichi-the-witch/",
+        "title": "Ichi the Witch",
+        "image": "https://i.imgur.com/ichi-cover.png",
+        "description": "Alternative name : Madan no Ichi\nA fixture synopsis about a young hunter entering a world of magic."
+      }
+    ],
+    "hasMore": false
+  },
+  "details": {
+    "id": "https://ww2.readichithewitch.com/manga/ichi-the-witch/",
+    "href": "https://ww2.readichithewitch.com/manga/ichi-the-witch/",
+    "url": "https://ww2.readichithewitch.com/manga/ichi-the-witch/",
+    "title": "Ichi the Witch",
+    "image": "https://i.imgur.com/ichi-cover.png",
+    "description": "Alternative name : Madan no Ichi\nA fixture synopsis about a young hunter entering a world of magic.",
+    "status": "Ongoing",
+    "genres": []
+  },
+  "chapters": [
+    {
+      "id": "https://ww2.readichithewitch.com/chapter/ichi-the-witch-chapter-96/",
+      "href": "https://ww2.readichithewitch.com/chapter/ichi-the-witch-chapter-96/",
+      "url": "https://ww2.readichithewitch.com/chapter/ichi-the-witch-chapter-96/",
+      "title": "Ichi the Witch Chapter 96",
+      "number": 96,
+      "language": "en"
+    },
+    {
+      "id": "https://ww2.readichithewitch.com/chapter/ichi-the-witch-chapter-48/",
+      "href": "https://ww2.readichithewitch.com/chapter/ichi-the-witch-chapter-48/",
+      "url": "https://ww2.readichithewitch.com/chapter/ichi-the-witch-chapter-48/",
+      "title": "Ichi the Witch Chapter 48",
+      "number": 48,
+      "language": "en"
+    },
+    {
+      "id": "https://ww2.readichithewitch.com/chapter/ichi-the-witch-chapter-1/",
+      "href": "https://ww2.readichithewitch.com/chapter/ichi-the-witch-chapter-1/",
+      "url": "https://ww2.readichithewitch.com/chapter/ichi-the-witch-chapter-1/",
+      "title": "Ichi the Witch Chapter 1",
+      "number": 1,
+      "language": "en"
+    }
+  ],
+  "images1": [
+    {
+      "url": "https://cdn.readichithewitch.com/file/mangap/8278/10001000/1.jpeg",
+      "headers": {
+        "Accept": "image/avif,image/webp,image/*,*/*",
+        "Referer": "https://ww2.readichithewitch.com/chapter/ichi-the-witch-chapter-1/"
+      }
+    },
+    {
+      "url": "https://cdn.readichithewitch.com/file/mangap/8278/10001000/2.jpeg",
+      "headers": {
+        "Accept": "image/avif,image/webp,image/*,*/*",
+        "Referer": "https://ww2.readichithewitch.com/chapter/ichi-the-witch-chapter-1/"
+      }
+    },
+    {
+      "url": "https://cdn.readichithewitch.com/file/mangap/8278/10001000/3.jpeg",
+      "headers": {
+        "Accept": "image/avif,image/webp,image/*,*/*",
+        "Referer": "https://ww2.readichithewitch.com/chapter/ichi-the-witch-chapter-1/"
+      }
+    }
+  ],
+  "images48": [
+    {
+      "url": "https://cdn.readichithewitch.com/file/mangap/8278/10048000/fixture/1.jpeg",
+      "headers": {
+        "Accept": "image/avif,image/webp,image/*,*/*",
+        "Referer": "https://ww2.readichithewitch.com/chapter/ichi-the-witch-chapter-48/"
+      }
+    },
+    {
+      "url": "https://cdn.readichithewitch.com/file/mangap/8278/10048000/fixture/2.jpeg?sig=fixture",
+      "headers": {
+        "Accept": "image/avif,image/webp,image/*,*/*",
+        "Referer": "https://ww2.readichithewitch.com/chapter/ichi-the-witch-chapter-48/"
+      }
+    },
+    {
+      "url": "https://cdn.readichithewitch.com/file/mangap/8278/10048000/fixture/3.webp",
+      "headers": {
+        "Accept": "image/avif,image/webp,image/*,*/*",
+        "Referer": "https://ww2.readichithewitch.com/chapter/ichi-the-witch-chapter-48/"
+      }
+    }
+  ],
+  "images96": [
+    {
+      "url": "https://cdn.readichithewitch.com/file/mangap/2026/35/8278/10096000/fixture/1.jpeg",
+      "headers": {
+        "Accept": "image/avif,image/webp,image/*,*/*",
+        "Referer": "https://ww2.readichithewitch.com/chapter/ichi-the-witch-chapter-96/"
+      }
+    },
+    {
+      "url": "https://cdn.readichithewitch.com/file/mangap/2026/35/8278/10096000/fixture/2.jpeg",
+      "headers": {
+        "Accept": "image/avif,image/webp,image/*,*/*",
+        "Referer": "https://ww2.readichithewitch.com/chapter/ichi-the-witch-chapter-96/"
+      }
+    },
+    {
+      "url": "https://cdn.readichithewitch.com/file/mangap/2026/35/8278/10096000/fixture/3.jpeg",
+      "headers": {
+        "Accept": "image/avif,image/webp,image/*,*/*",
+        "Referer": "https://ww2.readichithewitch.com/chapter/ichi-the-witch-chapter-96/"
+      }
+    }
+  ]
+}

@@ -1,0 +1,55 @@
+{
+  "allowedHosts": [
+    "readichithewitch.com",
+    "www.readichithewitch.com",
+    "ww2.readichithewitch.com",
+    "cdn.readichithewitch.com",
+    "i.imgur.com"
+  ],
+  "attribution": {
+    "author": "Synthetiq-HQ",
+    "authorizationURL": null,
+    "licenseName": null,
+    "licenseURL": null,
+    "website": "https://readichithewitch.com"
+  },
+  "baseURL": "https://readichithewitch.com",
+  "capabilities": [
+    "popular",
+    "latest",
+    "search",
+    "details",
+    "chapters",
+    "images",
+    "imageRequest",
+    "discovery"
+  ],
+  "contentRating": "suggestive",
+  "contentType": "pageImages",
+  "contractVersion": 1,
+  "entry": {
+    "path": "modules/ichi-the-witch/index.js",
+    "sha256": "9893dc255c80c6ae37cad1fc430d40d1b385719095c5ef0f1bd31def6c55796a"
+  },
+  "familyID": "ichi-the-witch",
+  "icon": {
+    "path": "modules/ichi-the-witch/icon.png",
+    "sha256": "faa24ec881e6040655c187a681d6dc496eb8aa41e1bd0652a180b3a40b457187"
+  },
+  "id": "ichi-the-witch",
+  "language": "en",
+  "legacyIDs": [],
+  "limits": {
+    "cacheTTLSeconds": 900,
+    "maxConcurrentRequests": 2,
+    "maxResponseBytes": 8388608,
+    "maxScriptBytes": 262144,
+    "timeoutMilliseconds": 25000
+  },
+  "minimumAppVersion": "1.0.0",
+  "name": "Ichi the Witch",
+  "releaseTrack": "beta",
+  "status": "active",
+  "universalLink": "https://synthetiq.uk/manga/modules/ichi-the-witch",
+  "version": "1.0.0"
+}
