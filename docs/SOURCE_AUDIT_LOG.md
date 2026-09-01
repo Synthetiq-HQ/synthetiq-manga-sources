@@ -2,8 +2,8 @@
 
 **Product:** Synthetiq Books module repository  
 **Audit date:** 2026-09-01
-**Current queue item:** Content-suitability gate before the next module (Asura Scans beta remains published for device/content validation)
-**Queue overrides:** The owner temporarily moved Batcave to priority #1; it was deferred after ordinary HTTP returned a Cloudflare challenge and the browser sessions had no member access. AllManga was then audited: catalogue, details, and chapter metadata were reachable, but the reader redirected to `mkissa.to`, which returned the same Cloudflare challenge. The queue advanced to Asura Scans, then briefly to MangaXo; MangaXo was removed at the owner's request, so future candidates must pass content review before implementation.
+**Current queue item:** No safe next module; KingOfShojo failed the content-suitability gate (Asura Scans beta remains published for device/content validation)
+**Queue overrides:** The owner temporarily moved Batcave to priority #1; it was deferred after ordinary HTTP returned a Cloudflare challenge and the browser sessions had no member access. AllManga was then audited: catalogue, details, and chapter metadata were reachable, but the reader redirected to `mkissa.to`, which returned the same Cloudflare challenge. The queue advanced to Asura Scans, then briefly to MangaXo; MangaXo was removed at the owner's request. KingOfShojo was checked next and rejected for adult/mature catalogue labels, so future candidates must pass content review before implementation.
 **Publication state:** Comix, MangaBuddy, and MangaXo are removed from the active catalogue; their files/history are retained in Git history for recovery. Asura Scans beta is published at commit `ab56e9f`.
 
 ## Evidence labels
@@ -56,7 +56,16 @@ This is a triage log, not a claim that every reachable site is suitable for a mo
 | 22 | LikeManga | EXISTING | Covered by the existing MGRead module. |
 | 23 | MangaXO | REMOVED / CONTENT POLICY | Briefly published at commit `025104a`, then removed at the owner's request. It is no longer in the active index; implementation evidence remains only as historical audit context. |
 | 24 | AllManga (duplicate) | DUPLICATE | Same queue source as item 14. |
-| 25 | KingOfShojo | REACHABLE / UNASSESSED | HTTP 200; queued for a separate bounded evaluation. |
+| 25 | KingOfShojo | REJECTED / CONTENT POLICY | Current public pages expose `Adult`, `Mature`, `Smut`, `Ecchi`, `Yaoi`, and `Manhwa Hot` labels plus an 18+/mature-content warning; no module started. |
+
+## KingOfShojo safety check
+
+Checked the [KingOfShojo homepage](https://kingofshojo.com/) and its current
+[manga listing](https://kingofshojo.com/manga/?order=update&page=1) on
+2026-09-01. The homepage displays an 18/mature-content warning and adult
+category labels. The listing includes multiple entries tagged `Adult`,
+`Mature`, and `Smut`, among other adult-oriented labels. The source fails the
+content-suitability gate; no module or active index entry was created.
 
 ## MangaBuddy / Comizy module (historical release; removed from catalogue)
 

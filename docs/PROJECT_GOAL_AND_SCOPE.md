@@ -1,7 +1,7 @@
 # Project Goal and Scope
 
 _Last updated: 2026-09-01_  
-_Status: MangaBuddy, Comix, and MangaXo removed; Batcave and AllManga deferred; Asura Scans beta remains published for device/content review_
+_Status: MangaBuddy, Comix, and MangaXo removed; Batcave and AllManga deferred; KingOfShojo rejected by the content gate; Asura Scans beta remains published for device/content review_
 _Implementation confidence: 92%_
 
 ## 1. Current Goal Summary
@@ -20,6 +20,7 @@ Validate the published Asura Scans beta and apply a content-suitability gate bef
 - AllManga's catalogue, details, and chapter metadata were reachable, but its reader redirected to `mkissa.to`, which returned a Cloudflare challenge; it is deferred without a bypass.
 - Asura Scans has been published as a beta with deterministic and bounded live evidence; device validation remains outstanding.
 - MangaXo was briefly published as a beta at commit `025104a`, then removed from the active catalogue at the owner's request; its `suggestive` rating is now a content-review lesson for future candidates.
+- KingOfShojo's current public homepage and catalogue expose adult/mature content labels and warnings, so it fails the content gate and no module will be created.
 
 ## 4. Desired Outcome
 
@@ -142,6 +143,7 @@ The smallest useful version is an Asura Scans module only if ordinary access exp
 | 2026-09-01 | Publish MangaXo beta | In scope | Hand off for Books/iPad testing | Public release commit `025104a`; fixture, contract/hash, and bounded live checks passed. |
 | 2026-09-01 | Remove MangaXo beta | Reversed / content policy | Remove from active catalogue | Owner requested removal; do not add adult or sexualized modules without a prior suitability gate. |
 | 2026-09-01 | Add pre-add content suitability gate | In scope | Apply before every future module | Review genres, labels, ratings, and sample titles before implementation or publication. |
+| 2026-09-01 | Safety-check KingOfShojo | Rejected / content policy | Do not implement | Current public pages expose `Adult`, `Mature`, `Smut`, `Ecchi`, `Yaoi`, and `Manhwa Hot` labels plus an 18+/mature-content warning. |
 
 ## 17. Implementation Readiness Checklist
 
