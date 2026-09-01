@@ -523,26 +523,6 @@
     "path": "modules/mangaball/icon.png",
     "sha256": "eeeacb45c7710193a674ac462106550f6e1d27ddc7c7940e32952eebbabfb2fc"
    }
-  },
-  {
-   "id": "comix",
-   "familyID": "comix",
-   "name": "Comix",
-   "version": "1.0.5",
-   "language": "en",
-   "contentType": "pageImages",
-   "contentRating": "suggestive",
-   "releaseTrack": "beta",
-   "status": "active",
-   "sortPriority": 90,
-   "manifest": {
-    "path": "modules/comix/manifest-1.0.5.json",
-    "sha256": "87dce1fc78cf3cae7e7ee0c88592ab3c651ffcefa1a65e0b0f62fea40ba0dba1"
-   },
-   "icon": {
-    "path": "modules/comix/icon.png",
-    "sha256": "9d692cb5b15b7bc220a96bdb9a60ecb8bb33e3651e85b9c4754ce09fb443a002"
-   }
   }
  ],
  "repository": {

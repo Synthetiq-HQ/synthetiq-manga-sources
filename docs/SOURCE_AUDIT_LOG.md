@@ -2,8 +2,8 @@
 
 **Product:** Synthetiq Books module repository  
 **Audit date:** 2026-08-31  
-**Current queue item:** Comix (`https://comix.to/`)  
-**Publication state:** Public beta release; 1.0.5 performance and pagination update published
+**Current queue item:** MangaBuddy (`https://mangabuddy.com/`, currently Comizy)  
+**Publication state:** Comix removed from the active catalogue; its files are retained for recovery while MangaBuddy is evaluated locally
 
 ## Evidence labels
 
@@ -26,9 +26,9 @@ This is a triage log, not a claim that every reachable site is suitable for a mo
 | 4 | Kagane | BLOCKED | HTTP 403 Cloudflare challenge; no module started. |
 | 5 | AquaReader | BLOCKED | HTTP 403 challenge; no bypass attempted. |
 | 6 | Comick | BLOCKED | HTTP 403 challenge; no bypass attempted. |
-| 7 | Comix | PUBLISHED BETA | Implemented, tested, and published; 1.0.5 performance update is being verified. |
+| 7 | Comix | REMOVED | Removed from the active catalogue after the owner reported a title-specific Bleach failure; historical files retained for recovery. |
 | 8 | MangaDot | BLOCKED | HTTP 403 challenge; no bypass attempted. |
-| 9 | MangaBuddy | REACHABLE / UNASSESSED | HTTP 200; queued for a separate bounded evaluation. |
+| 9 | MangaBuddy | LOCAL DRAFT / CURRENT | HTTP 200; local module draft is being unit-tested before publication. |
 | 10 | QToon | REACHABLE / UNASSESSED | HTTP 200; queued for a separate bounded evaluation. |
 | 11 | Specter Scans | REACHABLE / UNASSESSED | HTTP 200; queued for a separate bounded evaluation. |
 | 12 | Mangago | BLOCKED | HTTP 403 challenge; no bypass attempted. |
@@ -46,13 +46,14 @@ This is a triage log, not a claim that every reachable site is suitable for a mo
 | 24 | AllManga (duplicate) | DUPLICATE | Same queue source as item 14. |
 | 25 | KingOfShojo | REACHABLE / UNASSESSED | HTTP 200; queued for a separate bounded evaluation. |
 
-## Comix module
+## Comix module (historical release; removed from catalogue)
 
 **Module:** `comix`  
 **Version:** `1.0.5`
 **Track:** beta  
 **Type:** `pageImages`  
 **Source:** `https://comix.to/`  
+**Catalogue status:** Removed from `index.json` on 2026-09-01 at the owner's request after the module failed on the Bleach title. The source files and historical tests remain in the repository so the removal is recoverable.  
 **Reader media:** `*.wowpic1.store/i5/` and `*.wowpic2.store/i5/` (declared in the manifest)
 
 The module uses direct server-rendered HTML for the home feed and title details. Search, chapter pagination, and reader-page discovery use the app's normal `pagev2` browser bridge so the source's own browser session owns its client-side state. The module does not call the source's protected API directly, extract its token, decrypt its responses, or bypass a challenge.
