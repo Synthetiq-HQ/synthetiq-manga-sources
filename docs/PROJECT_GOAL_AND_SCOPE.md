@@ -1,12 +1,12 @@
 # Project Goal and Scope
 
 _Last updated: 2026-09-01_  
-_Status: MangaBuddy, Comix, and MangaXo removed; Batcave and AllManga deferred; KingOfShojo rejected by the content gate; Asura Scans beta remains published; Attack on Titan is queued for audit_
+_Status: MangaBuddy, Comix, and MangaXo removed; Batcave and AllManga deferred; KingOfShojo rejected by the content gate; Asura Scans beta remains published; Attack on Titan remains first in the queue; title-site inventory recorded_
 _Implementation confidence: 92%_
 
 ## 1. Current Goal Summary
 
-Audit the queued Attack on Titan single-series source, determine whether its show-specific URL family supports a reusable module pattern, and apply the content-suitability gate before implementation after Batcave and AllManga were deferred for blocked reader access.
+Audit the queued Attack on Titan single-series source first, then work through the newly inventoried title-focused sites one at a time. Determine whether their URL families support a reusable module pattern, and apply the content-suitability gate before implementation after Batcave and AllManga were deferred for blocked reader access.
 
 ## 2. Primary Users
 
@@ -23,10 +23,12 @@ Audit the queued Attack on Titan single-series source, determine whether its sho
 - KingOfShojo's current public homepage and catalogue expose adult/mature content labels and warnings, so it fails the content gate and no module will be created.
 - The supplied Attack on Titan URL is a third-party single-series site, not an official Crunchyroll URL; it uses rotating versioned hosts and a separate image CDN.
 - The supplied Attack on Titan page has no visible adult label, but the series includes violence/horror and remains subject to content review before implementation.
+- The title-site inventory found several reachable hubs for Ichi the Witch, Sakamoto Days, Blue Lock, One Punch Man, Kingdom, Hunter x Hunter, Jujutsu Kaisen, Fairy Tail, Seven Deadly Sins, Tokyo Ghoul, Chainsaw Man, and Berserk. Several other named links now redirect to MangaBolt or are unavailable, and duplicate hosts already exist for Kagurabachi, Solo Leveling, One Piece, and Black Clover.
 
 ## 4. Desired Outcome
 
 - Determine whether the queued Attack on Titan source is technically reusable, policy-appropriate, and reliable through ordinary public access.
+- Preserve the title-site inventory and process its non-duplicate candidates in queue order; discovery does not create an active module.
 - Confirm that the published Asura Scans beta remains reachable, policy-appropriate, and technically reliable in the Books app.
 - Keep the source in beta until iOS/device behavior and content controls are confirmed.
 
@@ -34,7 +36,7 @@ Audit the queued Attack on Titan single-series source, determine whether its sho
 
 The next candidate is an Attack on Titan module only if ordinary access exposes stable title, chapter, and reader data, the host family can be handled safely, and its content review is acceptable.
 
-> The detailed MangaBuddy/Comix material below is retained as historical context; QToon, Specter Scans, MangaXo, and KingOfShojo were skipped or removed for content-policy reasons, Batcave and AllManga were deferred for blocked reader access, and Asura Scans remains published as a beta. The current queue scope is Attack on Titan audit plus the pre-add content gate.
+> The detailed MangaBuddy/Comix material below is retained as historical context; QToon, Specter Scans, MangaXo, and KingOfShojo were skipped or removed for content-policy reasons, Batcave and AllManga were deferred for blocked reader access, and Asura Scans remains published as a beta. The current queue scope is Attack on Titan first, followed by the inventoried title hubs and the pre-add content gate.
 
 ## 6. Confirmed Decisions
 
@@ -85,7 +87,7 @@ The next candidate is an Attack on Titan module only if ordinary access exposes 
 
 ## 10. Open Questions
 
-- [ ] Whether the Attack on Titan single-series host family, canonical redirects, and image CDN paths remain stable and reusable, and whether the series' mature themes are acceptable for the app's content controls.
+- [ ] Whether the Attack on Titan and later title-site host families, canonical redirects, and image CDN paths remain stable and reusable, and whether each title's mature themes are acceptable for the app's content controls.
   - Why it matters: A changing API/CDN or unsuitable content rating would make the release unreliable or inappropriate.
   - Blocking: Device/content-policy review
 
@@ -148,6 +150,7 @@ The next candidate is an Attack on Titan module only if ordinary access exposes 
 | 2026-09-01 | Add pre-add content suitability gate | In scope | Apply before every future module | Review genres, labels, ratings, and sample titles before implementation or publication. |
 | 2026-09-01 | Safety-check KingOfShojo | Rejected / content policy | Do not implement | Current public pages expose `Adult`, `Mature`, `Smut`, `Ecchi`, `Yaoi`, and `Manhwa Hot` labels plus an 18+/mature-content warning. |
 | 2026-09-01 | Queue Attack on Titan single-series source | In scope | Audit URL family and content suitability before implementation | Supplied URL is third-party rather than official Crunchyroll; rotating hosts and external CDN require discovery and bounded testing. |
+| 2026-09-01 | Inventory title-focused sites linked by the Manga Goat network | In scope | Record reachable, duplicate, redirected, and unavailable sources; keep Attack on Titan first | No module code or active index entry was created; non-duplicate candidates remain safety and technical review items. |
 
 ## 17. Implementation Readiness Checklist
 

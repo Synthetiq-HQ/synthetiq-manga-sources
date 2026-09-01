@@ -3,7 +3,7 @@
 **Product:** Synthetiq Books module repository  
 **Audit date:** 2026-09-01
 **Current queue item:** Attack on Titan single-series source (`https://w47.read-attackontitan-manga.com/`, queued; no module implemented)
-**Queue overrides:** The owner temporarily moved Batcave to priority #1; it was deferred after ordinary HTTP returned a Cloudflare challenge and the browser sessions had no member access. AllManga was then audited: catalogue, details, and chapter metadata were reachable, but the reader redirected to `mkissa.to`, which returned the same Cloudflare challenge. The queue advanced to Asura Scans, then briefly to MangaXo; MangaXo was removed at the owner's request. KingOfShojo was checked next and rejected for adult/mature catalogue labels. Attack on Titan is now queued for URL-family and content review before implementation.
+**Queue overrides:** The owner temporarily moved Batcave to priority #1; it was deferred after ordinary HTTP returned a Cloudflare challenge and the browser sessions had no member access. AllManga was then audited: catalogue, details, and chapter metadata were reachable, but the reader redirected to `mkissa.to`, which returned the same Cloudflare challenge. The queue advanced to Asura Scans, then briefly to MangaXo; MangaXo was removed at the owner's request. KingOfShojo was checked next and rejected for adult/mature catalogue labels. Attack on Titan is now queued for URL-family and content review before implementation. A related-site inventory was then performed; it adds discovery candidates to the future queue but does not create or publish modules.
 **Publication state:** Comix, MangaBuddy, and MangaXo are removed from the active catalogue; their files/history are retained in Git history for recovery. Asura Scans beta is published at commit `ab56e9f`.
 
 ## Evidence labels
@@ -82,6 +82,76 @@ it is not rejected as an adult-only source at this stage. Attack on Titan is
 still not child-safe: the official series listing carries content advisories
 for nudity, profanity, and violence. The queue status therefore remains
 `SAFETY + TECHNICAL REVIEW`; no module or active index entry has been created.
+
+## Individual-title site inventory
+
+The supplied Attack on Titan host is part of a larger network of title-focused
+reading hubs. The network does not use one reliable domain formula: some roots
+use `read<title>.com`, some use `read<title>manga.com`, and the live root often
+redirects to a rotating `wN`/`wwN` host. A bounded ordinary-HTTPS check was
+performed on the roots below, followed by inspection of chapter-shaped
+navigation and a single chapter HTML page where available. Images were not
+bulk-downloaded. A reachable root is not automatically safe or ready for a
+module.
+
+The Chainsaw Man hub's related-sites directory is the main discovery evidence:
+it links to Ichi the Witch, Sakamoto Days, Kagurabachi, Kingdom, Solo Leveling,
+Blue Lock, One Punch Man, Fairy Tail, Jujutsu Kaisen, Naruto, Berserk, and
+other title hubs. The Blue Lock and Hunter x Hunter hubs also expose additional
+series on their pages, so each future module must scope its title parser rather
+than trusting the host name alone.
+
+### Reachable title-focused hubs
+
+| Title or hub | Observed entry URL(s) | Current result | Repo comparison | Safety gate / next action |
+|---|---|---|---|---|
+| Attack on Titan / Shingeki no Kyojin | `https://w47.read-attackontitan-manga.com/`; `https://readsnk.com/` | LIVE; both expose chapter lists, and the roots rotate to versioned hosts | Not in active index; Attack on Titan is already queue item #26 | Violence/horror review; remain queue #1; do not implement in this inventory pass |
+| Chainsaw Man | `https://readchainsawman.com/` | LIVE; versioned root and chapter pages respond; the hub also carries Fujimoto-related works | Not in active index | Dark/violent themes; review before queue acceptance |
+| Ichi the Witch | `https://readichithewitch.com/` | LIVE; versioned root exposes numbered chapters | Not in active index | No adult label observed in the bounded check; safety review still required |
+| Sakamoto Days | `https://readsakadays.com/` | LIVE; versioned root exposes numbered and coloured chapters | Not in active index | No adult label observed in the bounded check; safety review still required |
+| Kagurabachi | `https://readkagurabachimanga.com/` | LIVE; versioned root exposes chapter navigation | Active `kagurabachi` module already covers a different host | Duplicate source; do not queue until a separate-source reason is established |
+| Kingdom | `https://readkingdom.com/` | LIVE; versioned root exposes numbered chapters and extra versions | Not in active index | War/violence review; candidate after gate |
+| Solo Leveling / Ragnarok | `https://readsololeveling.org/` | LIVE; versioned root exposes Solo Leveling and Ragnarok chapters | Active `solo-leveling` module already exists on another host | Duplicate source; no new module until needed |
+| Blue Lock | `https://bluelockread.com/`; `https://blue-lock-manga.com/`; `https://readbluelock-manga.com/` | LIVE; all three expose Blue Lock chapter navigation, with rotating hosts on the first two | Not in active index | No adult label observed in the bounded check; review the extra catalogue on `bluelockread.com` before queueing |
+| Nanatsu no Taizai / Seven Deadly Sins | `https://read7deadlysins.com/` | LIVE; versioned root exposes Seven Deadly Sins and Four Horsemen chapters | Not in active index | Fan-service/violence review; candidate only after gate |
+| Tokyo Ghoul / Tokyo Ghoul:re | `https://tokyoghoulre.com/` | LIVE; versioned root exposes Tokyo Ghoul, Tokyo Ghoul:re, and Choujin X links | Not in active index | Graphic horror/violence review; candidate only after gate |
+| One Piece | `https://readonepiece.com/` | LIVE; versioned root exposes numbered and coloured chapters | Active `onepiece-manga-online` module already exists on a different host | Duplicate source; no new module until needed |
+| One Punch Man | `https://readopm.com/` | LIVE; versioned root exposes chapter navigation and related series | Not in active index | No adult label observed in the bounded check; safety review still required |
+| Fairy Tail / Eden's Zero / Dead Rock | `https://readfairytail.com/` | LIVE; versioned root exposes all three series | Not in active index | Fan-service/violence review; candidate only after gate |
+| Jujutsu Kaisen | `https://readjujutsukaisen.com/`; `https://read-jjk.com/`; `https://readjujutsukaisen-manga.com/` | LIVE; all expose chapter-shaped pages, though the three layouts and metadata differ | Not in active index | Dark fantasy, death, and violence review; do not treat as safe-approved |
+| Hunter x Hunter | `https://readhxh.com/` | LIVE; versioned root exposes Hunter x Hunter, coloured chapters, and related works | Not in active index | No adult label observed in the bounded check; safety review still required |
+| Berserk | `https://readberserk.com/` | LIVE; root exposes a large numbered chapter archive and CDN-backed reader pages | Not in active index | Mature/graphic themes; hold for explicit content review |
+| Black Clover | `https://readblack-clover.com/` | LIVE; versioned root exposes genres and a numbered chapter archive; the older linked `readblackclover.com` root was unavailable | Active `black-clover` module already exists on another host | Duplicate source; no new module until needed |
+
+The live checks above are discovery evidence, not a quality certification. The
+rotating hosts, extra series, advertisements, and different image CDNs mean a
+shared parser can be a starting template, but each module still needs its own
+title ownership checks, chapter ordering tests, image-host allow-list, and
+device validation.
+
+### Linked title names that are not currently separate hubs
+
+The related-sites directory also names Oshi no Ko, JoJo's Bizarre Adventure,
+The Promised Neverland, Tokyo Revengers, My Hero Academia, Kaguya-sama: Love
+is War, Demon Slayer, Naruto, Boruto, Bleach, Dr. Stone, Dragon Ball Super,
+and Mob Psycho 100. The checked links for these currently redirect to the
+general [MangaBolt](https://mangabolt.com/) catalogue rather than remaining
+separate title hubs, so they are not new individual-site module candidates.
+`readbleachmanga.com` returned an origin `522`, and `readvinlandsaga.com` did
+not return a current usable response. `readchainsaw-man-manga.com` returned
+only a small `Loading...` shell, while the current usable Chainsaw Man hub is
+`readchainsawman.com`.
+
+### Future queue from this inventory
+
+No code or `index.json` entry was created. Attack on Titan remains first. After
+it, the non-duplicate candidates are Ichi the Witch, Sakamoto Days, Blue Lock,
+One Punch Man, Kingdom, Hunter x Hunter, Jujutsu Kaisen, Fairy Tail/Eden's
+Zero, Seven Deadly Sins, Tokyo Ghoul, Chainsaw Man, and Berserk. Each remains
+`DISCOVERED / SAFETY + TECHNICAL REVIEW`, not `SAFE`, `PUBLISHED`, or
+`ACTIVE`, until its visible content, reader behavior, and device behavior pass
+the existing gate. Kagurabachi, Solo Leveling, One Piece, and Black Clover are
+recorded as alternate hosts for modules already present in the repository.
 
 ## KingOfShojo safety check
 
