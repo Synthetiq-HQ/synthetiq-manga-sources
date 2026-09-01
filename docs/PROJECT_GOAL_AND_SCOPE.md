@@ -1,12 +1,12 @@
 # Project Goal and Scope
 
 _Last updated: 2026-09-01_  
-_Status: MangaBuddy retired; Batcave and AllManga deferred, Asura Scans published, MangaXo is the current candidate_
+_Status: MangaBuddy retired; Batcave and AllManga deferred, Asura Scans and MangaXo published as betas; MangaXo awaits device/content review_
 _Implementation confidence: 92%_
 
 ## 1. Current Goal Summary
 
-Evaluate and publish the MangaXo beta after Asura Scans was published and Batcave and AllManga were deferred for blocked reader access.
+Validate the published MangaXo beta after Asura Scans was published and Batcave and AllManga were deferred for blocked reader access.
 
 ## 2. Primary Users
 
@@ -19,18 +19,18 @@ Evaluate and publish the MangaXo beta after Asura Scans was published and Batcav
 - Batcave was rechecked through ordinary HTTP and the available browser sessions; it returned a Cloudflare challenge and members-only sign-in, so it is deferred without a bypass.
 - AllManga's catalogue, details, and chapter metadata were reachable, but its reader redirected to `mkissa.to`, which returned a Cloudflare challenge; it is deferred without a bypass.
 - Asura Scans has been published as a beta with deterministic and bounded live evidence; device validation remains outstanding.
-- MangaXo is the current candidate and has a local module with deterministic and bounded live evidence; final repository publication is in progress.
+- MangaXo is published as a beta at commit `025104a` with deterministic and bounded live evidence; device/content-control validation remains outstanding.
 
 ## 4. Desired Outcome
 
-- Establish whether MangaXo is reachable, policy-appropriate, and technically reliable through ordinary public access.
+- Confirm that the published MangaXo beta remains reachable, policy-appropriate, and technically reliable in the Books app.
 - Keep the source in beta until iOS/device behavior and content controls are confirmed.
 
 ## 5. MVP Definition
 
 The smallest useful version is a MangaXo module only if ordinary access exposes stable search/discovery, title, chapter, and reader data that passes deterministic and bounded live checks.
 
-> The detailed MangaBuddy/Comix material below is retained as historical context; QToon and Specter Scans were skipped for content-policy reasons, Batcave and AllManga were deferred for blocked reader access, Asura Scans was published as a beta, and the current queue scope is MangaXo.
+> The detailed MangaBuddy/Comix material below is retained as historical context; QToon and Specter Scans were skipped for content-policy reasons, Batcave and AllManga were deferred for blocked reader access, and Asura Scans and MangaXo were published as betas. The current queue scope is MangaXo device/content review.
 
 ## 6. Confirmed Decisions
 
@@ -96,14 +96,14 @@ The smallest useful version is a MangaXo module only if ordinary access exposes 
 | Authentication | None | Confirmed | Use the source's public browser session. |
 | APIs/Integrations | `fetchv2` for MangaXo's public HTML/AJAX and image resources | Confirmed | No direct protected API/decryption or browser challenge bypass. |
 | Caching/Refresh | Five-minute title cache with bounded size | Confirmed | Avoid repeated detail/chapter work during navigation. |
-| Deployment | Public `synthetiq-manga-sources` repository | Confirmed | Asura beta published at `ab56e9f`; MangaXo publication follows final checks. |
+| Deployment | Public `synthetiq-manga-sources` repository | Confirmed | Asura beta published at `ab56e9f`; MangaXo beta published at `025104a`. |
 | Testing | Fixtures, repository checks, and bounded live browser checks | Confirmed | Device pass remains separate. |
 | Security/Privacy | Ordinary public requests only | Confirmed | No bypass or hidden credentials. |
 
 ## 13. Core User Workflow
 
 1. Refresh the public module repository in Books.
-2. Open MangaXo and browse or search for a title.
+2. Open the MangaXo beta and browse or search for a title.
 3. Open a title and receive its description and public chapters.
 4. Open a public chapter and receive ordered CDN page images.
 
@@ -135,6 +135,7 @@ The smallest useful version is a MangaXo module only if ordinary access exposes 
 | 2026-09-01 | AllManga reader redirected to a Cloudflare-protected `mkissa.to` page | Blocked | Defer AllManga and advance to Asura Scans | Catalogue and metadata worked; no bypass or cookie extraction attempted. |
 | 2026-09-01 | Advance queue to Asura Scans | In scope | Validate and publish beta candidate | Existing isolated draft passed its bounded live proof; device/content review remains. |
 | 2026-09-01 | Advance queue to MangaXo | In scope | Validate and publish beta candidate | Existing isolated draft passed its bounded live proof; device/content review remains. |
+| 2026-09-01 | Publish MangaXo beta | In scope | Hand off for Books/iPad testing | Public release commit `025104a`; fixture, contract/hash, and bounded live checks passed; device/content review remains. |
 
 ## 17. Implementation Readiness Checklist
 

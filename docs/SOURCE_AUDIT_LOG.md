@@ -2,9 +2,9 @@
 
 **Product:** Synthetiq Books module repository  
 **Audit date:** 2026-09-01
-**Current queue item:** MangaXo (`https://mangaxo.com/`, beta candidate)
+**Current queue item:** MangaXo (`https://mangaxo.com/`, published beta awaiting device/content validation)
 **Queue overrides:** The owner temporarily moved Batcave to priority #1; it was deferred after ordinary HTTP returned a Cloudflare challenge and the browser sessions had no member access. AllManga was then audited: catalogue, details, and chapter metadata were reachable, but the reader redirected to `mkissa.to`, which returned the same Cloudflare challenge. The queue advanced to Asura Scans, which is published, and now to MangaXo.
-**Publication state:** Comix and MangaBuddy removed from the active catalogue; their files/history are retained for recovery. Asura Scans beta is published at commit `ab56e9f`; MangaXo is being prepared for beta publication.
+**Publication state:** Comix and MangaBuddy removed from the active catalogue; their files/history are retained for recovery. Asura Scans beta is published at commit `ab56e9f`; MangaXo beta is published at commit `025104a`.
 
 ## Evidence labels
 
@@ -45,7 +45,7 @@ This is a triage log, not a claim that every reachable site is suitable for a mo
 | 20 | WeebCentral | EXISTING | Existing module; no duplicate created. |
 | 21 | MangaKatana | EXISTING | Existing module; no duplicate created. |
 | 22 | LikeManga | EXISTING | Covered by the existing MGRead module. |
-| 23 | MangaXO | LOCAL_COMPLETE / CURRENT | Local module; fixture suite and bounded live quality proof passed 100% (80/80 checks) across six titles. Beta publication follows final repository validation. |
+| 23 | MangaXO | PUBLISHED_BETA / CURRENT | Public beta at commit `025104a`; fixture, contract/hash, and bounded live quality proof passed 100% (80/80 checks) across six titles. Device/content-control testing remains. |
 | 24 | AllManga (duplicate) | DUPLICATE | Same queue source as item 14. |
 | 25 | KingOfShojo | REACHABLE / UNASSESSED | HTTP 200; queued for a separate bounded evaluation. |
 
@@ -209,3 +209,6 @@ CAPTCHA handling, or challenge bypass.
   installation remains the final acceptance step.
 - The beta manifest is marked `suggestive`; the app's content controls should
   be checked before wider rollout.
+- `PUBLICATION`: pushed to `synthetiq-manga-sources` `main` at commit
+  `025104a` after the repository test, contract, manifest/hash, and live proof
+  gates passed.
