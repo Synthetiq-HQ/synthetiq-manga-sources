@@ -920,6 +920,85 @@ test("One Piece preserves decimal chapters, excludes unrelated links, and reject
   );
 });
 
+test("Attack on Titan collapses aliases, orders chapters, and de-duplicates lazy reader images", async () => {
+  const fixtures = {
+    home: await text("modules/attack-on-titan/fixtures/home.html"),
+    chapter: await text("modules/attack-on-titan/fixtures/chapter.html"),
+    emptyChapter: await text("modules/attack-on-titan/fixtures/chapter-empty.html"),
+    challenge: await text("modules/attack-on-titan/fixtures/challenge.html"),
+    expected: await json("modules/attack-on-titan/fixtures/expected.json"),
+  };
+  const calls = [];
+  const module = await loadModule("modules/attack-on-titan/index.js", {
+    fetchv2: async (url, headers, method, body, options) => {
+      assert.equal(typeof url, "string");
+      assert.equal(method, "GET");
+      assert.equal(body, null);
+      assert.equal(options.followRedirects, true);
+      assert.equal(options.responseClass, "html");
+      calls.push(url);
+      if (/\/manga\/.*chapter/i.test(url)) return response(fixtures.chapter);
+      return response(fixtures.home);
+    },
+  });
+
+  assert.deepEqual(
+    JSON.parse(JSON.stringify(await module.searchResults("attack titan", 1))),
+    fixtures.expected.search,
+  );
+  assert.deepEqual(
+    JSON.parse(JSON.stringify(await module.searchResults("shingeki no kyojin", 1))),
+    fixtures.expected.search,
+  );
+  assert.deepEqual(
+    JSON.parse(JSON.stringify(await module.searchResults("__feed:popular", 1))),
+    fixtures.expected.search,
+  );
+  assert.deepEqual(
+    JSON.parse(JSON.stringify(await module.searchResults("zzz-no-match-token", 1))),
+    { items: [], hasMore: false },
+  );
+
+  const details = await module.extractDetails(fixtures.expected.details.id);
+  assert.deepEqual(JSON.parse(JSON.stringify(details)), fixtures.expected.details);
+
+  const chapters = await module.extractChapters(fixtures.expected.details.id);
+  assert.deepEqual(JSON.parse(JSON.stringify(chapters)), fixtures.expected.chapters);
+  assert.equal(chapters.length, 5);
+  assert.equal(chapters[0].number, 139.5);
+  assert.equal(chapters[0].title, "Attack on Titan Chapter 139.5");
+  assert.equal(chapters.some((chapter) => chapter.title.includes("Chapter 140")), false);
+  assert.equal(new Set(chapters.map((chapter) => chapter.number)).size, chapters.length);
+
+  const pages = await module.extractImages(chapters[2].id);
+  assert.deepEqual(JSON.parse(JSON.stringify(pages)), fixtures.expected.images);
+  assert.equal(new Set(pages.map((page) => page.url)).size, 4);
+  assert.ok(pages.every((page) => /^https:\/\/cdn\.(mangagoa\.xyz|readkakegurui\.com)\//.test(page.url)));
+  assert.ok(calls.every((url) => !url.includes("evil.example")));
+
+  const emptyChapterModule = await loadModule("modules/attack-on-titan/index.js", {
+    fetchv2: async (url) => response(
+      /\/manga\/.*chapter/i.test(url) ? fixtures.emptyChapter : fixtures.home,
+    ),
+  });
+  await assert.rejects(
+    () => emptyChapterModule.extractImages(chapters[2].id),
+    /chapter 138 is not available yet/i,
+  );
+
+  const challengeModule = await loadModule("modules/attack-on-titan/index.js", {
+    fetchv2: async () => response(fixtures.challenge),
+  });
+  await assert.rejects(
+    () => challengeModule.searchResults("attack titan", 1),
+    /challenge or access-denied/i,
+  );
+  await assert.rejects(
+    () => module.extractImages("https://evil.example/manga/attack-on-titan-chapter-1/"),
+    /invalid Attack on Titan chapter identifier/i,
+  );
+});
+
 test("SNAFU Comics parses catalogue, archive pages, and comic images", async () => {
   const fixtures = {
     allComics: await text("modules/snafu/fixtures/all-comics.html"),

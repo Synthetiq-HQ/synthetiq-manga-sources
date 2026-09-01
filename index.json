@@ -521,7 +521,27 @@
    },
    "icon": {
     "path": "modules/mangaball/icon.png",
-    "sha256": "eeeacb45c7710193a674ac462106550f6e1d27ddc7c7940e32952eebbabfb2fc"
+   "sha256": "eeeacb45c7710193a674ac462106550f6e1d27ddc7c7940e32952eebbabfb2fc"
+   }
+  },
+  {
+   "id": "attack-on-titan",
+   "familyID": "attack-on-titan",
+   "name": "Attack on Titan",
+   "version": "1.0.0",
+   "language": "en",
+   "contentType": "pageImages",
+   "contentRating": "suggestive",
+   "releaseTrack": "beta",
+   "status": "active",
+   "sortPriority": 90,
+   "manifest": {
+    "path": "modules/attack-on-titan/manifest.json",
+    "sha256": "bd315531c29dc69e7b4311d4edb78be906a39648309d61d650310504cb9bd743"
+   },
+   "icon": {
+    "path": "modules/attack-on-titan/icon.png",
+    "sha256": "46912e92610cd88394d18f22e14c69648e66ea1fcee3eac646ffad044efd02aa"
    }
   },
   {

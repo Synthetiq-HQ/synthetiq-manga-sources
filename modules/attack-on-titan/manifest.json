@@ -1,0 +1,57 @@
+{
+  "allowedHosts": [
+    "w47.read-attackontitan-manga.com",
+    "w40.read-attackontitan-manga.com",
+    "w46.read-attackontitan-manga.com",
+    "read-attackontitan-manga.com",
+    "www.read-attackontitan-manga.com",
+    "cdn.mangagoa.xyz",
+    "cdn.readkakegurui.com"
+  ],
+  "attribution": {
+    "author": "Synthetiq-HQ",
+    "authorizationURL": null,
+    "licenseName": null,
+    "licenseURL": null,
+    "website": "https://w47.read-attackontitan-manga.com"
+  },
+  "baseURL": "https://w47.read-attackontitan-manga.com",
+  "capabilities": [
+    "popular",
+    "latest",
+    "search",
+    "details",
+    "chapters",
+    "images",
+    "imageRequest",
+    "discovery"
+  ],
+  "contentRating": "suggestive",
+  "contentType": "pageImages",
+  "contractVersion": 1,
+  "entry": {
+    "path": "modules/attack-on-titan/index.js",
+    "sha256": "ef6ad42a65e1e3e2401cc83b14f86e546df4751623c45312a60d3995a2b8c636"
+  },
+  "familyID": "attack-on-titan",
+  "icon": {
+    "path": "modules/attack-on-titan/icon.png",
+    "sha256": "46912e92610cd88394d18f22e14c69648e66ea1fcee3eac646ffad044efd02aa"
+  },
+  "id": "attack-on-titan",
+  "language": "en",
+  "legacyIDs": [],
+  "limits": {
+    "cacheTTLSeconds": 900,
+    "maxConcurrentRequests": 2,
+    "maxResponseBytes": 8388608,
+    "maxScriptBytes": 262144,
+    "timeoutMilliseconds": 25000
+  },
+  "minimumAppVersion": "1.0.0",
+  "name": "Attack on Titan",
+  "releaseTrack": "beta",
+  "status": "active",
+  "universalLink": "https://synthetiq.uk/manga/modules/attack-on-titan",
+  "version": "1.0.0"
+}

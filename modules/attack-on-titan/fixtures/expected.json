@@ -1,0 +1,97 @@
+{
+  "search": {
+    "items": [
+      {
+        "id": "https://w47.read-attackontitan-manga.com/",
+        "href": "https://w47.read-attackontitan-manga.com/",
+        "url": "https://w47.read-attackontitan-manga.com/",
+        "title": "Attack on Titan",
+        "image": "https://www.read-attackontitan-manga.com/wp-content/uploads/fixture/attack-on-titan-cover.webp",
+        "description": "Fixture listing for the Attack on Titan source."
+      }
+    ],
+    "hasMore": false
+  },
+  "details": {
+    "id": "https://w47.read-attackontitan-manga.com/",
+    "href": "https://w47.read-attackontitan-manga.com/",
+    "url": "https://w47.read-attackontitan-manga.com/",
+    "title": "Attack on Titan",
+    "image": "https://www.read-attackontitan-manga.com/wp-content/uploads/fixture/attack-on-titan-cover.webp",
+    "description": "Fixture listing for the Attack on Titan source.",
+    "status": "Completed",
+    "genres": ["Action", "Drama", "Fantasy", "Shounen"]
+  },
+  "chapters": [
+    {
+      "id": "https://w47.read-attackontitan-manga.com/manga/shingeki-no-kyojin-colored-chapter-139-5/",
+      "href": "https://w47.read-attackontitan-manga.com/manga/shingeki-no-kyojin-colored-chapter-139-5/",
+      "url": "https://w47.read-attackontitan-manga.com/manga/shingeki-no-kyojin-colored-chapter-139-5/",
+      "title": "Attack on Titan Chapter 139.5",
+      "number": 139.5,
+      "language": "en"
+    },
+    {
+      "id": "https://w47.read-attackontitan-manga.com/manga/attack-on-titan-chapter-139/",
+      "href": "https://w47.read-attackontitan-manga.com/manga/attack-on-titan-chapter-139/",
+      "url": "https://w47.read-attackontitan-manga.com/manga/attack-on-titan-chapter-139/",
+      "title": "Attack on Titan Chapter 139",
+      "number": 139,
+      "language": "en"
+    },
+    {
+      "id": "https://w47.read-attackontitan-manga.com/manga/attack-on-titan-chapter-138/",
+      "href": "https://w47.read-attackontitan-manga.com/manga/attack-on-titan-chapter-138/",
+      "url": "https://w47.read-attackontitan-manga.com/manga/attack-on-titan-chapter-138/",
+      "title": "Attack on Titan Chapter 138",
+      "number": 138,
+      "language": "en"
+    },
+    {
+      "id": "https://w47.read-attackontitan-manga.com/manga/shingeki-no-kyojin-chapter-135/",
+      "href": "https://w47.read-attackontitan-manga.com/manga/shingeki-no-kyojin-chapter-135/",
+      "url": "https://w47.read-attackontitan-manga.com/manga/shingeki-no-kyojin-chapter-135/",
+      "title": "Attack on Titan Chapter 135",
+      "number": 135,
+      "language": "en"
+    },
+    {
+      "id": "https://w47.read-attackontitan-manga.com/manga/attack-on-titan-chapter-1/",
+      "href": "https://w47.read-attackontitan-manga.com/manga/attack-on-titan-chapter-1/",
+      "url": "https://w47.read-attackontitan-manga.com/manga/attack-on-titan-chapter-1/",
+      "title": "Attack on Titan Chapter 1",
+      "number": 1,
+      "language": "en"
+    }
+  ],
+  "images": [
+    {
+      "url": "https://cdn.mangagoa.xyz/fixture/attack-on-titan-138-001.jpg",
+      "headers": {
+        "Accept": "image/avif,image/webp,image/*,*/*",
+        "Referer": "https://w47.read-attackontitan-manga.com/manga/attack-on-titan-chapter-138/"
+      }
+    },
+    {
+      "url": "https://cdn.mangagoa.xyz/fixture/attack-on-titan-138-002.jpg",
+      "headers": {
+        "Accept": "image/avif,image/webp,image/*,*/*",
+        "Referer": "https://w47.read-attackontitan-manga.com/manga/attack-on-titan-chapter-138/"
+      }
+    },
+    {
+      "url": "https://cdn.mangagoa.xyz/fixture/attack-on-titan-138-003.jpg",
+      "headers": {
+        "Accept": "image/avif,image/webp,image/*,*/*",
+        "Referer": "https://w47.read-attackontitan-manga.com/manga/attack-on-titan-chapter-138/"
+      }
+    },
+    {
+      "url": "https://cdn.readkakegurui.com/fixture/attack-on-titan-138-004.jpg",
+      "headers": {
+        "Accept": "image/avif,image/webp,image/*,*/*",
+        "Referer": "https://w47.read-attackontitan-manga.com/manga/attack-on-titan-chapter-138/"
+      }
+    }
+  ]
+}

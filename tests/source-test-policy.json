@@ -108,6 +108,9 @@
   "onepiece-manga-online": {
    "chapterScope": "fixed-series-dom"
   },
+  "attack-on-titan": {
+   "chapterScope": "fixed-series-dom"
+  },
   "asura-scans": {
    "chapterScope": "selected-series-dom",
    "requiredCodeFragments": [

@@ -1,12 +1,12 @@
 # Project Goal and Scope
 
 _Last updated: 2026-09-01_  
-_Status: MangaBuddy, Comix, and MangaXo removed; Batcave and AllManga deferred; KingOfShojo rejected by the content gate; Asura Scans beta remains published; Attack on Titan remains first; 12 additional title-site candidates queued in order_
+_Status: MangaBuddy, Comix, and MangaXo removed; Batcave and AllManga deferred; KingOfShojo rejected by the content gate; Asura Scans and Attack on Titan betas are published for testing; Ichi the Witch is next; the remaining title-site candidates stay queued in order_
 _Implementation confidence: 92%_
 
 ## 1. Current Goal Summary
 
-Audit the queued Attack on Titan single-series source first, then work through the newly inventoried title-focused sites one at a time. Determine whether their URL families support a reusable module pattern, and apply the content-suitability gate before implementation after Batcave and AllManga were deferred for blocked reader access.
+Validate the published Attack on Titan single-series beta, then work through the newly inventoried title-focused sites one at a time starting with Ichi the Witch. Determine whether their URL families support a reusable module pattern, and apply the content-suitability gate before each implementation after Batcave and AllManga were deferred for blocked reader access.
 
 ## 2. Primary Users
 
@@ -21,22 +21,22 @@ Audit the queued Attack on Titan single-series source first, then work through t
 - Asura Scans has been published as a beta with deterministic and bounded live evidence; device validation remains outstanding.
 - MangaXo was briefly published as a beta at commit `025104a`, then removed from the active catalogue at the owner's request; its `suggestive` rating is now a content-review lesson for future candidates.
 - KingOfShojo's current public homepage and catalogue expose adult/mature content labels and warnings, so it fails the content gate and no module will be created.
-- The supplied Attack on Titan URL is a third-party single-series site, not an official Crunchyroll URL; it uses rotating versioned hosts and a separate image CDN.
-- The supplied Attack on Titan page has no visible adult label, but the series includes violence/horror and remains subject to content review before implementation.
+- The supplied Attack on Titan URL is a third-party single-series site, not an official Crunchyroll URL; its published beta handles rotating versioned page hosts and two observed reader CDNs.
+- The supplied Attack on Titan page has no visible Adult or Smut label, but the series includes violence/horror and the official listing carries nudity, profanity, and violence advisories; the module is therefore marked `suggestive` and remains beta-only pending device content-control testing.
 - The title-site inventory found several reachable hubs for Ichi the Witch, Sakamoto Days, Blue Lock, One Punch Man, Kingdom, Hunter x Hunter, Jujutsu Kaisen, Fairy Tail, Seven Deadly Sins, Tokyo Ghoul, Chainsaw Man, and Berserk. Several other named links now redirect to MangaBolt or are unavailable, and duplicate hosts already exist for Kagurabachi, Solo Leveling, One Piece, and Black Clover.
 
 ## 4. Desired Outcome
 
-- Determine whether the queued Attack on Titan source is technically reusable, policy-appropriate, and reliable through ordinary public access.
-- Preserve the title-site inventory and process its 12 non-duplicate candidates in queue order after Attack on Titan; discovery does not create an active module.
+- Confirm that the published Attack on Titan beta is technically reusable, policy-appropriate for beta testing, and reliable through ordinary public access.
+- Preserve the title-site inventory and process its 12 non-duplicate candidates in queue order, with Ichi the Witch next; discovery does not create an active module.
 - Confirm that the published Asura Scans beta remains reachable, policy-appropriate, and technically reliable in the Books app.
-- Keep the source in beta until iOS/device behavior and content controls are confirmed.
+- Keep both title-focused sources in beta until iOS/device behavior and content controls are confirmed.
 
 ## 5. MVP Definition
 
-The next candidate is an Attack on Titan module only if ordinary access exposes stable title, chapter, and reader data, the host family can be handled safely, and its content review is acceptable.
+The current candidate is the published Attack on Titan beta. The next candidate is Ichi the Witch only if its ordinary access exposes stable title, chapter, and reader data, its host family can be handled safely, and its content review is acceptable.
 
-> The detailed MangaBuddy/Comix material below is retained as historical context; QToon, Specter Scans, MangaXo, and KingOfShojo were skipped or removed for content-policy reasons, Batcave and AllManga were deferred for blocked reader access, and Asura Scans remains published as a beta. The current queue scope is Attack on Titan first, followed by the inventoried title hubs and the pre-add content gate.
+> The detailed MangaBuddy/Comix material below is retained as historical context; QToon, Specter Scans, MangaXo, and KingOfShojo were skipped or removed for content-policy reasons, Batcave and AllManga were deferred for blocked reader access, and Asura Scans and Attack on Titan remain published as betas. The current queue scope is Ichi the Witch next, followed by the inventoried title hubs and the pre-add content gate.
 
 ## 6. Confirmed Decisions
 
@@ -87,8 +87,8 @@ The next candidate is an Attack on Titan module only if ordinary access exposes 
 
 ## 10. Open Questions
 
-- [ ] Whether the Attack on Titan and later title-site host families, canonical redirects, and image CDN paths remain stable and reusable, and whether each title's mature themes are acceptable for the app's content controls.
-  - Why it matters: A changing API/CDN or unsuitable content rating would make the release unreliable or inappropriate.
+- [ ] Whether the published Attack on Titan host family and both observed image CDNs remain stable, whether its beta content classification works in the app, and whether later title-site themes are acceptable for the app's content controls.
+  - Why it matters: A changing host/CDN or unsuitable content rating would make the release unreliable or inappropriate.
   - Blocking: Device/content-policy review
 
 ## 11. Assumptions
@@ -106,7 +106,7 @@ The next candidate is an Attack on Titan module only if ordinary access exposes 
 | Authentication | None | Confirmed | Use the source's public browser session. |
 | APIs/Integrations | `fetchv2` for the queued source's public HTML and declared image resources | Confirmed | No direct protected API/decryption or browser challenge bypass. |
 | Caching/Refresh | Five-minute title cache with bounded size | Confirmed | Avoid repeated detail/chapter work during navigation. |
-| Deployment | Public `synthetiq-manga-sources` repository | Confirmed | Asura beta published at `ab56e9f`; no Attack on Titan module exists yet. |
+| Deployment | Public `synthetiq-manga-sources` repository | Confirmed | Asura beta published at `ab56e9f`; Attack on Titan beta is now active in `index.json` for owner testing. |
 | Testing | Fixtures, repository checks, and bounded live browser checks | Confirmed | Device pass remains separate. |
 | Security/Privacy | Ordinary public requests only | Confirmed | No bypass or hidden credentials. |
 
@@ -119,11 +119,11 @@ The next candidate is an Attack on Titan module only if ordinary access exposes 
 
 ## 14. Acceptance Criteria
 
-- [ ] Discovery and search return the complete source page without artificial trimming.
-- [ ] Chapter extraction preserves series ownership, numeric order, and public-access status.
-- [ ] Reader extraction returns every declared page in order and rejects malformed/off-host media.
-- [ ] Repository tests, source policy, manifest hashes, and repository verification pass.
-- [ ] The release is pushed to the public repository and its immutable and live `main` index/manifest/code/icon hashes match.
+- [x] Discovery and search return the complete source page without artificial trimming.
+- [x] Chapter extraction preserves series ownership, numeric order, and public-access status.
+- [x] Reader extraction returns every declared page in order and rejects malformed/off-host media.
+- [x] Repository tests, source policy, manifest hashes, and repository verification pass.
+- [x] The beta release is pushed to the public repository and its immutable and live `main` index/manifest/code/icon hashes match.
 - [ ] Device testing is reported separately from Windows/browser evidence.
 
 ## 15. Risks and Tradeoffs
@@ -150,6 +150,7 @@ The next candidate is an Attack on Titan module only if ordinary access exposes 
 | 2026-09-01 | Add pre-add content suitability gate | In scope | Apply before every future module | Review genres, labels, ratings, and sample titles before implementation or publication. |
 | 2026-09-01 | Safety-check KingOfShojo | Rejected / content policy | Do not implement | Current public pages expose `Adult`, `Mature`, `Smut`, `Ecchi`, `Yaoi`, and `Manhwa Hot` labels plus an 18+/mature-content warning. |
 | 2026-09-01 | Queue Attack on Titan single-series source | In scope | Audit URL family and content suitability before implementation | Supplied URL is third-party rather than official Crunchyroll; rotating hosts and external CDN require discovery and bounded testing. |
+| 2026-09-01 | Implement and publish Attack on Titan beta | In scope | Release for owner/device testing and advance queue to Ichi the Witch | Fixture, contract/hash, and bounded live checks passed; five spaced chapters and both observed reader CDNs returned valid image deliveries. |
 | 2026-09-01 | Inventory title-focused sites linked by the Manga Goat network | In scope | Record reachable, duplicate, redirected, and unavailable sources; keep Attack on Titan first | No module code or active index entry was created; non-duplicate candidates remain safety and technical review items. |
 | 2026-09-01 | Queue the 12 non-duplicate title-site candidates | In scope | Process Ichi the Witch through Berserk one at a time after Attack on Titan | Fixed order recorded in `docs/SOURCE_AUDIT_LOG.md`; duplicate, redirected, parked, and unavailable sources remain out of the module queue. |
 

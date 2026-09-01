@@ -2,9 +2,9 @@
 
 **Product:** Synthetiq Books module repository  
 **Audit date:** 2026-09-01
-**Current queue item:** Attack on Titan single-series source (`https://w47.read-attackontitan-manga.com/`, queued; no module implemented)
-**Queue overrides:** The owner temporarily moved Batcave to priority #1; it was deferred after ordinary HTTP returned a Cloudflare challenge and the browser sessions had no member access. AllManga was then audited: catalogue, details, and chapter metadata were reachable, but the reader redirected to `mkissa.to`, which returned the same Cloudflare challenge. The queue advanced to Asura Scans, then briefly to MangaXo; MangaXo was removed at the owner's request. KingOfShojo was checked next and rejected for adult/mature catalogue labels. Attack on Titan is now queued for URL-family and content review before implementation. A related-site inventory was then performed; twelve non-duplicate candidates are now queued behind Attack on Titan in fixed order. This queue does not create or publish modules.
-**Publication state:** Comix, MangaBuddy, and MangaXo are removed from the active catalogue; their files/history are retained in Git history for recovery. Asura Scans beta is published at commit `ab56e9f`.
+**Current queue item:** Ichi the Witch (#27) is next after the Attack on Titan beta (`https://w47.read-attackontitan-manga.com/`) was implemented and published for owner testing.
+**Queue overrides:** The owner temporarily moved Batcave to priority #1; it was deferred after ordinary HTTP returned a Cloudflare challenge and the browser sessions had no member access. AllManga was then audited: catalogue, details, and chapter metadata were reachable, but the reader redirected to `mkissa.to`, which returned the same Cloudflare challenge. The queue advanced to Asura Scans, then briefly to MangaXo; MangaXo was removed at the owner's request. KingOfShojo was checked next and rejected for adult/mature catalogue labels. Attack on Titan was implemented as the next title-focused beta after its URL-family, reader, and content review. The queue now advances to Ichi the Witch, followed by the remaining inventoried candidates in fixed order. This queue does not create or publish modules until each candidate passes its checks.
+**Publication state:** Comix, MangaBuddy, and MangaXo are removed from the active catalogue; their files/history are retained in Git history for recovery. Asura Scans beta is published at commit `ab56e9f`. Attack on Titan is published as a `suggestive` beta for owner/device testing.
 
 ## Evidence labels
 
@@ -16,6 +16,7 @@
 - **REACHABLE / UNASSESSED** — ordinary access responded, but no module has been accepted yet.
 - **LOCAL_COMPLETE** — an isolated module implementation and deterministic tests passed; publication is still pending.
 - **LIVE_NODE_PASS** — a bounded live Node proof reached the source and terminal media; this is not iOS/device evidence.
+- **PUBLIC_BETA** — the validated module is active in the public repository's index on the beta track for owner testing.
 - **REMOVED / CONTENT POLICY** — a module was removed from the active catalogue after owner review; it must not be treated as an available source.
 
 ## Content-suitability gate
@@ -57,7 +58,7 @@ This is a triage log, not a claim that every reachable site is suitable for a mo
 | 23 | MangaXO | REMOVED / CONTENT POLICY | Briefly published at commit `025104a`, then removed at the owner's request. It is no longer in the active index; implementation evidence remains only as historical audit context. |
 | 24 | AllManga (duplicate) | DUPLICATE | Same queue source as item 14. |
 | 25 | KingOfShojo | REJECTED / CONTENT POLICY | Current public pages expose `Adult`, `Mature`, `Smut`, `Ecchi`, `Yaoi`, and `Manhwa Hot` labels plus an 18+/mature-content warning; no module started. |
-| 26 | Attack on Titan single-series site | QUEUED / SAFETY + TECHNICAL REVIEW | Supplied URL is a third-party single-series host, not official Crunchyroll. Initial page shows public chapters and no adult label; rotating hosts, external CDN, and mature violence/horror require review before implementation. |
+| 26 | Attack on Titan single-series site | PUBLISHED_BETA / CURRENT | Third-party single-series host, not official Crunchyroll. Visible page showed public chapters and no Adult/Smut label; the beta now handles rotating page hosts, both observed reader CDNs, numeric aliases, lazy-image duplicates, and challenge/error responses. |
 | 27 | Ichi the Witch | QUEUED / SAFETY + TECHNICAL REVIEW | Reachable title-focused hub; process after Attack on Titan. No module or active index entry exists. |
 | 28 | Sakamoto Days | QUEUED / SAFETY + TECHNICAL REVIEW | Reachable title-focused hub; process after Ichi the Witch. No module or active index entry exists. |
 | 29 | Blue Lock | QUEUED / SAFETY + TECHNICAL REVIEW | Reachable through multiple title-focused hubs; process after Sakamoto Days. Extra catalogue on one hub requires title scoping. |
@@ -80,7 +81,8 @@ separate subscription service and is not the source being queued here.
 The supplied page is a single-series Attack on Titan catalogue with paths such
 as `/attack-on-titan-manga` and `/manga/attack-on-titan-chapter-1/`. Its links
 currently move between versioned hosts such as `w47`, `w40`, and `w46`, while
-reader images are served from `cdn.mangagoa.xyz`. The page also links to the
+reader images are served from the observed CDNs `cdn.mangagoa.xyz` and
+`cdn.readkakegurui.com`. The page also links to the
 broader Manga Goat network, whose visible home catalogue includes Attack on
 Titan, One Piece, Blue Lock, Spy X Family, Black Clover, and other titles.
 This is useful evidence for a shared layout, but it is not proof that every
@@ -90,10 +92,32 @@ checked independently.
 ### Preliminary safety result
 
 The supplied single-series page did not expose an `Adult` or `Smut` label, so
-it is not rejected as an adult-only source at this stage. Attack on Titan is
-still not child-safe: the official series listing carries content advisories
-for nudity, profanity, and violence. The queue status therefore remains
-`SAFETY + TECHNICAL REVIEW`; no module or active index entry has been created.
+it was not rejected as an adult-only source. Attack on Titan is still not
+child-safe: the official series listing carries content advisories for nudity,
+profanity, and violence. The module is therefore classified `suggestive` and
+published on the beta track for owner/device content-control testing.
+
+### Attack on Titan module implementation and bounded quality result
+
+The beta module is title-scoped to Attack on Titan and accepts only the
+observed versioned page hosts plus the two observed reader CDNs. It normalizes
+the `attack-on-titan` and `shingeki-no-kyojin` URL aliases, de-duplicates the
+repeated home-page entries, derives chapter numbers from URLs rather than
+misleading link labels, and collapses lazy placeholders with their real image
+tags without changing page order.
+
+- **FIXTURE_PASS** — deterministic module tests cover search, details, alias
+  normalization, duplicate chapter removal, numeric ordering, both image-CDN
+  hosts, lazy-image de-duplication, off-host rejection, unavailable chapters,
+  and challenge responses.
+- **LIVE_NODE_PASS** — the public home returned 140 unique chapters. Chapters
+  139.5, 100, 65, 20, and 1 were sampled; every sample returned unique ordered
+  pages, and first/middle/last image deliveries returned HTTP 200 from the
+  declared CDN with image/jpeg content.
+- **PUBLIC_BETA** — the module is active in `index.json` on the beta track
+  for owner testing.
+- **IOS_RUNTIME_PASS / DEVICE_PASS** — not claimed; the installed Books app and
+  real iOS bridge still require the owner's test.
 
 ## Individual-title site inventory
 
@@ -117,7 +141,7 @@ than trusting the host name alone.
 
 | Title or hub | Observed entry URL(s) | Current result | Repo comparison | Safety gate / next action |
 |---|---|---|---|---|
-| Attack on Titan / Shingeki no Kyojin | `https://w47.read-attackontitan-manga.com/`; `https://readsnk.com/` | LIVE; both expose chapter lists, and the roots rotate to versioned hosts | Not in active index; Attack on Titan is already queue item #26 | Violence/horror review; remain queue #1; do not implement in this inventory pass |
+| Attack on Titan / Shingeki no Kyojin | `https://w47.read-attackontitan-manga.com/`; `https://readsnk.com/` | LIVE; both expose chapter lists, and the roots rotate to versioned hosts | Active beta `attack-on-titan` module now covers the supplied host family | Violence/horror review remains; owner/device content-control testing is still required |
 | Chainsaw Man | `https://readchainsawman.com/` | LIVE; versioned root and chapter pages respond; the hub also carries Fujimoto-related works | Not in active index | Dark/violent themes; review before queue acceptance |
 | Ichi the Witch | `https://readichithewitch.com/` | LIVE; versioned root exposes numbered chapters | Not in active index | No adult label observed in the bounded check; safety review still required |
 | Sakamoto Days | `https://readsakadays.com/` | LIVE; versioned root exposes numbered and coloured chapters | Not in active index | No adult label observed in the bounded check; safety review still required |
@@ -156,13 +180,14 @@ only a small `Loading...` shell, while the current usable Chainsaw Man hub is
 
 ### Future queue from this inventory
 
-No code or `index.json` entry was created. The ordered future queue is #26
-Attack on Titan, followed by #27 Ichi the Witch, #28 Sakamoto Days, #29 Blue
-Lock, #30 One Punch Man, #31 Kingdom, #32 Hunter x Hunter, #33 Jujutsu
-Kaisen, #34 Fairy Tail/Eden's Zero/Dead Rock, #35 Seven Deadly Sins, #36
-Tokyo Ghoul, #37 Chainsaw Man, and #38 Berserk. Each remains `QUEUED / SAFETY
-+ TECHNICAL REVIEW`, not `SAFE`, `PUBLISHED`, or `ACTIVE`, until its visible
-content, reader behavior, and device behavior pass the existing gate.
+The Attack on Titan module is now active in `index.json` on the beta track.
+The ordered future queue starts with #27 Ichi the Witch, followed by #28
+Sakamoto Days, #29 Blue Lock, #30 One Punch Man, #31 Kingdom, #32 Hunter x
+Hunter, #33 Jujutsu Kaisen, #34 Fairy Tail/Eden's Zero/Dead Rock, #35 Seven
+Deadly Sins, #36 Tokyo Ghoul, #37 Chainsaw Man, and #38 Berserk. Each remains
+`QUEUED / SAFETY + TECHNICAL REVIEW`, not `SAFE`, `PUBLISHED`, or
+`ACTIVE`, until its visible content, reader behavior, and device behavior
+pass the existing gate.
 Kagurabachi, Solo Leveling, One Piece, and Black Clover are recorded as
 alternate hosts for modules already present in the repository and are not
 duplicate queue entries.
