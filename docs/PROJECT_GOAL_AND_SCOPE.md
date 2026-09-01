@@ -1,12 +1,12 @@
 # Project Goal and Scope
 
 _Last updated: 2026-09-01_  
-_Status: MangaBuddy, Comix, and MangaXo removed; Batcave and AllManga deferred; KingOfShojo rejected by the content gate; Asura Scans beta remains published for device/content review_
+_Status: MangaBuddy, Comix, and MangaXo removed; Batcave and AllManga deferred; KingOfShojo rejected by the content gate; Asura Scans beta remains published; Attack on Titan is queued for audit_
 _Implementation confidence: 92%_
 
 ## 1. Current Goal Summary
 
-Validate the published Asura Scans beta and apply a content-suitability gate before starting another module after Batcave and AllManga were deferred for blocked reader access.
+Audit the queued Attack on Titan single-series source, determine whether its show-specific URL family supports a reusable module pattern, and apply the content-suitability gate before implementation after Batcave and AllManga were deferred for blocked reader access.
 
 ## 2. Primary Users
 
@@ -21,17 +21,20 @@ Validate the published Asura Scans beta and apply a content-suitability gate bef
 - Asura Scans has been published as a beta with deterministic and bounded live evidence; device validation remains outstanding.
 - MangaXo was briefly published as a beta at commit `025104a`, then removed from the active catalogue at the owner's request; its `suggestive` rating is now a content-review lesson for future candidates.
 - KingOfShojo's current public homepage and catalogue expose adult/mature content labels and warnings, so it fails the content gate and no module will be created.
+- The supplied Attack on Titan URL is a third-party single-series site, not an official Crunchyroll URL; it uses rotating versioned hosts and a separate image CDN.
+- The supplied Attack on Titan page has no visible adult label, but the series includes violence/horror and remains subject to content review before implementation.
 
 ## 4. Desired Outcome
 
+- Determine whether the queued Attack on Titan source is technically reusable, policy-appropriate, and reliable through ordinary public access.
 - Confirm that the published Asura Scans beta remains reachable, policy-appropriate, and technically reliable in the Books app.
 - Keep the source in beta until iOS/device behavior and content controls are confirmed.
 
 ## 5. MVP Definition
 
-The smallest useful version is an Asura Scans module only if ordinary access exposes stable search/discovery, title, chapter, and reader data that passes deterministic and bounded live checks and its content review is acceptable.
+The next candidate is an Attack on Titan module only if ordinary access exposes stable title, chapter, and reader data, the host family can be handled safely, and its content review is acceptable.
 
-> The detailed MangaBuddy/Comix material below is retained as historical context; QToon, Specter Scans, and MangaXo were skipped or removed for content-policy reasons, Batcave and AllManga were deferred for blocked reader access, and Asura Scans remains published as a beta. The current queue scope is Asura device/content review plus the pre-add content gate.
+> The detailed MangaBuddy/Comix material below is retained as historical context; QToon, Specter Scans, MangaXo, and KingOfShojo were skipped or removed for content-policy reasons, Batcave and AllManga were deferred for blocked reader access, and Asura Scans remains published as a beta. The current queue scope is Attack on Titan audit plus the pre-add content gate.
 
 ## 6. Confirmed Decisions
 
@@ -82,7 +85,7 @@ The smallest useful version is an Asura Scans module only if ordinary access exp
 
 ## 10. Open Questions
 
-- [ ] Whether Asura Scans' public API and CDN paths remain stable, and whether its `suggestive` rating is acceptable for the app's content controls.
+- [ ] Whether the Attack on Titan single-series host family, canonical redirects, and image CDN paths remain stable and reusable, and whether the series' mature themes are acceptable for the app's content controls.
   - Why it matters: A changing API/CDN or unsuitable content rating would make the release unreliable or inappropriate.
   - Blocking: Device/content-policy review
 
@@ -99,16 +102,16 @@ The smallest useful version is an Asura Scans module only if ordinary access exp
 | Platform | Synthetiq Books module contract | Confirmed | No private app edits. |
 | Storage | Bounded in-memory cache | Confirmed | Short TTL; coalesce duplicate in-flight loads. |
 | Authentication | None | Confirmed | Use the source's public browser session. |
-| APIs/Integrations | `fetchv2` for Asura's public APIs, series pages, and CDN resources | Confirmed | No direct protected API/decryption or browser challenge bypass. |
+| APIs/Integrations | `fetchv2` for the queued source's public HTML and declared image resources | Confirmed | No direct protected API/decryption or browser challenge bypass. |
 | Caching/Refresh | Five-minute title cache with bounded size | Confirmed | Avoid repeated detail/chapter work during navigation. |
-| Deployment | Public `synthetiq-manga-sources` repository | Confirmed | Asura beta published at `ab56e9f`; MangaXo was removed after owner review. |
+| Deployment | Public `synthetiq-manga-sources` repository | Confirmed | Asura beta published at `ab56e9f`; no Attack on Titan module exists yet. |
 | Testing | Fixtures, repository checks, and bounded live browser checks | Confirmed | Device pass remains separate. |
 | Security/Privacy | Ordinary public requests only | Confirmed | No bypass or hidden credentials. |
 
 ## 13. Core User Workflow
 
 1. Refresh the public module repository in Books.
-2. Open Asura Scans and browse or search for a title.
+2. If the candidate passes review, open Attack on Titan and browse its title/chapter data.
 3. Open a title and receive its description and public chapters.
 4. Open a public chapter and receive ordered CDN page images.
 
@@ -144,6 +147,7 @@ The smallest useful version is an Asura Scans module only if ordinary access exp
 | 2026-09-01 | Remove MangaXo beta | Reversed / content policy | Remove from active catalogue | Owner requested removal; do not add adult or sexualized modules without a prior suitability gate. |
 | 2026-09-01 | Add pre-add content suitability gate | In scope | Apply before every future module | Review genres, labels, ratings, and sample titles before implementation or publication. |
 | 2026-09-01 | Safety-check KingOfShojo | Rejected / content policy | Do not implement | Current public pages expose `Adult`, `Mature`, `Smut`, `Ecchi`, `Yaoi`, and `Manhwa Hot` labels plus an 18+/mature-content warning. |
+| 2026-09-01 | Queue Attack on Titan single-series source | In scope | Audit URL family and content suitability before implementation | Supplied URL is third-party rather than official Crunchyroll; rotating hosts and external CDN require discovery and bounded testing. |
 
 ## 17. Implementation Readiness Checklist
 

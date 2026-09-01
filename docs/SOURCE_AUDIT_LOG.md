@@ -2,8 +2,8 @@
 
 **Product:** Synthetiq Books module repository  
 **Audit date:** 2026-09-01
-**Current queue item:** No safe next module; KingOfShojo failed the content-suitability gate (Asura Scans beta remains published for device/content validation)
-**Queue overrides:** The owner temporarily moved Batcave to priority #1; it was deferred after ordinary HTTP returned a Cloudflare challenge and the browser sessions had no member access. AllManga was then audited: catalogue, details, and chapter metadata were reachable, but the reader redirected to `mkissa.to`, which returned the same Cloudflare challenge. The queue advanced to Asura Scans, then briefly to MangaXo; MangaXo was removed at the owner's request. KingOfShojo was checked next and rejected for adult/mature catalogue labels, so future candidates must pass content review before implementation.
+**Current queue item:** Attack on Titan single-series source (`https://w47.read-attackontitan-manga.com/`, queued; no module implemented)
+**Queue overrides:** The owner temporarily moved Batcave to priority #1; it was deferred after ordinary HTTP returned a Cloudflare challenge and the browser sessions had no member access. AllManga was then audited: catalogue, details, and chapter metadata were reachable, but the reader redirected to `mkissa.to`, which returned the same Cloudflare challenge. The queue advanced to Asura Scans, then briefly to MangaXo; MangaXo was removed at the owner's request. KingOfShojo was checked next and rejected for adult/mature catalogue labels. Attack on Titan is now queued for URL-family and content review before implementation.
 **Publication state:** Comix, MangaBuddy, and MangaXo are removed from the active catalogue; their files/history are retained in Git history for recovery. Asura Scans beta is published at commit `ab56e9f`.
 
 ## Evidence labels
@@ -57,6 +57,31 @@ This is a triage log, not a claim that every reachable site is suitable for a mo
 | 23 | MangaXO | REMOVED / CONTENT POLICY | Briefly published at commit `025104a`, then removed at the owner's request. It is no longer in the active index; implementation evidence remains only as historical audit context. |
 | 24 | AllManga (duplicate) | DUPLICATE | Same queue source as item 14. |
 | 25 | KingOfShojo | REJECTED / CONTENT POLICY | Current public pages expose `Adult`, `Mature`, `Smut`, `Ecchi`, `Yaoi`, and `Manhwa Hot` labels plus an 18+/mature-content warning; no module started. |
+| 26 | Attack on Titan single-series site | QUEUED / SAFETY + TECHNICAL REVIEW | Supplied URL is a third-party single-series host, not official Crunchyroll. Initial page shows public chapters and no adult label; rotating hosts, external CDN, and mature violence/horror require review before implementation. |
+
+## Attack on Titan URL-family reconnaissance
+
+Source supplied by the owner: [w47.read-attackontitan-manga.com](https://w47.read-attackontitan-manga.com/).
+This is not an official Crunchyroll URL. Official Crunchyroll Manga is a
+separate subscription service and is not the source being queued here.
+
+The supplied page is a single-series Attack on Titan catalogue with paths such
+as `/attack-on-titan-manga` and `/manga/attack-on-titan-chapter-1/`. Its links
+currently move between versioned hosts such as `w47`, `w40`, and `w46`, while
+reader images are served from `cdn.mangagoa.xyz`. The page also links to the
+broader Manga Goat network, whose visible home catalogue includes Attack on
+Titan, One Piece, Blue Lock, Spy X Family, Black Clover, and other titles.
+This is useful evidence for a shared layout, but it is not proof that every
+show has identical paths or host behavior; each title must be discovered and
+checked independently.
+
+### Preliminary safety result
+
+The supplied single-series page did not expose an `Adult` or `Smut` label, so
+it is not rejected as an adult-only source at this stage. Attack on Titan is
+still not child-safe: the official series listing carries content advisories
+for nudity, profanity, and violence. The queue status therefore remains
+`SAFETY + TECHNICAL REVIEW`; no module or active index entry has been created.
 
 ## KingOfShojo safety check
 
