@@ -16,6 +16,7 @@ separate from the app checkout and intentionally contains no module ZIPs.
 | Solo Leveling | Page images | Single-series `fetchv2` |
 | Gachiakuta | Page images | Single-series `fetchv2` |
 | Haikyuu | Page images | Single-series `fetchv2` |
+| Asura Scans | Page images | Public catalogue/chapter APIs through `fetchv2` |
 
 Run deterministic validation from this directory:
 

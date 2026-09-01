@@ -123,6 +123,18 @@ stable identities, pagination, host rules, and sampled terminal delivery.
 
 This remains `LIVE_NODE_PASS`, not `IOS_RUNTIME_PASS`.
 
+The Asura Scans module also has a bounded live quality proof:
+
+```sh
+npm run test:asura:live
+```
+
+It checks six representative titles, five evenly spaced public chapters per
+title, every returned page URL, and the first, middle, and last delivered image
+from each sampled chapter. It writes
+`reports/live-asura-proof-latest.json`. This is ordinary public access only;
+it does not use credentials, cookies, or challenge bypasses.
+
 ## 4. Certification Matrix
 
 The release certifier combines fixtures, live probes, and the app's iOS WebKit

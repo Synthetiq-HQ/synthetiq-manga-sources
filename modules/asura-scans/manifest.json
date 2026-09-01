@@ -1,0 +1,53 @@
+{
+  "id": "asura-scans",
+  "familyID": "asura-scans",
+  "name": "Asura Scans",
+  "version": "1.0.0",
+  "minimumAppVersion": "1.0.0",
+  "language": "en",
+  "contentType": "pageImages",
+  "contentRating": "suggestive",
+  "releaseTrack": "beta",
+  "status": "active",
+  "contractVersion": 1,
+  "capabilities": [
+    "popular",
+    "latest",
+    "search",
+    "details",
+    "chapters",
+    "images",
+    "imageRequest",
+    "discovery"
+  ],
+  "baseURL": "https://asurascans.com",
+  "universalLink": "https://synthetiq.uk/manga/modules/asura-scans",
+  "entry": {
+    "path": "modules/asura-scans/index.js",
+    "sha256": "769cad33adc7645b519e188831cdbec60560e50bf5ba11b676a0c240bc66456a"
+  },
+  "icon": {
+    "path": "modules/asura-scans/icon.png",
+    "sha256": "34172b0656154dbaa8767555cdd8aa2f690a9001f0432a706034dc619d8ceec9"
+  },
+  "allowedHosts": [
+    "asurascans.com",
+    "api.asurascans.com",
+    "cdn.asurascans.com"
+  ],
+  "limits": {
+    "timeoutMilliseconds": 30000,
+    "maxResponseBytes": 16777216,
+    "maxScriptBytes": 524288,
+    "maxConcurrentRequests": 2,
+    "cacheTTLSeconds": 900
+  },
+  "attribution": {
+    "author": "Synthetiq-HQ",
+    "website": "https://asurascans.com",
+    "authorizationURL": null,
+    "licenseName": null,
+    "licenseURL": null
+  },
+  "legacyIDs": []
+}

@@ -523,8 +523,28 @@
     "path": "modules/mangaball/icon.png",
     "sha256": "eeeacb45c7710193a674ac462106550f6e1d27ddc7c7940e32952eebbabfb2fc"
    }
+  },
+  {
+   "id": "asura-scans",
+   "familyID": "asura-scans",
+   "name": "Asura Scans",
+   "version": "1.0.0",
+   "language": "en",
+   "contentType": "pageImages",
+   "contentRating": "suggestive",
+   "releaseTrack": "beta",
+   "status": "active",
+   "sortPriority": 92,
+   "manifest": {
+    "path": "modules/asura-scans/manifest.json",
+    "sha256": "f147774fa720add6ab3393794e95c68d0a69c3e253a00ffc6c87f30f2fd23f2f"
+   },
+   "icon": {
+    "path": "modules/asura-scans/icon.png",
+    "sha256": "34172b0656154dbaa8767555cdd8aa2f690a9001f0432a706034dc619d8ceec9"
+   }
   }
- ],
+],
  "repository": {
   "homepage": "https://github.com/Synthetiq-HQ/synthetiq-manga-sources",
   "id": "synthetiq.sources",

@@ -1,12 +1,12 @@
 # Project Goal and Scope
 
 _Last updated: 2026-09-01_  
-_Status: MangaBuddy retired; Batcave deferred, AllManga is the current candidate_
+_Status: MangaBuddy retired; Batcave and AllManga deferred, Asura Scans is the current candidate_
 _Implementation confidence: 92%_
 
 ## 1. Current Goal Summary
 
-Evaluate AllManga for a reliable, policy-appropriate Synthetiq Books module after Batcave was deferred for blocked access.
+Evaluate Asura Scans for a reliable, policy-appropriate Synthetiq Books module after Batcave and AllManga were deferred for blocked reader access.
 
 ## 2. Primary Users
 
@@ -17,18 +17,19 @@ Evaluate AllManga for a reliable, policy-appropriate Synthetiq Books module afte
 - The previous MangaBuddy/Comizy source was too adult/suggestive for the app and has been removed from the active catalogue.
 - QToon and Specter Scans were evaluated and skipped because their live catalogues expose adult-marked content without a reliable safe exclusion path.
 - Batcave was rechecked through ordinary HTTP and the available browser sessions; it returned a Cloudflare challenge and members-only sign-in, so it is deferred without a bypass.
-- AllManga must be audited before any implementation or publication decision.
+- AllManga's catalogue, details, and chapter metadata were reachable, but its reader redirected to `mkissa.to`, which returned a Cloudflare challenge; it is deferred without a bypass.
+- Asura Scans is the current candidate and has a local module with deterministic and bounded live evidence; device validation remains outstanding.
 
 ## 4. Desired Outcome
 
-- Establish whether AllManga is reachable, policy-appropriate, and technically reliable through ordinary public access.
+- Establish whether Asura Scans is reachable, policy-appropriate, and technically reliable through ordinary public access.
 - Keep the source unpublished until its contract, tests, content policy, and bounded live evidence pass.
 
 ## 5. MVP Definition
 
-The smallest useful version is an AllManga module only if ordinary access exposes stable search/discovery, title, chapter, and reader data that passes deterministic and bounded live checks.
+The smallest useful version is an Asura Scans module only if ordinary access exposes stable search/discovery, title, chapter, and reader data that passes deterministic and bounded live checks.
 
-> The detailed MangaBuddy/Comix material below is retained as historical context; QToon and Specter Scans were skipped for content-policy reasons, Batcave was deferred for blocked access, and the current queue scope is AllManga.
+> The detailed MangaBuddy/Comix material below is retained as historical context; QToon and Specter Scans were skipped for content-policy reasons, Batcave and AllManga were deferred for blocked reader access, and the current queue scope is Asura Scans.
 
 ## 6. Confirmed Decisions
 
@@ -49,7 +50,7 @@ The smallest useful version is an AllManga module only if ordinary access expose
 
 - [ ] Fast title detail and chapter loading
   - Priority: Must
-  - Notes: Remove fixed waits, avoid duplicate concurrent requests, and use the smallest reliable browser interaction.
+  - Notes: Use direct public APIs and short response caching; avoid duplicate requests and unnecessary browser work.
 - [ ] Complete discovery continuation pages
   - Priority: Must
   - Notes: Do not trim a full source page down to six cards merely to avoid overlap.
@@ -75,9 +76,9 @@ The smallest useful version is an AllManga module only if ordinary access expose
 
 ## 10. Open Questions
 
-- [ ] Whether AllManga's JavaScript shell exposes a stable supported API or interactive browser flow.
-  - Why it matters: A shell without catalogue data cannot support a reliable module.
-  - Blocking: Yes
+- [ ] Whether Asura Scans' public API and CDN paths remain stable, and whether its `suggestive` rating is acceptable for the app's content controls.
+  - Why it matters: A changing API/CDN or unsuitable content rating would make the release unreliable or inappropriate.
+  - Blocking: Device/content-policy review
 
 ## 11. Assumptions
 
@@ -92,7 +93,7 @@ The smallest useful version is an AllManga module only if ordinary access expose
 | Platform | Synthetiq Books module contract | Confirmed | No private app edits. |
 | Storage | Bounded in-memory cache | Confirmed | Short TTL; coalesce duplicate in-flight loads. |
 | Authentication | None | Confirmed | Use the source's public browser session. |
-| APIs/Integrations | `fetchv2` for public HTML; `pagev2` for browser-owned UI | Confirmed | No direct protected API/decryption. |
+| APIs/Integrations | `fetchv2` for Asura's public APIs, series pages, and CDN resources | Confirmed | No direct protected API/decryption or browser challenge bypass. |
 | Caching/Refresh | Five-minute title cache with bounded size | Confirmed | Avoid repeated detail/chapter work during navigation. |
 | Deployment | Public `synthetiq-manga-sources` repository | Confirmed | Release beta after tests and hash verification. |
 | Testing | Fixtures, repository checks, and bounded live browser checks | Confirmed | Device pass remains separate. |
@@ -101,16 +102,15 @@ The smallest useful version is an AllManga module only if ordinary access expose
 ## 13. Core User Workflow
 
 1. Refresh the public module repository in Books.
-2. Open Comix and browse or search for a title.
-3. Open a title and receive its description and chapters without avoidable module delay.
-4. Continue the homepage feed and receive a full useful next page.
-5. Read a chapter through the source-owned reader page.
+2. Open Asura Scans and browse or search for a title.
+3. Open a title and receive its description and public chapters.
+4. Open a public chapter and receive ordered CDN page images.
 
 ## 14. Acceptance Criteria
 
-- [ ] The popular continuation does not return an artificially trimmed six-card page when the source supplies a full page.
-- [ ] Chapter extraction has no unnecessary fixed per-page delay and safely completes the observed title pagination.
-- [ ] Repeated title detail/chapter requests within the cache window do not repeat the expensive browser work.
+- [ ] Discovery and search return the complete source page without artificial trimming.
+- [ ] Chapter extraction preserves series ownership, numeric order, and public-access status.
+- [ ] Reader extraction returns every declared page in order and rejects malformed/off-host media.
 - [ ] Repository tests, source policy, manifest hashes, and repository verification pass.
 - [ ] The release is pushed to the public repository and its immutable and live `main` index/manifest/code/icon hashes match.
 - [ ] Device testing is reported separately from Windows/browser evidence.
@@ -119,9 +119,9 @@ The smallest useful version is an AllManga module only if ordinary access expose
 
 | Risk | Impact | Decision | Mitigation |
 |---|---|---|---|
-| Comix client hydration or WebKit startup remains slow | Medium | Optimize module-side work first | Measure source HTML, browser action, and device separately. |
-| Source pagination markup changes | Medium | Keep browser-owned parsing | Fail clearly instead of returning partial chapters. |
-| Home feed and browse ordering differ | Low | Use a full continuation page | Prefer useful page size over a six-card trimmed page; monitor duplicates. |
+| AllManga reader is protected behind a source-side challenge | Medium | Defer the source | Keep AllManga out of the active catalogue until a supported public reader path exists. |
+| Asura API or CDN paths change | Medium | Keep endpoint and host guards strict | Fail clearly instead of returning partial or off-host chapters. |
+| Source content rating is `suggestive` | Medium | Release as beta only | Confirm the app's content controls on device before wider rollout. |
 
 ## 16. Scope Change Log
 
@@ -131,6 +131,8 @@ The smallest useful version is an AllManga module only if ordinary access expose
 | 2026-09-01 | Move Batcave to queue priority #1 | In scope | Audit now | Recheck ordinary access first; do not bypass a 403/challenge. |
 | 2026-09-01 | Batcave ordinary-access recheck returned a Cloudflare challenge | Blocked | No module started | HTTPS, `www`, and HTTP all returned 403; wait for a supported public path or defer. |
 | 2026-09-01 | Defer Batcave after ordinary and browser access remained blocked | Useful but deferred | Continue with AllManga | No credentials or cookies were entered or extracted. |
+| 2026-09-01 | AllManga reader redirected to a Cloudflare-protected `mkissa.to` page | Blocked | Defer AllManga and advance to Asura Scans | Catalogue and metadata worked; no bypass or cookie extraction attempted. |
+| 2026-09-01 | Advance queue to Asura Scans | In scope | Validate and publish beta candidate | Existing isolated draft passed its bounded live proof; device/content review remains. |
 
 ## 17. Implementation Readiness Checklist
 

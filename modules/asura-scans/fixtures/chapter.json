@@ -1,0 +1,26 @@
+{
+  "data": {
+    "access_gate": "",
+    "is_locked": false,
+    "series": {
+      "id": 7001,
+      "slug": "fixture-chronicle",
+      "title": "Fixture Chronicle",
+      "public_url": "/comics/fixture-chronicle-08677664"
+    },
+    "chapter": {
+      "id": 9001,
+      "series_id": 7001,
+      "number": 1,
+      "slug": "chapter-1",
+      "page_count": 3,
+      "is_premium": false,
+      "series_slug": "fixture-chronicle",
+      "pages": [
+        { "url": "https://cdn.asurascans.com/asura-images/chapters/fixture-chronicle/1/001.webp?v=1", "width": 900, "height": 1600 },
+        { "url": "https://cdn.asurascans.com/asura-images/chapters/fixture-chronicle/1/002.webp?v=1", "width": 900, "height": 1600 },
+        { "url": "https://cdn.asurascans.com/asura-images/chapters/fixture-chronicle/1/003.webp?v=1", "width": 900, "height": 1600 }
+      ]
+    }
+  }
+}

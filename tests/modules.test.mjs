@@ -1555,3 +1555,101 @@ test("Comix uses browser-owned pagination and lazy reader evidence", async () =>
     /Invalid Comix title identifier/,
   );
 });
+
+test("Asura Scans uses public API data, filters locked chapters, and preserves page order", async () => {
+  const fixtures = {
+    search: await text("modules/asura-scans/fixtures/search.json"),
+    searchPage2: await text("modules/asura-scans/fixtures/search-page-2.json"),
+    details: await text("modules/asura-scans/fixtures/details.json"),
+    chapters: await text("modules/asura-scans/fixtures/chapters.html"),
+    chapter: await text("modules/asura-scans/fixtures/chapter.json"),
+    chapter3: await text("modules/asura-scans/fixtures/chapter-3.json"),
+    locked: await text("modules/asura-scans/fixtures/locked-chapter.json"),
+    expected: await json("modules/asura-scans/fixtures/expected.json"),
+  };
+  const invalidPageFixture = JSON.parse(fixtures.chapter);
+  invalidPageFixture.data.chapter.number = 2;
+  invalidPageFixture.data.chapter.pages = invalidPageFixture.data.chapter.pages.map((page) => ({
+    ...page,
+    url: page.url.replace("/1/", "/2/"),
+  }));
+  invalidPageFixture.data.chapter.pages[1].url = "https://outside.invalid/not-an-asura-page.webp";
+  const differentSeriesFixture = JSON.parse(fixtures.chapter);
+  differentSeriesFixture.data.chapter.number = 5;
+  differentSeriesFixture.data.series.public_url = "/comics/different-series-08677664";
+  differentSeriesFixture.data.chapter.pages = differentSeriesFixture.data.chapter.pages.map((page) => ({
+    ...page,
+    url: page.url.replace("/1/", "/5/"),
+  }));
+  const calls = [];
+  const module = await loadModule("modules/asura-scans/index.js", {
+    fetchv2: async (url, headers, method, body) => {
+      assert.equal(method, "GET");
+      assert.equal(body, null);
+      calls.push({ url: String(url), headers });
+      const parsed = new URL(url);
+      if (parsed.pathname === "/api/search") {
+        if (parsed.searchParams.get("q") === "challenge") return response("<title>Just a moment...</title>");
+        return response(parsed.searchParams.get("offset") === "20" ? fixtures.searchPage2 : fixtures.search);
+      }
+      if (parsed.pathname === "/api/series" && parsed.search) return response(fixtures.search);
+      if (parsed.pathname === "/api/series/fixture-chronicle-08677664/chapters/4") return response(fixtures.locked);
+      if (parsed.pathname === "/api/series/fixture-chronicle-08677664/chapters/3") return response(fixtures.chapter3);
+      if (parsed.pathname === "/api/series/fixture-chronicle-08677664/chapters/2") return response(JSON.stringify(invalidPageFixture));
+      if (parsed.pathname === "/api/series/fixture-chronicle-08677664/chapters/5") return response(JSON.stringify(differentSeriesFixture));
+      if (parsed.pathname.startsWith("/api/series/fixture-chronicle-08677664/chapters/")) return response(fixtures.chapter);
+      if (parsed.pathname === "/api/series/fixture-chronicle-08677664") return response(fixtures.details);
+      if (parsed.pathname === "/comics/fixture-chronicle-08677664") return response(fixtures.chapters);
+      throw new Error(`Unexpected Asura Scans fixture URL: ${url}`);
+    },
+  });
+
+  const manifest = await json("modules/asura-scans/manifest.json");
+  assert.deepEqual(manifest.allowedHosts, ["asurascans.com", "api.asurascans.com", "cdn.asurascans.com"]);
+
+  const search = await module.searchResults("fixture", 1);
+  assert.deepEqual(JSON.parse(JSON.stringify(search)), fixtures.expected.search);
+  assert.deepEqual(JSON.parse(JSON.stringify(await module.searchResults("fixture", 2))), fixtures.expected.page2);
+  await assert.rejects(() => module.searchResults("challenge", 1), /browser challenge/i);
+
+  const details = await module.extractDetails(search.items[0].id);
+  assert.deepEqual(JSON.parse(JSON.stringify(details)), fixtures.expected.details);
+
+  const chapters = await module.extractChapters(details.id);
+  assert.deepEqual(JSON.parse(JSON.stringify(chapters)), fixtures.expected.chapters);
+  assert.equal(chapters.some((chapter) => chapter.number === 4), false, "future early-access chapter must be hidden");
+  assert.equal(chapters.some((chapter) => chapter.number === 99), false, "unrelated series chapter must be hidden");
+  assert.deepEqual(JSON.parse(JSON.stringify(chapters.map((chapter) => chapter.number))), [1, 2, 3]);
+
+  const pages = await module.extractImages(chapters[0].id);
+  assert.deepEqual(JSON.parse(JSON.stringify(pages)), fixtures.expected.images);
+  assert.ok(pages.every((page) => page.headers.Referer === chapters[0].id));
+  const restoredPages = await module.extractImages(chapters[2].id);
+  assert.ok(restoredPages.every((page) => page.url.includes("/chapters-restored/")));
+  await assert.rejects(
+    () => module.extractImages(chapters[1].id),
+    /invalid or duplicate page manifest/i,
+  );
+  await assert.rejects(
+    () => module.extractImages("https://asurascans.com/comics/fixture-chronicle-08677664/chapter/5"),
+    /different series/i,
+  );
+  await assert.rejects(
+    () => module.extractImages("https://asurascans.com/comics/fixture-chronicle-08677664/chapter/4"),
+    /locked|not publicly available/i,
+  );
+  await assert.rejects(
+    () => module.extractDetails("https://cdn.asurascans.com/comics/fixture-chronicle-08677664"),
+    /outside the source host/i,
+  );
+
+  const discovery = await module.discoveryHome();
+  assert.deepEqual(JSON.parse(JSON.stringify(discovery)), {
+    sections: [
+      { id: "popular", title: "Popular", items: fixtures.expected.search.items },
+      { id: "latest", title: "Latest", items: fixtures.expected.search.items },
+    ],
+  });
+  assert.ok(calls.some((call) => call.url.includes("api.asurascans.com/api/search")));
+  assert.ok(calls.some((call) => call.url.includes("api.asurascans.com/api/series?")));
+});

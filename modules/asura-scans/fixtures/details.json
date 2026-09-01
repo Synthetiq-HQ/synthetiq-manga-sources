@@ -1,0 +1,18 @@
+{
+  "series": {
+    "id": 7001,
+    "slug": "fixture-chronicle",
+    "title": "Fixture Chronicle",
+    "description": "<p>A fixture synopsis.</p>",
+    "cover": "https://cdn.asurascans.com/asura-images/covers/fixture-chronicle.webp",
+    "status": "ongoing",
+    "type": "manhwa",
+    "author": "Sample Author",
+    "artist": "Sample Artist",
+    "public_url": "/comics/fixture-chronicle-08677664",
+    "genres": [
+      { "id": 1, "name": "Action", "slug": "action" },
+      { "id": 2, "name": "Adventure", "slug": "adventure" }
+    ]
+  }
+}

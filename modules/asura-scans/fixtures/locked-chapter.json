@@ -1,0 +1,8 @@
+{
+  "data": {
+    "access_gate": "",
+    "is_locked": true,
+    "series": { "public_url": "/comics/fixture-chronicle-08677664" },
+    "chapter": { "series_id": 7001, "number": 4, "is_premium": true, "page_count": 0 }
+  }
+}

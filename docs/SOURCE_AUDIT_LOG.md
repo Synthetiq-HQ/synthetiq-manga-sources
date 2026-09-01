@@ -2,9 +2,9 @@
 
 **Product:** Synthetiq Books module repository  
 **Audit date:** 2026-09-01
-**Current queue item:** AllManga (`https://allmanga.to/`, pending API/interactive audit)
-**Queue override:** The owner temporarily moved Batcave to priority #1; it was deferred after ordinary HTTP returned a Cloudflare challenge and the browser session had no member access.
-**Publication state:** Comix and MangaBuddy removed from the active catalogue; their files/history are retained for recovery
+**Current queue item:** Asura Scans (`https://asurascans.com/`, beta candidate)
+**Queue overrides:** The owner temporarily moved Batcave to priority #1; it was deferred after ordinary HTTP returned a Cloudflare challenge and the browser sessions had no member access. AllManga was then audited: catalogue, details, and chapter metadata were reachable, but the reader redirected to `mkissa.to`, which returned the same Cloudflare challenge. The queue therefore advanced to Asura Scans.
+**Publication state:** Comix and MangaBuddy removed from the active catalogue; their files/history are retained for recovery. Asura Scans is being prepared as a beta release.
 
 ## Evidence labels
 
@@ -14,6 +14,8 @@
 - **DEVICE PASS** — the installed iOS/iPad app passed; not claimed here.
 - **BLOCKED** — ordinary access returned a challenge/error; no bypass was attempted.
 - **REACHABLE / UNASSESSED** — ordinary access responded, but no module has been accepted yet.
+- **LOCAL_COMPLETE** — an isolated module implementation and deterministic tests passed; publication is still pending.
+- **LIVE_NODE_PASS** — a bounded live Node proof reached the source and terminal media; this is not iOS/device evidence.
 
 ## Queue audit
 
@@ -34,9 +36,9 @@ This is a triage log, not a claim that every reachable site is suitable for a mo
 | 11 | Specter Scans | SKIPPED | Public catalogue exposes an `Adult` genre, but cards do not carry reliable content tags for safe exclusion; no module published. |
 | 12 | Mangago | BLOCKED | HTTP 403 challenge; no bypass attempted. |
 | 13 | MangaFire | EXISTING | Existing module; no duplicate created. |
-| 14 | AllManga | REACHABLE / CURRENT | HTTP 200 shell; pending API/interactive audit before any module work. |
-| 15 | MangaKakalot | REACHABLE / UNASSESSED | HTTP 200; queued for a separate bounded evaluation. |
-| 16 | Asura | REACHABLE / UNASSESSED | HTTP 200; queued for a separate bounded evaluation. |
+| 14 | AllManga | PARTIAL / DEFERRED | Public API exposed catalogue, details, and chapter metadata, but the reader redirected to `mkissa.to`, which returned HTTP 403 with `Cf-Mitigated: challenge`; no bypass or cookie extraction attempted. |
+| 15 | MangaKakalot | PARTIAL / DEFERRED | Public response was HTTP 200 but contained challenge/captcha signals; no bypass attempted. |
+| 16 | Asura | LOCAL_COMPLETE / CURRENT | Local module; fixture suite and bounded live quality proof passed 100% (79/79 checks) across six titles. Beta publication follows final repository validation. |
 | 17 | Batcave | BLOCKED / DEFERRED | Owner moved this source to priority #1, but HTTPS, `www`, and HTTP returned HTTP 403 with `Cf-Mitigated: challenge`; the browser also showed members-only access without an existing login. No module was started and no bypass was attempted. |
 | 18 | ReadComicsOnline | BLOCKED | HTTP 403 challenge; no bypass attempted. |
 | 19 | MangaHub | BLOCKED | HTTP 403 challenge; no bypass attempted. |
@@ -153,3 +155,31 @@ Cross-title result: **5/5 passed**, 456/456 page resources observed. The sampled
 - `tests/modules.test.mjs`
 
 The 1.0.5 beta is ready for public update testing. Runtime and iPad/device acceptance remain separate checks because this audit environment cannot execute the installed Books bridge.
+
+## AllManga audit and Asura Scans queue advance
+
+AllManga's JavaScript catalogue rendered normally in a browser session. Its
+public API supplied search, discovery, details, and chapter metadata. Opening a
+chapter redirected to the source-owned `mkissa.to` reader, where ordinary HTTPS
+returned an HTTP 403 Cloudflare challenge. No login, cookie extraction, or
+challenge bypass was attempted, so AllManga remains deferred rather than being
+released with a broken reader.
+
+Asura Scans is now the current candidate. Its module uses the source's public
+catalogue/search APIs, selected-series chapter manifest, chapter API, and
+declared CDN page images. It rejects challenge responses, mismatched series,
+locked chapters, malformed page manifests, and off-host media. The beta
+manifest is marked `suggestive`, so device testing should confirm that the
+app's content controls handle that rating as intended.
+
+### Asura Scans evidence
+
+- `FIXTURE_PASS`: deterministic tests cover search pagination, discovery,
+  details, series-scoped chapter parsing, premium filtering, decimal ordering,
+  restored CDN paths, locked-reader failure, challenge rejection, and host
+  ownership guards.
+- `LIVE_NODE_PASS`: six representative titles, five evenly spaced public
+  chapters per title, every returned page URL, and first/middle/last image
+  delivery passed 79/79 checks (100%).
+- `IOS_RUNTIME_PASS` and `DEVICE_PASS`: not claimed; installation and the real
+  Books/WebKit bridge still require the owner's iPad test.

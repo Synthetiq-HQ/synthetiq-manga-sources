@@ -1,0 +1,32 @@
+{
+  "data": [
+    {
+      "id": 7001,
+      "slug": "fixture-chronicle",
+      "title": "Fixture Chronicle",
+      "description": "<p>A fixture synopsis.</p>",
+      "cover": "https://cdn.asurascans.com/asura-images/covers/fixture-chronicle.webp",
+      "status": "ongoing",
+      "type": "manhwa",
+      "public_url": "/comics/fixture-chronicle-08677664",
+      "genres": [
+        { "id": 1, "name": "Action", "slug": "action" },
+        { "id": 2, "name": "Adventure", "slug": "adventure" }
+      ]
+    },
+    {
+      "id": 7002,
+      "slug": "fixture-companion",
+      "title": "Fixture Companion",
+      "description": "<p>A second fixture title.</p>",
+      "cover": "https://cdn.asurascans.com/asura-images/covers/fixture-companion.jpg",
+      "status": "completed",
+      "type": "manhwa",
+      "public_url": "/comics/fixture-companion-08677664",
+      "genres": [
+        { "id": 3, "name": "Drama", "slug": "drama" }
+      ]
+    }
+  ],
+  "meta": { "total": 21, "per_page": 20, "has_more": true }
+}

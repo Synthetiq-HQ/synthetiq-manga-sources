@@ -1,0 +1,18 @@
+{
+  "data": [
+    {
+      "id": 7003,
+      "slug": "fixture-page-two",
+      "title": "Fixture Page Two",
+      "description": "<p>A paginated fixture title.</p>",
+      "cover": "https://cdn.asurascans.com/asura-images/covers/fixture-page-two.webp",
+      "status": "ongoing",
+      "type": "manhwa",
+      "public_url": "/comics/fixture-page-two-08677664",
+      "genres": [
+        { "id": 4, "name": "Mystery", "slug": "mystery" }
+      ]
+    }
+  ],
+  "meta": { "total": 21, "per_page": 20, "has_more": false }
+}

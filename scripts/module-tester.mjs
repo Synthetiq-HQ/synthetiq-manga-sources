@@ -291,6 +291,9 @@ async function createRuntime(slug, mode) {
       discoveryJSON: await fixture("discovery.json"),
       mangabuddyLatest: await fixture("latest.html"),
       mangabuddyRanking: await fixture("ranking.html"),
+      asuraSearchPage2: await fixture("search-page-2.json"),
+      asuraLockedChapter: await fixture("locked-chapter.json"),
+      asuraChapter3: await fixture("chapter-3.json"),
     };
 
     bridges = {
@@ -371,6 +374,29 @@ if (slug === "novelfire") {
           if (/comizy\.io\/latest(?:\?|$)/i.test(u) && special.mangabuddyLatest) return fixtureResponse(special.mangabuddyLatest);
           if (/comizy\.io\/[^/]+\/[^/]+(?:\?|$)/i.test(u) && chapter) return fixtureResponse(chapter);
           if (/comizy\.io\/[^/]+(?:\?|$)/i.test(u) && details) return fixtureResponse(details);
+        }
+        if (slug === "asura-scans") {
+          if (/\/api\/search\?/i.test(u)) {
+            const parsed = new URL(u);
+            if (parsed.searchParams.get("offset") === "20" && special.asuraSearchPage2) {
+              return fixtureResponse(special.asuraSearchPage2, 200);
+            }
+            if (search) return fixtureResponse(search, 200);
+          }
+          if (/\/api\/series\/[^/]+\/chapters\//i.test(u)) {
+            if (/\/chapters\/4(?:\?|$)/i.test(u) && special.asuraLockedChapter) {
+              return fixtureResponse(special.asuraLockedChapter, 200);
+            }
+            if (/\/chapters\/3(?:\?|$)/i.test(u) && special.asuraChapter3) {
+              return fixtureResponse(special.asuraChapter3, 200);
+            }
+            if (chapter) return fixtureResponse(chapter, 200);
+          }
+          if (/\/api\/series\/[^/]+$/i.test(u) && details) return fixtureResponse(details, 200);
+          if (/\/api\/series\?/i.test(u) && search) return fixtureResponse(search, 200);
+          if (/\/comics\/[^/]+\/chapter\//i.test(u) && chapter) return fixtureResponse(chapter, 200);
+          if (/\/comics\/[^/]+$/i.test(u) && chapterList) return fixtureResponse(chapterList, 200);
+          if (home) return fixtureResponse(home, 200);
         }
         // WeebCentral uses /series/<id> for details and
         // /series/<id>/full-chapter-list for chapters. Resolve the more
