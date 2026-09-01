@@ -115,6 +115,14 @@
     "ChapterListReact",
     "sourceChapter.series_slug"
    ]
+  },
+  "mangaxo": {
+   "chapterScope": "selected-series-ajax",
+   "requiredCodeFragments": [
+    "function parseChapters(html, manga)",
+    "en-chapters",
+    "chapter.slug !== manga.slug"
+   ]
   }
  }
 }

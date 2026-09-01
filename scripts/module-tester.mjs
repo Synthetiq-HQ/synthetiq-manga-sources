@@ -294,6 +294,11 @@ async function createRuntime(slug, mode) {
       asuraSearchPage2: await fixture("search-page-2.json"),
       asuraLockedChapter: await fixture("locked-chapter.json"),
       asuraChapter3: await fixture("chapter-3.json"),
+      mangaxoSearchPage2: await fixture("search-page-2.html"),
+      mangaxoReadingList: await fixture("reading-list.json"),
+      mangaxoImages: await fixture("images.json"),
+      mangaxoInvalidImages: await fixture("images-invalid.json"),
+      mangaxoEmptyImages: await fixture("images-empty.json"),
     };
 
     bridges = {
@@ -396,6 +401,30 @@ if (slug === "novelfire") {
           if (/\/api\/series\?/i.test(u) && search) return fixtureResponse(search, 200);
           if (/\/comics\/[^/]+\/chapter\//i.test(u) && chapter) return fixtureResponse(chapter, 200);
           if (/\/comics\/[^/]+$/i.test(u) && chapterList) return fixtureResponse(chapterList, 200);
+          if (home) return fixtureResponse(home, 200);
+        }
+        if (slug === "mangaxo") {
+          if (/\/ajax\/reading-list\/4242(?:\?|$)/i.test(u) && special.mangaxoReadingList) {
+            return fixtureResponse(special.mangaxoReadingList, 200);
+          }
+          if (/\/ajax\/image\/list\/9002(?:\?|$)/i.test(u) && special.mangaxoInvalidImages) {
+            return fixtureResponse(special.mangaxoInvalidImages, 202);
+          }
+          if (/\/ajax\/image\/list\/9004(?:\?|$)/i.test(u) && special.mangaxoEmptyImages) {
+            return fixtureResponse(special.mangaxoEmptyImages, 202);
+          }
+          if (/\/ajax\/image\/list\/\d+(?:\?|$)/i.test(u) && special.mangaxoImages) {
+            return fixtureResponse(special.mangaxoImages, 202);
+          }
+          if (/\/search\?/i.test(u)) {
+            const parsed = new URL(u);
+            if (parsed.searchParams.get("page") === "2" && special.mangaxoSearchPage2) {
+              return fixtureResponse(special.mangaxoSearchPage2, 200);
+            }
+            if (search) return fixtureResponse(search, 200);
+          }
+          if (/\/manga\/[^/]+$/i.test(u) && details) return fixtureResponse(details, 200);
+          if (/\/home(?:\?|$)/i.test(u) && home) return fixtureResponse(home, 200);
           if (home) return fixtureResponse(home, 200);
         }
         // WeebCentral uses /series/<id> for details and

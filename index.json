@@ -541,7 +541,27 @@
    },
    "icon": {
     "path": "modules/asura-scans/icon.png",
-    "sha256": "34172b0656154dbaa8767555cdd8aa2f690a9001f0432a706034dc619d8ceec9"
+   "sha256": "34172b0656154dbaa8767555cdd8aa2f690a9001f0432a706034dc619d8ceec9"
+   }
+  },
+  {
+   "id": "mangaxo",
+   "familyID": "mangaxo",
+   "name": "MangaXo",
+   "version": "1.0.0",
+   "language": "en",
+   "contentType": "pageImages",
+   "contentRating": "suggestive",
+   "releaseTrack": "beta",
+   "status": "active",
+   "sortPriority": 93,
+   "manifest": {
+    "path": "modules/mangaxo/manifest.json",
+    "sha256": "1143aadf90034a841a74cc18f5de7716ce43e922d8e5be5c7b3bbac47a06d483"
+   },
+   "icon": {
+    "path": "modules/mangaxo/icon.png",
+    "sha256": "ad1f3f7254564ff290c0b8a61509349ea7aa42a18f9805a43170826d2fec4baa"
    }
   }
 ],

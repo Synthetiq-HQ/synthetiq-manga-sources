@@ -1,12 +1,12 @@
 # Project Goal and Scope
 
 _Last updated: 2026-09-01_  
-_Status: MangaBuddy retired; Batcave and AllManga deferred, Asura Scans beta published for device testing_
+_Status: MangaBuddy retired; Batcave and AllManga deferred, Asura Scans published, MangaXo is the current candidate_
 _Implementation confidence: 92%_
 
 ## 1. Current Goal Summary
 
-Validate the published Asura Scans beta on device and confirm its `suggestive` content rating is handled correctly after Batcave and AllManga were deferred for blocked reader access.
+Evaluate and publish the MangaXo beta after Asura Scans was published and Batcave and AllManga were deferred for blocked reader access.
 
 ## 2. Primary Users
 
@@ -18,18 +18,19 @@ Validate the published Asura Scans beta on device and confirm its `suggestive` c
 - QToon and Specter Scans were evaluated and skipped because their live catalogues expose adult-marked content without a reliable safe exclusion path.
 - Batcave was rechecked through ordinary HTTP and the available browser sessions; it returned a Cloudflare challenge and members-only sign-in, so it is deferred without a bypass.
 - AllManga's catalogue, details, and chapter metadata were reachable, but its reader redirected to `mkissa.to`, which returned a Cloudflare challenge; it is deferred without a bypass.
-- Asura Scans is the current candidate and has a local module with deterministic and bounded live evidence; device validation remains outstanding.
+- Asura Scans has been published as a beta with deterministic and bounded live evidence; device validation remains outstanding.
+- MangaXo is the current candidate and has a local module with deterministic and bounded live evidence; final repository publication is in progress.
 
 ## 4. Desired Outcome
 
-- Establish whether Asura Scans is reachable, policy-appropriate, and technically reliable through ordinary public access.
+- Establish whether MangaXo is reachable, policy-appropriate, and technically reliable through ordinary public access.
 - Keep the source in beta until iOS/device behavior and content controls are confirmed.
 
 ## 5. MVP Definition
 
-The smallest useful version is an Asura Scans module only if ordinary access exposes stable search/discovery, title, chapter, and reader data that passes deterministic and bounded live checks.
+The smallest useful version is a MangaXo module only if ordinary access exposes stable search/discovery, title, chapter, and reader data that passes deterministic and bounded live checks.
 
-> The detailed MangaBuddy/Comix material below is retained as historical context; QToon and Specter Scans were skipped for content-policy reasons, Batcave and AllManga were deferred for blocked reader access, and the current queue scope is Asura Scans.
+> The detailed MangaBuddy/Comix material below is retained as historical context; QToon and Specter Scans were skipped for content-policy reasons, Batcave and AllManga were deferred for blocked reader access, Asura Scans was published as a beta, and the current queue scope is MangaXo.
 
 ## 6. Confirmed Decisions
 
@@ -76,7 +77,7 @@ The smallest useful version is an Asura Scans module only if ordinary access exp
 
 ## 10. Open Questions
 
-- [ ] Whether Asura Scans' public API and CDN paths remain stable, and whether its `suggestive` rating is acceptable for the app's content controls.
+- [ ] Whether MangaXo's public HTML/AJAX and image-host paths remain stable, and whether its `suggestive` rating is acceptable for the app's content controls.
   - Why it matters: A changing API/CDN or unsuitable content rating would make the release unreliable or inappropriate.
   - Blocking: Device/content-policy review
 
@@ -93,16 +94,16 @@ The smallest useful version is an Asura Scans module only if ordinary access exp
 | Platform | Synthetiq Books module contract | Confirmed | No private app edits. |
 | Storage | Bounded in-memory cache | Confirmed | Short TTL; coalesce duplicate in-flight loads. |
 | Authentication | None | Confirmed | Use the source's public browser session. |
-| APIs/Integrations | `fetchv2` for Asura's public APIs, series pages, and CDN resources | Confirmed | No direct protected API/decryption or browser challenge bypass. |
+| APIs/Integrations | `fetchv2` for MangaXo's public HTML/AJAX and image resources | Confirmed | No direct protected API/decryption or browser challenge bypass. |
 | Caching/Refresh | Five-minute title cache with bounded size | Confirmed | Avoid repeated detail/chapter work during navigation. |
-| Deployment | Public `synthetiq-manga-sources` repository | Confirmed | Asura beta published at `ab56e9f`; device testing remains. |
+| Deployment | Public `synthetiq-manga-sources` repository | Confirmed | Asura beta published at `ab56e9f`; MangaXo publication follows final checks. |
 | Testing | Fixtures, repository checks, and bounded live browser checks | Confirmed | Device pass remains separate. |
 | Security/Privacy | Ordinary public requests only | Confirmed | No bypass or hidden credentials. |
 
 ## 13. Core User Workflow
 
 1. Refresh the public module repository in Books.
-2. Open Asura Scans and browse or search for a title.
+2. Open MangaXo and browse or search for a title.
 3. Open a title and receive its description and public chapters.
 4. Open a public chapter and receive ordered CDN page images.
 
@@ -133,6 +134,7 @@ The smallest useful version is an Asura Scans module only if ordinary access exp
 | 2026-09-01 | Defer Batcave after ordinary and browser access remained blocked | Useful but deferred | Continue with AllManga | No credentials or cookies were entered or extracted. |
 | 2026-09-01 | AllManga reader redirected to a Cloudflare-protected `mkissa.to` page | Blocked | Defer AllManga and advance to Asura Scans | Catalogue and metadata worked; no bypass or cookie extraction attempted. |
 | 2026-09-01 | Advance queue to Asura Scans | In scope | Validate and publish beta candidate | Existing isolated draft passed its bounded live proof; device/content review remains. |
+| 2026-09-01 | Advance queue to MangaXo | In scope | Validate and publish beta candidate | Existing isolated draft passed its bounded live proof; device/content review remains. |
 
 ## 17. Implementation Readiness Checklist
 

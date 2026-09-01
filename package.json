@@ -11,6 +11,7 @@
     "test:mangabuddy:live": "node scripts/live-mangabuddy-proof.mjs --live",
     "test:atsu:live": "RUN_LIVE_TESTS=1 node scripts/live-atsu-proof.mjs",
     "test:asura:live": "node scripts/live-asura-proof.mjs --live --with-discovery",
+    "test:mangaxo:live": "node scripts/live-mangaxo-proof.mjs --live --with-discovery",
     "test:poseidon:live": "RUN_LIVE_TESTS=1 node scripts/live-poseidon-proof.mjs",
     "test:module": "node scripts/module-tester.mjs",
     "test:module:fixtures": "node scripts/module-tester.mjs --fixtures",

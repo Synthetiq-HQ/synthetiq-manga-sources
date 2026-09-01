@@ -2,9 +2,9 @@
 
 **Product:** Synthetiq Books module repository  
 **Audit date:** 2026-09-01
-**Current queue item:** Asura Scans (`https://asurascans.com/`, beta candidate)
-**Queue overrides:** The owner temporarily moved Batcave to priority #1; it was deferred after ordinary HTTP returned a Cloudflare challenge and the browser sessions had no member access. AllManga was then audited: catalogue, details, and chapter metadata were reachable, but the reader redirected to `mkissa.to`, which returned the same Cloudflare challenge. The queue therefore advanced to Asura Scans.
-**Publication state:** Comix and MangaBuddy removed from the active catalogue; their files/history are retained for recovery. Asura Scans beta is published at commit `ab56e9f` for owner/device testing.
+**Current queue item:** MangaXo (`https://mangaxo.com/`, beta candidate)
+**Queue overrides:** The owner temporarily moved Batcave to priority #1; it was deferred after ordinary HTTP returned a Cloudflare challenge and the browser sessions had no member access. AllManga was then audited: catalogue, details, and chapter metadata were reachable, but the reader redirected to `mkissa.to`, which returned the same Cloudflare challenge. The queue advanced to Asura Scans, which is published, and now to MangaXo.
+**Publication state:** Comix and MangaBuddy removed from the active catalogue; their files/history are retained for recovery. Asura Scans beta is published at commit `ab56e9f`; MangaXo is being prepared for beta publication.
 
 ## Evidence labels
 
@@ -45,7 +45,7 @@ This is a triage log, not a claim that every reachable site is suitable for a mo
 | 20 | WeebCentral | EXISTING | Existing module; no duplicate created. |
 | 21 | MangaKatana | EXISTING | Existing module; no duplicate created. |
 | 22 | LikeManga | EXISTING | Covered by the existing MGRead module. |
-| 23 | MangaXO | REACHABLE / UNASSESSED | HTTP 200; queued for a separate bounded evaluation. |
+| 23 | MangaXO | LOCAL_COMPLETE / CURRENT | Local module; fixture suite and bounded live quality proof passed 100% (80/80 checks) across six titles. Beta publication follows final repository validation. |
 | 24 | AllManga (duplicate) | DUPLICATE | Same queue source as item 14. |
 | 25 | KingOfShojo | REACHABLE / UNASSESSED | HTTP 200; queued for a separate bounded evaluation. |
 
@@ -185,3 +185,27 @@ app's content controls handle that rating as intended.
   repository validation passed.
 - `IOS_RUNTIME_PASS` and `DEVICE_PASS`: not claimed; installation and the real
   Books/WebKit bridge still require the owner's iPad test.
+
+## MangaXo implementation record
+
+Source: [MangaXo](https://mangaxo.com/)
+
+The source exposes ordinary public HTML/AJAX flows for discovery, title
+details, chapter lists, and ordered reader image manifests. The module keeps
+all requests on the declared source or image hosts, preserves decimal chapter
+numbers, deduplicates title-scoped results, and rejects malformed, empty,
+off-host, or mismatched reader responses. It uses no credentials, cookies,
+CAPTCHA handling, or challenge bypass.
+
+### MangaXo evidence
+
+- `FIXTURE_PASS`: deterministic tests cover discovery/search pagination,
+  title ownership, English chapter parsing, decimal ordering, chapter/image
+  manifest validation, empty-reader failure, and image-host restrictions.
+- `LIVE_NODE_PASS`: six representative titles, five evenly spaced chapters per
+  title, every returned page URL, and first/middle/last image delivery passed
+  80/80 checks (100%).
+- `IOS_RUNTIME_PASS` and `DEVICE_PASS`: not claimed; the owner's app/device
+  installation remains the final acceptance step.
+- The beta manifest is marked `suggestive`; the app's content controls should
+  be checked before wider rollout.
