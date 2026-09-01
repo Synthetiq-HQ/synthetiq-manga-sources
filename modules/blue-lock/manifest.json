@@ -1,0 +1,53 @@
+{
+  "allowedHosts": [
+    "bluelockread.com",
+    "*.bluelockread.com",
+    "i.imgur.com"
+  ],
+  "attribution": {
+    "author": "Synthetiq-HQ",
+    "authorizationURL": null,
+    "licenseName": null,
+    "licenseURL": null,
+    "website": "https://bluelockread.com"
+  },
+  "baseURL": "https://bluelockread.com",
+  "capabilities": [
+    "popular",
+    "latest",
+    "search",
+    "details",
+    "chapters",
+    "images",
+    "imageRequest",
+    "discovery"
+  ],
+  "contentRating": "suggestive",
+  "contentType": "pageImages",
+  "contractVersion": 1,
+  "entry": {
+    "path": "modules/blue-lock/index.js",
+    "sha256": "f272f297063ea8020a2615ad2cb61067f0e9ef34a918d481e54bd3dac2552d0b"
+  },
+  "familyID": "blue-lock",
+  "icon": {
+    "path": "modules/blue-lock/icon.png",
+    "sha256": "43e0e3ad9776773dac354aca1aa35d9b1fc5aee844b7368c8774f51eb604654d"
+  },
+  "id": "blue-lock",
+  "language": "en",
+  "legacyIDs": [],
+  "limits": {
+    "cacheTTLSeconds": 900,
+    "maxConcurrentRequests": 2,
+    "maxResponseBytes": 8388608,
+    "maxScriptBytes": 262144,
+    "timeoutMilliseconds": 25000
+  },
+  "minimumAppVersion": "1.0.0",
+  "name": "Blue Lock",
+  "releaseTrack": "beta",
+  "status": "active",
+  "universalLink": "https://synthetiq.uk/manga/modules/blue-lock",
+  "version": "1.0.0"
+}

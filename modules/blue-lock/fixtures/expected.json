@@ -1,0 +1,95 @@
+{
+  "search": {
+    "items": [
+      {
+        "id": "https://bluelockread.com/manga/blue-lock/",
+        "href": "https://bluelockread.com/manga/blue-lock/",
+        "url": "https://bluelockread.com/manga/blue-lock/",
+        "title": "Blue Lock",
+        "image": "https://i.imgur.com/fixture-blue-lock.png",
+        "description": "Fixture listing for Blue Lock."
+      }
+    ],
+    "hasMore": false
+  },
+  "details": {
+    "id": "https://bluelockread.com/manga/blue-lock/",
+    "href": "https://bluelockread.com/manga/blue-lock/",
+    "url": "https://bluelockread.com/manga/blue-lock/",
+    "title": "Blue Lock",
+    "image": "https://i.imgur.com/fixture-blue-lock.png",
+    "description": "Fixture listing for Blue Lock.",
+    "status": "Ongoing",
+    "genres": ["Action", "Sports", "Shounen"]
+  },
+  "chapters": [
+    {
+      "id": "https://ww3.bluelockread.com/chapter/blue-lock-chapter-12/",
+      "href": "https://ww3.bluelockread.com/chapter/blue-lock-chapter-12/",
+      "url": "https://ww3.bluelockread.com/chapter/blue-lock-chapter-12/",
+      "title": "Blue Lock Chapter 12",
+      "number": 12,
+      "releaseDate": null,
+      "language": "en"
+    },
+    {
+      "id": "https://ww3.bluelockread.com/chapter/blue-lock-chapter-10.2/",
+      "href": "https://ww3.bluelockread.com/chapter/blue-lock-chapter-10.2/",
+      "url": "https://ww3.bluelockread.com/chapter/blue-lock-chapter-10.2/",
+      "title": "Blue Lock Chapter 10.2",
+      "number": 10.2,
+      "releaseDate": null,
+      "language": "en"
+    },
+    {
+      "id": "https://ww3.bluelockread.com/chapter/blue-lock-chapter-10.1/",
+      "href": "https://ww3.bluelockread.com/chapter/blue-lock-chapter-10.1/",
+      "url": "https://ww3.bluelockread.com/chapter/blue-lock-chapter-10.1/",
+      "title": "Blue Lock Chapter 10.1",
+      "number": 10.1,
+      "releaseDate": null,
+      "language": "en"
+    },
+    {
+      "id": "https://ww3.bluelockread.com/chapter/blue-lock-chapter-10/",
+      "href": "https://ww3.bluelockread.com/chapter/blue-lock-chapter-10/",
+      "url": "https://ww3.bluelockread.com/chapter/blue-lock-chapter-10/",
+      "title": "Blue Lock Chapter 10",
+      "number": 10,
+      "releaseDate": null,
+      "language": "en"
+    },
+    {
+      "id": "https://ww3.bluelockread.com/chapter/blue-lock-chapter-01/",
+      "href": "https://ww3.bluelockread.com/chapter/blue-lock-chapter-01/",
+      "url": "https://ww3.bluelockread.com/chapter/blue-lock-chapter-01/",
+      "title": "Blue Lock Chapter 1",
+      "number": 1,
+      "releaseDate": null,
+      "language": "en"
+    }
+  ],
+  "images": [
+    {
+      "url": "https://cdn.bluelockread.com/file/mangap/fixture/blue-lock/1.jpeg?t=fixture",
+      "headers": {
+        "Accept": "image/avif,image/webp,image/*,*/*",
+        "Referer": "https://ww3.bluelockread.com/chapter/blue-lock-chapter-12/"
+      }
+    },
+    {
+      "url": "https://cdn.bluelockread.com/file/mangap/fixture/blue-lock/2.jpeg?t=fixture",
+      "headers": {
+        "Accept": "image/avif,image/webp,image/*,*/*",
+        "Referer": "https://ww3.bluelockread.com/chapter/blue-lock-chapter-12/"
+      }
+    },
+    {
+      "url": "https://cdn.bluelockread.com/file/mangap/fixture/blue-lock/3.jpeg?t=fixture",
+      "headers": {
+        "Accept": "image/avif,image/webp,image/*,*/*",
+        "Referer": "https://ww3.bluelockread.com/chapter/blue-lock-chapter-12/"
+      }
+    }
+  ]
+}
