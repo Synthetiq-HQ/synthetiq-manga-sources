@@ -1,0 +1,70 @@
+{
+  "search": {
+    "items": [
+      {
+        "id": "https://readkingdom.com/manga/kingdom/",
+        "href": "https://readkingdom.com/manga/kingdom/",
+        "title": "Kingdom",
+        "image": "https://i.imgur.com/kingdom-cover.png"
+      }
+    ],
+    "hasMore": false
+  },
+  "details": {
+    "id": "https://readkingdom.com/manga/kingdom/",
+    "href": "https://readkingdom.com/manga/kingdom/",
+    "url": "https://readkingdom.com/manga/kingdom/",
+    "title": "Kingdom",
+    "image": "https://i.imgur.com/kingdom-cover.png",
+    "description": "Read Kingdom manga for free online",
+    "authors": [],
+    "author": "",
+    "genres": [],
+    "status": "Ongoing"
+  },
+  "chapters": [
+    {
+      "id": "https://readkingdom.com/chapter/kingdom-chapter-003/",
+      "href": "https://readkingdom.com/chapter/kingdom-chapter-003/",
+      "url": "https://readkingdom.com/chapter/kingdom-chapter-003/",
+      "title": "Chapter 3",
+      "number": 3,
+      "releaseDate": null,
+      "language": "en"
+    },
+    {
+      "id": "https://readkingdom.com/chapter/kingdom-chapter-002/",
+      "href": "https://readkingdom.com/chapter/kingdom-chapter-002/",
+      "url": "https://readkingdom.com/chapter/kingdom-chapter-002/",
+      "title": "Chapter 2",
+      "number": 2,
+      "releaseDate": null,
+      "language": "en"
+    },
+    {
+      "id": "https://readkingdom.com/chapter/kingdom-chapter-001/",
+      "href": "https://readkingdom.com/chapter/kingdom-chapter-001/",
+      "url": "https://readkingdom.com/chapter/kingdom-chapter-001/",
+      "title": "Chapter 1",
+      "number": 1,
+      "releaseDate": null,
+      "language": "en"
+    }
+  ],
+  "images": [
+    {
+      "url": "https://cdn.readkingdom.com/file/mangap/8/10003000/1.jpg",
+      "headers": {
+        "Accept": "image/avif,image/webp,image/*,*/*",
+        "Referer": "https://ww6.readkingdom.com/chapter/kingdom-chapter-003/"
+      }
+    },
+    {
+      "url": "https://cdn.readkingdom.com/file/mangap/8/10003000/2.jpeg",
+      "headers": {
+        "Accept": "image/avif,image/webp,image/*,*/*",
+        "Referer": "https://ww6.readkingdom.com/chapter/kingdom-chapter-003/"
+      }
+    }
+  ]
+}

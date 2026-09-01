@@ -1,0 +1,55 @@
+{
+  "allowedHosts": [
+    "readkingdom.com",
+    "ww5.readkingdom.com",
+    "ww6.readkingdom.com",
+    "cdn.readkingdom.com",
+    "i.imgur.com"
+  ],
+  "attribution": {
+    "author": "Synthetiq-HQ",
+    "authorizationURL": null,
+    "licenseName": null,
+    "licenseURL": null,
+    "website": "https://readkingdom.com"
+  },
+  "baseURL": "https://readkingdom.com",
+  "capabilities": [
+    "popular",
+    "latest",
+    "search",
+    "details",
+    "chapters",
+    "images",
+    "imageRequest",
+    "discovery"
+  ],
+  "contentRating": "suggestive",
+  "contentType": "pageImages",
+  "contractVersion": 1,
+  "entry": {
+    "path": "modules/kingdom/index.js",
+    "sha256": "0a09b9021c665f8194e381a9f2e2a6db62be780e93f874595882473d31c3243d"
+  },
+  "familyID": "kingdom",
+  "icon": {
+    "path": "modules/kingdom/icon.png",
+    "sha256": "faa24ec881e6040655c187a681d6dc496eb8aa41e1bd0652a180b3a40b457187"
+  },
+  "id": "kingdom",
+  "language": "en",
+  "legacyIDs": [],
+  "limits": {
+    "cacheTTLSeconds": 900,
+    "maxConcurrentRequests": 2,
+    "maxResponseBytes": 8388608,
+    "maxScriptBytes": 262144,
+    "timeoutMilliseconds": 25000
+  },
+  "minimumAppVersion": "1.0.0",
+  "name": "Kingdom",
+  "releaseTrack": "beta",
+  "status": "active",
+  "universalLink": "https://synthetiq.uk/manga/modules/kingdom",
+  "version": "1.0.0"
+}
