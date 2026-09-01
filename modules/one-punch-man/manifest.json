@@ -1,0 +1,52 @@
+{
+  "allowedHosts": [
+    "readopm.com",
+    "*.readopm.com"
+  ],
+  "attribution": {
+    "author": "Synthetiq-HQ",
+    "authorizationURL": null,
+    "licenseName": null,
+    "licenseURL": null,
+    "website": "https://readopm.com"
+  },
+  "baseURL": "https://readopm.com",
+  "capabilities": [
+    "popular",
+    "latest",
+    "search",
+    "details",
+    "chapters",
+    "images",
+    "imageRequest",
+    "discovery"
+  ],
+  "contentRating": "suggestive",
+  "contentType": "pageImages",
+  "contractVersion": 1,
+  "entry": {
+    "path": "modules/one-punch-man/index.js",
+    "sha256": "d201e7ebbcb89ff9af3196873bab6d4f4cb73b6409d791280f143fd73a905ec1"
+  },
+  "familyID": "one-punch-man",
+  "icon": {
+    "path": "modules/one-punch-man/icon.png",
+    "sha256": "9476e0b12f1c2054bb1f5f7980e166deb34f7a93a4dad6f2351ff85fd4e04c1b"
+  },
+  "id": "one-punch-man",
+  "language": "en",
+  "legacyIDs": [],
+  "limits": {
+    "cacheTTLSeconds": 900,
+    "maxConcurrentRequests": 2,
+    "maxResponseBytes": 8388608,
+    "maxScriptBytes": 262144,
+    "timeoutMilliseconds": 25000
+  },
+  "minimumAppVersion": "1.0.0",
+  "name": "One Punch Man",
+  "releaseTrack": "beta",
+  "status": "active",
+  "universalLink": "https://synthetiq.uk/manga/modules/one-punch-man",
+  "version": "1.0.0"
+}

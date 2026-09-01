@@ -1,0 +1,106 @@
+{
+  "search": {
+    "items": [
+      {
+        "id": "https://readopm.com/manga/one-punch-man/",
+        "href": "https://readopm.com/manga/one-punch-man/",
+        "url": "https://readopm.com/manga/one-punch-man/",
+        "title": "One Punch Man",
+        "image": "https://ww4.readopm.com/wp-content/uploads/2017/11/Read-One-Punch-Man-Manga.png",
+        "description": "In this action-comedy, Saitama searches for a worthy opponent. — fixture description."
+      }
+    ],
+    "hasMore": false
+  },
+  "details": {
+    "id": "https://readopm.com/manga/one-punch-man/",
+    "href": "https://readopm.com/manga/one-punch-man/",
+    "url": "https://readopm.com/manga/one-punch-man/",
+    "title": "One Punch Man",
+    "image": "https://ww4.readopm.com/wp-content/uploads/2017/11/Read-One-Punch-Man-Manga.png",
+    "description": "In this action-comedy, Saitama searches for a worthy opponent. — fixture description.",
+    "status": "Ongoing",
+    "genres": ["Action", "Comedy", "Shounen", "Supernatural"]
+  },
+  "chapters": [
+    {
+      "id": "https://readopm.com/chapter/one-punch-man-chapter-237/",
+      "href": "https://readopm.com/chapter/one-punch-man-chapter-237/",
+      "url": "https://readopm.com/chapter/one-punch-man-chapter-237/",
+      "title": "One Punch Man Chapter 237",
+      "number": 237,
+      "language": "en"
+    },
+    {
+      "id": "https://readopm.com/chapter/one-punch-man-chapter-144/",
+      "href": "https://readopm.com/chapter/one-punch-man-chapter-144/",
+      "url": "https://readopm.com/chapter/one-punch-man-chapter-144/",
+      "title": "One Punch Man Chapter 143",
+      "number": 143,
+      "language": "en"
+    },
+    {
+      "id": "https://readopm.com/chapter/one-punch-man-chapter-100-2-142-revised/",
+      "href": "https://readopm.com/chapter/one-punch-man-chapter-100-2-142-revised/",
+      "url": "https://readopm.com/chapter/one-punch-man-chapter-100-2-142-revised/",
+      "title": "One Punch Man Chapter 100.2 (Revised)",
+      "number": 100.2,
+      "language": "en"
+    },
+    {
+      "id": "https://readopm.com/chapter/one-punch-man-chapter-078-5/",
+      "href": "https://readopm.com/chapter/one-punch-man-chapter-078-5/",
+      "url": "https://readopm.com/chapter/one-punch-man-chapter-078-5/",
+      "title": "One Punch Man Bonus Chapter: Sonic",
+      "number": 78.5,
+      "language": "en"
+    },
+    {
+      "id": "https://readopm.com/chapter/one-punch-man-chapter-055-003/",
+      "href": "https://readopm.com/chapter/one-punch-man-chapter-055-003/",
+      "url": "https://readopm.com/chapter/one-punch-man-chapter-055-003/",
+      "title": "One Punch Man Chapter 55.003",
+      "number": 55.003,
+      "language": "en"
+    },
+    {
+      "id": "https://readopm.com/chapter/one-punch-man-chapter-055/",
+      "href": "https://readopm.com/chapter/one-punch-man-chapter-055/",
+      "url": "https://readopm.com/chapter/one-punch-man-chapter-055/",
+      "title": "One Punch Man Chapter 55",
+      "number": 55,
+      "language": "en"
+    },
+    {
+      "id": "https://readopm.com/chapter/one-punch-man-chapter-001/",
+      "href": "https://readopm.com/chapter/one-punch-man-chapter-001/",
+      "url": "https://readopm.com/chapter/one-punch-man-chapter-001/",
+      "title": "One Punch Man Chapter 1",
+      "number": 1,
+      "language": "en"
+    }
+  ],
+  "images": [
+    {
+      "url": "https://cdn.readopm.com/file/fixture/one-punch-man-237-01.png",
+      "headers": {
+        "Accept": "image/avif,image/webp,image/*,*/*",
+        "Referer": "https://ww7.readopm.com/chapter/one-punch-man-chapter-237/"
+      }
+    },
+    {
+      "url": "https://cdn.readopm.com/file/fixture/one-punch-man-237-02.png",
+      "headers": {
+        "Accept": "image/avif,image/webp,image/*,*/*",
+        "Referer": "https://ww7.readopm.com/chapter/one-punch-man-chapter-237/"
+      }
+    },
+    {
+      "url": "https://cdn.readopm.com/file/fixture/one-punch-man-237-03.jpeg?quality=90",
+      "headers": {
+        "Accept": "image/avif,image/webp,image/*,*/*",
+        "Referer": "https://ww7.readopm.com/chapter/one-punch-man-chapter-237/"
+      }
+    }
+  ]
+}
