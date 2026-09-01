@@ -230,12 +230,12 @@ function looksLikeImage(response) {
   ].some((prefix) => magic.startsWith(prefix));
 }
 
-function fixtureResponse(body, status = 200) {
+function fixtureResponse(body, status = 200, finalUrl = "https://fixture.invalid/") {
   return {
     status,
     ok: status >= 200 && status < 300,
     headers: {},
-    finalUrl: "https://fixture.invalid/",
+    finalUrl,
     body,
     bodyDropped: false,
     dropReason: null,
@@ -264,7 +264,8 @@ async function createRuntime(slug, mode) {
       || (await readFile(path.join(root, "modules", slug, "fixtures", "images.html"), "utf8").catch(() => null))
       || (await readFile(path.join(root, "modules", slug, "fixtures", "images.json"), "utf8").catch(() => null))
       || (await readFile(path.join(root, "modules", slug, "fixtures", "pages.json"), "utf8").catch(() => null))
-      || (await readFile(path.join(root, "modules", slug, "fixtures", "chapter.json"), "utf8").catch(() => null));
+      || (await readFile(path.join(root, "modules", slug, "fixtures", "chapter.json"), "utf8").catch(() => null))
+      || (await readFile(path.join(root, "modules", slug, "fixtures", "chapter-1.html"), "utf8").catch(() => null));
     const chapterList =
       (await readFile(path.join(root, "modules", slug, "fixtures", "chapters.html"), "utf8").catch(() => null))
       || (await readFile(path.join(root, "modules", slug, "fixtures", "chapters.json"), "utf8").catch(() => null));
@@ -397,6 +398,18 @@ if (slug === "novelfire") {
           if (/\/comics\/[^/]+\/chapter\//i.test(u) && chapter) return fixtureResponse(chapter, 200);
           if (/\/comics\/[^/]+$/i.test(u) && chapterList) return fixtureResponse(chapterList, 200);
           if (home) return fixtureResponse(home, 200);
+        }
+        if (slug === "ichi-the-witch") {
+          if (/\/chapter\//i.test(u) && chapter) return fixtureResponse(chapter, 200, u);
+          if (details) return fixtureResponse(details, 200, u);
+        }
+        if (slug === "sakamoto-days") {
+          if (/\/chapter\//i.test(u) && chapter) return fixtureResponse(chapter, 200, u);
+          if (details) return fixtureResponse(details, 200, u);
+        }
+        if (slug === "one-punch-man") {
+          if (/\/chapter\//i.test(u) && chapter) return fixtureResponse(chapter, 200, u);
+          if (details) return fixtureResponse(details, 200, u);
         }
         // WeebCentral uses /series/<id> for details and
         // /series/<id>/full-chapter-list for chapters. Resolve the more

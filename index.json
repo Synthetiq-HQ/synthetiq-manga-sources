@@ -563,6 +563,106 @@
     "path": "modules/asura-scans/icon.png",
    "sha256": "34172b0656154dbaa8767555cdd8aa2f690a9001f0432a706034dc619d8ceec9"
    }
+  },
+  {
+   "id": "ichi-the-witch",
+   "familyID": "ichi-the-witch",
+   "name": "Ichi the Witch",
+   "version": "1.0.0",
+   "language": "en",
+   "contentType": "pageImages",
+   "contentRating": "suggestive",
+   "releaseTrack": "beta",
+   "status": "active",
+   "sortPriority": 93,
+   "manifest": {
+    "path": "modules/ichi-the-witch/manifest.json",
+    "sha256": "b124585a23a2bdbd9f9f8c6525660a328987fde69065fb86cde1041d201709d8"
+   },
+   "icon": {
+    "path": "modules/ichi-the-witch/icon.png",
+    "sha256": "faa24ec881e6040655c187a681d6dc496eb8aa41e1bd0652a180b3a40b457187"
+   }
+  },
+  {
+   "id": "sakamoto-days",
+   "familyID": "sakamoto-days",
+   "name": "Sakamoto Days",
+   "version": "1.0.0",
+   "language": "en",
+   "contentType": "pageImages",
+   "contentRating": "suggestive",
+   "releaseTrack": "beta",
+   "status": "active",
+   "sortPriority": 94,
+   "manifest": {
+    "path": "modules/sakamoto-days/manifest.json",
+    "sha256": "96fe7522fdfe5c053cd1232c7769d9023e108f0221ae064d0149b1ec574aabb1"
+   },
+   "icon": {
+    "path": "modules/sakamoto-days/icon.png",
+    "sha256": "5c0b5876ec07984a24cfd282aeec94486a110483d5345356596526af93f08e62"
+   }
+  },
+  {
+   "id": "blue-lock",
+   "familyID": "blue-lock",
+   "name": "Blue Lock",
+   "version": "1.0.0",
+   "language": "en",
+   "contentType": "pageImages",
+   "contentRating": "suggestive",
+   "releaseTrack": "beta",
+   "status": "active",
+   "sortPriority": 95,
+   "manifest": {
+    "path": "modules/blue-lock/manifest.json",
+    "sha256": "436ec20131db67f3ae476fd3252fda4b1ae4c20ff79a81563dd8ca611ebe56ed"
+   },
+   "icon": {
+    "path": "modules/blue-lock/icon.png",
+    "sha256": "43e0e3ad9776773dac354aca1aa35d9b1fc5aee844b7368c8774f51eb604654d"
+   }
+  },
+  {
+   "id": "one-punch-man",
+   "familyID": "one-punch-man",
+   "name": "One Punch Man",
+   "version": "1.0.0",
+   "language": "en",
+   "contentType": "pageImages",
+   "contentRating": "suggestive",
+   "releaseTrack": "beta",
+   "status": "active",
+   "sortPriority": 96,
+   "manifest": {
+    "path": "modules/one-punch-man/manifest.json",
+    "sha256": "dae5d92eafac9edbe66fd692a3ca7c0915f9664ba19c584fac71db91b05e8587"
+   },
+   "icon": {
+    "path": "modules/one-punch-man/icon.png",
+    "sha256": "9476e0b12f1c2054bb1f5f7980e166deb34f7a93a4dad6f2351ff85fd4e04c1b"
+   }
+  },
+  {
+   "id": "kingdom",
+   "familyID": "kingdom",
+   "name": "Kingdom",
+   "version": "1.0.0",
+   "language": "en",
+   "contentType": "pageImages",
+   "contentRating": "suggestive",
+   "releaseTrack": "beta",
+   "status": "active",
+   "sortPriority": 97,
+   "manifest": {
+    "path": "modules/kingdom/manifest.json",
+    "sha256": "d90ad9d524e03a8d3790c84817d8c4f5b5229b611e1ff9fe583ceef8aab97efa"
+   },
+   "icon": {
+    "path": "modules/kingdom/icon.png",
+    "sha256": "faa24ec881e6040655c187a681d6dc496eb8aa41e1bd0652a180b3a40b457187"
+   }
   }
 ],
  "repository": {

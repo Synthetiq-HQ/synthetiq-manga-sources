@@ -118,6 +118,41 @@
     "ChapterListReact",
     "sourceChapter.series_slug"
    ]
+  },
+  "ichi-the-witch": {
+   "chapterScope": "fixed-series-dom",
+   "requiredCodeFragments": [
+    "function parseChapterList(html, base)",
+    "chapterURLParts"
+   ]
+  },
+  "sakamoto-days": {
+   "chapterScope": "fixed-series-dom",
+   "requiredCodeFragments": [
+    "function parseChapterList(html, base)",
+    "chapterURLParts"
+   ]
+  },
+  "blue-lock": {
+   "chapterScope": "fixed-series-dom",
+   "requiredCodeFragments": [
+    "function parseChapterList(html, base)",
+    "chapterURLParts"
+   ]
+  },
+  "one-punch-man": {
+   "chapterScope": "fixed-series-dom",
+   "requiredCodeFragments": [
+    "function parseChapterList(html, base)",
+    "chapterURLParts"
+   ]
+  },
+  "kingdom": {
+   "chapterScope": "fixed-series-dom",
+   "requiredCodeFragments": [
+    "function parseChapterList(html, base = BASE_URL)",
+    "chapterURLParts"
+   ]
   }
  }
 }

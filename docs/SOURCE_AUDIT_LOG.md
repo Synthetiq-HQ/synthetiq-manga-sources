@@ -2,9 +2,9 @@
 
 **Product:** Synthetiq Books module repository  
 **Audit date:** 2026-09-01
-**Current queue item:** Ichi the Witch (#27) is next after the Attack on Titan beta (`https://w47.read-attackontitan-manga.com/`) was implemented and published for owner testing.
-**Queue overrides:** The owner temporarily moved Batcave to priority #1; it was deferred after ordinary HTTP returned a Cloudflare challenge and the browser sessions had no member access. AllManga was then audited: catalogue, details, and chapter metadata were reachable, but the reader redirected to `mkissa.to`, which returned the same Cloudflare challenge. The queue advanced to Asura Scans, then briefly to MangaXo; MangaXo was removed at the owner's request. KingOfShojo was checked next and rejected for adult/mature catalogue labels. Attack on Titan was implemented as the next title-focused beta after its URL-family, reader, and content review. The queue now advances to Ichi the Witch, followed by the remaining inventoried candidates in fixed order. This queue does not create or publish modules until each candidate passes its checks.
-**Publication state:** Comix, MangaBuddy, and MangaXo are removed from the active catalogue; their files/history are retained in Git history for recovery. Asura Scans beta is published at commit `ab56e9f`. Attack on Titan is published as a `suggestive` beta at commit `2992536` for owner/device testing.
+**Current queue item:** Hunter x Hunter (#32) is next after the five title-focused betas in this batch were implemented, parent-tested, and approved for publication.
+**Queue overrides:** The owner temporarily moved Batcave to priority #1; it was deferred after ordinary HTTP returned a Cloudflare challenge and the browser sessions had no member access. AllManga was then audited: catalogue, details, and chapter metadata were reachable, but the reader redirected to `mkissa.to`, which returned the same Cloudflare challenge. The queue advanced to Asura Scans, then briefly to MangaXo; MangaXo was removed at the owner's request. KingOfShojo was checked next and rejected for adult/mature catalogue labels. Attack on Titan was implemented as the next title-focused beta after its URL-family, reader, and content review. The five subsequent title-focused candidates were implemented and parent-tested together; the queue now advances to Hunter x Hunter, followed by the remaining inventoried candidates in fixed order. This queue does not create or publish modules until each candidate passes its checks.
+**Publication state:** Comix, MangaBuddy, and MangaXo are removed from the active catalogue; their files/history are retained in Git history for recovery. Asura Scans beta is published at commit `ab56e9f`. Attack on Titan is published as a `suggestive` beta at commit `2992536`. Ichi the Witch, Sakamoto Days, Blue Lock, One Punch Man, and Kingdom are now the next `suggestive` beta batch for owner/device testing.
 
 ## Evidence labels
 
@@ -59,11 +59,11 @@ This is a triage log, not a claim that every reachable site is suitable for a mo
 | 24 | AllManga (duplicate) | DUPLICATE | Same queue source as item 14. |
 | 25 | KingOfShojo | REJECTED / CONTENT POLICY | Current public pages expose `Adult`, `Mature`, `Smut`, `Ecchi`, `Yaoi`, and `Manhwa Hot` labels plus an 18+/mature-content warning; no module started. |
 | 26 | Attack on Titan single-series site | PUBLISHED_BETA / CURRENT | Third-party single-series host, not official Crunchyroll. Visible page showed public chapters and no Adult/Smut label; the beta now handles rotating page hosts, both observed reader CDNs, numeric aliases, lazy-image duplicates, and challenge/error responses. |
-| 27 | Ichi the Witch | QUEUED / SAFETY + TECHNICAL REVIEW | Reachable title-focused hub; process after Attack on Titan. No module or active index entry exists. |
-| 28 | Sakamoto Days | QUEUED / SAFETY + TECHNICAL REVIEW | Reachable title-focused hub; process after Ichi the Witch. No module or active index entry exists. |
-| 29 | Blue Lock | QUEUED / SAFETY + TECHNICAL REVIEW | Reachable through multiple title-focused hubs; process after Sakamoto Days. Extra catalogue on one hub requires title scoping. |
-| 30 | One Punch Man | QUEUED / SAFETY + TECHNICAL REVIEW | Reachable title-focused hub; process after Blue Lock. No module or active index entry exists. |
-| 31 | Kingdom | QUEUED / SAFETY + TECHNICAL REVIEW | Reachable title-focused hub; process after One Punch Man. War/violence review required. |
+| 27 | Ichi the Witch | PUBLISHED_BETA / BATCH | Module `ichi-the-witch` passed fixture, contract, parent live, and CDN image checks. |
+| 28 | Sakamoto Days | PUBLISHED_BETA / BATCH | Module `sakamoto-days` passed fixture, contract, parent live, and CDN image checks. |
+| 29 | Blue Lock | PUBLISHED_BETA / BATCH | Module `blue-lock` scopes the mixed host catalogue to Blue Lock and passed fixture, contract, parent live, and CDN image checks. |
+| 30 | One Punch Man | PUBLISHED_BETA / BATCH | Module `one-punch-man` scopes the mixed catalogue to the main series and passed fixture, contract, parent live, and CDN image checks. |
+| 31 | Kingdom | PUBLISHED_BETA / BATCH | Module `kingdom` passed fixture, contract, parent live, and CDN image checks; violence remains the reason for the suggestive beta rating. |
 | 32 | Hunter x Hunter | QUEUED / SAFETY + TECHNICAL REVIEW | Reachable title-focused hub; process after Kingdom. No module or active index entry exists. |
 | 33 | Jujutsu Kaisen | QUEUED / SAFETY + TECHNICAL REVIEW | Three reachable title-focused variants; process after Hunter x Hunter. Layout and metadata differ between hosts. |
 | 34 | Fairy Tail / Eden's Zero / Dead Rock | QUEUED / SAFETY + TECHNICAL REVIEW | Reachable multi-series hub; process after Jujutsu Kaisen. Fan-service/violence review required. |
@@ -143,16 +143,16 @@ than trusting the host name alone.
 |---|---|---|---|---|
 | Attack on Titan / Shingeki no Kyojin | `https://w47.read-attackontitan-manga.com/`; `https://readsnk.com/` | LIVE; both expose chapter lists, and the roots rotate to versioned hosts | Active beta `attack-on-titan` module now covers the supplied host family | Violence/horror review remains; owner/device content-control testing is still required |
 | Chainsaw Man | `https://readchainsawman.com/` | LIVE; versioned root and chapter pages respond; the hub also carries Fujimoto-related works | Not in active index | Dark/violent themes; review before queue acceptance |
-| Ichi the Witch | `https://readichithewitch.com/` | LIVE; versioned root exposes numbered chapters | Not in active index | No adult label observed in the bounded check; safety review still required |
-| Sakamoto Days | `https://readsakadays.com/` | LIVE; versioned root exposes numbered and coloured chapters | Not in active index | No adult label observed in the bounded check; safety review still required |
+| Ichi the Witch | `https://readichithewitch.com/` | LIVE; versioned root exposes numbered chapters | Active beta `ichi-the-witch` module | No adult label observed; 96 chapters and sampled reader images passed the batch gate |
+| Sakamoto Days | `https://readsakadays.com/` | LIVE; versioned root exposes numbered and coloured chapters | Active beta `sakamoto-days` module | No adult label observed; 274 chapters and sampled reader images passed the batch gate |
 | Kagurabachi | `https://readkagurabachimanga.com/` | LIVE; versioned root exposes chapter navigation | Active `kagurabachi` module already covers a different host | Duplicate source; do not queue until a separate-source reason is established |
-| Kingdom | `https://readkingdom.com/` | LIVE; versioned root exposes numbered chapters and extra versions | Not in active index | War/violence review; candidate after gate |
+| Kingdom | `https://readkingdom.com/` | LIVE; versioned root exposes numbered chapters and extra versions | Active beta `kingdom` module | No adult label observed; violence is documented and 927 chapters/sample images passed the batch gate |
 | Solo Leveling / Ragnarok | `https://readsololeveling.org/` | LIVE; versioned root exposes Solo Leveling and Ragnarok chapters | Active `solo-leveling` module already exists on another host | Duplicate source; no new module until needed |
-| Blue Lock | `https://bluelockread.com/`; `https://blue-lock-manga.com/`; `https://readbluelock-manga.com/` | LIVE; all three expose Blue Lock chapter navigation, with rotating hosts on the first two | Not in active index | No adult label observed in the bounded check; review the extra catalogue on `bluelockread.com` before queueing |
+| Blue Lock | `https://bluelockread.com/`; `https://blue-lock-manga.com/`; `https://readbluelock-manga.com/` | LIVE; all three expose Blue Lock chapter navigation, with rotating hosts on the first two | Active beta `blue-lock` module uses `bluelockread.com` | No adult label observed; mixed catalogue is title-scoped and 365 chapters/sample images passed the batch gate |
 | Nanatsu no Taizai / Seven Deadly Sins | `https://read7deadlysins.com/` | LIVE; versioned root exposes Seven Deadly Sins and Four Horsemen chapters | Not in active index | Fan-service/violence review; candidate only after gate |
 | Tokyo Ghoul / Tokyo Ghoul:re | `https://tokyoghoulre.com/` | LIVE; versioned root exposes Tokyo Ghoul, Tokyo Ghoul:re, and Choujin X links | Not in active index | Graphic horror/violence review; candidate only after gate |
 | One Piece | `https://readonepiece.com/` | LIVE; versioned root exposes numbered and coloured chapters | Active `onepiece-manga-online` module already exists on a different host | Duplicate source; no new module until needed |
-| One Punch Man | `https://readopm.com/` | LIVE; versioned root exposes chapter navigation and related series | Not in active index | No adult label observed in the bounded check; safety review still required |
+| One Punch Man | `https://readopm.com/` | LIVE; versioned root exposes chapter navigation and related series | Active beta `one-punch-man` module | No adult label observed; mixed catalogue is title-scoped and 270 chapters/sample images passed the batch gate |
 | Fairy Tail / Eden's Zero / Dead Rock | `https://readfairytail.com/` | LIVE; versioned root exposes all three series | Not in active index | Fan-service/violence review; candidate only after gate |
 | Jujutsu Kaisen | `https://readjujutsukaisen.com/`; `https://read-jjk.com/`; `https://readjujutsukaisen-manga.com/` | LIVE; all expose chapter-shaped pages, though the three layouts and metadata differ | Not in active index | Dark fantasy, death, and violence review; do not treat as safe-approved |
 | Hunter x Hunter | `https://readhxh.com/` | LIVE; versioned root exposes Hunter x Hunter, coloured chapters, and related works | Not in active index | No adult label observed in the bounded check; safety review still required |
@@ -180,17 +180,42 @@ only a small `Loading...` shell, while the current usable Chainsaw Man hub is
 
 ### Future queue from this inventory
 
-The Attack on Titan module is now active in `index.json` on the beta track.
-The ordered future queue starts with #27 Ichi the Witch, followed by #28
-Sakamoto Days, #29 Blue Lock, #30 One Punch Man, #31 Kingdom, #32 Hunter x
-Hunter, #33 Jujutsu Kaisen, #34 Fairy Tail/Eden's Zero/Dead Rock, #35 Seven
-Deadly Sins, #36 Tokyo Ghoul, #37 Chainsaw Man, and #38 Berserk. Each remains
-`QUEUED / SAFETY + TECHNICAL REVIEW`, not `SAFE`, `PUBLISHED`, or
-`ACTIVE`, until its visible content, reader behavior, and device behavior
-pass the existing gate.
+The Attack on Titan module is active in `index.json` on the beta track. The
+five title-focused modules for Ichi the Witch, Sakamoto Days, Blue Lock, One
+Punch Man, and Kingdom are the current beta batch. The ordered future queue
+now starts with #32 Hunter x Hunter, followed by #33 Jujutsu Kaisen, #34 Fairy
+Tail/Eden's Zero/Dead Rock, #35 Seven Deadly Sins, #36 Tokyo Ghoul, #37
+Chainsaw Man, and #38 Berserk. Each remains `QUEUED / SAFETY + TECHNICAL REVIEW`,
+not `SAFE`, `PUBLISHED`, or `ACTIVE`, until its visible content, reader
+behavior, and device behavior pass the existing gate.
 Kagurabachi, Solo Leveling, One Piece, and Black Clover are recorded as
 alternate hosts for modules already present in the repository and are not
 duplicate queue entries.
+
+### Five-module beta batch evidence
+
+The five queued candidates were delegated to independent workers and then
+reviewed in the release worktree. All five use ordinary public HTTPS through
+`fetchv2`, no credentials or challenge bypass, strict title ownership, and
+declared image-host allow-lists. Their visible catalogues did not show adult or
+sexualized labels; each remains `suggestive` beta because the sources are
+unclassified third-party hosts and/or contain action violence.
+
+- **Ichi the Witch** — 96 live chapters; parent live probe passed chapters 96
+  and 1 with 19 and 50 pages, including first/middle/last JPEG deliveries.
+- **Sakamoto Days** — 274 live chapters; parent live probe passed chapters 273
+  and 0 with 19 and 44 pages, including first/middle/last JPEG deliveries.
+- **Blue Lock** — 365 live chapters; parent live probe passed chapters 359
+  and 1 with 20 and 75 pages, including first/middle/last JPEG deliveries.
+- **One Punch Man** — 270 live chapters; parent live probe passed chapters 237
+  and 1 with 22 pages each, including first/middle/last JPEG/PNG deliveries.
+- **Kingdom** — 927 live chapters; parent live probe passed chapters 885 and 1
+  with 21 and 62 pages, including first/middle/last JPEG deliveries.
+
+Every module also passed its focused unit tests, the app-shaped fixture probe,
+the source-contract audit, and the parent repository gate. iOS/WebKit and
+content-control device evidence are still separate from this Windows/Node
+validation.
 
 ## KingOfShojo safety check
 

@@ -1,12 +1,12 @@
 # Project Goal and Scope
 
 _Last updated: 2026-09-01_  
-_Status: MangaBuddy, Comix, and MangaXo removed; Batcave and AllManga deferred; KingOfShojo rejected by the content gate; Asura Scans and Attack on Titan betas are published for testing; Ichi the Witch is next; the remaining title-site candidates stay queued in order_
+_Status: MangaBuddy, Comix, and MangaXo removed; Batcave and AllManga deferred; KingOfShojo rejected by the content gate; Asura Scans, Attack on Titan, Ichi the Witch, Sakamoto Days, Blue Lock, One Punch Man, and Kingdom betas are published for testing; Hunter x Hunter is next_
 _Implementation confidence: 92%_
 
 ## 1. Current Goal Summary
 
-Validate the published Attack on Titan single-series beta, then work through the newly inventoried title-focused sites one at a time starting with Ichi the Witch. Determine whether their URL families support a reusable module pattern, and apply the content-suitability gate before each implementation after Batcave and AllManga were deferred for blocked reader access.
+Validate the published title-focused betas, then work through the newly inventoried sites starting with Hunter x Hunter. Keep the reusable URL-family pattern title-scoped, and apply the content-suitability gate before each implementation after Batcave and AllManga were deferred for blocked reader access.
 
 ## 2. Primary Users
 
@@ -28,15 +28,19 @@ Validate the published Attack on Titan single-series beta, then work through the
 ## 4. Desired Outcome
 
 - Confirm that the published Attack on Titan beta is technically reusable, policy-appropriate for beta testing, and reliable through ordinary public access.
-- Preserve the title-site inventory and process its 12 non-duplicate candidates in queue order, with Ichi the Witch next; discovery does not create an active module.
+- Preserve the title-site inventory and process its 12 non-duplicate candidates in queue order, with Hunter x Hunter next after the five-module beta batch; discovery does not create an active module.
 - Confirm that the published Asura Scans beta remains reachable, policy-appropriate, and technically reliable in the Books app.
-- Keep both title-focused sources in beta until iOS/device behavior and content controls are confirmed.
+- Keep each title-focused source in beta until iOS/device behavior and content controls are confirmed.
 
 ## 5. MVP Definition
 
-The current candidate is the published Attack on Titan beta. The next candidate is Ichi the Witch only if its ordinary access exposes stable title, chapter, and reader data, its host family can be handled safely, and its content review is acceptable.
+The current release candidate is the five-module beta batch for Ichi the Witch,
+Sakamoto Days, Blue Lock, One Punch Man, and Kingdom. The next candidate is
+Hunter x Hunter only if its ordinary access exposes stable title, chapter, and
+reader data, its host family can be handled safely, and its content review is
+acceptable.
 
-> The detailed MangaBuddy/Comix material below is retained as historical context; QToon, Specter Scans, MangaXo, and KingOfShojo were skipped or removed for content-policy reasons, Batcave and AllManga were deferred for blocked reader access, and Asura Scans and Attack on Titan remain published as betas. The current queue scope is Ichi the Witch next, followed by the inventoried title hubs and the pre-add content gate.
+> The detailed MangaBuddy/Comix material below is retained as historical context; QToon, Specter Scans, MangaXo, and KingOfShojo were skipped or removed for content-policy reasons, Batcave and AllManga were deferred for blocked reader access, and Asura Scans, Attack on Titan, Ichi the Witch, Sakamoto Days, Blue Lock, One Punch Man, and Kingdom remain published as betas. The current queue scope is Hunter x Hunter next, followed by the inventoried title hubs and the pre-add content gate.
 
 ## 6. Confirmed Decisions
 
@@ -106,7 +110,7 @@ The current candidate is the published Attack on Titan beta. The next candidate 
 | Authentication | None | Confirmed | Use the source's public browser session. |
 | APIs/Integrations | `fetchv2` for the queued source's public HTML and declared image resources | Confirmed | No direct protected API/decryption or browser challenge bypass. |
 | Caching/Refresh | Five-minute title cache with bounded size | Confirmed | Avoid repeated detail/chapter work during navigation. |
-| Deployment | Public `synthetiq-manga-sources` repository | Confirmed | Asura beta published at `ab56e9f`; Attack on Titan beta is active in `index.json` at commit `2992536` for owner testing. |
+| Deployment | Public `synthetiq-manga-sources` repository | Confirmed | Asura beta published at `ab56e9f`; Attack on Titan and the five-module title-site beta batch are active in `index.json` for owner testing. |
 | Testing | Fixtures, repository checks, and bounded live browser checks | Confirmed | Device pass remains separate. |
 | Security/Privacy | Ordinary public requests only | Confirmed | No bypass or hidden credentials. |
 
@@ -153,6 +157,7 @@ The current candidate is the published Attack on Titan beta. The next candidate 
 | 2026-09-01 | Implement and publish Attack on Titan beta | In scope | Release for owner/device testing and advance queue to Ichi the Witch | Public commit `2992536`; fixture, contract/hash, and bounded live checks passed; five spaced chapters and both observed reader CDNs returned valid image deliveries. |
 | 2026-09-01 | Inventory title-focused sites linked by the Manga Goat network | In scope | Record reachable, duplicate, redirected, and unavailable sources; keep Attack on Titan first | No module code or active index entry was created; non-duplicate candidates remain safety and technical review items. |
 | 2026-09-01 | Queue the 12 non-duplicate title-site candidates | In scope | Process Ichi the Witch through Berserk one at a time after Attack on Titan | Fixed order recorded in `docs/SOURCE_AUDIT_LOG.md`; duplicate, redirected, parked, and unavailable sources remain out of the module queue. |
+| 2026-09-01 | Delegate the next five title-site modules to independent workers | In scope | Implement Ichi the Witch, Sakamoto Days, Blue Lock, One Punch Man, and Kingdom in parallel without publishing partial work | All five workers returned PASS; parent review and live app-shaped checks passed before the combined release. |
 
 ## 17. Implementation Readiness Checklist
 

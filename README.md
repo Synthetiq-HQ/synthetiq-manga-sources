@@ -17,6 +17,11 @@ separate from the app checkout and intentionally contains no module ZIPs.
 | Gachiakuta | Page images | Single-series `fetchv2` |
 | Haikyuu | Page images | Single-series `fetchv2` |
 | Asura Scans | Page images | Public catalogue/chapter APIs through `fetchv2` |
+| Ichi the Witch | Page images | Single-series `fetchv2` beta |
+| Sakamoto Days | Page images | Single-series `fetchv2` beta |
+| Blue Lock | Page images | Title-scoped `fetchv2` beta |
+| One Punch Man | Page images | Title-scoped `fetchv2` beta |
+| Kingdom | Page images | Single-series `fetchv2` beta |
 
 Run deterministic validation from this directory:
 

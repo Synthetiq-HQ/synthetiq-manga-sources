@@ -19,6 +19,11 @@ const expectedHandlers = {
   "beginning-after-the-end": ["searchResults", "extractDetails", "extractChapters", "extractImages"],
   "kagurabachi": ["searchResults", "extractDetails", "extractChapters", "extractImages"],
   "black-clover": ["searchResults", "extractDetails", "extractChapters", "extractImages"],
+  "ichi-the-witch": ["searchResults", "extractDetails", "extractChapters", "extractImages"],
+  "sakamoto-days": ["searchResults", "extractDetails", "extractChapters", "extractImages"],
+  "blue-lock": ["searchResults", "extractDetails", "extractChapters", "extractImages"],
+  "one-punch-man": ["searchResults", "extractDetails", "extractChapters", "extractImages"],
+  "kingdom": ["searchResults", "extractDetails", "extractChapters", "extractImages"],
 };
 
 function fail(message) {
