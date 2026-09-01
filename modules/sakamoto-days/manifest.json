@@ -1,0 +1,56 @@
+{
+  "allowedHosts": [
+    "readsakadays.com",
+    "www.readsakadays.com",
+    "ww1.readsakadays.com",
+    "ww2.readsakadays.com",
+    "cdn.readsakadays.com",
+    "i.imgur.com"
+  ],
+  "attribution": {
+    "author": "Synthetiq-HQ",
+    "authorizationURL": null,
+    "licenseName": null,
+    "licenseURL": null,
+    "website": "https://readsakadays.com"
+  },
+  "baseURL": "https://ww2.readsakadays.com",
+  "capabilities": [
+    "popular",
+    "latest",
+    "search",
+    "details",
+    "chapters",
+    "images",
+    "imageRequest",
+    "discovery"
+  ],
+  "contentRating": "suggestive",
+  "contentType": "pageImages",
+  "contractVersion": 1,
+  "entry": {
+    "path": "modules/sakamoto-days/index.js",
+    "sha256": "af60b3318ebdeceda1197b95f7d2d24bf05a5d886123331ceca340f755b84aba"
+  },
+  "familyID": "sakamoto-days",
+  "icon": {
+    "path": "modules/sakamoto-days/icon.png",
+    "sha256": "5c0b5876ec07984a24cfd282aeec94486a110483d5345356596526af93f08e62"
+  },
+  "id": "sakamoto-days",
+  "language": "en",
+  "legacyIDs": [],
+  "limits": {
+    "cacheTTLSeconds": 900,
+    "maxConcurrentRequests": 2,
+    "maxResponseBytes": 8388608,
+    "maxScriptBytes": 262144,
+    "timeoutMilliseconds": 25000
+  },
+  "minimumAppVersion": "1.0.0",
+  "name": "Sakamoto Days",
+  "releaseTrack": "beta",
+  "status": "active",
+  "universalLink": "https://synthetiq.uk/manga/modules/sakamoto-days",
+  "version": "1.0.0"
+}

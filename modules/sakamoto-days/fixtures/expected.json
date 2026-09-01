@@ -1,0 +1,92 @@
+{
+  "search": {
+    "items": [
+      {
+        "id": "https://ww2.readsakadays.com/manga/sakamoto-days/",
+        "href": "https://ww2.readsakadays.com/manga/sakamoto-days/",
+        "url": "https://ww2.readsakadays.com/manga/sakamoto-days/",
+        "title": "Sakamoto Days",
+        "image": "https://i.imgur.com/fixture-sakamoto-cover.png",
+        "description": "A retired assassin protects his family while running a neighborhood store."
+      }
+    ],
+    "hasMore": false
+  },
+  "details": {
+    "id": "https://ww2.readsakadays.com/manga/sakamoto-days/",
+    "href": "https://ww2.readsakadays.com/manga/sakamoto-days/",
+    "url": "https://ww2.readsakadays.com/manga/sakamoto-days/",
+    "title": "Sakamoto Days",
+    "image": "https://i.imgur.com/fixture-sakamoto-cover.png",
+    "description": "A retired assassin protects his family while running a neighborhood store.",
+    "status": "Ongoing",
+    "authors": [],
+    "author": "",
+    "genres": ["Action", "Comedy", "Shounen"]
+  },
+  "chapters": [
+    {
+      "id": "https://ww2.readsakadays.com/chapter/sakamoto-days-chapter-273/",
+      "href": "https://ww2.readsakadays.com/chapter/sakamoto-days-chapter-273/",
+      "url": "https://ww2.readsakadays.com/chapter/sakamoto-days-chapter-273/",
+      "title": "Sakamoto Days Chapter 273",
+      "number": 273,
+      "language": "en"
+    },
+    {
+      "id": "https://ww2.readsakadays.com/chapter/sakamoto-days-chapter-137/",
+      "href": "https://ww2.readsakadays.com/chapter/sakamoto-days-chapter-137/",
+      "url": "https://ww2.readsakadays.com/chapter/sakamoto-days-chapter-137/",
+      "title": "Sakamoto Days Chapter 137",
+      "number": 137,
+      "language": "en"
+    },
+    {
+      "id": "https://ww2.readsakadays.com/chapter/sakamoto-days-chapter-1.5/",
+      "href": "https://ww2.readsakadays.com/chapter/sakamoto-days-chapter-1.5/",
+      "url": "https://ww2.readsakadays.com/chapter/sakamoto-days-chapter-1.5/",
+      "title": "Sakamoto Days Chapter 1.5",
+      "number": 1.5,
+      "language": "en"
+    },
+    {
+      "id": "https://ww2.readsakadays.com/chapter/sakamoto-days-chapter-1/",
+      "href": "https://ww2.readsakadays.com/chapter/sakamoto-days-chapter-1/",
+      "url": "https://ww2.readsakadays.com/chapter/sakamoto-days-chapter-1/",
+      "title": "Sakamoto Days Chapter 1",
+      "number": 1,
+      "language": "en"
+    },
+    {
+      "id": "https://ww2.readsakadays.com/chapter/sakamoto-days-chapter-0/",
+      "href": "https://ww2.readsakadays.com/chapter/sakamoto-days-chapter-0/",
+      "url": "https://ww2.readsakadays.com/chapter/sakamoto-days-chapter-0/",
+      "title": "Sakamoto Days Chapter 0",
+      "number": 0,
+      "language": "en"
+    }
+  ],
+  "images": [
+    {
+      "url": "https://cdn.readsakadays.com/file/mangap/fixture/10137000/1.jpeg",
+      "headers": {
+        "Accept": "image/avif,image/webp,image/*,*/*",
+        "Referer": "https://ww2.readsakadays.com/chapter/sakamoto-days-chapter-137/"
+      }
+    },
+    {
+      "url": "https://cdn.readsakadays.com/file/mangap/fixture/10137000/2.jpeg?token=fixture",
+      "headers": {
+        "Accept": "image/avif,image/webp,image/*,*/*",
+        "Referer": "https://ww2.readsakadays.com/chapter/sakamoto-days-chapter-137/"
+      }
+    },
+    {
+      "url": "https://cdn.readsakadays.com/file/mangap/fixture/10137000/3.webp",
+      "headers": {
+        "Accept": "image/avif,image/webp,image/*,*/*",
+        "Referer": "https://ww2.readsakadays.com/chapter/sakamoto-days-chapter-137/"
+      }
+    }
+  ]
+}
