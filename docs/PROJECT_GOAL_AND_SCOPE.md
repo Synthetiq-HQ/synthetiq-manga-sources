@@ -1,12 +1,12 @@
 # Project Goal and Scope
 
 _Last updated: 2026-09-01_  
-_Status: Implementation in progress_  
+_Status: MangaBuddy 1.0.1 beta published; device testing pending_
 _Implementation confidence: 92%_
 
 ## 1. Current Goal Summary
 
-Improve the public Comix module so title details and chapters load quickly and discovery feeds provide a useful, continuous stream of manga cards in Synthetiq Books.
+Release the MangaBuddy/Comizy module with reliable search, discovery, title details, ordered chapters, and reader images in Synthetiq Books.
 
 ## 2. Primary Users
 
@@ -14,17 +14,19 @@ Improve the public Comix module so title details and chapters load quickly and d
 
 ## 3. Problem Being Solved
 
-- Opening a Comix title can take too long before its description and chapters appear.
-- The previous homepage continuation workaround returned only six popular cards because it discarded the first 22 cards from a 28-card browse page.
+- The next queue source needs a reliable module before wider user testing.
+- The source redirects MangaBuddy to Comizy, so the module must follow the current public endpoint while keeping the queue identity.
 
 ## 4. Desired Outcome
 
-- Remove avoidable module-side latency and repeated work while preserving source-owned browser behavior.
-- Return full useful continuation pages, with accurate `hasMore` behavior and no arbitrary small final page.
+- Return complete, ordered, source-owned content with bounded retries, short-lived caching, and clear failures for unsafe or malformed responses.
+- Keep the public release beta until device testing and broader quality sampling are complete.
 
 ## 5. MVP Definition
 
-The smallest useful version is a Comix module update that improves chapter loading, fixes discovery pagination, passes repository validation, and is published for device testing.
+The smallest useful version is a MangaBuddy/Comizy page-image module that passes deterministic tests, repository validation, and a bounded live quality proof before publication.
+
+> The detailed Comix-specific material below is retained as historical context; the current release scope is MangaBuddy/Comizy.
 
 ## 6. Confirmed Decisions
 

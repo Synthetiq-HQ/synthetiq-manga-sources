@@ -1,9 +1,9 @@
 # Source Audit Log
 
 **Product:** Synthetiq Books module repository  
-**Audit date:** 2026-08-31  
+**Audit date:** 2026-09-01
 **Current queue item:** MangaBuddy (`https://mangabuddy.com/`, currently Comizy)  
-**Publication state:** Comix removed from the active catalogue; its files are retained for recovery while MangaBuddy is evaluated locally
+**Publication state:** Comix removed from the active catalogue; MangaBuddy 1.0.1 published as beta after deterministic and bounded live checks
 
 ## Evidence labels
 
@@ -28,7 +28,7 @@ This is a triage log, not a claim that every reachable site is suitable for a mo
 | 6 | Comick | BLOCKED | HTTP 403 challenge; no bypass attempted. |
 | 7 | Comix | REMOVED | Removed from the active catalogue after the owner reported a title-specific Bleach failure; historical files retained for recovery. |
 | 8 | MangaDot | BLOCKED | HTTP 403 challenge; no bypass attempted. |
-| 9 | MangaBuddy | LOCAL DRAFT / CURRENT | HTTP 200; local module draft is being unit-tested before publication. |
+| 9 | MangaBuddy | PUBLISHED BETA / CURRENT | HTTP 200; 1.0.1 published after unit, fixture, repository, and bounded live checks. |
 | 10 | QToon | REACHABLE / UNASSESSED | HTTP 200; queued for a separate bounded evaluation. |
 | 11 | Specter Scans | REACHABLE / UNASSESSED | HTTP 200; queued for a separate bounded evaluation. |
 | 12 | Mangago | BLOCKED | HTTP 403 challenge; no bypass attempted. |
@@ -45,6 +45,39 @@ This is a triage log, not a claim that every reachable site is suitable for a mo
 | 23 | MangaXO | REACHABLE / UNASSESSED | HTTP 200; queued for a separate bounded evaluation. |
 | 24 | AllManga (duplicate) | DUPLICATE | Same queue source as item 14. |
 | 25 | KingOfShojo | REACHABLE / UNASSESSED | HTTP 200; queued for a separate bounded evaluation. |
+
+## MangaBuddy / Comizy module (published beta)
+
+**Module:** `mangabuddy`
+**Version:** `1.0.1`
+**Track:** beta
+**Type:** `pageImages`
+**Source:** `https://mangabuddy.com/` (currently redirects to `https://comizy.io/`)
+**Catalogue status:** Active in `index.json` after publication on 2026-09-01.
+
+The module uses ordinary public `fetchv2` requests against Comizy's observed
+search API, server-rendered discovery/title pages, and declared `cmzcdn.org`
+reader images. It does not bypass challenges, authentication, tokens, or rate
+limits. It filters source-marked adult titles, coalesces concurrent title-page
+loads, caches successful HTML briefly, preserves chapter order, removes
+omnibus rows when individual chapters exist, and rejects malformed or
+off-host data.
+
+### Evidence
+
+- **UNIT PASS:** three MangaBuddy tests cover normal handlers, pagination,
+  filters, retries, shared-load caching, malformed/challenge data, adult
+  access, title ownership, and image-host validation.
+- **FIXTURE PASS:** the app-shaped fixture tester passed MangaBuddy 1/1 and
+  exercised search, discovery, details, chapters, and reader images.
+- **LIVE PASS:** five titles passed: Chainsaw Man (379 chapters), One Piece
+  (1,299), Naruto (748), Jujutsu Kaisen (477), and Solo Leveling (265).
+  Fifteen sampled chapter readers returned ordered image lists and all sampled
+  first-image requests returned HTTP 200.
+- **CONTRACT PASS:** the full repository suite passed 38/38 tests, 28 source
+  policies/manifests, and exact SHA-256 verification.
+- **DEVICE PASS:** pending installation and verification in the Synthetiq
+  Books iOS/iPad runtime.
 
 ## Comix module (historical release; removed from catalogue)
 

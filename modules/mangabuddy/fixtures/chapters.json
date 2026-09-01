@@ -1,0 +1,49 @@
+{
+  "success": true,
+  "data": {
+    "chapters": [
+      {
+        "id": "fixture-c4",
+        "url": "/fixture-chronicle/chapter-4",
+        "name": "Chapter 4",
+        "updated_at": "2026-08-01T10:00:00.000Z",
+        "number": 7
+      },
+      {
+        "id": "fixture-bundle",
+        "url": "/fixture-chronicle/chapter-1-4",
+        "name": "Chapter 1-4",
+        "updated_at": "2026-08-01T09:00:00.000Z",
+        "number": 6
+      },
+      {
+        "id": "fixture-c2",
+        "url": "/fixture-chronicle/vol-1-chapter-2-midpoint",
+        "name": "Vol. 1 Chapter 2: Midpoint",
+        "updated_at": "2026-07-01T10:00:00.000Z",
+        "number": 5
+      },
+      {
+        "id": "fixture-c15",
+        "url": "/fixture-chronicle/chapter-1-5",
+        "name": "Chapter 1.5",
+        "updated_at": "2026-06-01T10:00:00.000Z",
+        "number": 4
+      },
+      {
+        "id": "fixture-c0",
+        "url": "/fixture-chronicle/chapter-0",
+        "name": "Chapter 0",
+        "updated_at": "2026-05-01T10:00:00.000Z",
+        "number": 1
+      },
+      {
+        "id": "fixture-other",
+        "url": "/other-title/chapter-1",
+        "name": "Chapter 1",
+        "updated_at": "2026-04-01T10:00:00.000Z",
+        "number": 2
+      }
+    ]
+  }
+}

@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-08-31T23:38:54Z",
+ "generatedAt": "2026-09-01T11:23:32Z",
  "modules": [
   {
    "contentRating": "suggestive",
@@ -522,6 +522,26 @@
    "icon": {
     "path": "modules/mangaball/icon.png",
     "sha256": "eeeacb45c7710193a674ac462106550f6e1d27ddc7c7940e32952eebbabfb2fc"
+   }
+  },
+  {
+   "id": "mangabuddy",
+   "familyID": "mangabuddy",
+   "name": "MangaBuddy (Comizy)",
+   "version": "1.0.1",
+   "language": "en",
+   "contentType": "pageImages",
+   "contentRating": "suggestive",
+   "releaseTrack": "beta",
+   "status": "active",
+   "sortPriority": 90,
+   "manifest": {
+    "path": "modules/mangabuddy/manifest.json",
+    "sha256": "52a125067c5ebe8eb190ed54a3beab3387795e4a4dd337a4bc3429385da7c254"
+   },
+   "icon": {
+    "path": "modules/mangabuddy/icon.png",
+    "sha256": "e600eb18806030a219754857ea278ad869616e21ad12d3a51ba661503b1e382c"
    }
   }
  ],

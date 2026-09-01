@@ -493,6 +493,248 @@ test("MangaKatana parses only the selected title's chapter table and thzq page i
   assert.deepEqual(JSON.parse(JSON.stringify(pages)), fixtures.expected.images);
 });
 
+test("MangaBuddy parses Comizy search, safe details, ordered chapters, and reader pages", async () => {
+  const fixtures = {
+    search: await text("modules/mangabuddy/fixtures/search.json"),
+    details: await text("modules/mangabuddy/fixtures/details.html"),
+    chapters: await text("modules/mangabuddy/fixtures/chapters.json"),
+    chapter: await text("modules/mangabuddy/fixtures/chapter.html"),
+    latest: await text("modules/mangabuddy/fixtures/latest.html"),
+    ranking: await text("modules/mangabuddy/fixtures/ranking.html"),
+    expected: await json("modules/mangabuddy/fixtures/expected.json"),
+  };
+  const module = await loadModule("modules/mangabuddy/index.js", {
+    fetchv2: async (url, headers, method, body, options) => {
+      assert.equal(typeof url, "string");
+      assert.equal(method, "GET");
+      assert.equal(body, null);
+      const parsed = new URL(url);
+      if (parsed.hostname === "api.comizy.io") {
+        assert.equal(options.responseClass, "json");
+        if (parsed.pathname === "/titles/search") return response(fixtures.search);
+        if (parsed.pathname === "/titles/fixture-safe-id/chapters") return response(fixtures.chapters);
+      }
+      assert.equal(parsed.hostname, "comizy.io");
+      assert.equal(options.responseClass, "html");
+      if (parsed.pathname === "/fixture-chronicle") return response(fixtures.details);
+      if (parsed.pathname.startsWith("/fixture-chronicle/")) return response(fixtures.chapter);
+      if (parsed.pathname === "/fixture-adult") {
+        return response(fixtures.details.replace('"isAdult":false', '"isAdult":true'));
+      }
+      if (parsed.pathname === "/latest") return response(fixtures.latest);
+      if (parsed.pathname === "/ranking") return response(fixtures.ranking);
+      throw new Error(`Unexpected MangaBuddy URL: ${url}`);
+    },
+  });
+
+  assert.deepEqual(JSON.parse(JSON.stringify(await module.searchResults("fixture", 1))), fixtures.expected.search);
+  const details = await module.extractDetails(fixtures.expected.search.items[0].id);
+  assert.deepEqual(JSON.parse(JSON.stringify(details)), fixtures.expected.details);
+
+  const chapters = await module.extractChapters(details.id);
+  assert.deepEqual(JSON.parse(JSON.stringify(chapters)), fixtures.expected.chapters);
+  assert.equal(chapters.some((chapter) => /1-4/.test(chapter.title)), false, "omnibus range row is omitted");
+  assert.deepEqual(JSON.parse(JSON.stringify(await module.extractImages(chapters[0].id))), fixtures.expected.images);
+
+  assert.deepEqual(JSON.parse(JSON.stringify(await module.discoveryHome())), fixtures.expected.discovery);
+  assert.deepEqual(
+    JSON.parse(JSON.stringify(await module.discoveryFeed("popular", 1))),
+    { items: fixtures.expected.discovery.sections[0].items, hasMore: false },
+  );
+  await assert.rejects(
+    () => module.extractDetails("https://comizy.io/fixture-adult"),
+    /marked this title as adult/i,
+  );
+});
+
+test("MangaBuddy paginates, retries transient API responses, and coalesces shared title loads", async () => {
+  const fixtures = {
+    search: await text("modules/mangabuddy/fixtures/search.json"),
+    details: await text("modules/mangabuddy/fixtures/details.html"),
+    chapters: await text("modules/mangabuddy/fixtures/chapters.json"),
+    latest: await text("modules/mangabuddy/fixtures/latest.html"),
+    ranking: await text("modules/mangabuddy/fixtures/ranking.html"),
+  };
+  const calls = [];
+  let retryAttempts = 0;
+  let inFlightHTML = 0;
+  let maxInFlightHTML = 0;
+  const withMore = (fixture, hasMore) => hasMore
+    ? fixture.replace(/"has_next":false/, '"has_next":true')
+    : fixture;
+  const module = await loadModule("modules/mangabuddy/index.js", {
+    setTimeout: (callback) => { callback(); return 0; },
+    clearTimeout: () => {},
+    fetchv2: async (url, headers, method, body, options) => {
+      const parsed = new URL(url);
+      calls.push({ url, headers, method, body, options });
+      assert.equal(method, "GET");
+      assert.equal(body, null);
+
+      if (parsed.hostname === "api.comizy.io") {
+        assert.equal(options.responseClass, "json");
+        if (parsed.pathname === "/titles/search") {
+          if (parsed.searchParams.get("q") === "retry") {
+            retryAttempts += 1;
+            if (retryAttempts === 1) return response("temporary upstream failure", 503);
+          }
+          const payload = JSON.parse(fixtures.search);
+          payload.data.pagination = {
+            has_next: parsed.searchParams.get("page") === "2",
+          };
+          return response(JSON.stringify(payload));
+        }
+        if (parsed.pathname === "/titles/fixture-safe-id/chapters") return response(fixtures.chapters);
+      }
+
+      assert.equal(parsed.hostname, "comizy.io");
+      assert.equal(options.responseClass, "html");
+      inFlightHTML += 1;
+      maxInFlightHTML = Math.max(maxInFlightHTML, inFlightHTML);
+      try {
+        await Promise.resolve();
+        if (parsed.pathname === "/fixture-chronicle") return response(fixtures.details);
+        if (parsed.pathname === "/latest") {
+          return response(withMore(fixtures.latest, parsed.searchParams.has("page")));
+        }
+        if (parsed.pathname === "/ranking") {
+          return response(withMore(fixtures.ranking, parsed.searchParams.has("page")));
+        }
+      } finally {
+        inFlightHTML -= 1;
+      }
+      throw new Error(`Unexpected MangaBuddy URL: ${url}`);
+    },
+  });
+
+  const pagedSearch = await module.searchResults({
+    text: "fixture",
+    tags: ["Fantasy"],
+    excludeTags: ["Horror"],
+    status: "Ongoing",
+  }, 2);
+  assert.equal(pagedSearch.items.length, 1);
+  assert.equal(pagedSearch.hasMore, true);
+  const searchCall = calls.find((call) => {
+    const parsed = new URL(call.url);
+    return parsed.hostname === "api.comizy.io" && parsed.pathname === "/titles/search"
+      && parsed.searchParams.get("page") === "2";
+  });
+  assert.ok(searchCall, "search page 2 must be requested");
+  assert.equal(new URL(searchCall.url).searchParams.get("q"), "fixture");
+
+  const retried = await module.searchResults("retry", 1);
+  assert.equal(retried.items.length, 1);
+  assert.equal(retryAttempts, 2, "a transient API failure should be retried once");
+
+  const [details, chapters] = await Promise.all([
+    module.extractDetails("https://comizy.io/fixture-chronicle"),
+    module.extractChapters("https://comizy.io/fixture-chronicle"),
+  ]);
+  assert.equal(details.title, "Fixture Chronicle");
+  assert.equal(chapters.length, 4);
+  assert.equal(
+    calls.filter((call) => new URL(call.url).pathname === "/fixture-chronicle").length,
+    1,
+    "concurrent details and chapters must share one title HTML request",
+  );
+  await module.extractDetails("https://comizy.io/fixture-chronicle");
+  assert.equal(
+    calls.filter((call) => new URL(call.url).pathname === "/fixture-chronicle").length,
+    1,
+    "cached title details must not refetch HTML",
+  );
+
+  const latestPage = await module.discoveryFeed("latest", 2);
+  assert.equal(latestPage.items.length, 1);
+  assert.equal(latestPage.hasMore, true);
+  assert.deepEqual(
+    JSON.parse(JSON.stringify(await module.searchResults("__feed:latest", 2))),
+    JSON.parse(JSON.stringify(latestPage)),
+  );
+  const rankingPage = await module.discoveryFeed("ranking", 2);
+  assert.equal(rankingPage.items.length, 1);
+  assert.equal(rankingPage.hasMore, true);
+
+  const home = await module.discoveryHome();
+  assert.equal(home.sections.length, 2);
+  assert.equal(home.sections[0].id, "popular");
+  assert.equal(home.sections[1].id, "latest");
+  assert.equal(maxInFlightHTML, 2, "home sections should load concurrently");
+});
+
+test("MangaBuddy rejects malformed, challenged, out-of-scope, and unsafe data", async () => {
+  const fixtures = {
+    details: await text("modules/mangabuddy/fixtures/details.html"),
+    chapter: await text("modules/mangabuddy/fixtures/chapter.html"),
+  };
+  const fallbackChapter = `<!doctype html><script id="__NEXT_DATA__" type="application/json">${JSON.stringify({
+    props: { pageProps: { initialChapter: {
+      pages: [],
+      images: ["https://x1.cmzcdn.org/e/fallback.webp"],
+    } } },
+  })}</script>`;
+  const unsafeChapter = fixtures.chapter.replace(
+    /https:\/\/x[12]\.cmzcdn\.org\/e\/[^" ]+/g,
+    "https://evil.example/e/bad",
+  );
+  const module = await loadModule("modules/mangabuddy/index.js", {
+    setTimeout: (callback) => { callback(); return 0; },
+    clearTimeout: () => {},
+    fetchv2: async (url, headers, method, body, options) => {
+      const parsed = new URL(url);
+      assert.equal(method, "GET");
+      assert.equal(body, null);
+      if (parsed.hostname === "api.comizy.io" && parsed.pathname === "/titles/search") {
+        assert.equal(options.responseClass, "json");
+        const query = parsed.searchParams.get("q");
+        if (query === "challenge") return response("<html>captcha</html>");
+        if (query === "dropped") return { ok: true, status: 200, bodyDropped: true, dropReason: "maxBytesHint" };
+        if (query === "malformed") return response(JSON.stringify({ success: true, data: {} }));
+        if (query === "not-found") return response("missing", 404);
+      }
+      assert.equal(parsed.hostname, "comizy.io");
+      assert.equal(options.responseClass, "html");
+      if (parsed.pathname === "/fixture-empty-title") {
+        return response(fixtures.details.replace('"name":"Fixture Chronicle"', '"name":""'));
+      }
+      if (parsed.pathname === "/fixture-missing") return response("<html><body>missing data</body></html>");
+      if (parsed.pathname === "/fixture-chronicle/fallback") return response(fallbackChapter);
+      if (parsed.pathname === "/fixture-chronicle/unsafe") return response(unsafeChapter);
+      throw new Error(`Unexpected MangaBuddy URL: ${url}`);
+    },
+  });
+
+  await assert.rejects(() => module.searchResults("challenge"), /challenge page/i);
+  await assert.rejects(() => module.searchResults("dropped"), /response was dropped/i);
+  await assert.rejects(() => module.searchResults("malformed"), /no item list/i);
+  await assert.rejects(() => module.searchResults("not-found"), /HTTP 404/i);
+  await assert.rejects(
+    () => module.extractDetails("https://evil.example/fixture-chronicle"),
+    /Invalid MangaBuddy title identifier/i,
+  );
+  await assert.rejects(
+    () => module.extractDetails("https://comizy.io/latest"),
+    /Invalid MangaBuddy title identifier/i,
+  );
+  await assert.rejects(
+    () => module.extractDetails("https://comizy.io/fixture-missing"),
+    /did not contain Next data/i,
+  );
+  await assert.rejects(
+    () => module.extractDetails("https://comizy.io/fixture-empty-title"),
+    /did not contain a title/i,
+  );
+
+  const fallbackImages = await module.extractImages("https://comizy.io/fixture-chronicle/fallback");
+  assert.equal(fallbackImages.length, 1);
+  assert.equal(fallbackImages[0].url, "https://x1.cmzcdn.org/e/fallback.webp");
+  await assert.rejects(
+    () => module.extractImages("https://comizy.io/fixture-chronicle/unsafe"),
+    /no readable page images/i,
+  );
+});
+
 test("MGRead (LikeManga) parses search, details, paginated chapters, and CDN page images", async () => {
   const fixtures = {
     search: await text("modules/mgread/fixtures/search.html"),

@@ -107,6 +107,16 @@ npm run test:module -- weebcentral \
   --pages 5
 ```
 
+The MangaBuddy/Comizy module also has a bounded five-title quality proof:
+
+```sh
+npm run test:mangabuddy:live
+```
+
+It checks the newest, middle, and oldest readable chapters for Chainsaw Man,
+One Piece, Naruto, Jujutsu Kaisen, and Solo Leveling, while downloading only
+one page image from each sampled chapter.
+
 The probe walks discovery or search, details, complete chapters or sections,
 and terminal images, text, EPUB, or PDF resources. It validates response shape,
 stable identities, pagination, host rules, and sampled terminal delivery.

@@ -1,0 +1,38 @@
+{
+  "success": true,
+  "data": {
+    "items": [
+      {
+        "id": "fixture-safe-id",
+        "url": "/fixture-chronicle",
+        "name": "Fixture Chronicle",
+        "cover": "https://rx.comizy.io/covers/fixture-chronicle.webp",
+        "status": "Ongoing",
+        "summary": "A deterministic fixture title.",
+        "stats": { "chapters_count": 4 },
+        "is_adult": false,
+        "genres": [
+          { "name": "Fantasy", "slug": "fantasy" },
+          { "name": "Adventure", "slug": "adventure" }
+        ]
+      },
+      {
+        "id": "fixture-adult-id",
+        "url": "/fixture-adult",
+        "name": "Fixture Adult Title",
+        "cover": "https://rx.comizy.io/covers/fixture-adult.webp",
+        "status": "Ongoing",
+        "is_adult": true,
+        "genres": [{ "name": "Mature", "slug": "mature" }]
+      }
+    ],
+    "pagination": {
+      "total": 2,
+      "page": 1,
+      "limit": 24,
+      "total_pages": 1,
+      "has_next": false,
+      "has_previous": false
+    }
+  }
+}

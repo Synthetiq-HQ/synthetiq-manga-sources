@@ -1,0 +1,54 @@
+{
+ "allowedHosts": [
+  "comizy.io",
+  "*.comizy.io",
+  "mangabuddy.com",
+  "*.cmzcdn.org"
+ ],
+ "attribution": {
+  "author": "Synthetiq-HQ",
+  "authorizationURL": null,
+  "licenseName": null,
+  "licenseURL": null,
+  "website": "https://mangabuddy.com"
+ },
+ "baseURL": "https://comizy.io",
+ "capabilities": [
+  "popular",
+  "latest",
+  "search",
+  "details",
+  "chapters",
+  "images",
+  "imageRequest",
+  "discovery"
+ ],
+ "contentRating": "suggestive",
+ "contentType": "pageImages",
+ "contractVersion": 1,
+ "entry": {
+  "path": "modules/mangabuddy/index.js",
+  "sha256": "9752fed89b95d1b063e760b7156590205f2a6d941a7a7599096b2a296a669169"
+ },
+ "familyID": "mangabuddy",
+ "icon": {
+  "path": "modules/mangabuddy/icon.png",
+  "sha256": "e600eb18806030a219754857ea278ad869616e21ad12d3a51ba661503b1e382c"
+ },
+ "id": "mangabuddy",
+ "language": "en",
+ "legacyIDs": [],
+ "limits": {
+  "cacheTTLSeconds": 300,
+  "maxConcurrentRequests": 2,
+  "maxResponseBytes": 16777216,
+  "maxScriptBytes": 524288,
+  "timeoutMilliseconds": 30000
+ },
+ "minimumAppVersion": "1.0.0",
+ "name": "MangaBuddy (Comizy)",
+ "releaseTrack": "beta",
+ "status": "active",
+ "universalLink": "https://synthetiq.uk/manga/modules/mangabuddy",
+ "version": "1.0.1"
+}

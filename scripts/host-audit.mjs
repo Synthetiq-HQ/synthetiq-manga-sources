@@ -66,6 +66,7 @@ const queries = {
   "beginning-after-the-end": "the beginning after the end",
   "solo-leveling": "solo leveling",
   haikyuu: "haikyuu",
+  mangabuddy: "chainsaw",
 };
 
 const report = {};

@@ -289,6 +289,8 @@ async function createRuntime(slug, mode) {
       imagesJSON: await fixture("images.json"),
       chapterJSON: await fixture("chapter.json"),
       discoveryJSON: await fixture("discovery.json"),
+      mangabuddyLatest: await fixture("latest.html"),
+      mangabuddyRanking: await fixture("ranking.html"),
     };
 
     bridges = {
@@ -361,6 +363,14 @@ if (slug === "novelfire") {
           if (/\/title-detail\//i.test(u) && details) return fixtureResponse(details);
           if (/\/chapter-detail\//i.test(u) && chapter) return fixtureResponse(chapter);
           if (home) return fixtureResponse(home);
+        }
+        if (slug === "mangabuddy") {
+          if (/api\.comizy\.io\/titles\/search/i.test(u) && search) return fixtureResponse(search);
+          if (/api\.comizy\.io\/titles\/[^/]+\/chapters/i.test(u) && chapterList) return fixtureResponse(chapterList);
+          if (/comizy\.io\/ranking(?:\?|$)/i.test(u) && special.mangabuddyRanking) return fixtureResponse(special.mangabuddyRanking);
+          if (/comizy\.io\/latest(?:\?|$)/i.test(u) && special.mangabuddyLatest) return fixtureResponse(special.mangabuddyLatest);
+          if (/comizy\.io\/[^/]+\/[^/]+(?:\?|$)/i.test(u) && chapter) return fixtureResponse(chapter);
+          if (/comizy\.io\/[^/]+(?:\?|$)/i.test(u) && details) return fixtureResponse(details);
         }
         // WeebCentral uses /series/<id> for details and
         // /series/<id>/full-chapter-list for chapters. Resolve the more

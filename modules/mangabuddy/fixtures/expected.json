@@ -1,0 +1,122 @@
+{
+  "search": {
+    "items": [
+      {
+        "id": "https://comizy.io/fixture-chronicle",
+        "href": "https://comizy.io/fixture-chronicle",
+        "url": "https://comizy.io/fixture-chronicle",
+        "title": "Fixture Chronicle",
+        "image": "https://rx.comizy.io/covers/fixture-chronicle.webp",
+        "description": "A deterministic fixture title.",
+        "status": "Ongoing",
+        "genres": ["Fantasy", "Adventure"],
+        "chapterCount": 4
+      }
+    ],
+    "hasMore": false
+  },
+  "details": {
+    "id": "https://comizy.io/fixture-chronicle",
+    "href": "https://comizy.io/fixture-chronicle",
+    "url": "https://comizy.io/fixture-chronicle",
+    "title": "Fixture Chronicle",
+    "description": "A deterministic fixture description.",
+    "image": "https://rx.comizy.io/covers/fixture-chronicle.webp",
+    "authors": ["Fixture Author"],
+    "author": "Fixture Author",
+    "genres": ["Fantasy", "Adventure"],
+    "status": "Ongoing"
+  },
+  "chapters": [
+    {
+      "id": "https://comizy.io/fixture-chronicle/chapter-4",
+      "href": "https://comizy.io/fixture-chronicle/chapter-4",
+      "url": "https://comizy.io/fixture-chronicle/chapter-4",
+      "title": "Chapter 4",
+      "number": 4,
+      "releaseDate": "2026-08-01T10:00:00.000Z",
+      "language": "en"
+    },
+    {
+      "id": "https://comizy.io/fixture-chronicle/vol-1-chapter-2-midpoint",
+      "href": "https://comizy.io/fixture-chronicle/vol-1-chapter-2-midpoint",
+      "url": "https://comizy.io/fixture-chronicle/vol-1-chapter-2-midpoint",
+      "title": "Vol. 1 Chapter 2: Midpoint",
+      "number": 2,
+      "releaseDate": "2026-07-01T10:00:00.000Z",
+      "language": "en"
+    },
+    {
+      "id": "https://comizy.io/fixture-chronicle/chapter-1-5",
+      "href": "https://comizy.io/fixture-chronicle/chapter-1-5",
+      "url": "https://comizy.io/fixture-chronicle/chapter-1-5",
+      "title": "Chapter 1.5",
+      "number": 1.5,
+      "releaseDate": "2026-06-01T10:00:00.000Z",
+      "language": "en"
+    },
+    {
+      "id": "https://comizy.io/fixture-chronicle/chapter-0",
+      "href": "https://comizy.io/fixture-chronicle/chapter-0",
+      "url": "https://comizy.io/fixture-chronicle/chapter-0",
+      "title": "Chapter 0",
+      "number": 0,
+      "releaseDate": "2026-05-01T10:00:00.000Z",
+      "language": "en"
+    }
+  ],
+  "images": [
+    {
+      "url": "https://x2.cmzcdn.org/e/fixture-2.webp",
+      "headers": {
+        "Accept": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8",
+        "Referer": "https://comizy.io/"
+      }
+    },
+    {
+      "url": "https://x1.cmzcdn.org/e/fixture-1.webp",
+      "headers": {
+        "Accept": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8",
+        "Referer": "https://comizy.io/"
+      }
+    }
+  ],
+  "discovery": {
+    "sections": [
+      {
+        "id": "popular",
+        "title": "Popular",
+        "items": [
+          {
+            "id": "https://comizy.io/fixture-popular",
+            "href": "https://comizy.io/fixture-popular",
+            "url": "https://comizy.io/fixture-popular",
+            "title": "Fixture Popular",
+            "image": "https://rx.comizy.io/covers/fixture-popular.webp",
+            "description": "Popular fixture",
+            "status": "Completed",
+            "genres": ["Fantasy"],
+            "chapterCount": 8
+          }
+        ]
+      },
+      {
+        "id": "latest",
+        "title": "Latest",
+        "items": [
+          {
+            "id": "https://comizy.io/fixture-latest",
+            "href": "https://comizy.io/fixture-latest",
+            "url": "https://comizy.io/fixture-latest",
+            "title": "Fixture Latest",
+            "image": "https://rx.comizy.io/covers/fixture-latest.webp",
+            "description": "Latest fixture",
+            "status": "Ongoing",
+            "genres": ["Adventure"],
+            "chapterCount": 3
+          }
+        ]
+      }
+    ]
+  }
+}
