@@ -135,17 +135,6 @@ from each sampled chapter. It writes
 `reports/live-asura-proof-latest.json`. This is ordinary public access only;
 it does not use credentials, cookies, or challenge bypasses.
 
-For the locally implemented MangaXo quality matrix:
-
-```sh
-npm run test:mangaxo:live
-```
-
-This bounded proof checks six representative titles, five evenly spaced
-chapters per title, every returned page URL, and three delivered images per
-sampled chapter. It writes `reports/live-mangaxo-proof-latest.json` and is
-intentionally opt-in. No source credentials or bypass logic are used.
-
 ## 4. Certification Matrix
 
 The release certifier combines fixtures, live probes, and the app's iOS WebKit

@@ -2,9 +2,9 @@
 
 **Product:** Synthetiq Books module repository  
 **Audit date:** 2026-09-01
-**Current queue item:** MangaXo (`https://mangaxo.com/`, published beta awaiting device/content validation)
-**Queue overrides:** The owner temporarily moved Batcave to priority #1; it was deferred after ordinary HTTP returned a Cloudflare challenge and the browser sessions had no member access. AllManga was then audited: catalogue, details, and chapter metadata were reachable, but the reader redirected to `mkissa.to`, which returned the same Cloudflare challenge. The queue advanced to Asura Scans, which is published, and now to MangaXo.
-**Publication state:** Comix and MangaBuddy removed from the active catalogue; their files/history are retained for recovery. Asura Scans beta is published at commit `ab56e9f`; MangaXo beta is published at commit `025104a`.
+**Current queue item:** Content-suitability gate before the next module (Asura Scans beta remains published for device/content validation)
+**Queue overrides:** The owner temporarily moved Batcave to priority #1; it was deferred after ordinary HTTP returned a Cloudflare challenge and the browser sessions had no member access. AllManga was then audited: catalogue, details, and chapter metadata were reachable, but the reader redirected to `mkissa.to`, which returned the same Cloudflare challenge. The queue advanced to Asura Scans, then briefly to MangaXo; MangaXo was removed at the owner's request, so future candidates must pass content review before implementation.
+**Publication state:** Comix, MangaBuddy, and MangaXo are removed from the active catalogue; their files/history are retained in Git history for recovery. Asura Scans beta is published at commit `ab56e9f`.
 
 ## Evidence labels
 
@@ -16,6 +16,15 @@
 - **REACHABLE / UNASSESSED** — ordinary access responded, but no module has been accepted yet.
 - **LOCAL_COMPLETE** — an isolated module implementation and deterministic tests passed; publication is still pending.
 - **LIVE_NODE_PASS** — a bounded live Node proof reached the source and terminal media; this is not iOS/device evidence.
+- **REMOVED / CONTENT POLICY** — a module was removed from the active catalogue after owner review; it must not be treated as an available source.
+
+## Content-suitability gate
+
+Before implementing or publishing a new module, inspect the source's visible
+genres, labels, ratings, and representative catalogue entries. Do not add
+adult or sexualized sources. If a source is suggestive, unclassified, or lacks
+a reliable safe exclusion path, stop and obtain content approval before any
+module or index entry is created.
 
 ## Queue audit
 
@@ -45,7 +54,7 @@ This is a triage log, not a claim that every reachable site is suitable for a mo
 | 20 | WeebCentral | EXISTING | Existing module; no duplicate created. |
 | 21 | MangaKatana | EXISTING | Existing module; no duplicate created. |
 | 22 | LikeManga | EXISTING | Covered by the existing MGRead module. |
-| 23 | MangaXO | PUBLISHED_BETA / CURRENT | Public beta at commit `025104a`; fixture, contract/hash, and bounded live quality proof passed 100% (80/80 checks) across six titles. Device/content-control testing remains. |
+| 23 | MangaXO | REMOVED / CONTENT POLICY | Briefly published at commit `025104a`, then removed at the owner's request. It is no longer in the active index; implementation evidence remains only as historical audit context. |
 | 24 | AllManga (duplicate) | DUPLICATE | Same queue source as item 14. |
 | 25 | KingOfShojo | REACHABLE / UNASSESSED | HTTP 200; queued for a separate bounded evaluation. |
 
@@ -186,9 +195,13 @@ app's content controls handle that rating as intended.
 - `IOS_RUNTIME_PASS` and `DEVICE_PASS`: not claimed; installation and the real
   Books/WebKit bridge still require the owner's iPad test.
 
-## MangaXo implementation record
+## MangaXo implementation record (removed)
 
 Source: [MangaXo](https://mangaxo.com/)
+
+This module was removed from the active catalogue at the owner's request after
+content review. It is not an available source for users; the following is
+retained only to explain the historical implementation and removal decision.
 
 The source exposes ordinary public HTML/AJAX flows for discovery, title
 details, chapter lists, and ordered reader image manifests. The module keeps
@@ -210,5 +223,4 @@ CAPTCHA handling, or challenge bypass.
 - The beta manifest is marked `suggestive`; the app's content controls should
   be checked before wider rollout.
 - `PUBLICATION`: pushed to `synthetiq-manga-sources` `main` at commit
-  `025104a` after the repository test, contract, manifest/hash, and live proof
-  gates passed.
+  `025104a`, then removed from the active catalogue at the owner's request.

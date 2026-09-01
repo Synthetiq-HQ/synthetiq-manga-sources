@@ -17,7 +17,6 @@ separate from the app checkout and intentionally contains no module ZIPs.
 | Gachiakuta | Page images | Single-series `fetchv2` |
 | Haikyuu | Page images | Single-series `fetchv2` |
 | Asura Scans | Page images | Public catalogue/chapter APIs through `fetchv2` |
-| MangaXo | Page images | Public HTML plus first-party AJAX manifests through `fetchv2` |
 
 Run deterministic validation from this directory:
 
