@@ -41,8 +41,12 @@
     if (typeof globalThis.fetchv2 !== "function") {
       throw new Error("Poseidon Scans requires the fetchv2 bridge.");
     }
+    const requestedAttempts = Number(options.maxAttempts);
+    const attempts = Number.isFinite(requestedAttempts)
+      ? Math.min(MAX_ATTEMPTS, Math.max(1, Math.floor(requestedAttempts)))
+      : MAX_ATTEMPTS;
     let lastError = null;
-    for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt += 1) {
+    for (let attempt = 1; attempt <= attempts; attempt += 1) {
       if (attempt > 1) await sleep(1200 * (attempt - 1));
       let response = null;
       try {
@@ -365,15 +369,18 @@
       throw new Error("Invalid Poseidon Scans chapter identifier.");
     }
     const chapterURL = absoluteURL(input);
-    let pages = [];
-    let locked = false;
-    for (let attempt = 1; attempt <= MAX_ATTEMPTS && !pages.length; attempt += 1) {
-      if (attempt > 1) await sleep(1200 * (attempt - 1));
-      const result = await fetchDirect(chapterURL);
-      const parsed = parseImages(result.body);
-      locked = parsed.current.isPremium === true;
-      pages = parsed.images;
-    }
+    // The app gives each handler one bounded runtime window. Do not retry a
+    // chapter page inside the handler: fetchDirect's normal retry policy can
+    // otherwise turn one slow request into several sequential requests and
+    // make a valid download appear as a generic app timeout. Image files are
+    // downloaded separately by the app and retain their own request headers.
+    const result = await fetchDirect(chapterURL, {
+      maxAttempts: 1,
+      maxBytesHint: 16 * 1024 * 1024,
+    });
+    const parsed = parseImages(result.body);
+    const locked = parsed.current.isPremium === true;
+    const pages = parsed.images;
     if (!pages.length && locked) {
       throw new Error("This chapter is Premium and requires a Poseidon Scans account.");
     }

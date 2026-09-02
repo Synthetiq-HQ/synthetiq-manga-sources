@@ -15,6 +15,7 @@
     "details",
     "chapters",
     "images",
+    "imageRequest",
     "discovery"
   ],
   "contentRating": "suggestive",
@@ -22,7 +23,7 @@
   "contractVersion": 1,
   "entry": {
     "path": "modules/poseidon-scans/index.js",
-    "sha256": "7894d54b1df30182383b99fa622a97f5a655c42c90d9a559cca43f20db21807f"
+    "sha256": "08fa92cda38f2001b8f9bb157bfab1e8f6bdd4ba4c905d19b87ee930c1e7ece4"
   },
   "familyID": "poseidon-scans",
   "icon": {
@@ -45,5 +46,5 @@
   "releaseTrack": "beta",
   "status": "active",
   "universalLink": "https://synthetiq.uk/manga/modules/poseidon-scans",
-  "version": "1.0.1"
+  "version": "1.0.2"
 }

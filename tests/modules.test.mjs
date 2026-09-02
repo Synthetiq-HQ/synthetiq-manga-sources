@@ -793,12 +793,17 @@ test("Poseidon Scans parses search, flight-data details, free-only chapters, and
     pages: await text("modules/poseidon-scans/fixtures/pages.rsc"),
     expected: await json("modules/poseidon-scans/fixtures/expected.json"),
   };
+  let chapterCalls = 0;
   const module = await loadModule("modules/poseidon-scans/index.js", {
-    fetchv2: async (url) => {
+    fetchv2: async (url, headers, method, body, options) => {
       assert.equal(typeof url, "string");
       if (url.includes("/api/search")) return response(fixtures.search);
       if (url.includes("/api/manga/lastchapters")) return response(fixtures.search);
-      if (url.includes("/chapter/")) return response(fixtures.pages);
+      if (url.includes("/chapter/")) {
+        chapterCalls += 1;
+        assert.equal(options.maxBytesHint, 16 * 1024 * 1024, "chapter page uses the manifest response ceiling");
+        return response(fixtures.pages);
+      }
       if (url.includes("/serie/")) return response(fixtures.details);
       if (url.endsWith("poseidon-scans.net/")) return response(fixtures.search);
       throw new Error(`Unexpected URL: ${url}`);
@@ -816,10 +821,28 @@ test("Poseidon Scans parses search, flight-data details, free-only chapters, and
 
   const pages = await module.extractImages(chapters[0].id);
   assert.deepEqual(JSON.parse(JSON.stringify(pages)), fixtures.expected.images);
+  assert.equal(chapterCalls, 1, "a successful chapter page must be fetched once");
 
   const discovery = await module.discoveryHome();
   assert.ok(discovery.sections.length > 0);
   assert.equal(discovery.sections[0].items[0].title, "Fixture One");
+});
+
+test("Poseidon Scans does not retry a timed-out chapter handler", async () => {
+  let calls = 0;
+  const module = await loadModule("modules/poseidon-scans/index.js", {
+    fetchv2: async (url, headers, method, body, options) => {
+      calls += 1;
+      assert.match(url, /\/chapter\/44$/);
+      throw new Error("fixture timeout");
+    },
+  });
+
+  await assert.rejects(
+    module.extractImages("https://poseidon-scans.net/serie/fixture-one/chapter/44"),
+    /fixture timeout/,
+  );
+  assert.equal(calls, 1, "a chapter timeout must not fan out into nested retries");
 });
 
 test("xkcd serves the single series from the official JSON API", async () => {

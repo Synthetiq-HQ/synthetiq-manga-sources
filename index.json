@@ -455,12 +455,12 @@
       "language": "fr",
       "manifest": {
         "path": "modules/poseidon-scans/manifest.json",
-        "sha256": "352bdcb99d2a74e2ab299844d67dd266f92c6b49ad97e3f735c94106a511bb47"
+        "sha256": "d6e74e0454a28ed08e8eea31f2ae6e2026aeffaa685a9fedc8edbf4ce904c7b2"
       },
       "name": "Poseidon Scans",
       "releaseTrack": "beta",
       "status": "active",
-      "version": "1.0.1",
+      "version": "1.0.2",
       "sortPriority": 7
     },
     {
