@@ -273,8 +273,14 @@
       .map((match) => stripHTML(match[2]).toLowerCase())
       .filter((genre, index, all) => genre && all.indexOf(genre) === index);
     if (!title || hasUnsafeTags(genres) || titleLooksUnsafe(title)) throw new Error("Lnori title is unavailable under the module safety filter.");
-    const image = absoluteURL(attribute(String(html || "").match(/<meta\b[^>]*property=(['"])og:image\1[^>]*>/i)?.[0], "content")
-      || hero.match(/<img\b[^>]*>/i)?.[0] && attribute(hero.match(/<img\b[^>]*>/i)?.[0], "src"));
+    // Prefer the hero cover. Lnori's series-level og:image can be a collage
+    // and does not match the cover returned by the library card.
+    const heroImageTag = hero.match(/<img\b[^>]*>/i)?.[0] || "";
+    const image = absoluteURL(
+      attribute(heroImageTag, "data-src")
+        || attribute(heroImageTag, "src")
+        || attribute(String(html || "").match(/<meta\b[^>]*property=(['"])og:image\1[^>]*>/i)?.[0], "content"),
+    );
     const description = decodeEntities(attribute(String(html || "").match(/<meta\b[^>]*name=(['"])description\1[^>]*>/i)?.[0], "content")).trim();
     return { id: seriesURL, href: seriesURL, title, author, image, description, genres };
   }
@@ -299,11 +305,28 @@
     return chapters.sort((left, right) => left.number - right.number);
   }
 
-  function chapterText(html) {
+  function parseBookSections(html) {
     const content = String(html || "").match(/<article\b[^>]*class=(['"])[^'\"]*\bcontent-body\b[^'\"]*\1[^>]*>([\s\S]*?)<\/article>/i)?.[2]
       || String(html || "").match(/<main\b[^>]*>([\s\S]*?)<\/main>/i)?.[1]
       || "";
     if (!content) throw new Error("Lnori volume text was unavailable.");
+    const headings = [];
+    const headingPattern = /<h[1-6]\b[^>]*class=(['"])[^'\"]*\bchapter-title\b[^'\"]*\1[^>]*>([^<]+)<\/h[1-6]>/gi;
+    for (const match of content.matchAll(headingPattern)) {
+      const title = stripHTML(match[2]);
+      if (title) headings.push({ title, start: match.index ?? 0 });
+    }
+    if (!headings.length) return [{ title: "Volume", content }];
+    return headings.map((heading, index) => ({
+      title: heading.title,
+      content: content.slice(heading.start, headings[index + 1]?.start ?? content.length),
+    }));
+  }
+
+  function chapterText(html, sectionIndex = 0) {
+    const sections = parseBookSections(html);
+    const selected = sections[Math.max(0, Number(sectionIndex) || 0)] || sections[0];
+    const content = selected.content;
     const withoutMedia = content
       .replace(/<script\b[\s\S]*?<\/script>/gi, " ")
       .replace(/<style\b[\s\S]*?<\/style>/gi, " ")
@@ -319,8 +342,22 @@
     const contentText = (parts.length ? parts : [stripHTML(withoutMedia)]).filter(Boolean).join("\n\n").trim();
     if (!contentText) throw new Error("Lnori volume text was empty.");
     if (new TextEncoder().encode(contentText).byteLength > MAX_TEXT_BYTES) throw new Error("Lnori volume text exceeds the app size limit.");
-    const title = stripHTML(String(html || "").match(/<h1\b[^>]*id=(['"])book-title\1[^>]*>([\s\S]*?)<\/h1>/i)?.[2]) || "Lnori volume";
-    return { title, content: contentText };
+    return { title: selected.title || stripHTML(String(html || "").match(/<h1\b[^>]*id=(['"])book-title\1[^>]*>([\s\S]*?)<\/h1>/i)?.[2]) || "Lnori volume", content: contentText };
+  }
+
+  async function mapWithConcurrency(values, limit, worker) {
+    const output = new Array(values.length);
+    let next = 0;
+    async function run() {
+      while (true) {
+        const index = next;
+        next += 1;
+        if (index >= values.length) return;
+        output[index] = await worker(values[index], index);
+      }
+    }
+    await Promise.all(Array.from({ length: Math.min(limit, values.length) }, run));
+    return output;
   }
 
   async function searchResults(query, page = 1) {
@@ -342,12 +379,28 @@
 
   async function extractChapters(id) {
     const seriesURL = sourcePath(id, "series");
-    return parseVolumes(await request(seriesURL), seriesURL);
+    const volumes = parseVolumes(await request(seriesURL), seriesURL);
+    const expanded = await mapWithConcurrency(volumes, 2, async (volume) => {
+      const bookURL = sourcePath(volume.id, "book");
+      const sections = parseBookSections(await request(bookURL, { maxBytes: MAX_TEXT_BYTES, maxBytesHint: MAX_TEXT_BYTES }));
+      return sections.map((section, sectionIndex) => ({
+        id: `${bookURL}#section=${sectionIndex}`,
+        href: `${bookURL}#section=${sectionIndex}`,
+        number: 0,
+        title: `Volume ${volume.number} — ${section.title}`,
+        image: volume.image,
+        language: "en",
+      }));
+    });
+    let ordinal = 0;
+    return expanded.flat().map((chapter) => ({ ...chapter, number: ++ordinal }));
   }
 
   async function extractText(id) {
-    const bookURL = sourcePath(id, "book");
-    return chapterText(await request(bookURL, { maxBytes: MAX_TEXT_BYTES, maxBytesHint: MAX_TEXT_BYTES }));
+    const parsed = new URL(String(id || ""), BASE_URL);
+    const bookURL = sourcePath(parsed.toString().split("#")[0], "book");
+    const sectionIndex = parsed.hash.match(/section=(\d+)/i)?.[1] || 0;
+    return chapterText(await request(bookURL, { maxBytes: MAX_TEXT_BYTES, maxBytesHint: MAX_TEXT_BYTES }), sectionIndex);
   }
 
   async function discoveryHome() {

@@ -20,7 +20,7 @@
   "contractVersion": 1,
   "entry": {
     "path": "modules/lnori/index.js",
-    "sha256": "f761781f301dd57f7d72ea61e782f024adef2b8f3b8388d267a6798a0285f582"
+    "sha256": "e3bce3e8c0b15eee4d0e4f6ae8a1b0acf2a0fd3b46574a1d1c05d35ecb505740"
   },
   "familyID": "lnori",
   "icon": {

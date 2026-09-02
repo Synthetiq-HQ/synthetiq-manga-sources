@@ -40,7 +40,7 @@ test("Lnori filters tagged catalogue entries and reads ordered volume text", asy
     if (url === "https://lnori.com/library") return response(fixtures.library);
     if (url === "https://lnori.com/") return response(fixtures.home);
     if (url === "https://lnori.com/series/100/fixture-academy") return response(fixtures.series);
-    if (url === "https://lnori.com/book/501/fixture-academy-vol-1") return response(fixtures.volume);
+    if (/^https:\/\/lnori\.com\/book\//.test(url)) return response(fixtures.volume);
     throw new Error(`Unexpected Lnori URL: ${url}`);
   });
 
@@ -60,18 +60,22 @@ test("Lnori filters tagged catalogue entries and reads ordered volume text", asy
 
   const details = await module.extractDetails(search.items[0].id);
   assert.equal(details.title, "Fixture Academy");
+  assert.equal(details.image, "https://cdn.lnori.com/cover/100.webp");
   assert.deepEqual(JSON.parse(JSON.stringify(details.genres)), ["action", "fantasy"]);
 
   const chapters = await module.extractChapters(details.id);
   assert.deepEqual(JSON.parse(JSON.stringify(chapters.map((chapter) => ({ number: chapter.number, title: chapter.title })))), [
-    { number: 1, title: "Volume 1" },
-    { number: 2, title: "Volume 2" },
-    { number: 3, title: "Volume 3" },
+    { number: 1, title: "Volume 1 — Chapter 1: Arrival" },
+    { number: 2, title: "Volume 1 — Chapter 2: Lessons" },
+    { number: 3, title: "Volume 2 — Chapter 1: Arrival" },
+    { number: 4, title: "Volume 2 — Chapter 2: Lessons" },
+    { number: 5, title: "Volume 3 — Chapter 1: Arrival" },
+    { number: 6, title: "Volume 3 — Chapter 2: Lessons" },
   ]);
-  const volume = await module.extractText(chapters[0].id);
+  const volume = await module.extractText(chapters[1].id);
   assert.deepEqual(JSON.parse(JSON.stringify(volume)), {
-    title: "Fixture Academy, Vol. 1",
-    content: "Chapter 1: Arrival\n\nThe first synthetic paragraph.\n\nThe second synthetic paragraph.\n\nChapter 2: Lessons\n\nThe final synthetic paragraph; just a moment passed.",
+    title: "Chapter 2: Lessons",
+    content: "Chapter 2: Lessons\n\nThe final synthetic paragraph; just a moment passed.",
   });
   assert.ok(calls.every((call) => call.headers.Referer === "https://lnori.com/"));
   assert.ok(calls.every((call) => call.options.followRedirects === true));
