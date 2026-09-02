@@ -425,44 +425,6 @@
       "version": "1.0.0"
     },
     {
-      "contentRating": "unknown",
-      "contentType": "text",
-      "familyID": "novelfire",
-      "icon": {
-        "path": "modules/novelfire/icon.png",
-        "sha256": "7ea3e790b051f9d2e2be7742cc4e296e56b21dfd349cfe8fa69b883b4efd04f7"
-      },
-      "id": "novelfire",
-      "language": "en",
-      "manifest": {
-        "path": "modules/novelfire/manifest.json",
-        "sha256": "af458e168437d11b3e6af4ef4ed40d4105f5f4e01e6be7fa3af35b73790d7557"
-      },
-      "name": "NovelFire",
-      "releaseTrack": "beta",
-      "status": "active",
-      "version": "1.0.2"
-    },
-    {
-      "contentRating": "unknown",
-      "contentType": "text",
-      "familyID": "witchculttranslation",
-      "icon": {
-        "path": "modules/witchculttranslation/icon.png",
-        "sha256": "b93533a924a5cac835f4ab22aa3107684b817552b9edce2254c14378129efb60"
-      },
-      "id": "witchculttranslation",
-      "language": "en",
-      "manifest": {
-        "path": "modules/witchculttranslation/manifest.json",
-        "sha256": "509480c17ed9277099d62b8a5d0a533d449405ee510f79ffec11a9b1503cc0a2"
-      },
-      "name": "Witch Cult Translations",
-      "releaseTrack": "beta",
-      "status": "active",
-      "version": "1.0.0"
-    },
-    {
       "contentRating": "suggestive",
       "contentType": "pageImages",
       "familyID": "poseidon-scans",

@@ -76,22 +76,12 @@
   "comicfury": {
    "chapterScope": "external-archive"
   },
-  "novelfire": {
-   "chapterScope": "selected-series-dom",
-   "requiredCodeFragments": [
-     "function chaptersFromHTML(html, slug)",
-     "match[3].toLowerCase() !== slug"
-   ]
-  },
   "lnori": {
    "chapterScope": "selected-series-dom",
    "requiredCodeFragments": [
     "function parseVolumes(html, seriesURL)",
     "sourcePath(id, \"series\")"
    ]
-  },
-  "witchculttranslation": {
-   "chapterScope": "fixed-series"
   },
   "poseidon-scans": {
    "chapterScope": "api",
