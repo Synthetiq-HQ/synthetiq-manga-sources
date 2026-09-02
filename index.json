@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-01T11:31:48Z",
+  "generatedAt": "2026-09-02T22:51:22Z",
   "modules": [
     {
       "contentRating": "suggestive",
@@ -423,6 +423,25 @@
       "releaseTrack": "beta",
       "status": "active",
       "version": "1.0.1"
+    },
+    {
+      "contentRating": "unknown",
+      "contentType": "text",
+      "familyID": "novelfire",
+      "icon": {
+        "path": "modules/novelfire/icon.png",
+        "sha256": "7ea3e790b051f9d2e2be7742cc4e296e56b21dfd349cfe8fa69b883b4efd04f7"
+      },
+      "id": "novelfire",
+      "language": "en",
+      "manifest": {
+        "path": "modules/novelfire/manifest.json",
+        "sha256": "af458e168437d11b3e6af4ef4ed40d4105f5f4e01e6be7fa3af35b73790d7557"
+      },
+      "name": "NovelFire",
+      "releaseTrack": "beta",
+      "status": "active",
+      "version": "1.0.2"
     },
     {
       "contentRating": "suggestive",

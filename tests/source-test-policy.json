@@ -83,6 +83,13 @@
     "sourcePath(id, \"series\")"
    ]
   },
+  "novelfire": {
+   "chapterScope": "selected-series-dom",
+   "requiredCodeFragments": [
+    "function chaptersFromHTML(html, slug)",
+    "match[3].toLowerCase() !== slug"
+   ]
+  },
   "poseidon-scans": {
    "chapterScope": "api",
    "requiredCodeFragments": [
