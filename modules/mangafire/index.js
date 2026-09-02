@@ -534,6 +534,108 @@
     throw lastError || new Error("MangaFire request failed.");
   }
 
+  function readerChapterURL(value) {
+    const input = String(value || "").trim();
+    const match = input.match(/(?:https:\/\/mangafire\.to)?\/?title\/([^/?#]+)\/chapter\/([0-9]+)/i);
+    return match ? `${BASE_URL}/title/${match[1]}/chapter/${match[2]}` : "";
+  }
+
+  function readerPageActionScript() {
+    return `(() => {
+      const resultKey = '__synthetiqMangaFireReaderResult';
+      const markerID = 'synthetiq-mangafire-reader-complete';
+      const wait = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
+      const finish = () => {
+        let marker = document.getElementById(markerID);
+        if (!marker) {
+          marker = document.createElement('div');
+          marker.id = markerID;
+          marker.hidden = true;
+          document.body.appendChild(marker);
+        }
+      };
+      const readImages = (pages) => {
+        for (const image of document.querySelectorAll('img.reader-img, img')) {
+          const pageMatch = String(image.alt || '').match(/page\\s+([0-9]+)/i);
+          const source = image.currentSrc || image.src || '';
+          if (!pageMatch || !/^https:\/\//i.test(source)) continue;
+          const number = Number(pageMatch[1]);
+          if (!Number.isInteger(number) || number < 1) continue;
+          if (image.complete && image.naturalWidth > 0) pages.set(number, source);
+        }
+      };
+      void (async () => {
+        try {
+          let controls = [];
+          for (let attempt = 0; attempt < 80 && !controls.length; attempt += 1) {
+            controls = Array.from(document.querySelectorAll('button[aria-label^="Page "]'));
+            if (!controls.length) await wait(125);
+          }
+          if (!controls.length) throw new Error('MangaFire reader page controls were not found.');
+          const pages = new Map();
+          const positions = new Set([0, controls.length - 1]);
+          for (let index = 0; index < controls.length; index += 4) positions.add(index);
+          for (const index of [...positions].sort((left, right) => left - right)) {
+            const control = controls[index];
+            if (!control) continue;
+            control.click();
+            await wait(300);
+            readImages(pages);
+          }
+          for (let attempt = 0; attempt < 4; attempt += 1) {
+            await wait(250);
+            readImages(pages);
+          }
+          globalThis[resultKey] = JSON.stringify({
+            ok: true,
+            expected: controls.length,
+            pages: [...pages.entries()].sort((left, right) => left[0] - right[0]).map(([number, url]) => ({ number, url }))
+          });
+        } catch (error) {
+          globalThis[resultKey] = JSON.stringify({
+            ok: false,
+            error: String(error && error.message ? error.message : error)
+          });
+        } finally {
+          finish();
+        }
+      })();
+    })()`;
+  }
+
+  async function readerPageImages(url) {
+    if (typeof globalThis.pagev2 !== "function") throw new Error("MangaFire reader requires the pagev2 bridge.");
+    const snapshot = await globalThis.pagev2({
+      url,
+      headers: { Accept: "text/html,application/xhtml+xml", Referer: `${BASE_URL}/` },
+      userAgent: null,
+      timeoutMilliseconds: 30_000,
+      settleMilliseconds: 300,
+      includeHTML: false,
+      captureResponseBodies: false,
+      maxEntries: 32,
+      maxResponseCharacters: 1_000_000,
+      actionScript: readerPageActionScript(),
+      returnScript: "globalThis.__synthetiqMangaFireReaderResult || JSON.stringify({ ok: false, error: 'MangaFire reader did not finish.' })",
+      waitForSelector: "#synthetiq-mangafire-reader-complete",
+      waitForURLIncludes: "/title/",
+      waitForRequestURLIncludes: null,
+      waitForResponseURLIncludes: null,
+      waitForResponseBodyIncludes: null,
+    });
+    const result = parseJSON(snapshot && snapshot.evaluatedData);
+    if (!result || result.ok !== true) {
+      throw new Error(result && result.error ? String(result.error) : "MangaFire reader returned no image data.");
+    }
+    const expected = Number(result.expected);
+    const pages = Array.isArray(result.pages) ? result.pages.map(pageDescriptor).filter(Boolean) : [];
+    if (!pages.length) throw new Error("MangaFire reader returned no readable image URLs.");
+    if (Number.isInteger(expected) && expected > 0 && pages.length < expected) {
+      throw new Error(`MangaFire reader returned ${pages.length} of ${expected} pages.`);
+    }
+    return pages;
+  }
+
   function titlePath(value) {
     const input = String(value || "").trim();
     const match = input.match(/(?:https:\/\/mangafire\.to)?\/?title\/([^/?#]+)/i);
@@ -638,6 +740,19 @@
   function isExplicitlyExcluded(item) {
     const groups = [item && item.genres, item && item.themes, item && item.demographics];
     return groups.some((group) => Array.isArray(group) && group.some((entry) => EXCLUDED_GENRE_IDS.includes(Number(entry && entry.id))));
+  }
+
+  function isUnavailableAccess(item) {
+    if (!item || typeof item !== "object") return false;
+    const booleanFlags = [
+      "locked", "isLocked", "paid", "isPaid", "premium", "isPremium",
+      "requiresPurchase", "requiresSubscription", "requiresLogin", "loginRequired",
+    ];
+    if (booleanFlags.some((key) => item[key] === true)) return true;
+    if (item.canRead === false || item.readable === false || item.isFree === false) return true;
+    const blockedStates = new Set(["locked", "paid", "premium", "members", "members-only", "login", "login-required", "unavailable"]);
+    return [item.access, item.availability, item.state, item.status]
+      .some((value) => blockedStates.has(String(value || "").trim().toLowerCase()));
   }
 
   function mapSearchItem(item) {
@@ -769,6 +884,7 @@
     const chapters = [];
     for (const response of responses) {
       for (const item of Array.isArray(response.items) ? response.items : []) {
+        if (isUnavailableAccess(item)) continue;
         const remoteID = String((item && item.id) || "");
         if (!/^[0-9]+$/.test(remoteID) || seen.has(remoteID)) continue;
         const number = Number(item.number);
@@ -799,6 +915,8 @@
     if (!Number.isFinite(offset) || offset <= 0) offset = 0;
     let url = String(rawURL || "");
     if (!url.startsWith("https://")) return null;
+    const host = new URL(url).hostname.toLowerCase();
+    if (!(host === "mfcdn.nl" || host.endsWith(".mfcdn.nl") || host.endsWith(".mfcdn1.xyz") || host.endsWith(".mfcdn2.xyz") || host.endsWith(".mfcdn3.xyz"))) return null;
     if (offset > 0 && !/#scrambled_[0-9]+$/i.test(url)) {
       url = `${url.split("#")[0]}#scrambled_${offset}`;
     }
@@ -826,9 +944,19 @@
   }
 
   async function extractImages(id) {
+    const readerURL = readerChapterURL(id);
+    if (readerURL && typeof globalThis.pagev2 === "function") {
+      try {
+        return await readerPageImages(readerURL);
+      } catch (_) {
+        // Some app/runtime versions expose only fetchv2. Retain the API
+        // reader fallback for those clients and for numeric chapter IDs.
+      }
+    }
     const remoteID = chapterID(id);
     const payload = await pageJSON(`${BASE_URL}/api/chapters/${encodeURIComponent(remoteID)}`);
     const chapter = payload && payload.data ? payload.data : payload;
+    if (isUnavailableAccess(chapter)) throw new Error("MangaFire chapter is locked or requires paid access.");
     const pages = (chapter && Array.isArray(chapter.pages) ? chapter.pages : [])
       .map(pageDescriptor)
       .filter(Boolean);

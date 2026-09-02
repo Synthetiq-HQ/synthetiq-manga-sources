@@ -208,6 +208,24 @@ async function testMangaFire() {
         evaluatedData: null,
       };
     }
+    if (new URL(task.url).pathname === "/title/fixture-fixture-alpha/chapter/9001") {
+      assert.equal(task.waitForSelector, "#synthetiq-mangafire-reader-complete");
+      assert.equal(task.returnScript, "globalThis.__synthetiqMangaFireReaderResult || JSON.stringify({ ok: false, error: 'MangaFire reader did not finish.' })");
+      assert.match(task.actionScript, /button\[aria-label\^="Page "\]/);
+      assert.match(task.actionScript, /img\.reader-img/);
+      return {
+        finalURL: task.url,
+        title: "",
+        html: null,
+        events: [],
+        cookies: {},
+        evaluatedData: JSON.stringify({
+          ok: true,
+          expected: 4,
+          pages: expected.images.map((page, index) => ({ number: index + 1, url: page.url })),
+        }),
+      };
+    }
     assert.ok(new URL(task.url).pathname.startsWith("/api/"));
     assert.equal(task.returnScript, "document.body ? document.body.innerText : ''");
     assert.equal(task.captureResponseBodies, false);

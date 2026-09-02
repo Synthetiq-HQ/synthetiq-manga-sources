@@ -229,6 +229,7 @@ test("MangaFire falls back to pagev2 when headless signing is unavailable", asyn
     structuredPages: await json("modules/mangafire/fixtures/pages.json"),
     expected: await json("modules/mangafire/fixtures/expected.json"),
   };
+  fixtures.firstChapters.items.push({ id: 8998, number: 10, name: "Paid Chapter", language: "en", type: "official", locked: true });
   const calls = [];
   const module = await loadModule("modules/mangafire/index.js", {
     pagev2: async (task) => {
@@ -250,6 +251,24 @@ test("MangaFire falls back to pagev2 when headless signing is unavailable", asyn
           evaluatedData: null,
         };
       }
+      if (task.url.includes("/title/fixture-fixture-alpha/chapter/9001")) {
+        assert.equal(task.waitForSelector, "#synthetiq-mangafire-reader-complete");
+        assert.equal(task.returnScript, "globalThis.__synthetiqMangaFireReaderResult || JSON.stringify({ ok: false, error: 'MangaFire reader did not finish.' })");
+        assert.match(task.actionScript, /button\[aria-label\^="Page "\]/);
+        assert.match(task.actionScript, /img\.reader-img/);
+        return {
+          finalURL: task.url,
+          title: "",
+          html: null,
+          cookies: {},
+          events: [],
+          evaluatedData: JSON.stringify({
+            ok: true,
+            expected: 4,
+            pages: fixtures.expected.images.map((page, index) => ({ number: index + 1, url: page.url })),
+          }),
+        };
+      }
       assert.equal(task.captureResponseBodies, false);
       assert.equal(task.returnScript, "document.body ? document.body.innerText : ''");
       let payload;
@@ -259,6 +278,7 @@ test("MangaFire falls back to pagev2 when headless signing is unavailable", asyn
       else if (task.url.includes("/api/titles/fixture/chapters") && task.url.includes("page=2")) payload = fixtures.secondChapters;
       else if (task.url.endsWith("/api/chapters/9001")) payload = fixtures.chapter;
       else if (task.url.endsWith("/api/chapters/9002")) payload = fixtures.structuredPages;
+      else if (task.url.endsWith("/api/chapters/9003")) payload = { data: { id: 9003, locked: true, pages: fixtures.chapter.data.pages } };
       else throw new Error(`Unexpected URL: ${task.url}`);
       return {
         finalURL: task.url,
@@ -289,6 +309,7 @@ test("MangaFire falls back to pagev2 when headless signing is unavailable", asyn
   assert.equal(structured[1].scrambled, true);
   assert.equal(structured[1].scrambleKey, "fixture-key");
   assert.deepEqual(JSON.parse(JSON.stringify(structured[1].tiles)), { rows: 4, columns: 4, order: [3, 0, 1, 2] });
+  await assert.rejects(() => module.extractImages("9003"), /locked or requires paid access/);
 });
 
 test("MangaFire bridges protected browser results as JSON text", async () => {

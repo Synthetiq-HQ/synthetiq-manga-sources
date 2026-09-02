@@ -30,7 +30,7 @@
   "contractVersion": 1,
   "entry": {
     "path": "modules/mangafire/index.js",
-    "sha256": "f591a3970a559d52a0d696d25ed16eaecf0588f19b648074c250c7ea84b92125"
+    "sha256": "205fda8fb9dffde1a4e38c79a53485f0c293d140c992398d3dd1cf0cbe7dd46a"
   },
   "familyID": "mangafire-v2",
   "icon": {

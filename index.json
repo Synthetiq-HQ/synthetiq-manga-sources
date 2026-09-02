@@ -73,7 +73,7 @@
       "language": "en",
       "manifest": {
         "path": "modules/mangafire/manifest.json",
-        "sha256": "b01761d4e43c5300d3bac48d88545e466250a72f77b115e9a08907e3dfb243c5"
+        "sha256": "a5413d3a29ae8a9022beaf6f89397ab3e8b30e3125538b92925a18a2d3e3cee9"
       },
       "name": "MangaFire",
       "releaseTrack": "stable",
