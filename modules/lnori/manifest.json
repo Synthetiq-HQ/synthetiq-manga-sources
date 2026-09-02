@@ -1,0 +1,46 @@
+{
+  "allowedHosts": [
+    "lnori.com",
+    "*.lnori.com"
+  ],
+  "attribution": {
+    "author": "Synthetiq-HQ",
+    "website": "https://lnori.com"
+  },
+  "baseURL": "https://lnori.com",
+  "capabilities": [
+    "search",
+    "details",
+    "chapters",
+    "text",
+    "discovery"
+  ],
+  "contentRating": "unknown",
+  "contentType": "text",
+  "contractVersion": 1,
+  "entry": {
+    "path": "modules/lnori/index.js",
+    "sha256": "f761781f301dd57f7d72ea61e782f024adef2b8f3b8388d267a6798a0285f582"
+  },
+  "familyID": "lnori",
+  "icon": {
+    "path": "modules/lnori/icon.png",
+    "sha256": "2b1af2c72d766152c44012e905fc7d670a61fff315d8bb85d3bd4d05c7f65179"
+  },
+  "id": "lnori",
+  "language": "en",
+  "legacyIDs": [],
+  "limits": {
+    "cacheTTLSeconds": 900,
+    "maxConcurrentRequests": 2,
+    "maxResponseBytes": 8388608,
+    "maxScriptBytes": 524288,
+    "timeoutMilliseconds": 30000
+  },
+  "minimumAppVersion": "1.0.0",
+  "name": "Lnori",
+  "releaseTrack": "beta",
+  "status": "active",
+  "universalLink": "https://lnori.com",
+  "version": "1.0.0"
+}

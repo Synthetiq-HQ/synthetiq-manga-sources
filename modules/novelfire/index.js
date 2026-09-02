@@ -2,6 +2,7 @@
 
 (() => {
   const BASE_URL = "https://novelfire.net";
+  const CHAPTER_BASE_URL = "https://novelphoenix.com";
   const MAX_TEXT_BYTES = 4 * 1024 * 1024;
   const DEFAULT_HEADERS = {
     Accept: "text/html,application/xhtml+xml,application/json;q=0.9,*/*;q=0.8",
@@ -13,6 +14,18 @@
   const MAX_CHAPTER_PAGES = 100;
   const REQUEST_INTERVAL_MS = 400;
   const MAX_CACHED_RESPONSES = 48;
+  const UNSAFE_GENRES = new Set([
+    "adult",
+    "ecchi",
+    "erotica",
+    "explicit",
+    "harem",
+    "mature",
+    "nsfw",
+    "porn",
+    "r-18",
+    "smut",
+  ]);
   const responseCache = new Map();
   const chapterCache = new Map();
   const chapterLoads = new Map();
@@ -81,7 +94,9 @@
 
   function isChallengePage(body) {
     const page = String(body || "").toLowerCase();
-    return page.includes("just a moment") || page.includes("cf-chl-") || page.includes("verify you are human");
+    const head = page.match(/<head\b[\s\S]*?<\/head>/i)?.[0] || page.slice(0, 16 * 1024);
+    return /<title\b[^>]*>[\s\S]*?(?:just a moment|attention required|checking your browser|access denied)/i.test(head)
+      || /cf-chl-|cf-turnstile|challenge-platform|verify you are human/i.test(head);
   }
 
   async function responseText(response) {
@@ -207,6 +222,17 @@
     return decodeEntities(description).replace(/^Read\s+.+?\s+novel\s+online\s+(?:free\s*)?(?:from|now).*$/i, "").trim();
   }
 
+  function genresFrom(html) {
+    const region = String(html || "").match(/<div\b[^>]*class=(['"])[^'"]*\bcategories\b[^'"]*\1[^>]*>[\s\S]*?<\/div>/i)?.[0] || "";
+    return [...region.matchAll(/<a\b[^>]*>([\s\S]*?)<\/a>/gi)]
+      .map((match) => stripHTML(match[1]))
+      .filter((genre, index, all) => genre && all.indexOf(genre) === index);
+  }
+
+  function hasUnsafeGenre(genres) {
+    return genres.some((genre) => UNSAFE_GENRES.has(String(genre || "").trim().toLowerCase()));
+  }
+
   async function extractDetails(id) {
     const slug = normalizeSlug(id);
     const html = await request(`${BASE_URL}/book/${slug}`);
@@ -214,9 +240,8 @@
     const author = stripHTML(html.match(/<div\b[^>]*class=(['"])[^'"]*\bauthor\b[^'"]*\1[^>]*>([\s\S]*?)<\/div>/i)?.[2]);
     const status = stripHTML(html.match(/<strong\b[^>]*class=(['"])[^'"]*\b(?:ongoing|completed)\b[^'"]*\1[^>]*>([\s\S]*?)<\/strong>/i)?.[2]);
     const image = attribute(html.match(/<meta\b[^>]*property=(['"])og:image\1[^>]*>/i)?.[0], "content");
-    const genres = [...html.matchAll(/<a\b[^>]*href=(['"])[^'"]*\/genre-[^'"]*\1[^>]*>([\s\S]*?)<\/a>/gi)]
-      .map((match) => stripHTML(match[2]))
-      .filter((genre, index, all) => genre && all.indexOf(genre) === index);
+    const genres = genresFrom(html);
+    if (hasUnsafeGenre(genres)) throw new Error("NovelFire title is unavailable under the module safety filter.");
     return { id: slug, href: `${BASE_URL}/book/${slug}`, title, author: author.replace(/^Author:\s*/i, "").trim(), status, image: absoluteURL(image), description: descriptionFrom(html), genres };
   }
 
@@ -272,7 +297,7 @@
 
   async function extractText(reference) {
     const { slug, number } = chapterReference(reference);
-    const html = await request(`${BASE_URL}/book/${slug}/chapter-${number}`, { cacheable: false, maxBytesHint: MAX_TEXT_BYTES });
+    const html = await request(`${CHAPTER_BASE_URL}/novel/${slug}/chapter-${number}`, { cacheable: false, maxBytesHint: MAX_TEXT_BYTES });
     const content = html.match(/<div\b[^>]*id=(['"])content\1[^>]*>([\s\S]*?)<\/div>\s*<div\b[^>]*class=(['"])[^'"]*\bchapternav\b/i)?.[2]
       || html.match(/<div\b[^>]*id=(['"])content\1[^>]*>([\s\S]*?)<\/div>/i)?.[2];
     if (!content) throw new Error("NovelFire chapter text was unavailable.");

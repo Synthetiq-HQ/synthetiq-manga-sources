@@ -408,6 +408,25 @@
   {
    "contentRating": "unknown",
    "contentType": "text",
+   "familyID": "lnori",
+   "icon": {
+    "path": "modules/lnori/icon.png",
+    "sha256": "2b1af2c72d766152c44012e905fc7d670a61fff315d8bb85d3bd4d05c7f65179"
+   },
+   "id": "lnori",
+   "language": "en",
+   "manifest": {
+    "path": "modules/lnori/manifest.json",
+    "sha256": "fa06e2f5fe27a98d338513f2a4f6c4bfaba253d4c3d253623813d25469c21250"
+   },
+   "name": "Lnori",
+   "releaseTrack": "beta",
+   "status": "active",
+   "version": "1.0.0"
+  },
+  {
+   "contentRating": "unknown",
+   "contentType": "text",
    "familyID": "novelfire",
    "icon": {
     "path": "modules/novelfire/icon.png",
@@ -417,12 +436,31 @@
    "language": "en",
    "manifest": {
     "path": "modules/novelfire/manifest.json",
-    "sha256": "b1dd79279073c01bed89821eb5d5c4e580d37907fa09f269b6565324a0291517"
+    "sha256": "af458e168437d11b3e6af4ef4ed40d4105f5f4e01e6be7fa3af35b73790d7557"
    },
    "name": "NovelFire",
    "releaseTrack": "beta",
    "status": "active",
-   "version": "1.0.1"
+   "version": "1.0.2"
+  },
+  {
+   "contentRating": "unknown",
+   "contentType": "text",
+   "familyID": "witchculttranslation",
+   "icon": {
+    "path": "modules/witchculttranslation/icon.png",
+    "sha256": "b93533a924a5cac835f4ab22aa3107684b817552b9edce2254c14378129efb60"
+   },
+   "id": "witchculttranslation",
+   "language": "en",
+   "manifest": {
+    "path": "modules/witchculttranslation/manifest.json",
+    "sha256": "509480c17ed9277099d62b8a5d0a533d449405ee510f79ffec11a9b1503cc0a2"
+   },
+   "name": "Witch Cult Translations",
+   "releaseTrack": "beta",
+   "status": "active",
+   "version": "1.0.0"
   },
   {
    "contentRating": "suggestive",

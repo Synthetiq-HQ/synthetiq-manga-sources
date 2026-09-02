@@ -5,9 +5,10 @@
   "type": "module",
   "scripts": {
     "finalize": "node scripts/finalize-hashes.mjs",
-    "test": "node --test tests/modules.test.mjs tests/module-report.test.mjs tests/documentation.test.mjs tests/chapter-ownership.test.mjs modules/ichi-the-witch/test.mjs modules/sakamoto-days/module.test.mjs tests/blue-lock.test.mjs modules/one-punch-man/test.mjs modules/kingdom/test.mjs && node scripts/source-contract-audit.mjs && node scripts/validate.mjs && node scripts/verify-repository.mjs",
+    "test": "node --test tests/modules.test.mjs tests/module-report.test.mjs tests/documentation.test.mjs tests/chapter-ownership.test.mjs modules/ichi-the-witch/test.mjs modules/sakamoto-days/module.test.mjs tests/blue-lock.test.mjs modules/one-punch-man/test.mjs modules/kingdom/test.mjs modules/lnori/test.mjs modules/witchculttranslation/test.mjs && node scripts/source-contract-audit.mjs && node scripts/validate.mjs && node scripts/verify-repository.mjs",
     "test:contracts": "node --test tests/chapter-ownership.test.mjs && node scripts/source-contract-audit.mjs",
     "test:live": "RUN_LIVE_TESTS=1 node scripts/live-smoke.mjs",
+    "test:novel-sources:live": "node scripts/live-novel-sources-proof.mjs",
     "test:mangabuddy:live": "node scripts/live-mangabuddy-proof.mjs --live",
     "test:atsu:live": "RUN_LIVE_TESTS=1 node scripts/live-atsu-proof.mjs",
     "test:asura:live": "node scripts/live-asura-proof.mjs --live --with-discovery",

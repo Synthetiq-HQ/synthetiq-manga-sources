@@ -1,7 +1,8 @@
 {
   "allowedHosts": [
     "novelfire.net",
-    "*.novelfire.net"
+    "*.novelfire.net",
+    "novelphoenix.com"
   ],
   "attribution": {
     "author": "Synthetiq-HQ",
@@ -22,7 +23,7 @@
   "contractVersion": 1,
   "entry": {
     "path": "modules/novelfire/index.js",
-    "sha256": "6ccdeb06407686d34a318f5d1257d1a2e71441858d8604aad4641a072f5f798a"
+    "sha256": "47b60e650430f15d09b81946e4119cca5ba3ab691601d9d50df54d01d70d3257"
   },
   "familyID": "novelfire",
   "icon": {
@@ -46,5 +47,5 @@
   "releaseTrack": "beta",
   "status": "active",
   "universalLink": "https://novelfire.net",
-  "version": "1.0.1"
+  "version": "1.0.2"
 }

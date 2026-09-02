@@ -1226,6 +1226,7 @@ test("NovelFire parses search, details, complete chapters, and chapter text", as
     searchPage2: await text("modules/novelfire/fixtures/search-page-2.html"),
     home: await text("modules/novelfire/fixtures/home.html"),
     details: await text("modules/novelfire/fixtures/details.html"),
+    unsafeDetails: await text("modules/novelfire/fixtures/details-unsafe.html"),
     chapters: await text("modules/novelfire/fixtures/chapters.html"),
     chaptersPage2: await text("modules/novelfire/fixtures/chapters-page-2.html"),
     chapter: await text("modules/novelfire/fixtures/chapter.html"),
@@ -1242,7 +1243,8 @@ test("NovelFire parses search, details, complete chapters, and chapter text", as
       if (url.endsWith("/genre-all/sort-new/status-all/all-novel")) return response(fixtures.home);
       if (url.endsWith("/book/fixture-chronicle/chapters")) return response(fixtures.chapters);
       if (url.endsWith("/book/fixture-chronicle/chapters?page=2")) return response(fixtures.chaptersPage2);
-      if (url.endsWith("/book/fixture-chronicle/chapter-1")) return response(fixtures.chapter);
+      if (url.endsWith("novelphoenix.com/novel/fixture-chronicle/chapter-1")) return response(fixtures.chapter);
+      if (url.endsWith("/book/fixture-unsafe")) return response(fixtures.unsafeDetails);
       if (url.endsWith("/book/fixture-chronicle")) return response(fixtures.details);
       throw new Error(`Unexpected NovelFire URL: ${url}`);
     },
@@ -1283,6 +1285,7 @@ test("NovelFire parses search, details, complete chapters, and chapter text", as
     description: "A synthetic fixture description.",
     genres: ["Fantasy"],
   });
+  await assert.rejects(() => module.extractDetails("fixture-unsafe"), /safety filter/i);
 
   const chapters = await module.extractChapters(details.id);
   assert.equal(chapters.length, 2);
@@ -1292,7 +1295,7 @@ test("NovelFire parses search, details, complete chapters, and chapter text", as
   const chapter = await module.extractText(chapters[0].id);
   assert.deepEqual(JSON.parse(JSON.stringify(chapter)), {
     title: "Chapter 1",
-    content: "Fixture paragraph one.\n\nFixture paragraph two.",
+    content: "Fixture paragraph one.\n\nFixture paragraph two; just a moment passed.",
   });
 
   const home = await module.discoveryHome();
