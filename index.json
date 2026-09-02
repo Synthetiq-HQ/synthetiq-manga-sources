@@ -417,12 +417,12 @@
       "language": "en",
       "manifest": {
         "path": "modules/lnori/manifest.json",
-        "sha256": "7936898c10841f195341c2c22c0464578c869f7311a13e301d7ada5af49dc7d7"
+        "sha256": "62bf46f288afa850a7f1886ba4f75a46731e282ec9d9af18459082ba658f2c4f"
       },
       "name": "Lnori",
       "releaseTrack": "beta",
       "status": "active",
-      "version": "1.0.0"
+      "version": "1.0.1"
     },
     {
       "contentRating": "suggestive",
@@ -477,7 +477,7 @@
       "sortPriority": 87,
       "manifest": {
         "path": "modules/yskcomics/manifest.json",
-        "sha256": "e9bd373864734e0738df5c84e371b912f36c0c1981e8056c7dc5e144a1252170"
+        "sha256": "ae4165b82bf65156723ba1b4d1c9d9b4283b7548fee5deeed859e20306f98499"
       },
       "icon": {
         "path": "modules/yskcomics/icon.png",
