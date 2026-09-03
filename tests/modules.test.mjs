@@ -821,6 +821,13 @@ test("Poseidon Scans parses search, flight-data details, free-only chapters, and
 
   const pages = await module.extractImages(chapters[0].id);
   assert.deepEqual(JSON.parse(JSON.stringify(pages)), fixtures.expected.images);
+  for (const page of pages) {
+    const imageURL = new URL(page.url);
+    assert.equal(imageURL.pathname, "/_next/image");
+    assert.equal(imageURL.searchParams.get("w"), "1200");
+    assert.equal(imageURL.searchParams.get("q"), "75");
+    assert.match(imageURL.searchParams.get("url") || "", /^https:\/\/poseidon-scans\.net\/api\/chapters\//);
+  }
   assert.equal(chapterCalls, 1, "a successful chapter page must be fetched once");
 
   const discovery = await module.discoveryHome();

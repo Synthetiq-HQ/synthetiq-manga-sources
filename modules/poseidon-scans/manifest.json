@@ -23,7 +23,7 @@
   "contractVersion": 1,
   "entry": {
     "path": "modules/poseidon-scans/index.js",
-    "sha256": "08fa92cda38f2001b8f9bb157bfab1e8f6bdd4ba4c905d19b87ee930c1e7ece4"
+    "sha256": "1a6fc6850feef1e9b24ec83298e13c6d0ae69130033672895b04ca8ba937c453"
   },
   "familyID": "poseidon-scans",
   "icon": {
@@ -46,5 +46,5 @@
   "releaseTrack": "beta",
   "status": "active",
   "universalLink": "https://synthetiq.uk/manga/modules/poseidon-scans",
-  "version": "1.0.2"
+  "version": "1.0.3"
 }

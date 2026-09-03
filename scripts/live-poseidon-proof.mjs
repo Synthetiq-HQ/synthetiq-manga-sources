@@ -19,6 +19,8 @@ if (process.env.RUN_LIVE_TESTS !== "1") {
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const modulePath = path.join(root, "modules", "poseidon-scans", "index.js");
+const DOWNLOAD_PAGE_LIMIT = 12 * 1024 * 1024;
+const IMAGE_CONCURRENCY = 4;
 
 async function responseFor(url, headers = {}, method = "GET", body = null, options = {}) {
   const response = await fetch(url, {
@@ -58,6 +60,57 @@ async function loadModule() {
 
 const pause = (ms = 700) => new Promise((resolve) => setTimeout(resolve, ms));
 
+async function probeImages(pages, label) {
+  const results = [];
+  let next = 0;
+  async function worker() {
+    while (true) {
+      const index = next++;
+      if (index >= pages.length) return;
+      const page = pages[index];
+      const imageURL = new URL(page.url);
+      assert.equal(imageURL.pathname, "/_next/image", `${label} must use Poseidon's bounded image route`);
+      assert.equal(imageURL.searchParams.get("w"), "1200", `${label} image width`);
+      assert.equal(imageURL.searchParams.get("q"), "75", `${label} image quality`);
+      assert.match(imageURL.searchParams.get("url") || "", /^https:\/\/poseidon-scans\.net\//, `${label} original image host`);
+
+      const started = Date.now();
+      try {
+        const response = await fetch(page.url, {
+          headers: { Accept: "image/avif,image/webp,image/apng,image/*,*/*", "User-Agent": "Mozilla/5.0", ...page.headers },
+          signal: AbortSignal.timeout(30_000),
+        });
+        const bytes = await response.arrayBuffer();
+        results.push({
+          index,
+          status: response.status,
+          type: response.headers.get("content-type") || "",
+          bytes: bytes.byteLength,
+          elapsedMs: Date.now() - started,
+        });
+      } catch (error) {
+        results.push({ index, error: String(error), bytes: 0, elapsedMs: Date.now() - started });
+      }
+    }
+  }
+
+  await Promise.all(Array.from({ length: Math.min(IMAGE_CONCURRENCY, pages.length) }, () => worker()));
+  const failures = results.filter((result) =>
+    result.error
+      || result.status !== 200
+      || !result.type.startsWith("image/")
+      || result.bytes === 0
+      || result.bytes > DOWNLOAD_PAGE_LIMIT,
+  );
+  assert.equal(failures.length, 0, `${label} image probe failures: ${JSON.stringify(failures.slice(0, 3))}`);
+  return {
+    pages: results.length,
+    totalBytes: results.reduce((sum, result) => sum + result.bytes, 0),
+    maxBytes: Math.max(...results.map((result) => result.bytes)),
+    slowestMs: Math.max(...results.map((result) => result.elapsedMs)),
+  };
+}
+
 const module = await loadModule();
 
 // 1. Discovery surfaces.
@@ -92,7 +145,7 @@ for (let i = 1; i < chapters.length; i += 1) {
 }
 console.log(`chapters: ${chapters.length} free (${chapters[0].number}…${chapters[chapters.length - 1].number})`);
 
-// 5. Images + first-page probes on sampled chapters.
+// 5. Images + complete bounded download probes on sampled chapters.
 for (const target of [chapters[0], chapters[Math.floor(chapters.length / 2)], chapters[chapters.length - 1]]) {
   await pause();
   const pages = await module.extractImages(target.id);
@@ -104,15 +157,20 @@ for (const target of [chapters[0], chapters[Math.floor(chapters.length / 2)], ch
       "image host must be allowlisted",
     );
   }
-  const first = pages[0];
-  const image = await fetch(first.url, {
-    headers: { Accept: "image/avif,image/webp,image/*,*/*", "User-Agent": "Mozilla/5.0", ...first.headers },
-    signal: AbortSignal.timeout(30_000),
-  });
-  assert.equal(image.status, 200, `first page probe for chapter ${target.number} should be 200`);
-  assert.match(image.headers.get("content-type") || "", /^image\//, "first page must be an image MIME");
-  console.log(`chapter ${target.number}: ${pages.length} pages, first image HTTP ${image.status} ${image.headers.get("content-type")}`);
+  const probe = await probeImages(pages, `chapter ${target.number}`);
+  console.log(`chapter ${target.number}: ${probe.pages} pages, max ${probe.maxBytes} bytes, slowest ${probe.slowestMs}ms`);
   await pause(300);
 }
 
-console.log("Poseidon Scans live proof: PASS (discovery + search + details + chapters + images)");
+// 6. Regression case for oversized source scans reported by the owner.
+const marriedSearch = await module.searchResults("More Than a Married Couple, But Not Lovers", 1);
+const married = marriedSearch.items.find((item) => item.id.includes("/fuufu-ijou-koibito-miman-3939"));
+assert.ok(married, "More Than a Married Couple, But Not Lovers should be discoverable");
+const marriedChapters = await module.extractChapters(married.id);
+const marriedChapter43 = marriedChapters.find((chapter) => chapter.number === 43);
+assert.ok(marriedChapter43, "More Than a Married Couple, But Not Lovers chapter 43 should be listed");
+const marriedPages = await module.extractImages(marriedChapter43.id);
+const marriedProbe = await probeImages(marriedPages, "More Than a Married Couple, But Not Lovers chapter 43");
+console.log(`More Than a Married Couple, But Not Lovers chapter 43: ${marriedProbe.pages} pages, max ${marriedProbe.maxBytes} bytes, slowest ${marriedProbe.slowestMs}ms`);
+
+console.log("Poseidon Scans live proof: PASS (discovery + search + details + chapters + bounded full-page downloads)");

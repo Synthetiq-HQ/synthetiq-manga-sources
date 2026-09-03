@@ -51,14 +51,14 @@
   ],
   "images": [
     {
-      "url": "https://poseidon-scans.net/api/chapters/fixture-one/cmc2/1.webp",
+      "url": "https://poseidon-scans.net/_next/image?url=https%3A%2F%2Fposeidon-scans.net%2Fapi%2Fchapters%2Ffixture-one%2Fcmc2%2F1.webp&w=1200&q=75",
       "headers": {
         "Accept": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8",
         "Referer": "https://poseidon-scans.net/serie/fixture-one/chapter/2"
       }
     },
     {
-      "url": "https://poseidon-scans.net/api/chapters/fixture-one/cmc2/2.webp",
+      "url": "https://poseidon-scans.net/_next/image?url=https%3A%2F%2Fposeidon-scans.net%2Fapi%2Fchapters%2Ffixture-one%2Fcmc2%2F2.webp&w=1200&q=75",
       "headers": {
         "Accept": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8",
         "Referer": "https://poseidon-scans.net/serie/fixture-one/chapter/2"

@@ -9,6 +9,8 @@
   };
   const RETRYABLE_STATUS = new Set([403, 408, 425, 429, 500, 502, 503, 504]);
   const MAX_ATTEMPTS = 3;
+  const OPTIMIZED_IMAGE_WIDTH = 1200;
+  const OPTIMIZED_IMAGE_QUALITY = 75;
   const HOME_CACHE_TTL = 90_000;
   let homeCache = { at: 0, value: "" };
 
@@ -88,6 +90,17 @@
     if (input.startsWith("//")) return `https:${input}`.split("#")[0];
     if (input.startsWith("/")) return `${BASE_URL}${input}`.split("#")[0];
     return `${BASE_URL}/${input}`.split("#")[0];
+  }
+
+  function readerImageURL(raw) {
+    const original = absoluteURL(raw);
+    if (!original) return "";
+    // Poseidon serves some source scans above the Books downloader's 12 MiB
+    // per-image ceiling. Its public Next image route provides a bounded,
+    // cacheable WebP without requiring credentials or browser state.
+    if (!/^https:\/\/poseidon-scans\.net\//i.test(original)) return original;
+    if (original.startsWith(`${BASE_URL}/_next/image?`)) return original;
+    return `${BASE_URL}/_next/image?url=${encodeURIComponent(original)}&w=${OPTIMIZED_IMAGE_WIDTH}&q=${OPTIMIZED_IMAGE_QUALITY}`;
   }
 
   function flightObject(text, key, open, close) {
@@ -324,7 +337,7 @@
     }
     const images = raw
       .map((page, index) => ({
-        url: absoluteURL(String(page.originalUrl || "")),
+        url: readerImageURL(String(page.originalUrl || "")),
         order: Number.isFinite(Number(page.order)) ? Number(page.order) : index,
       }))
       .filter((page) => page.url)
