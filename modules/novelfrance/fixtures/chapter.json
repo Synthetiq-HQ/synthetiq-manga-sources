@@ -1,0 +1,17 @@
+{
+  "id": "fixture-chapter-1-id",
+  "novelId": "fixture-safe-id",
+  "chapterNumber": 1,
+  "title": "Arrival",
+  "slug": "chapter-1",
+  "paragraphs": [
+    { "id": "paragraph-1", "kind": "text", "content": "The first fixture paragraph." },
+    { "id": "paragraph-2", "kind": "text", "content": "The second fixture paragraph." }
+  ],
+  "content": null,
+  "wordCount": 8,
+  "paragraphCount": 2,
+  "isPremium": false,
+  "freeAt": null,
+  "novel": { "slug": "fixture-safe" }
+}

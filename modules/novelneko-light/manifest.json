@@ -1,0 +1,45 @@
+{
+  "allowedHosts": [
+    "novelneko.fr",
+    "*.novelneko.fr"
+  ],
+  "attribution": {
+    "author": "Synthetiq-HQ",
+    "website": "https://novelneko.fr"
+  },
+  "baseURL": "https://novelneko.fr/lightnovels/",
+  "capabilities": [
+    "search",
+    "details",
+    "chapters",
+    "resources"
+  ],
+  "contentRating": "unknown",
+  "contentType": "publication",
+  "contractVersion": 1,
+  "entry": {
+    "path": "modules/novelneko-light/index.js",
+    "sha256": "6f95ffb3e1270f40072441bc1e88c56720b2b88ba6fec8e398568c6ac951a8e5"
+  },
+  "familyID": "novelneko-light",
+  "icon": {
+    "path": "modules/novelneko-light/icon.png",
+    "sha256": "7ea3e790b051f9d2e2be7742cc4e296e56b21dfd349cfe8fa69b883b4efd04f7"
+  },
+  "id": "novelneko-light",
+  "language": "fr",
+  "legacyIDs": [],
+  "limits": {
+    "cacheTTLSeconds": 900,
+    "maxConcurrentRequests": 3,
+    "maxResponseBytes": 4194304,
+    "maxScriptBytes": 524288,
+    "timeoutMilliseconds": 30000
+  },
+  "minimumAppVersion": "1.0.0",
+  "name": "NovelNeko Light-Novels",
+  "releaseTrack": "beta",
+  "status": "active",
+  "universalLink": "https://novelneko.fr/lightnovels/",
+  "version": "0.1.1"
+}

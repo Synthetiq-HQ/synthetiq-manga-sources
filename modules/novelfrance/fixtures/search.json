@@ -1,0 +1,37 @@
+{
+  "novels": [
+    {
+      "id": "fixture-safe-id",
+      "title": "Fixture Safe Novel",
+      "slug": "fixture-safe",
+      "description": "A safe fixture novel.",
+      "coverImage": "/uploads/covers/fixture-safe.webp",
+      "author": "Fixture Author",
+      "status": "ONGOING",
+      "genres": [{ "name": "Aventure", "slug": "aventure" }],
+      "tags": [{ "name": "Magie", "slug": "magie" }]
+    },
+    {
+      "id": "fixture-unsafe-id",
+      "title": "Fixture After Dark",
+      "slug": "fixture-unsafe",
+      "description": "Not available under the safety policy.",
+      "coverImage": "/uploads/covers/fixture-unsafe.webp",
+      "author": "Fixture Author",
+      "status": "ONGOING",
+      "genres": [{ "name": "Mature", "slug": "mature" }],
+      "tags": []
+    },
+    {
+      "id": "fixture-missing-id",
+      "title": "Fixture Missing Metadata",
+      "slug": "fixture-missing",
+      "description": "This must fail closed.",
+      "coverImage": "/uploads/covers/fixture-missing.webp",
+      "author": "Fixture Author",
+      "status": "ONGOING"
+    }
+  ],
+  "total": 3,
+  "hasMore": false
+}

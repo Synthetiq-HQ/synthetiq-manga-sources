@@ -1,0 +1,32 @@
+[
+  {
+    "title": "Safe French Light Novel",
+    "image": "safe/cover.jpg",
+    "link": "safe/",
+    "subtitle": "3 volumes"
+  },
+  {
+    "title": "Unsafe Harem Light Novel",
+    "image": "unsafe/cover.jpg",
+    "link": "unsafe/",
+    "subtitle": "1 volume"
+  },
+  {
+    "title": "Missing Safety Metadata",
+    "image": "missing/cover.jpg",
+    "link": "missing/",
+    "subtitle": "1 volume"
+  },
+  {
+    "title": "Restricted Volume Metadata",
+    "image": "restricted/cover.jpg",
+    "link": "restricted/",
+    "subtitle": "8 volumes"
+  },
+  {
+    "title": "Missing Volume Safety Metadata",
+    "image": "volume-missing/cover.jpg",
+    "link": "volume-missing/",
+    "subtitle": "2 volumes"
+  }
+]

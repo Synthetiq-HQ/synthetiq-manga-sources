@@ -1,0 +1,34 @@
+{
+  "chapters": [
+    {
+      "id": "fixture-chapter-1-id",
+      "slug": "chapter-1",
+      "chapterNumber": 1,
+      "title": "Arrival",
+      "isPremium": false,
+      "freeAt": null
+    },
+    {
+      "id": "fixture-chapter-2-id",
+      "slug": "chapter-2",
+      "chapterNumber": 2,
+      "title": "Locked Chapter",
+      "isPremium": true,
+      "freeAt": null
+    },
+    {
+      "id": "fixture-chapter-3-id",
+      "slug": "chapter-3",
+      "chapterNumber": 3,
+      "title": "Lessons",
+      "isPremium": false,
+      "freeAt": null
+    }
+  ],
+  "total": 3,
+  "skip": 0,
+  "take": 50,
+  "order": "asc",
+  "search": null,
+  "hasMore": false
+}

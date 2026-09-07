@@ -682,6 +682,66 @@
         "path": "modules/kingdom/icon-v1.0.2.png",
         "sha256": "8c3353928a9ae2df7b866c7ccd85d426f03a7bf42ea79f9189696f223a72f8eb"
       }
+    },
+    {
+      "id": "novelfrance",
+      "familyID": "novelfrance",
+      "name": "NovelFrance",
+      "version": "0.1.1",
+      "language": "fr",
+      "contentType": "text",
+      "contentRating": "unknown",
+      "releaseTrack": "beta",
+      "status": "active",
+      "sortPriority": 98,
+      "manifest": {
+        "path": "modules/novelfrance/manifest.json",
+        "sha256": "d4e8e03682b713c5d8a3b3be88c19e05172f79ec20797afb76a1fa4c72290beb"
+      },
+      "icon": {
+        "path": "modules/novelfrance/icon.png",
+        "sha256": "7430c04b3aaa06a57cab6d1fab557638161f5396c27beaa3331c4029ff149e06"
+      }
+    },
+    {
+      "id": "novelneko-web",
+      "familyID": "novelneko-web",
+      "name": "NovelNeko Web-Novels",
+      "version": "0.1.1",
+      "language": "fr",
+      "contentType": "text",
+      "contentRating": "unknown",
+      "releaseTrack": "beta",
+      "status": "active",
+      "sortPriority": 99,
+      "manifest": {
+        "path": "modules/novelneko-web/manifest.json",
+        "sha256": "e33e879bcc44e7502d6650a3b67d61b8feea36220a781e710cd898ecfeded36d"
+      },
+      "icon": {
+        "path": "modules/novelneko-web/icon.png",
+        "sha256": "7430c04b3aaa06a57cab6d1fab557638161f5396c27beaa3331c4029ff149e06"
+      }
+    },
+    {
+      "id": "novelneko-light",
+      "familyID": "novelneko-light",
+      "name": "NovelNeko Light-Novels",
+      "version": "0.1.1",
+      "language": "fr",
+      "contentType": "publication",
+      "contentRating": "unknown",
+      "releaseTrack": "beta",
+      "status": "active",
+      "sortPriority": 100,
+      "manifest": {
+        "path": "modules/novelneko-light/manifest.json",
+        "sha256": "7be507bd507c5601a14ca8efb8d2961e626815559160108d73ee11d39ea91d8f"
+      },
+      "icon": {
+        "path": "modules/novelneko-light/icon.png",
+        "sha256": "7ea3e790b051f9d2e2be7742cc4e296e56b21dfd349cfe8fa69b883b4efd04f7"
+      }
     }
   ],
   "repository": {

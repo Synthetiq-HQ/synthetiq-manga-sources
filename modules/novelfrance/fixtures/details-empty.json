@@ -1,0 +1,10 @@
+{
+  "id": "fixture-empty-id",
+  "title": "Fixture Empty Safety",
+  "slug": "fixture-empty",
+  "description": "This must fail closed.",
+  "coverImage": "/uploads/covers/fixture-empty.webp",
+  "author": "Fixture Author",
+  "genres": [],
+  "tags": []
+}

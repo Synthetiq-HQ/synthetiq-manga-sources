@@ -1,0 +1,11 @@
+{
+  "id": "fixture-locked-id",
+  "novelId": "fixture-safe-id",
+  "chapterNumber": 4,
+  "title": "Locked",
+  "slug": "chapter-locked",
+  "paragraphs": [{ "kind": "text", "content": "This must not be returned." }],
+  "isPremium": true,
+  "freeAt": null,
+  "novel": { "slug": "fixture-safe" }
+}

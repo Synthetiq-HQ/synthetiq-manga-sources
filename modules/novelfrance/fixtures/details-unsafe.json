@@ -1,0 +1,11 @@
+{
+  "id": "fixture-unsafe-id",
+  "title": "Fixture After Dark",
+  "slug": "fixture-unsafe",
+  "description": "Not available under the safety policy.",
+  "coverImage": "/uploads/covers/fixture-unsafe.webp",
+  "author": "Fixture Author",
+  "status": "ONGOING",
+  "genres": [{ "name": "Mature", "slug": "mature" }],
+  "tags": []
+}

@@ -1,0 +1,44 @@
+{
+  "novels": [
+    {
+      "id": "fixture-search-valid-id",
+      "title": "Fixture Search Valid",
+      "slug": "fixture-search-valid",
+      "description": "Valid search fixture.",
+      "coverImage": "/uploads/covers/fixture-search-valid.webp",
+      "author": "Fixture Author",
+      "genres": [{ "name": "Aventure", "slug": "aventure" }],
+      "tags": []
+    },
+    {
+      "id": "fixture-search-evil-id",
+      "title": "Fixture External Identity",
+      "slug": "https://evil.example/novel/fixture-search-evil",
+      "genres": [{ "name": "Aventure" }],
+      "tags": []
+    },
+    {
+      "id": "fixture-search-path-id",
+      "title": "Fixture Invalid Path",
+      "slug": "fixture-search/invalid",
+      "genres": [{ "name": "Aventure" }],
+      "tags": []
+    },
+    {
+      "id": { "unexpected": "object" },
+      "title": "Fixture Invalid Source ID",
+      "slug": "fixture-search-object-id",
+      "genres": [{ "name": "Aventure" }],
+      "tags": []
+    },
+    {
+      "id": "fixture-search-empty-title-id",
+      "title": "<script>unsafe placeholder</script>",
+      "slug": "fixture-search-empty-title",
+      "genres": [{ "name": "Aventure" }],
+      "tags": []
+    }
+  ],
+  "total": 5,
+  "hasMore": false
+}

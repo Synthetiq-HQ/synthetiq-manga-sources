@@ -1,0 +1,12 @@
+{
+  "id": "fixture-safe-id",
+  "title": "Fixture Safe Novel",
+  "slug": "fixture-safe",
+  "description": "A safe fixture novel.",
+  "coverImage": "/uploads/covers/fixture-safe.webp",
+  "author": "Fixture Author",
+  "status": "ONGOING",
+  "genres": [{ "name": "Aventure", "slug": "aventure" }],
+  "tags": [{ "name": "Magie", "slug": "magie" }],
+  "_count": { "chapters": 3 }
+}

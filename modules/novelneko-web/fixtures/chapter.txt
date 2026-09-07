@@ -1,0 +1,3 @@
+Chapitre de démonstration.
+
+Le texte inventé confirme que la lecture renvoie un contenu non vide.

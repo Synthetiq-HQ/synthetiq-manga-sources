@@ -1,0 +1,9 @@
+{
+  "id": "fixture-missing-id",
+  "title": "Fixture Missing Metadata",
+  "slug": "fixture-missing",
+  "description": "This must fail closed.",
+  "coverImage": "/uploads/covers/fixture-missing.webp",
+  "author": "Fixture Author",
+  "status": "ONGOING"
+}

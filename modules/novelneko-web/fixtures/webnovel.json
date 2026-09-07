@@ -1,0 +1,254 @@
+[
+  {
+    "title": "Fixture Chronicle",
+    "image": "fixture-chronicle/cover.jpg",
+    "link": "fixture-chronicle/",
+    "subtitle": "2 chapitres",
+    "type": "Web Novel"
+  },
+  {
+    "title": "Fixture Ecchi Chronicle",
+    "image": "fixture-ecchi/cover.jpg",
+    "link": "fixture-ecchi/",
+    "subtitle": "1 chapitre",
+    "type": "Web Novel"
+  },
+  {
+    "title": "Fixture Missing Metadata",
+    "image": "fixture-missing/cover.jpg",
+    "link": "fixture-missing/",
+    "subtitle": "1 chapitre",
+    "type": "Web Novel"
+  },
+  {
+    "title": "Fixture Paid Metadata",
+    "image": "fixture-paid/cover.jpg",
+    "link": "fixture-paid/",
+    "subtitle": "1 chapitre",
+    "type": "Web Novel"
+  },
+  {
+    "title": "Fixture Locked Metadata",
+    "image": "fixture-locked/cover.jpg",
+    "link": "fixture-locked/",
+    "subtitle": "1 chapitre",
+    "type": "Web Novel"
+  },
+  {
+    "title": "Fixture Synopsis Adult Marker",
+    "image": "fixture-synopsis-adult/cover.jpg",
+    "link": "fixture-synopsis-adult/",
+    "subtitle": "1 chapitre",
+    "type": "Web Novel"
+  },
+  {
+    "title": "Fixture Light Novel",
+    "image": "fixture-light-novel/cover.jpg",
+    "link": "fixture-light-novel/",
+    "subtitle": "1 chapitre",
+    "type": "Light Novel"
+  },
+  {
+    "title": "Fixture Text Paid",
+    "image": "fixture-text-paid/cover.jpg",
+    "link": "fixture-text-paid/",
+    "subtitle": "1 chapitre",
+    "type": "Web Novel"
+  },
+  {
+    "title": "Fixture Text Locked",
+    "image": "fixture-text-locked/cover.jpg",
+    "link": "fixture-text-locked/",
+    "subtitle": "1 chapitre",
+    "type": "Web Novel"
+  },
+  {
+    "title": "Fixture Text Fallback",
+    "image": "fixture-text-fallback/cover.jpg",
+    "link": "fixture-text-fallback/",
+    "subtitle": "1 chapitre",
+    "type": "Web Novel"
+  },
+  {
+    "title": "Fixture Text HTML Failure",
+    "image": "fixture-text-html/cover.jpg",
+    "link": "fixture-text-html/",
+    "subtitle": "1 chapitre",
+    "type": "Web Novel"
+  },
+  {
+    "title": "Fixture Page 01",
+    "image": "fixture-page-01/cover.jpg",
+    "link": "fixture-page-01/",
+    "subtitle": "1 chapitre",
+    "type": "Web Novel"
+  },
+  {
+    "title": "Fixture Page 02",
+    "image": "fixture-page-02/cover.jpg",
+    "link": "fixture-page-02/",
+    "subtitle": "1 chapitre",
+    "type": "Web Novel"
+  },
+  {
+    "title": "Fixture Page 03",
+    "image": "fixture-page-03/cover.jpg",
+    "link": "fixture-page-03/",
+    "subtitle": "1 chapitre",
+    "type": "Web Novel"
+  },
+  {
+    "title": "Fixture Page 04",
+    "image": "fixture-page-04/cover.jpg",
+    "link": "fixture-page-04/",
+    "subtitle": "1 chapitre",
+    "type": "Web Novel"
+  },
+  {
+    "title": "Fixture Page 05",
+    "image": "fixture-page-05/cover.jpg",
+    "link": "fixture-page-05/",
+    "subtitle": "1 chapitre",
+    "type": "Web Novel"
+  },
+  {
+    "title": "Fixture Page 06",
+    "image": "fixture-page-06/cover.jpg",
+    "link": "fixture-page-06/",
+    "subtitle": "1 chapitre",
+    "type": "Web Novel"
+  },
+  {
+    "title": "Fixture Page 07",
+    "image": "fixture-page-07/cover.jpg",
+    "link": "fixture-page-07/",
+    "subtitle": "1 chapitre",
+    "type": "Web Novel"
+  },
+  {
+    "title": "Fixture Page 08",
+    "image": "fixture-page-08/cover.jpg",
+    "link": "fixture-page-08/",
+    "subtitle": "1 chapitre",
+    "type": "Web Novel"
+  },
+  {
+    "title": "Fixture Page 09",
+    "image": "fixture-page-09/cover.jpg",
+    "link": "fixture-page-09/",
+    "subtitle": "1 chapitre",
+    "type": "Web Novel"
+  },
+  {
+    "title": "Fixture Page 10",
+    "image": "fixture-page-10/cover.jpg",
+    "link": "fixture-page-10/",
+    "subtitle": "1 chapitre",
+    "type": "Web Novel"
+  },
+  {
+    "title": "Fixture Page 11",
+    "image": "fixture-page-11/cover.jpg",
+    "link": "fixture-page-11/",
+    "subtitle": "1 chapitre",
+    "type": "Web Novel"
+  },
+  {
+    "title": "Fixture Page 12",
+    "image": "fixture-page-12/cover.jpg",
+    "link": "fixture-page-12/",
+    "subtitle": "1 chapitre",
+    "type": "Web Novel"
+  },
+  {
+    "title": "Fixture Page 13",
+    "image": "fixture-page-13/cover.jpg",
+    "link": "fixture-page-13/",
+    "subtitle": "1 chapitre",
+    "type": "Web Novel"
+  },
+  {
+    "title": "Fixture Page 14",
+    "image": "fixture-page-14/cover.jpg",
+    "link": "fixture-page-14/",
+    "subtitle": "1 chapitre",
+    "type": "Web Novel"
+  },
+  {
+    "title": "Fixture Page 15",
+    "image": "fixture-page-15/cover.jpg",
+    "link": "fixture-page-15/",
+    "subtitle": "1 chapitre",
+    "type": "Web Novel"
+  },
+  {
+    "title": "Fixture Page 16",
+    "image": "fixture-page-16/cover.jpg",
+    "link": "fixture-page-16/",
+    "subtitle": "1 chapitre",
+    "type": "Web Novel"
+  },
+  {
+    "title": "Fixture Page 17",
+    "image": "fixture-page-17/cover.jpg",
+    "link": "fixture-page-17/",
+    "subtitle": "1 chapitre",
+    "type": "Web Novel"
+  },
+  {
+    "title": "Fixture Page 18",
+    "image": "fixture-page-18/cover.jpg",
+    "link": "fixture-page-18/",
+    "subtitle": "1 chapitre",
+    "type": "Web Novel"
+  },
+  {
+    "title": "Fixture Page 19",
+    "image": "fixture-page-19/cover.jpg",
+    "link": "fixture-page-19/",
+    "subtitle": "1 chapitre",
+    "type": "Web Novel"
+  },
+  {
+    "title": "Fixture Page 20",
+    "image": "fixture-page-20/cover.jpg",
+    "link": "fixture-page-20/",
+    "subtitle": "1 chapitre",
+    "type": "Web Novel"
+  },
+  {
+    "title": "Fixture Page 21",
+    "image": "fixture-page-21/cover.jpg",
+    "link": "fixture-page-21/",
+    "subtitle": "1 chapitre",
+    "type": "Web Novel"
+  },
+  {
+    "title": "Fixture Page 22",
+    "image": "fixture-page-22/cover.jpg",
+    "link": "fixture-page-22/",
+    "subtitle": "1 chapitre",
+    "type": "Web Novel"
+  },
+  {
+    "title": "Fixture Page 23",
+    "image": "fixture-page-23/cover.jpg",
+    "link": "fixture-page-23/",
+    "subtitle": "1 chapitre",
+    "type": "Web Novel"
+  },
+  {
+    "title": "Fixture Page 24",
+    "image": "fixture-page-24/cover.jpg",
+    "link": "fixture-page-24/",
+    "subtitle": "1 chapitre",
+    "type": "Web Novel"
+  },
+  {
+    "title": "Fixture Page 25",
+    "image": "fixture-page-25/cover.jpg",
+    "link": "fixture-page-25/",
+    "subtitle": "1 chapitre",
+    "type": "Web Novel"
+  }
+]

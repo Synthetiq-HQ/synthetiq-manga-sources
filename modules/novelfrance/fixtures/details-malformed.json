@@ -1,0 +1,10 @@
+{
+  "id": "fixture-malformed-id",
+  "title": "Fixture Malformed Safety",
+  "slug": "fixture-malformed",
+  "description": "This must fail closed.",
+  "coverImage": "/uploads/covers/fixture-malformed.webp",
+  "author": "Fixture Author",
+  "genres": [{ "name": "" }],
+  "tags": []
+}

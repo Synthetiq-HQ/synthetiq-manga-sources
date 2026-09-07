@@ -160,6 +160,21 @@
     "function parseChapterList(html, base = BASE_URL)",
     "chapterURLParts"
    ]
+  },
+  "novelfrance": {
+   "chapterScope": "api"
+  },
+  "novelneko-web": {
+   "chapterScope": "selected-series-dom",
+   "requiredCodeFragments": [
+    "function chapterFileCandidates"
+   ]
+  },
+  "novelneko-light": {
+   "chapterScope": "selected-series-dom",
+   "requiredCodeFragments": [
+    "function parseVolumes(html, series)"
+   ]
   }
  }
 }
