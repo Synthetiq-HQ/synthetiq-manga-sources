@@ -1,6 +1,10 @@
 {
  "schemaVersion": 1,
  "modules": {
+  "oceanofpdf": {
+   "chapterScope": "resource-derived",
+   "requiredCodeFragments": ["function resourceFromHTML(html, fileName)", "actualName !== fileName"]
+  },
   "mangaball": {
    "chapterScope": "api"
   },

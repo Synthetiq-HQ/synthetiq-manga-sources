@@ -742,6 +742,25 @@
         "path": "modules/novelneko-light/icon.png",
         "sha256": "7ea3e790b051f9d2e2be7742cc4e296e56b21dfd349cfe8fa69b883b4efd04f7"
       }
+    },
+    {
+      "id": "oceanofpdf",
+      "familyID": "oceanofpdf",
+      "name": "OceanofPDF",
+      "version": "1.0.0",
+      "language": "multi",
+      "contentType": "publication",
+      "contentRating": "unknown",
+      "releaseTrack": "beta",
+      "status": "active",
+      "manifest": {
+        "path": "modules/oceanofpdf/manifest.json",
+        "sha256": "7d9cde7d472e1389df65393c4d8a2328ebcab550c3388e04093eda93f1eba8af"
+      },
+      "icon": {
+        "path": "modules/oceanofpdf/icon.png",
+        "sha256": "c29eab5844a32a8736b5313a81e5d2dcac661c67f430b8ae655b960493669463"
+      }
     }
   ],
   "repository": {
