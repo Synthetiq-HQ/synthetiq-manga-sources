@@ -1,7 +1,10 @@
 # OceanofPDF for Books
 
-Beta module, version 1.0.0, prepared for the owner's explicitly requested public
+Beta module, version 1.0.1, prepared for the owner's explicitly requested public
 device-testing release. Native device verification remains pending.
+
+Version 1.0.1 adds the required empty `legacyIDs` array omitted in 1.0.0,
+fixing the native Books installation decoder failure.
 
 ## Supported
 

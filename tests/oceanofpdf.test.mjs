@@ -4,6 +4,15 @@ import vm from "node:vm";
 import { readFile } from "node:fs/promises";
 
 const source = await readFile(new URL("../modules/oceanofpdf/index.js", import.meta.url), "utf8");
+test("manifest includes every required native Books field, including empty legacy IDs", async () => {
+  const manifest = JSON.parse(await readFile(new URL("../modules/oceanofpdf/manifest.json", import.meta.url), "utf8"));
+  for (const key of ["id", "familyID", "legacyIDs", "name", "version", "contractVersion", "minimumAppVersion",
+    "contentType", "language", "contentRating", "releaseTrack", "status", "capabilities", "baseURL",
+    "universalLink", "entry", "icon", "allowedHosts", "limits", "attribution"]) {
+    assert.ok(Object.hasOwn(manifest, key), `Missing native Codable field: ${key}`);
+  }
+  assert.deepEqual(manifest.legacyIDs, []);
+});
 const base = "https://oceanofpdf.com";
 const id = `${base}/authors/example-author/pdf-example-book-download/`;
 const form = { action: `${base}/Fetching_Resource.php`, method: "post", server: "srv3", fileName: "Example_Book.pdf" };

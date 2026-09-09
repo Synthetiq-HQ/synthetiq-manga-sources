@@ -1,8 +1,9 @@
 {
   "id": "oceanofpdf",
   "familyID": "oceanofpdf",
+  "legacyIDs": [],
   "name": "OceanofPDF",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "contractVersion": 1,
   "minimumAppVersion": "1.0.0",
   "language": "multi",

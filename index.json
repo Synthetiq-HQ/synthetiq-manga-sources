@@ -747,7 +747,7 @@
       "id": "oceanofpdf",
       "familyID": "oceanofpdf",
       "name": "OceanofPDF",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "language": "multi",
       "contentType": "publication",
       "contentRating": "unknown",
@@ -755,7 +755,7 @@
       "status": "active",
       "manifest": {
         "path": "modules/oceanofpdf/manifest.json",
-        "sha256": "7d9cde7d472e1389df65393c4d8a2328ebcab550c3388e04093eda93f1eba8af"
+        "sha256": "d71cbdbb6e3abb91d2b6657b546ce06e1f0d70564382b4dca4014a6b2dcc10dc"
       },
       "icon": {
         "path": "modules/oceanofpdf/icon.png",
