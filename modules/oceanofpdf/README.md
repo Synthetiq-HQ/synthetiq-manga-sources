@@ -1,10 +1,28 @@
 # OceanofPDF for Books
 
-Beta module, version 1.0.1, prepared for the owner's explicitly requested public
+Beta module, version 1.0.2, prepared for the owner's explicitly requested public
 device-testing release. Native device verification remains pending.
 
 Version 1.0.1 adds the required empty `legacyIDs` array omitted in 1.0.0,
 fixing the native Books installation decoder failure.
+
+Version 1.0.2 supplies the required `headers: {}` in every `pagev2` request.
+Without it, native Books rejects the request before navigating to the source.
+The exact emitted request was tested with the app's real `ModulePageTask`
+Swift decoder: removing `headers` reproduces `keyNotFound`; the fixed request
+decodes successfully. The JavaScript regression test now checks every required
+native request field as well as the manifest fields.
+
+Reproduce the native request contract check on macOS:
+
+```sh
+node scripts/check-oceanofpdf-native-contract.mjs "/path/to/Synthetiq Manga App"
+```
+
+A full iOS WebKit end-to-end test was added to the app's opt-in engine tests,
+but its execution was blocked by Xcode stalling during workspace setup. Do not
+treat this request-decoding proof as successful on-device website verification
+or publication playback. Those gates remain open.
 
 ## Supported
 

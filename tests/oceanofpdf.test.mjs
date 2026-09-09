@@ -47,6 +47,11 @@ test("details preserve URL identity, and absent covers stay absent", async () =>
   assert.equal(details.id, id);
   assert.equal(details.coverURL, null);
   assert.equal(details.title, "Example Book");
+  assert.deepEqual(plain(calls.pages[0].headers), {});
+  for (const key of ["url", "headers", "timeoutMilliseconds", "settleMilliseconds", "includeHTML",
+    "captureResponseBodies", "maxEntries", "maxResponseCharacters"]) {
+    assert.ok(Object.hasOwn(calls.pages[0], key), `Missing native pagev2 field: ${key}`);
+  }
   await module.extractDetails(id);
   assert.equal(calls.pages.length, 1);
 });

@@ -104,7 +104,7 @@
         throw new Error("OceanofPDF needs Books browser verification support (pagev2).");
       }
       const snapshot = await globalThis.pagev2({
-        url, timeoutMilliseconds: 18000, settleMilliseconds: 300,
+        url, headers: {}, timeoutMilliseconds: 18000, settleMilliseconds: 300,
         includeHTML: false, captureResponseBodies: false, maxEntries: 1,
         maxResponseCharacters: MAX_HTML, waitForSelector: "main",
         returnScript: `(${capturePage.toString()})(${JSON.stringify(kind)})`,

@@ -3,7 +3,7 @@
   "familyID": "oceanofpdf",
   "legacyIDs": [],
   "name": "OceanofPDF",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "contractVersion": 1,
   "minimumAppVersion": "1.0.0",
   "language": "multi",
@@ -15,7 +15,7 @@
   "universalLink": "https://oceanofpdf.com/",
   "capabilities": ["search", "details", "resources", "latest", "discovery", "interactivePage"],
   "allowedHosts": ["oceanofpdf.com", "media.oceanofpdf.com", "fs3.oceanofpdf.com", "fs4.oceanofpdf.com"],
-  "entry": {"path": "modules/oceanofpdf/index.js", "sha256": "d46796eb144e761e407011a7caf8a2808634b2150421b15467777a62018910c8"},
+  "entry": {"path": "modules/oceanofpdf/index.js", "sha256": "691796de062eb01b2ea95b9376d3794ee2ed11d9af45baef4bce65c90d7fa0e1"},
   "icon": {"path": "modules/oceanofpdf/icon.png", "sha256": "c29eab5844a32a8736b5313a81e5d2dcac661c67f430b8ae655b960493669463"},
   "limits": {
     "timeoutMilliseconds": 30000,
