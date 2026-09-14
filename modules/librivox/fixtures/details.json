@@ -1,0 +1,44 @@
+{
+  "books": [
+    {
+      "id": "9001",
+      "title": "Fixture Audio Book",
+      "description": "A deterministic audio fixture.",
+      "language": "English",
+      "authors": ["Fixture Author"],
+      "genres": ["Adventure", "Public domain"],
+      "totaltimesecs": 210,
+      "url_librivox": "https://librivox.org/fixture-audio-book/",
+      "coverart_thumbnail": "https://archive.org/download/fixture-audio-book/cover-thumb.jpg",
+      "sections": [
+        {
+          "section_number": 1,
+          "title": "Chapter One",
+          "listen_url": "https://archive.org/download/fixture-audio-book/fixture-01.mp3",
+          "playtimesecs": 60,
+          "language": "English",
+          "readers": ["Fixture Reader"],
+          "release_date": "2026-01-01T00:00:00Z"
+        },
+        {
+          "section_number": 2,
+          "title": "Chapter Two",
+          "listen_url": "https://archive.org/download/fixture-audio-book/fixture-02.mp3",
+          "playtimesecs": 70,
+          "language": "English",
+          "readers": ["Fixture Reader"],
+          "release_date": "2026-01-01T00:00:00Z"
+        },
+        {
+          "section_number": 3,
+          "title": "Chapter Three",
+          "listen_url": "https://archive.org/download/fixture-audio-book/fixture-03.mp3",
+          "playtimesecs": 80,
+          "language": "English",
+          "readers": ["Fixture Reader"],
+          "release_date": "2026-01-01T00:00:00Z"
+        }
+      ]
+    }
+  ]
+}

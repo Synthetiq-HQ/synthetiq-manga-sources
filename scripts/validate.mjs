@@ -15,6 +15,7 @@ const requiredByType = {
   pageImages: ["extractChapters", "extractImages"],
   text: ["extractChapters", "extractText"],
   publication: ["extractResources"],
+  audio: ["extractChapters", "extractAudio"],
 };
 
 async function JSONFile(relativePath) {
@@ -124,6 +125,7 @@ async function validateCatalogue() {
         extractImages: "images",
         extractText: "text",
         extractResources: "resources",
+        extractAudio: "audio",
       }[handler];
       assert.ok(manifest.capabilities.includes(capability), `${entry.id} missing ${capability} capability`);
     }

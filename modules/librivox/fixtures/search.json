@@ -1,0 +1,24 @@
+{
+  "books": [
+    {
+      "id": "9001",
+      "title": "Fixture Audio Book",
+      "description": "A deterministic audio fixture.",
+      "language": "English",
+      "authors": ["Fixture Author"],
+      "genres": ["Adventure", "Public domain"],
+      "url_librivox": "https://librivox.org/fixture-audio-book/",
+      "coverart_thumbnail": "https://archive.org/download/fixture-audio-book/cover-thumb.jpg"
+    },
+    {
+      "id": "9002",
+      "title": "Second Fixture Audio Book",
+      "description": "A second deterministic audio fixture.",
+      "language": "English",
+      "authors": ["Second Author"],
+      "genres": ["History"],
+      "url_librivox": "https://librivox.org/second-fixture-audio-book/",
+      "coverart_thumbnail": "https://archive.org/download/second-fixture-audio-book/cover-thumb.jpg"
+    }
+  ]
+}

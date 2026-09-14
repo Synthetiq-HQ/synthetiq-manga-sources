@@ -1,0 +1,87 @@
+{
+  "search": {
+    "items": [
+      {
+        "id": "9001",
+        "href": "https://librivox.org/fixture-audio-book/",
+        "url": "https://librivox.org/fixture-audio-book/",
+        "title": "Fixture Audio Book",
+        "image": "https://archive.org/download/fixture-audio-book/cover-thumb.jpg",
+        "description": "A deterministic audio fixture.",
+        "author": "Fixture Author",
+        "genres": ["Adventure", "Public domain"]
+      },
+      {
+        "id": "9002",
+        "href": "https://librivox.org/second-fixture-audio-book/",
+        "url": "https://librivox.org/second-fixture-audio-book/",
+        "title": "Second Fixture Audio Book",
+        "image": "https://archive.org/download/second-fixture-audio-book/cover-thumb.jpg",
+        "description": "A second deterministic audio fixture.",
+        "author": "Second Author",
+        "genres": ["History"]
+      }
+    ],
+    "hasMore": false
+  },
+  "details": {
+    "id": "9001",
+    "href": "https://librivox.org/fixture-audio-book/",
+    "url": "https://librivox.org/fixture-audio-book/",
+    "title": "Fixture Audio Book",
+    "image": "https://archive.org/download/fixture-audio-book/cover-thumb.jpg",
+    "description": "A deterministic audio fixture.",
+    "author": "Fixture Author",
+    "genres": ["Adventure", "Public domain"],
+    "authors": ["Fixture Author"],
+    "status": "Completed",
+    "language": "English",
+    "chapterCount": 3,
+    "duration": 210
+  },
+  "chapters": [
+    {
+      "id": "librivox:book:9001:section:1",
+      "href": "librivox:book:9001:section:1",
+      "url": "librivox:book:9001:section:1",
+      "title": "Chapter One",
+      "number": 1,
+      "releaseDate": "2026-01-01T00:00:00Z",
+      "language": "English"
+    },
+    {
+      "id": "librivox:book:9001:section:2",
+      "href": "librivox:book:9001:section:2",
+      "url": "librivox:book:9001:section:2",
+      "title": "Chapter Two",
+      "number": 2,
+      "releaseDate": "2026-01-01T00:00:00Z",
+      "language": "English"
+    },
+    {
+      "id": "librivox:book:9001:section:3",
+      "href": "librivox:book:9001:section:3",
+      "url": "librivox:book:9001:section:3",
+      "title": "Chapter Three",
+      "number": 3,
+      "releaseDate": "2026-01-01T00:00:00Z",
+      "language": "English"
+    }
+  ],
+  "audio": {
+    "tracks": [
+      {
+        "id": "librivox:book:9001:section:1",
+        "title": "Chapter One",
+        "url": "https://archive.org/download/fixture-audio-book/fixture-01.mp3",
+        "format": "mp3",
+        "fileName": "9001-section-1.mp3",
+        "duration": 60,
+        "part": 1,
+        "track": 1,
+        "language": "English",
+        "readers": "Fixture Reader"
+      }
+    ]
+  }
+}

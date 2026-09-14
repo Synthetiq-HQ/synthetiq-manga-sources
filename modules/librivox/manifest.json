@@ -1,0 +1,50 @@
+{
+  "allowedHosts": [
+    "librivox.org",
+    "*.librivox.org",
+    "archive.org",
+    "*.archive.org"
+  ],
+  "attribution": {
+    "author": "Synthetiq-HQ",
+    "authorizationURL": "https://librivox.org/api/info",
+    "licenseName": "LibriVox public domain recordings",
+    "website": "https://librivox.org"
+  },
+  "baseURL": "https://librivox.org",
+  "capabilities": [
+    "search",
+    "details",
+    "chapters",
+    "audio",
+    "discovery"
+  ],
+  "contentRating": "safe",
+  "contentType": "audio",
+  "contractVersion": 1,
+  "entry": {
+    "path": "modules/librivox/index.js",
+    "sha256": "3ae36577e67a65cd75d5d4e15162667276691416934699431a78e4b128b7bf8e"
+  },
+  "familyID": "librivox",
+  "icon": {
+    "path": "modules/librivox/icon.png",
+    "sha256": "abbcbc4e308c5e8848695a861dd96194d0973bcf6cb6228778af5a65d33394da"
+  },
+  "id": "librivox",
+  "language": "multi",
+  "legacyIDs": [],
+  "limits": {
+    "cacheTTLSeconds": 900,
+    "maxConcurrentRequests": 2,
+    "maxResponseBytes": 16777216,
+    "maxScriptBytes": 524288,
+    "timeoutMilliseconds": 30000
+  },
+  "minimumAppVersion": "1.7.0",
+  "name": "LibriVox Audiobooks",
+  "releaseTrack": "beta",
+  "status": "active",
+  "universalLink": "https://synthetiq.uk/manga/modules/librivox",
+  "version": "1.0.1"
+}

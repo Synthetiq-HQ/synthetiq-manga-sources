@@ -761,6 +761,26 @@
         "path": "modules/oceanofpdf/icon.png",
         "sha256": "c29eab5844a32a8736b5313a81e5d2dcac661c67f430b8ae655b960493669463"
       }
+    },
+    {
+      "contentRating": "safe",
+      "contentType": "audio",
+      "familyID": "librivox",
+      "icon": {
+        "path": "modules/librivox/icon.png",
+        "sha256": "abbcbc4e308c5e8848695a861dd96194d0973bcf6cb6228778af5a65d33394da"
+      },
+      "id": "librivox",
+      "language": "multi",
+      "manifest": {
+        "path": "modules/librivox/manifest.json",
+        "sha256": "51e42430b7e82bc0493bf3f2b945499dee1e4b43f8321c5be5ecdbe1ff30cdb0"
+      },
+      "name": "LibriVox Audiobooks",
+      "releaseTrack": "beta",
+      "status": "active",
+      "version": "1.0.1",
+      "sortPriority": 6
     }
   ],
   "repository": {
