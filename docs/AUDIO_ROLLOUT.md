@@ -1,15 +1,16 @@
-# Audio Catalogue Rollout - Staged Only
+# Audio Catalogue Rollout - Owner-Approved Main Publication
 
 LibriVox 1.0.1 is copied unchanged from Synthetiq-HQ/audio-testing. Its stable ID,
 manifest, script, icon and hashes are preserved. Existing main entries are unchanged.
 
-Do not merge this branch into the legacy live index yet. Older Books versions
+On 2026-09-15 the owner explicitly approved publishing to main after the new
+Books release, accepting the compatibility risk for older clients. Older Books versions
 decode the entire index with a content-type enum that has no audio case. A new
 audio entry can fail the whole refresh before minimumAppVersion is evaluated.
 Updating the new app alone does not protect people still using those versions.
 
-Use a version-aware catalogue rollout or a separate index selected by compatible
-app versions before publishing to main. Keep Audio Testing online throughout the
+Affected users must update Books before refreshing this catalogue. A version-aware
+catalogue remains the preferred future compatibility fix. Keep Audio Testing online throughout the
 transition. Do not delete it until existing subscriptions have a tested migration.
 
 Availability in a catalogue is not automatic installation. Users must have the
