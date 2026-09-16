@@ -1,0 +1,44 @@
+{
+  "allowedHosts": [
+    "hotaudiobooks.com",
+    "*.hotaudiobooks.com",
+    "ipaudio.club",
+    "*.ipaudio.club"
+  ],
+  "attribution": {
+    "author": "Synthetiq-HQ",
+    "authorizationURL": "https://hotaudiobooks.com/",
+    "licenseName": "Source-provided public web audio; rights unverified",
+    "website": "https://hotaudiobooks.com/"
+  },
+  "baseURL": "https://hotaudiobooks.com",
+  "capabilities": ["search", "details", "chapters", "audio", "discovery"],
+  "contentRating": "suggestive",
+  "contentType": "audio",
+  "contractVersion": 1,
+  "entry": {
+    "path": "modules/hot-audiobooks/index.js",
+    "sha256": "b01b2fd5a166f4fa9255c0c9a915f42d522b93422927c26cf292dad2b6b631b6"
+  },
+  "familyID": "hot-audiobooks",
+  "icon": {
+    "path": "modules/hot-audiobooks/icon.png",
+    "sha256": "d92f875755c6490ea028fb1a0e2248936a7efb4bf3529af89039e313b224ebcc"
+  },
+  "id": "hot-audiobooks",
+  "language": "en",
+  "legacyIDs": [],
+  "limits": {
+    "cacheTTLSeconds": 300,
+    "maxConcurrentRequests": 2,
+    "maxResponseBytes": 8388608,
+    "maxScriptBytes": 524288,
+    "timeoutMilliseconds": 30000
+  },
+  "minimumAppVersion": "1.7.0",
+  "name": "Hot Audiobooks",
+  "releaseTrack": "beta",
+  "status": "active",
+  "universalLink": "https://synthetiq.uk/manga/modules/hot-audiobooks",
+  "version": "1.0.0"
+}

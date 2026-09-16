@@ -185,6 +185,9 @@
   },
   "goldenaudiobooks": {
    "chapterScope": "source-page-dom"
+  },
+  "hot-audiobooks": {
+   "chapterScope": "source-page-dom"
   }
  }
 }
