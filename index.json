@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-02T22:51:22Z",
+  "generatedAt": "2026-09-16T00:00:00Z",
   "modules": [
     {
       "contentRating": "suggestive",
@@ -781,6 +781,26 @@
       "status": "active",
       "version": "1.0.1",
       "sortPriority": 6
+    },
+    {
+      "contentRating": "suggestive",
+      "contentType": "audio",
+      "familyID": "goldenaudiobooks",
+      "icon": {
+        "path": "modules/goldenaudiobooks/icon.png",
+        "sha256": "215237495d1561bd7683dc996ac4c0332c1c375bcbc7fe94945af576c92d4ebd"
+      },
+      "id": "goldenaudiobooks",
+      "language": "en",
+      "manifest": {
+        "path": "modules/goldenaudiobooks/manifest.json",
+        "sha256": "4458e40ee284a3acbb2ab3dacedaf36f15a249750dcfc5b8f3c07f3a9d59ed31"
+      },
+      "name": "Golden Audiobooks",
+      "releaseTrack": "beta",
+      "status": "active",
+      "version": "1.0.0",
+      "sortPriority": 7
     }
   ],
   "repository": {

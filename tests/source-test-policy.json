@@ -179,6 +179,12 @@
    "requiredCodeFragments": [
     "function parseVolumes(html, series)"
    ]
+  },
+  "librivox": {
+   "chapterScope": "api"
+  },
+  "goldenaudiobooks": {
+   "chapterScope": "source-page-dom"
   }
  }
 }

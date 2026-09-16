@@ -1,0 +1,44 @@
+{
+  "allowedHosts": [
+    "goldenaudiobooks.com",
+    "*.goldenaudiobooks.com",
+    "ipaudio.club",
+    "*.ipaudio.club"
+  ],
+  "attribution": {
+    "author": "Synthetiq-HQ",
+    "authorizationURL": "https://goldenaudiobooks.com/",
+    "licenseName": "Source-provided public web audio; rights unverified",
+    "website": "https://goldenaudiobooks.com/"
+  },
+  "baseURL": "https://goldenaudiobooks.com",
+  "capabilities": ["search", "details", "chapters", "audio", "discovery"],
+  "contentRating": "suggestive",
+  "contentType": "audio",
+  "contractVersion": 1,
+  "entry": {
+    "path": "modules/goldenaudiobooks/index.js",
+    "sha256": "74dded0b408025ed6c93f10ddc4d931e01c860101792bf6e7abe9ef39bbcc4ee"
+  },
+  "familyID": "goldenaudiobooks",
+  "icon": {
+    "path": "modules/goldenaudiobooks/icon.png",
+    "sha256": "215237495d1561bd7683dc996ac4c0332c1c375bcbc7fe94945af576c92d4ebd"
+  },
+  "id": "goldenaudiobooks",
+  "language": "en",
+  "legacyIDs": [],
+  "limits": {
+    "cacheTTLSeconds": 300,
+    "maxConcurrentRequests": 2,
+    "maxResponseBytes": 8388608,
+    "maxScriptBytes": 524288,
+    "timeoutMilliseconds": 30000
+  },
+  "minimumAppVersion": "1.7.0",
+  "name": "Golden Audiobooks",
+  "releaseTrack": "beta",
+  "status": "active",
+  "universalLink": "https://synthetiq.uk/manga/modules/goldenaudiobooks",
+  "version": "1.0.0"
+}
