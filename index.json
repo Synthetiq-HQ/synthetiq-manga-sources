@@ -821,6 +821,26 @@
       "status": "active",
       "version": "1.0.0",
       "sortPriority": 8
+    },
+    {
+      "id": "audioaz",
+      "familyID": "audioaz",
+      "name": "AudioAZ (Prototype)",
+      "version": "0.1.0",
+      "language": "multi",
+      "contentType": "audio",
+      "contentRating": "suggestive",
+      "releaseTrack": "beta",
+      "status": "active",
+      "sortPriority": 9,
+      "manifest": {
+        "path": "modules/audioaz/manifest.json",
+        "sha256": "0d180e2def8b00fee978dc3a06409393733a21aec8fbe4efe6c7b7a7baffbb74"
+      },
+      "icon": {
+        "path": "modules/audioaz/icon.png",
+        "sha256": "1d3ffbdda36c5d425831926e09c7da4258eb527022c27243c7a2a8cfc5305043"
+      }
     }
   ],
   "repository": {

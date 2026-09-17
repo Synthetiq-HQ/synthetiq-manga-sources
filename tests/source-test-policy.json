@@ -188,6 +188,9 @@
   },
   "hot-audiobooks": {
    "chapterScope": "source-page-dom"
+  },
+  "audioaz": {
+   "chapterScope": "source-page-dom"
   }
  }
 }
