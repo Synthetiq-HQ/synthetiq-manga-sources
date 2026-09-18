@@ -189,6 +189,14 @@
   "hot-audiobooks": {
    "chapterScope": "source-page-dom"
   },
+  "chikari": {
+   "chapterScope": "api",
+   "requiredCodeFragments": [
+    "data.slug !== slug",
+    "data.series_slug !== slug",
+    "Number(data.number) !== number"
+   ]
+  },
   "audioaz": {
    "chapterScope": "source-page-dom"
   }

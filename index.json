@@ -841,6 +841,25 @@
         "path": "modules/audioaz/icon.png",
         "sha256": "1d3ffbdda36c5d425831926e09c7da4258eb527022c27243c7a2a8cfc5305043"
       }
+    },
+    {
+      "id": "chikari",
+      "familyID": "chikari",
+      "name": "Chikari",
+      "version": "1.0.0",
+      "language": "en",
+      "contentType": "pageImages",
+      "contentRating": "suggestive",
+      "releaseTrack": "beta",
+      "status": "active",
+      "manifest": {
+        "path": "modules/chikari/manifest.json",
+        "sha256": "30de4ae4167d85a556fb67e7bb75de77843f93b12a65d2cecf97c50b9388008d"
+      },
+      "icon": {
+        "path": "modules/chikari/icon.png",
+        "sha256": "6fca630e5f439a1c4cbf13cdd9b2957b6156100befcfe54bb6a77f8d7d150a69"
+      }
     }
   ],
   "repository": {

@@ -1,0 +1,53 @@
+{
+  "contractVersion": 1,
+  "id": "chikari",
+  "familyID": "chikari",
+  "legacyIDs": [],
+  "name": "Chikari",
+  "version": "1.0.0",
+  "minimumAppVersion": "1.0.0",
+  "language": "en",
+  "contentType": "pageImages",
+  "contentRating": "suggestive",
+  "releaseTrack": "beta",
+  "status": "active",
+  "description": "Chikari manga, manhwa and manhua. Non-adult comics only.",
+  "baseURL": "https://chikari.moe",
+  "universalLink": "https://chikari.moe",
+  "capabilities": [
+    "popular",
+    "latest",
+    "search",
+    "details",
+    "chapters",
+    "images",
+    "imageRequest",
+    "discovery"
+  ],
+  "entry": {
+    "path": "modules/chikari/index.js",
+    "sha256": "acb7635dbeb7f1a3a56a15cd83751bb88ccd47709b64807277b1e1e1b05b932b"
+  },
+  "icon": {
+    "path": "modules/chikari/icon.png",
+    "sha256": "6fca630e5f439a1c4cbf13cdd9b2957b6156100befcfe54bb6a77f8d7d150a69"
+  },
+  "allowedHosts": [
+    "chikari.moe",
+    "cdn.chikari.moe"
+  ],
+  "limits": {
+    "timeoutMilliseconds": 30000,
+    "maxConcurrentRequests": 2,
+    "maxResponseBytes": 4194304,
+    "maxScriptBytes": 262144,
+    "cacheTTLSeconds": 300
+  },
+  "attribution": {
+    "author": "Synthetiq-HQ",
+    "website": "https://chikari.moe",
+    "licenseName": null,
+    "licenseURL": null,
+    "authorizationURL": null
+  }
+}
