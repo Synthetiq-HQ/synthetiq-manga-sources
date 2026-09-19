@@ -47,6 +47,25 @@ test("NovelFrance filters unsafe search results and paginates with bounded publi
   assert.match(calls[1], /take=20/);
 });
 
+test("NovelFrance discovery loads the public catalogue instead of returning no titles", async () => {
+  const search = await fixture("search.json");
+  const calls = [];
+  const module = await load(async (url) => {
+    calls.push(url);
+    return response(search);
+  });
+
+  const home = await module.discoveryHome();
+  assert.equal(home.sections.length, 1);
+  assert.equal(home.sections[0].id, "latest");
+  assert.equal(home.sections[0].items.length, 1);
+  assert.match(calls[0], /\/api\/search\?q=&skip=0&take=20/);
+  const second = await module.discoveryFeed("latest", 2);
+  assert.equal(second.items.length, 1);
+  assert.match(calls[1], /skip=20/);
+  await assert.rejects(() => module.discoveryFeed("unknown", 1), /feed is invalid/i);
+});
+
 test("NovelFrance rejects malformed search identities and empty cleaned titles", async () => {
   const search = await fixture("search-regressions.json");
   const module = await load(async (url) => {

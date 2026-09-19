@@ -304,9 +304,8 @@
     }
   }
 
-  async function searchResults(query, page = 1) {
+  async function catalogueResults(query, page = 1) {
     const text = String(query || "").trim();
-    if (!text) return { items: [], hasMore: false };
     const requestedPage = Number(page);
     if (!Number.isSafeInteger(requestedPage) || requestedPage < 1) {
       throw new Error("NovelFrance search pagination page is invalid.");
@@ -340,6 +339,22 @@
       items.push(item);
     }
     return { items, hasMore: Boolean(payload.hasMore) };
+  }
+
+  async function searchResults(query, page = 1) {
+    const text = String(query || "").trim();
+    if (!text) return { items: [], hasMore: false };
+    return catalogueResults(text, page);
+  }
+
+  async function discoveryFeed(id, page = 1) {
+    if (id !== "latest" && id !== "popular") throw new Error("NovelFrance discovery feed is invalid.");
+    return catalogueResults("", page);
+  }
+
+  async function discoveryHome() {
+    const feed = await discoveryFeed("latest", 1);
+    return { sections: [{ id: "latest", title: "Romans récents", items: feed.items, hasMore: feed.hasMore }] };
   }
 
   async function extractDetails(id) {
@@ -448,7 +463,7 @@
     return content;
   }
 
-  const handlers = { searchResults, extractDetails, extractChapters, extractText };
+  const handlers = { searchResults, extractDetails, extractChapters, extractText, discoveryFeed, discoveryHome };
   globalThis.SynthetiqModule = handlers;
   Object.assign(globalThis, handlers);
 })();

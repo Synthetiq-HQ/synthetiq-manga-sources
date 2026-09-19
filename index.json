@@ -687,7 +687,7 @@
       "id": "novelfrance",
       "familyID": "novelfrance",
       "name": "NovelFrance",
-      "version": "0.1.1",
+      "version": "0.4.1",
       "language": "fr",
       "contentType": "text",
       "contentRating": "unknown",
@@ -696,7 +696,7 @@
       "sortPriority": 98,
       "manifest": {
         "path": "modules/novelfrance/manifest.json",
-        "sha256": "d4e8e03682b713c5d8a3b3be88c19e05172f79ec20797afb76a1fa4c72290beb"
+        "sha256": "097f3c591f4202572026197ae4aca5466543737dfa5d8c66f0f26693bef15f92"
       },
       "icon": {
         "path": "modules/novelfrance/icon.png",
