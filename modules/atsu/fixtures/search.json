@@ -1,7 +1,8 @@
 {
-  "found": 2,
+  "found": 3,
   "hits": [
-    {"document": {"id":"fixture-safe","title":"Fixture Safe Title","englishTitle":"Fixture Safe Title","posterSmall":"/static/posters/fixture-safe.webp","isAdult":false}},
-    {"document": {"id":"fixture-adult","title":"Fixture Adult Title","englishTitle":"Fixture Adult Title","posterSmall":"/static/posters/fixture-adult.webp","isAdult":true}}
+    {"document": {"id":"fixture-safe","title":"Fixture Safe Title","englishTitle":"Fixture Safe Title","posterSmall":"/static/posters/fixture-safe.webp","medium":"Comic","isAdult":false}},
+    {"document": {"id":"fixture-adult","title":"Fixture Adult Title","englishTitle":"Fixture Adult Title","posterSmall":"/static/posters/fixture-adult.webp","medium":"Comic","isAdult":true}},
+    {"document": {"id":"fixture-novel","title":"Fixture Novel","englishTitle":"Fixture Novel","posterSmall":"/static/posters/fixture-novel.webp","medium":"Novel","isAdult":false}}
   ]
 }

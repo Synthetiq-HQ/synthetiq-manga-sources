@@ -120,7 +120,7 @@
   }
 
   function card(item) {
-    if (!item || isAdult(item)) return null;
+    if (!item || isAdult(item) || nonEmpty(item.medium).toLowerCase() !== "comic") return null;
     const id = nonEmpty(item.id);
     const title = nonEmpty(item.englishTitle || item.title);
     if (!id || !title) return null;
@@ -155,7 +155,7 @@
     const params = new URLSearchParams({
       q: nonEmpty(query) || "*",
       query_by: "title,englishTitle,otherNames,authors",
-      include_fields: "id,title,englishTitle,poster,posterSmall,posterMedium,type,isAdult,tags,status,authors",
+      include_fields: "id,title,englishTitle,poster,posterSmall,posterMedium,type,medium,isAdult,tags,status,authors",
       page: String(requestedPage),
       per_page: String(PAGE_SIZE),
     });
@@ -206,6 +206,9 @@
   function detailsFromManga(manga, id) {
     if (!manga || isAdult(manga)) {
       throw new Error("This title is excluded by the source content policy.");
+    }
+    if (nonEmpty(manga.medium).toLowerCase() !== "comic") {
+      throw new Error("This Atsu title is a novel and is unavailable in the image reader.");
     }
     const title = nonEmpty(manga.englishTitle || manga.title);
     if (!title) throw new Error("Atsu title metadata did not contain a name.");
@@ -390,6 +393,7 @@
     const seen = new Set();
     const output = [];
     for (const chapter of chapters) {
+      if (Number(chapter?.pageCount || 0) <= 0) continue;
       const chapterID = nonEmpty(chapter?.id);
       if (!chapterID || seen.has(chapterID)) continue;
       seen.add(chapterID);

@@ -13,12 +13,12 @@
       "language": "en",
       "manifest": {
         "path": "modules/atsu/manifest.json",
-        "sha256": "a8a8229d8c36c2835566e143db6a46ef3d3d4ce9042eda6927b2753474d2e409"
+        "sha256": "fbd27baf04a3c06063ed2ea1313cfb30bd61aaeb80e1c547e4d8fee708303c37"
       },
       "name": "Atsu",
       "releaseTrack": "beta",
       "status": "active",
-      "version": "1.0.5",
+      "version": "1.0.6",
       "sortPriority": 5
     },
     {

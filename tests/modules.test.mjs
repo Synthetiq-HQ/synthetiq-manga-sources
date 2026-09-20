@@ -139,12 +139,14 @@ test("Atsu uses direct APIs, keeps complete chapters, and filters source-marked 
   const search = await module.searchResults("fixture", 1);
   assert.deepEqual(JSON.parse(JSON.stringify(search)), fixtures.expected.search);
   assert.equal(search.items.some((item) => item.id === "fixture-adult"), false);
+  assert.equal(search.items.some((item) => item.id === "fixture-novel"), false);
 
   const details = await module.extractDetails(search.items[0].id);
   assert.deepEqual(JSON.parse(JSON.stringify(details)), fixtures.expected.details);
 
   const chapters = await module.extractChapters(details.id);
   assert.deepEqual(JSON.parse(JSON.stringify(chapters)), fixtures.expected.chapters);
+  assert.equal(chapters.some((chapter) => chapter.id.includes("fixture-empty")), false);
 
   const images = await module.extractImages(chapters[0].id);
   assert.deepEqual(JSON.parse(JSON.stringify(images)), fixtures.expected.images);

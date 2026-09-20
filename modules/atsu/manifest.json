@@ -26,7 +26,7 @@
   "contractVersion": 1,
   "entry": {
     "path": "modules/atsu/index.js",
-    "sha256": "265f6d8359d43c5d9236b76758be12c6e34c00b2b515fcee83bddd7075162caa"
+    "sha256": "5bd098b378264c80e0252ca408469e6cec4a8a2ca42c2474a4785414e6b64c16"
   },
   "familyID": "atsu",
   "icon": {
@@ -51,5 +51,5 @@
   "releaseTrack": "beta",
   "status": "active",
   "universalLink": "https://synthetiq.uk/manga/modules/atsu",
-  "version": "1.0.5"
+  "version": "1.0.6"
 }
