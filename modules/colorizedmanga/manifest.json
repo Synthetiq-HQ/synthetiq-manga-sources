@@ -1,0 +1,53 @@
+{
+  "allowedHosts": [
+    "colorizedmangas.com",
+    "www.colorizedmangas.com",
+    "cdn.jsdelivr.net"
+  ],
+  "attribution": {
+    "author": "Aliclat / Synthetiq-HQ",
+    "authorizationURL": null,
+    "licenseName": null,
+    "licenseURL": null,
+    "website": "https://colorizedmangas.com"
+  },
+  "baseURL": "https://colorizedmangas.com",
+  "capabilities": [
+    "popular",
+    "latest",
+    "search",
+    "details",
+    "chapters",
+    "images",
+    "imageRequest",
+    "discovery"
+  ],
+  "contentRating": "suggestive",
+  "contentType": "pageImages",
+  "contractVersion": 1,
+  "entry": {
+    "path": "modules/colorizedmanga/index.js",
+    "sha256": "d4ce71bd2c40b3e9cfae385c0a248ab3f243b12cc0bc8f6590b3572588652d77"
+  },
+  "familyID": "colorizedmanga",
+  "icon": {
+    "path": "modules/colorizedmanga/icon.png",
+    "sha256": "dfde692ffd5a4cfc2c6450ff8b751e040177612b1e3c7488c3c3f1e468c48b30"
+  },
+  "id": "colorizedmanga",
+  "language": "en",
+  "legacyIDs": ["colorizedmanga-v1"],
+  "limits": {
+    "cacheTTLSeconds": 300,
+    "maxConcurrentRequests": 2,
+    "maxResponseBytes": 8388608,
+    "maxScriptBytes": 262144,
+    "timeoutMilliseconds": 30000
+  },
+  "minimumAppVersion": "1.0.0",
+  "name": "ColorizedManga (Aliclat)",
+  "releaseTrack": "beta",
+  "status": "active",
+  "universalLink": "https://synthetiq.uk/manga/modules/colorizedmanga",
+  "version": "1.0.0"
+}

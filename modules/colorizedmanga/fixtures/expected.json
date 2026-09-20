@@ -1,0 +1,61 @@
+{
+  "search": {
+    "items": [
+      {
+        "id": "https://colorizedmangas.com/fixture-manga",
+        "href": "https://colorizedmangas.com/fixture-manga",
+        "url": "https://colorizedmangas.com/fixture-manga",
+        "title": "Fixture Manga",
+        "image": "https://colorizedmangas.com/covers/fixture-manga.jpg",
+        "description": "Fixture Manga — 2 colored chapters"
+      }
+    ],
+    "hasMore": false
+  },
+  "details": {
+    "id": "https://colorizedmangas.com/fixture-manga",
+    "href": "https://colorizedmangas.com/fixture-manga",
+    "url": "https://colorizedmangas.com/fixture-manga",
+    "title": "Fixture Manga",
+    "author": "Sample Author",
+    "authors": ["Sample Author"],
+    "status": "Ongoing",
+    "image": "https://colorizedmangas.com/covers/fixture-manga.jpg",
+    "description": "A synthetic color manga fixture.",
+    "genres": ["Action", "Fantasy"]
+  },
+  "chapters": [
+    {
+      "id": "https://colorizedmangas.com/fixture-manga/chapter/1",
+      "href": "https://colorizedmangas.com/fixture-manga/chapter/1",
+      "url": "https://colorizedmangas.com/fixture-manga/chapter/1",
+      "title": "Chapter 1 — First Light",
+      "number": 1,
+      "language": "en"
+    },
+    {
+      "id": "https://colorizedmangas.com/fixture-manga/chapter/2",
+      "href": "https://colorizedmangas.com/fixture-manga/chapter/2",
+      "url": "https://colorizedmangas.com/fixture-manga/chapter/2",
+      "title": "Chapter 2 — Second Light",
+      "number": 2,
+      "language": "en"
+    }
+  ],
+  "images": [
+    {
+      "url": "https://cdn.jsdelivr.net/gh/example/fixture-pages@abc/pages/1/001.webp",
+      "headers": {
+        "Accept": "image/avif,image/webp,image/*,*/*",
+        "Referer": "https://colorizedmangas.com/"
+      }
+    },
+    {
+      "url": "https://cdn.jsdelivr.net/gh/example/fixture-pages@abc/pages/1/002.webp",
+      "headers": {
+        "Accept": "image/avif,image/webp,image/*,*/*",
+        "Referer": "https://colorizedmangas.com/"
+      }
+    }
+  ]
+}

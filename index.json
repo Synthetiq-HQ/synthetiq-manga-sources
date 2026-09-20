@@ -860,6 +860,26 @@
         "path": "modules/chikari/icon.png",
         "sha256": "6fca630e5f439a1c4cbf13cdd9b2957b6156100befcfe54bb6a77f8d7d150a69"
       }
+    },
+    {
+      "id": "colorizedmanga",
+      "familyID": "colorizedmanga",
+      "name": "ColorizedManga (Aliclat)",
+      "version": "1.0.0",
+      "language": "en",
+      "contentType": "pageImages",
+      "contentRating": "suggestive",
+      "releaseTrack": "beta",
+      "status": "active",
+      "sortPriority": 90,
+      "manifest": {
+        "path": "modules/colorizedmanga/manifest.json",
+        "sha256": "644e35a05b849bd0b1c87eb255151821db7634fe0fbf480f7bf8262a78103907"
+      },
+      "icon": {
+        "path": "modules/colorizedmanga/icon.png",
+        "sha256": "dfde692ffd5a4cfc2c6450ff8b751e040177612b1e3c7488c3c3f1e468c48b30"
+      }
     }
   ],
   "repository": {

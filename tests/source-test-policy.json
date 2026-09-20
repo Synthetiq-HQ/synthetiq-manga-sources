@@ -119,6 +119,13 @@
   "onepiece-manga-online": {
    "chapterScope": "fixed-series-dom"
   },
+  "colorizedmanga": {
+   "chapterScope": "selected-series-dom",
+   "requiredCodeFragments": [
+    "function parseChapters(html, series)",
+    "series.slug"
+   ]
+  },
   "attack-on-titan": {
    "chapterScope": "fixed-series-dom"
   },
