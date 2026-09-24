@@ -1,17 +1,17 @@
 {
   "allowedHosts": [
-    "thekagurabachi.com",
-    "www.thekagurabachi.com",
-    "*.thekagurabachi.com"
+    "thekagurabachimanga.com",
+    "www.thekagurabachimanga.com",
+    "*.thekagurabachimanga.com"
   ],
   "attribution": {
     "author": "Synthetiq-HQ",
     "authorizationURL": null,
     "licenseName": null,
     "licenseURL": null,
-    "website": "https://thekagurabachi.com"
+    "website": "https://thekagurabachimanga.com"
   },
-  "baseURL": "https://thekagurabachi.com",
+  "baseURL": "https://thekagurabachimanga.com",
   "capabilities": [
     "popular",
     "latest",
@@ -27,7 +27,7 @@
   "contractVersion": 1,
   "entry": {
     "path": "modules/kagurabachi/index.js",
-    "sha256": "8963751fc047c16ad58b0e5574a50be8e94d39ae85b4cba9cd085668db85979b"
+    "sha256": "510e46b8847d80969477d346395733749a4fa640f841c4227335d61fff77c523"
   },
   "familyID": "kagurabachi",
   "icon": {
@@ -49,5 +49,5 @@
   "releaseTrack": "beta",
   "status": "active",
   "universalLink": "https://synthetiq.uk/manga/modules/kagurabachi",
-  "version": "1.0.3"
+  "version": "1.0.4"
 }

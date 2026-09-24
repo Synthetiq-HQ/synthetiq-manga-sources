@@ -189,12 +189,12 @@
       "language": "en",
       "manifest": {
         "path": "modules/kagurabachi/manifest.json",
-        "sha256": "de6793b4f8b5f65f1fb8613e25dfb6ddb1be2c35b6df68f7b06210bfdd6c5f17"
+        "sha256": "30bee7107d51bccb3650469376542414e9151ffe6f35878dfee54cb4b1f184b8"
       },
       "name": "Kagurabachi",
       "releaseTrack": "beta",
       "status": "active",
-      "version": "1.0.3"
+      "version": "1.0.4"
     },
     {
       "contentRating": "suggestive",
@@ -227,12 +227,12 @@
       "language": "en",
       "manifest": {
         "path": "modules/solo-leveling/manifest.json",
-        "sha256": "ca0c2aeb5cd1615c9773f5ff473fb7f4728b010f71beb838233a12e3d84f7a60"
+        "sha256": "97a025a6763d00e6cd002fe18af572ebf7e2cfd00e391cfbb84f0deecfcd4eb1"
       },
       "name": "Solo Leveling",
       "releaseTrack": "beta",
       "status": "active",
-      "version": "1.0.2"
+      "version": "1.0.3"
     },
     {
       "contentRating": "suggestive",

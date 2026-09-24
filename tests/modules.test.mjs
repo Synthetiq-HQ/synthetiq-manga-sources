@@ -1251,7 +1251,7 @@ for (const slug of singleSeriesModules) {
     const module = await loadModule(`modules/${slug}/index.js`, {
       fetchv2: async (url) => {
         assert.equal(typeof url, "string");
-        if (/\/manga\/.*chapter/i.test(url)) return response(fixtures.chapter);
+        if (/\/manga\/.*chapter/i.test(url) || /-chapter-\d/i.test(url)) return response(fixtures.chapter);
         return response(fixtures.home);
       },
     });

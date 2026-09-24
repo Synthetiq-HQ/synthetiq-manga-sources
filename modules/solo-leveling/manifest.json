@@ -1,17 +1,17 @@
 {
   "allowedHosts": [
-    "thesololevelingmanga.com",
-    "www.thesololevelingmanga.com",
-    "*.thesololevelingmanga.com"
+    "thesololevelingmanga.info",
+    "www.thesololevelingmanga.info",
+    "*.thesololevelingmanga.info"
   ],
   "attribution": {
     "author": "Synthetiq-HQ",
     "authorizationURL": null,
     "licenseName": null,
     "licenseURL": null,
-    "website": "https://thesololevelingmanga.com"
+    "website": "https://thesololevelingmanga.info"
   },
-  "baseURL": "https://thesololevelingmanga.com",
+  "baseURL": "https://thesololevelingmanga.info",
   "capabilities": [
     "popular",
     "latest",
@@ -27,7 +27,7 @@
   "contractVersion": 1,
   "entry": {
     "path": "modules/solo-leveling/index.js",
-    "sha256": "9aaeae9ff52c0b52797d22b6373c0ba5d8cf02dfd5349526d8be020aff5b1203"
+    "sha256": "e583de3cf2209e0971582dccd1ecde0c2e42a1db629edc75d022a96cfa1300bc"
   },
   "familyID": "solo-leveling",
   "icon": {
@@ -49,5 +49,5 @@
   "releaseTrack": "beta",
   "status": "active",
   "universalLink": "https://synthetiq.uk/manga/modules/solo-leveling",
-  "version": "1.0.2"
+  "version": "1.0.3"
 }

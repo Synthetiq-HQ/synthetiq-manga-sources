@@ -1,7 +1,7 @@
 "use strict";
 
 (() => {
-  const BASE_URL = "https://thekagurabachi.com";
+  const BASE_URL = "https://thekagurabachimanga.com";
   const SERIES_TITLE = "Kagurabachi";
   const SERIES_SLUG = "kagurabachi";
   const DEFAULT_HEADERS = {
@@ -109,11 +109,16 @@
   }
 
   function chapterNumber(href, title) {
-    const fromHref = String(href || "").match(/chapter[- ]([0-9]+(?:\.[0-9]+)?)/i)
-      || String(href || "").match(/ch[-_]?([0-9]+(?:\.[0-9]+)?)/i);
-    if (fromHref) return Number(fromHref[1]);
-    const fromTitle = String(title || "").match(/(?:chapter|ch\.?)[\s#:-]*([0-9]+(?:\.[0-9]+)?)/i);
-    return fromTitle ? Number(fromTitle[1]) : null;
+    // Bonus chapters use "-" as the decimal separator in this site's slugs
+    // (manga/kagurabachi-chapter-112-5/ is titled "Chapter 112.5").
+    const fromHref = String(href || "").match(/chapter[-_ ]?([0-9]+)(?:[-_.]([0-9]{1,2}))?/i)
+      || String(href || "").match(/ch[-_]?([0-9]+)(?:[-_.]([0-9]{1,2}))?/i);
+    if (fromHref) {
+      const whole = Number(fromHref[1]);
+      return fromHref[2] == null ? whole : Number(`${whole}.${fromHref[2]}`);
+    }
+    const fromTitle = String(title || "").match(/(?:chapter|ch\.?)[\s#:-]*([0-9]+(?:[.-][0-9]+)?)/i);
+    return fromTitle ? Number(String(fromTitle[1]).replace("-", ".")) : null;
   }
 
   function isChapterURL(url) {
@@ -156,9 +161,9 @@
   function parseCover(html, base) {
     // Prefer explicit social/card art, never page scans or multi-thousand-pixel chapter thumbs.
     const og = decodeEntities((html.match(/og:image" content="([^"]+)"/i) || [])[1] || "");
-    if (og.startsWith("https://") && !/logo|icon|sprite/i.test(og)) return og;
+    if (og.startsWith("https://") && !/logo|icon|sprite|banner|advert|sponsor|promo|survey/i.test(og)) return og;
     const twitter = decodeEntities((html.match(/twitter:image[^>]*content="([^"]+)"/i) || [])[1] || "");
-    if (twitter.startsWith("https://") && !/logo|icon|sprite/i.test(twitter)) return twitter;
+    if (twitter.startsWith("https://") && !/logo|icon|sprite|banner|advert|sponsor|promo|survey/i.test(twitter)) return twitter;
 
     const candidates = Array.from(
       html.matchAll(/(?:data-src|src)=["']?(https?:\/\/[^"'\s>]+\.(?:jpg|jpeg|png|webp|avif))/gi),
@@ -166,10 +171,10 @@
 
     const scored = candidates
       .filter((url) => url.startsWith("https://"))
-      .filter((url) => !/logo|icon|emoji|avatar|sprite|gravatar|adservice|favicon/i.test(url))
+      .filter((url) => !/logo|icon|emoji|avatar|sprite|gravatar|adservice|doubleclick|favicon|banner|advert|sponsor|promo|survey/i.test(url))
       // Skip chapter-page style assets and extreme WordPress derivatives.
       .filter((url) => !/chapter-\d|\/\d{2,4}-[a-z0-9-]+-chapter/i.test(url))
-      .filter((url) => !/-\d{3,4}x\d{3,4}\.(?:jpg|jpeg|png|webp|avif)$/i.test(url) || /cover/i.test(url))
+      .filter((url) => !/[_-]\d{2,4}x\d{2,5}(?:[_-][0-9a-z-]+)*\.(?:jpg|jpeg|png|webp|avif)(?:\?|$)/i.test(url) || /cover/i.test(url))
       .map((url) => {
         let score = 0;
         if (/cover/i.test(url)) score += 50;
@@ -218,11 +223,11 @@
         pageURL,
       );
       if (!url.startsWith("https://") || seen.has(url)) continue;
-      if (/logo|icon|emoji|avatar|sprite|gravatar|adservice|doubleclick/i.test(url)) continue;
+      if (/logo|icon|emoji|avatar|sprite|gravatar|adservice|doubleclick|banner|advert|sponsor|promo|survey/i.test(url)) continue;
       if (/data:image\//i.test(url)) continue;
       if (!/\.(?:jpg|jpeg|png|webp|avif|gif)(?:\?|$)/i.test(url) && !/\/uploads\//i.test(url)) continue;
       // Skip tiny WordPress thumbnails when a full-size sibling exists later.
-      if (/-\d{2,4}x\d{2,4}\.(?:jpg|jpeg|png|webp|avif)$/i.test(url)) continue;
+      if (/[_-]\d{2,4}x\d{2,5}(?:[_-][0-9a-z-]+)*\.(?:jpg|jpeg|png|webp|avif)(?:\?|$)/i.test(url)) continue;
       pages.push({
         url,
         headers: {

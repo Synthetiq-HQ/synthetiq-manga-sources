@@ -1,7 +1,7 @@
 "use strict";
 
 (() => {
-  const BASE_URL = "https://thesololevelingmanga.com";
+  const BASE_URL = "https://thesololevelingmanga.info";
   const SERIES_TITLE = "Solo Leveling";
   const SERIES_SLUG = "solo-leveling";
   const DEFAULT_HEADERS = {
@@ -10,6 +10,7 @@
   };
   const RETRYABLE_STATUS = new Set([403, 408, 425, 429, 500, 502, 503, 504]);
   const MAX_ATTEMPTS = 3;
+  const MAX_CHAPTER_PAGES = 10;
   const HOME_CACHE_TTL = 60_000;
   let homeCache = { at: 0, value: null };
 
@@ -118,10 +119,11 @@
 
   function isChapterURL(url) {
     const value = String(url || "").toLowerCase().split("#")[0];
-    if (!value.includes("/manga/")) return false;
     if (!/(?:chapter|ch)[-_ ]?\d/i.test(value)) return false;
-    if (/\/(?:tag|genre|author|page|wp-content|login|register)\//i.test(value)) return false;
-    return true;
+    if (/\/(?:tag|genre|author|page|wp-content|login|register|feed|comment)\//i.test(value)) return false;
+    // The successor site dropped the "/manga/" prefix and serves bare
+    // "<slug>-chapter-<n>" slugs; the old prefixed shape still passes too.
+    return new RegExp(`/${SERIES_SLUG}-chapter-\\d`, "i").test(value);
   }
 
   function parseChaptersHTML(html, base) {
@@ -153,12 +155,29 @@
     return chapters;
   }
 
+  function chapterPageURL(html, base, state) {
+    // The successor site pages its chapter grid through WordPress query-loop
+    // links ("?query-N-page=M"). Follow the next page number one hop at a
+    // time, keeping the query-block parameter stable across hops.
+    const pattern = /href=["']([^"']*query-(\d+)-page=(\d+)[^"']*)["']/gi;
+    let best = null;
+    for (const match of String(html || "").matchAll(pattern)) {
+      const page = Number(match[3]);
+      if (state.param && match[2] !== state.param) continue;
+      if (!(page > state.page)) continue;
+      if (!best || page < best.page) {
+        best = { url: absoluteURL(decodeEntities(match[1]), base), page, param: match[2] };
+      }
+    }
+    return best;
+  }
+
   function parseCover(html, base) {
     // Prefer explicit social/card art, never page scans or multi-thousand-pixel chapter thumbs.
     const og = decodeEntities((html.match(/og:image" content="([^"]+)"/i) || [])[1] || "");
-    if (og.startsWith("https://") && !/logo|icon|sprite/i.test(og)) return og;
+    if (og.startsWith("https://") && !/logo|icon|sprite|banner|advert|sponsor|promo|survey/i.test(og)) return og;
     const twitter = decodeEntities((html.match(/twitter:image[^>]*content="([^"]+)"/i) || [])[1] || "");
-    if (twitter.startsWith("https://") && !/logo|icon|sprite/i.test(twitter)) return twitter;
+    if (twitter.startsWith("https://") && !/logo|icon|sprite|banner|advert|sponsor|promo|survey/i.test(twitter)) return twitter;
 
     const candidates = Array.from(
       html.matchAll(/(?:data-src|src)=["']?(https?:\/\/[^"'\s>]+\.(?:jpg|jpeg|png|webp|avif))/gi),
@@ -166,10 +185,10 @@
 
     const scored = candidates
       .filter((url) => url.startsWith("https://"))
-      .filter((url) => !/logo|icon|emoji|avatar|sprite|gravatar|adservice|favicon/i.test(url))
+      .filter((url) => !/logo|icon|emoji|avatar|sprite|gravatar|adservice|doubleclick|favicon|banner|advert|sponsor|promo|survey/i.test(url))
       // Skip chapter-page style assets and extreme WordPress derivatives.
       .filter((url) => !/chapter-\d|\/\d{2,4}-[a-z0-9-]+-chapter/i.test(url))
-      .filter((url) => !/-\d{3,4}x\d{3,4}\.(?:jpg|jpeg|png|webp|avif)$/i.test(url) || /cover/i.test(url))
+      .filter((url) => !/[_-]\d{2,4}x\d{2,5}(?:[_-][0-9a-z-]+)*\.(?:jpg|jpeg|png|webp|avif)(?:\?|$)/i.test(url) || /cover/i.test(url))
       .map((url) => {
         let score = 0;
         if (/cover/i.test(url)) score += 50;
@@ -212,11 +231,11 @@
         pageURL,
       );
       if (!url.startsWith("https://") || seen.has(url)) continue;
-      if (/logo|icon|emoji|avatar|sprite|gravatar|adservice|doubleclick/i.test(url)) continue;
+      if (/logo|icon|emoji|avatar|sprite|gravatar|adservice|doubleclick|banner|advert|sponsor|promo|survey/i.test(url)) continue;
       if (/data:image\//i.test(url)) continue;
       if (!/\.(?:jpg|jpeg|png|webp|avif|gif)(?:\?|$)/i.test(url) && !/\/uploads\//i.test(url)) continue;
       // Skip tiny WordPress thumbnails when a full-size sibling exists later.
-      if (/-\d{2,4}x\d{2,4}\.(?:jpg|jpeg|png|webp|avif)$/i.test(url)) continue;
+      if (/[_-]\d{2,4}x\d{2,5}(?:[_-][0-9a-z-]+)*\.(?:jpg|jpeg|png|webp|avif)(?:\?|$)/i.test(url)) continue;
       pages.push({
         url,
         headers: {
@@ -295,17 +314,52 @@
   }
 
   async function extractChapters(id) {
+    let home = null;
     let chapters = [];
     // A burst-rate-limited or interstitial homepage can parse to zero links;
     // re-fetch fresh copies before declaring the series empty.
     for (let attempt = 1; attempt <= MAX_ATTEMPTS && !chapters.length; attempt += 1) {
       if (attempt > 1) await sleep(1200 * (attempt - 1));
-      const home = await loadHome(attempt > 1);
+      home = await loadHome(attempt > 1);
       chapters = parseChaptersHTML(home.body, home.finalUrl || BASE_URL);
     }
     if (!chapters.length) {
       throw new Error(`${SERIES_TITLE} homepage returned no chapter links.`);
     }
+
+    // The homepage only lists the newest slice of chapters; older entries
+    // live on the site's query-loop pages ("?query-N-page=M"). Walk that
+    // chain so the list stays complete, bounded and deduplicated.
+    const seen = new Set(chapters.map((chapter) => chapter.id));
+    const state = { page: 1, param: null };
+    const visited = new Set();
+    let next = chapterPageURL(home.body, home.finalUrl || BASE_URL, state);
+    for (let step = 0; next && step < MAX_CHAPTER_PAGES && !visited.has(next.url); step += 1) {
+      visited.add(next.url);
+      state.page = next.page;
+      state.param = next.param;
+      let payload = null;
+      try {
+        payload = await fetchDirect(next.url, { maxBytesHint: 4 * 1024 * 1024 });
+      } catch (error) {
+        break;
+      }
+      let added = 0;
+      for (const chapter of parseChaptersHTML(payload.body, payload.finalUrl || next.url)) {
+        if (seen.has(chapter.id)) continue;
+        seen.add(chapter.id);
+        chapters.push(chapter);
+        added += 1;
+      }
+      if (!added) break;
+      next = chapterPageURL(payload.body, payload.finalUrl || next.url, state);
+    }
+
+    chapters.sort((left, right) => {
+      const a = left.number == null ? -1 : left.number;
+      const b = right.number == null ? -1 : right.number;
+      return b - a;
+    });
     return chapters;
   }
 

@@ -29,9 +29,9 @@ Health below combines **fixture unit tests** (`npm test`), **live smoke** (`npm 
 | 5 | `mangakatana` | `mangakatana` | hub | beta | mangakatana.com | page images | Branded initials (MK) |
 | 6 | `mgread` | `mgread` | hub | beta | mgread.io | page images | Site favicon |
 | 7 | `black-clover` | `black-clover` | single-series | beta | blackcloveronline.com | page images | Branded initials (BC) |
-| 8 | `kagurabachi` | `kagurabachi` | single-series | beta | thekagurabachi.com | page images | Branded initials (KB) |
+| 8 | `kagurabachi` | `kagurabachi` | single-series | beta | thekagurabachimanga.com | page images | Branded initials (KB) |
 | 9 | `beginning-after-the-end` | `beginning-after-the-end` | single-series | beta | thebeginningaftertheendmanga.com | page images | Branded initials (BT) |
-| 10 | `solo-leveling` | `solo-leveling` | single-series | beta | thesololevelingmanga.com | page images | Branded initials (SL) |
+| 10 | `solo-leveling` | `solo-leveling` | single-series | beta | thesololevelingmanga.info | page images | Branded initials (SL) |
 | 11 | `gachiakuta` | `gachiakuta` | single-series | beta, retired | gachiakuta.com.lv | preview only | Branded initials (GA) |
 | 12 | `haikyuu` | `haikyuu` | single-series | beta | read-haikyuu.com | page images | Branded initials (HQ) |
 
