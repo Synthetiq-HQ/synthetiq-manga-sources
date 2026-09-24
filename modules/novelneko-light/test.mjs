@@ -37,6 +37,8 @@ const pages = {
   missing: await fixture("missing.html"),
   restricted: await fixture("restricted.html"),
   "volume-missing": await fixture("volume-missing.html"),
+  herostome: await fixture("herostome.html"),
+  outside: await fixture("outside.html"),
 };
 
 function bridge(url, headers, method, body, options) {
@@ -45,7 +47,7 @@ function bridge(url, headers, method, body, options) {
   assert.equal(headers.Referer, "https://novelneko.fr/lightnovels/");
   assert.equal(options.followRedirects, true);
   if (url.endsWith("/lightnovel.json")) return response(catalog, "application/json");
-  const match = url.match(/\/lightnovels\/(safe|unsafe|missing|restricted|volume-missing)\/$/);
+  const match = url.match(/\/lightnovels\/(safe|unsafe|missing|restricted|volume-missing|herostome|outside)\/$/);
   if (match) return response(pages[match[1]]);
   throw new Error(`Unexpected URL: ${url}`);
 }
@@ -85,6 +87,11 @@ await assert.rejects(() => module.extractDetails("https://novelneko.fr/lightnove
 await assert.rejects(() => module.extractDetails("https://novelneko.fr/lightnovels/missing/"), /safety metadata is missing/i);
 await assert.rejects(() => module.extractDetails("https://novelneko.fr/lightnovels/restricted/"), /no public PDF volumes/i);
 await assert.rejects(() => module.extractDetails("https://novelneko.fr/lightnovels/volume-missing/"), /no public PDF volumes/i);
+
+const subdirDetails = await module.extractDetails("https://novelneko.fr/lightnovels/herostome/");
+assert.deepEqual(plain(subdirDetails.volumes.map((volume) => volume.number)), [1, 1.5, 2]);
+assert.ok(subdirDetails.volumes.every((volume) => volume.url.startsWith("https://novelneko.fr/lightnovels/herostome/herostome/")));
+await assert.rejects(() => module.extractDetails("https://novelneko.fr/lightnovels/outside/"), /outside its light-novel series directory/i);
 await assert.rejects(() => module.extractDetails("https://example.invalid/lightnovels/safe/"), /out-of-scope|invalid/i);
 
 const manifest = JSON.parse(await readFile(path.join(root, "manifest.json"), "utf8"));

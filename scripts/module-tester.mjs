@@ -230,6 +230,17 @@ function looksLikeImage(response) {
   ].some((prefix) => magic.startsWith(prefix));
 }
 
+function looksLikeAudio(response) {
+  const contentType = String(response.contentType || "").toLowerCase();
+  if (contentType.startsWith("audio/")) return true;
+  const magic = String(response.bodyMagicHex || "").toLowerCase();
+  return [
+    "494433", // ID3-tagged MP3
+    "fffb", "fff3", "fff2", "ffe3", // MPEG audio frame sync
+    "4f676753", // OggS
+  ].some((prefix) => magic.startsWith(prefix));
+}
+
 function fixtureResponse(body, status = 200, finalUrl = "https://fixture.invalid/") {
   return {
     status,
@@ -411,6 +422,12 @@ if (slug === "novelfire") {
           if (/\/chapter\//i.test(u) && chapter) return fixtureResponse(chapter, 200, u);
           if (details) return fixtureResponse(details, 200, u);
         }
+        if (slug === "librivox") {
+          // LibriVox fetchBook hits api/feed/audiobooks/?...&id=<n>; the
+          // catalogue/search calls use limit/offset/title instead.
+          if (/[?&]id=\d+/.test(u) && details) return fixtureResponse(details);
+          if (search) return fixtureResponse(search);
+        }
         // WeebCentral uses /series/<id> for details and
         // /series/<id>/full-chapter-list for chapters. Resolve the more
         // specific chapter route first so the generic fixture runner exercises
@@ -541,6 +558,7 @@ function pickTerminal(module) {
   if (typeof module.extractImages === "function") return "images";
   if (typeof module.extractText === "function") return "text";
   if (typeof module.extractResources === "function") return "resources";
+  if (typeof module.extractAudio === "function") return "audio";
   return null;
 }
 
@@ -825,6 +843,58 @@ async function testModule(slug, mode, indexEntry) {
             count: resources.length,
             formats: resources.map((r) => r.format || r.type).filter(Boolean),
             title: d.title || d.name,
+          };
+        } else if (terminal === "audio") {
+          const trackChapter = itemChapters[0];
+          const aResult = await timed(() => module.extractAudio(trackChapter.id || trackChapter.href || trackChapter.url));
+          terminalMs += aResult.durationMs;
+          if (!aResult.ok) throw new Error(aResult.error);
+          const audio = aResult.value;
+          const tracks = Array.isArray(audio)
+            ? audio
+            : (audio && (audio.tracks || audio.resources || audio.items)) || [];
+          assert.ok(tracks.length > 0, "no playable audio tracks");
+          const firstTrack = tracks[0];
+          const trackURL = typeof firstTrack === "string" ? firstTrack : firstTrack && firstTrack.url;
+          assert.ok(trackURL && String(trackURL).startsWith("https://"), "audio track URL must be HTTPS");
+
+          let deliveries = [];
+          if (mode === "live") {
+            const parsedTrackURL = new URL(trackURL);
+            assert.ok(
+              isAllowedHost(parsedTrackURL.hostname, manifest.allowedHosts),
+              `audio host is not declared by manifest: ${parsedTrackURL.hostname}`
+            );
+            const audioResult = await timed(() => networkResponse(
+              trackURL,
+              { ...(firstTrack && firstTrack.headers || {}), Range: "bytes=0-2047" },
+              "GET",
+              null,
+              { timeoutMilliseconds: manifest.limits?.timeoutMilliseconds, maxBytesHint: manifest.limits?.maxResponseBytes }
+            ));
+            if (!audioResult.ok) throw new Error(audioResult.error);
+            const track = audioResult.value;
+            assert.ok(track.ok, `audio track returned HTTP ${track.status}`);
+            assert.ok(track.status === 200 || track.status === 206, `audio track returned unexpected HTTP ${track.status}`);
+            assert.ok(track.bodyBytes > 0, "audio track response was empty");
+            assert.ok(looksLikeAudio(track), `audio track did not look like audio (${track.contentType || "unknown content type"})`);
+            deliveries = [{
+              ok: true,
+              status: track.status,
+              contentType: track.contentType || null,
+              bytes: track.bodyBytes,
+              host: parsedTrackURL.hostname,
+            }];
+          }
+
+          terminalReport = {
+            kind: "audio",
+            ok: true,
+            durationMs: aResult.durationMs,
+            count: tracks.length,
+            first: String(trackURL).slice(0, 140),
+            title: d.title || d.name,
+            deliveries,
           };
         } else {
           throw new Error("Module has no terminal content handler");

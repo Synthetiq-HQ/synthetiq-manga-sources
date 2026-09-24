@@ -16,6 +16,7 @@
   };
   const RETRYABLE_STATUS = new Set([408, 425, 429, 500, 502, 503, 504]);
   const REQUIRED_ENTRY_TYPE = "web novel";
+  const ALTERNATE_ENTRY_TYPE = "light novel";
   const UNSAFE_MARKERS = [
     "adult",
     "adulte",
@@ -112,8 +113,9 @@
     return RESTRICTED_CHAPTER_TEXT_RE.test(normalizeSafety(value));
   }
 
-  function isWebNovelType(value) {
-    return normalizeSafety(value) === REQUIRED_ENTRY_TYPE;
+  function isSupportedEntryType(value) {
+    const normalized = normalizeSafety(value);
+    return normalized === REQUIRED_ENTRY_TYPE || normalized === ALTERNATE_ENTRY_TYPE;
   }
 
   function ensureAllowedURL(value, base = WEBNOVEL_BASE_URL) {
@@ -257,7 +259,7 @@
         const title = decodeEntities(String(entry.title || "")).trim();
         if (!title) return [];
         const declaredType = decodeEntities(String(entry.type || "")).trim();
-        if (declaredType && !isWebNovelType(declaredType)) return [];
+        if (declaredType && !isSupportedEntryType(declaredType)) return [];
         if (hasUnsafeMarker([title, entry.subtitle, declaredType])) return [];
         seen.add(slug);
         return [{
@@ -285,8 +287,13 @@
   }
 
   function labelledValue(html, label) {
-    const pattern = new RegExp(`<div\\b[^>]*>\\s*<strong\\b[^>]*>\\s*${label}\\s*:?\\s*<\\/strong>\\s*([\\s\\S]*?)<\\/div>`, "i");
-    return stripHTML(String(html || "").match(pattern)?.[1] || "");
+    const labels = Array.isArray(label) ? label : [label];
+    for (const candidate of labels) {
+      const pattern = new RegExp(`<div\\b[^>]*>\\s*<strong\\b[^>]*>\\s*${candidate}\\s*:?\\s*<\\/strong>\\s*([\\s\\S]*?)<\\/div>`, "i");
+      const value = stripHTML(String(html || "").match(pattern)?.[1] || "");
+      if (value) return value;
+    }
+    return "";
   }
 
   function parseGenres(html) {
@@ -303,7 +310,7 @@
     if (!title || !genres.length) throw new Error("NovelNeko safety metadata is missing; title rejected.");
     const author = labelledValue(source, "Auteur");
     const translator = labelledValue(source, "Traducteur");
-    const status = labelledValue(source, "Statut");
+    const status = labelledValue(source, ["Statut", "Status"]);
     const type = labelledValue(source, "Type");
     const publicationDate = labelledValue(source, "Date de parution");
     const synopsis = stripHTML(source.match(/<div\b[^>]*class=(['"])[^'"]*\bsynopsis-box\b[^'"]*\1[^>]*>([\s\S]*?)<\/div>/i)?.[2])
@@ -323,8 +330,8 @@
     ])) {
       throw new Error("NovelNeko title is unavailable under the strict safety filter: adult, paid, premium, or locked metadata.");
     }
-    if (!isWebNovelType(type)) {
-      throw new Error("NovelNeko entry type is not Web Novel; Light Novel entries are not supported.");
+    if (type && !isSupportedEntryType(type)) {
+      throw new Error("NovelNeko entry type is not a supported novel format.");
     }
     const countText = stripHTML(source.match(/<div\b[^>]*class=(['"])[^'"]*\bchapter-count\b[^'"]*\1[^>]*>([\s\S]*?)<\/div>/i)?.[2]);
     const chapterCount = Number((countText.match(/\d[\d\s.,]*/)?.[0] || "").replace(/[\s.,]/g, ""));
@@ -343,13 +350,13 @@
       author,
       translator,
       status,
-      type,
+      type: type || "Web Novel",
       publicationDate,
       genres,
       chapterCount,
       language: "fr",
     };
-    if (!item.author || !item.status || !item.type || !item.description) {
+    if (!item.author || !item.description) {
       throw new Error("NovelNeko detail metadata is incomplete; title rejected.");
     }
     return item;

@@ -707,7 +707,7 @@
       "id": "novelneko-web",
       "familyID": "novelneko-web",
       "name": "NovelNeko Web-Novels",
-      "version": "0.1.1",
+      "version": "0.1.2",
       "language": "fr",
       "contentType": "text",
       "contentRating": "unknown",
@@ -716,7 +716,7 @@
       "sortPriority": 99,
       "manifest": {
         "path": "modules/novelneko-web/manifest.json",
-        "sha256": "e33e879bcc44e7502d6650a3b67d61b8feea36220a781e710cd898ecfeded36d"
+        "sha256": "b54888c73fd3054ea29353b39265c0c9918a4bfa932e0fc87a9ae546e8097f5a"
       },
       "icon": {
         "path": "modules/novelneko-web/icon.png",
@@ -727,7 +727,7 @@
       "id": "novelneko-light",
       "familyID": "novelneko-light",
       "name": "NovelNeko Light-Novels",
-      "version": "0.1.1",
+      "version": "0.1.2",
       "language": "fr",
       "contentType": "publication",
       "contentRating": "unknown",
@@ -736,7 +736,7 @@
       "sortPriority": 100,
       "manifest": {
         "path": "modules/novelneko-light/manifest.json",
-        "sha256": "7be507bd507c5601a14ca8efb8d2961e626815559160108d73ee11d39ea91d8f"
+        "sha256": "0a1cf15a18a315428bbdfc698b077e536f45b957e86ffe549c1998a1612bd5a6"
       },
       "icon": {
         "path": "modules/novelneko-light/icon.png",

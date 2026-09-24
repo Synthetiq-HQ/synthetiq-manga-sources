@@ -278,9 +278,9 @@
       if (!/\.pdf(?:$|[?#])/i.test(href)) continue;
       const parsed = safeURL(new URL(href, series).toString(), "PDF volume URL");
       const pathname = parsed.pathname;
-      const seriesPath = new URL(series).pathname;
-      if (!pathname.startsWith(`${seriesPath}volumes/`) || !/\.pdf$/i.test(pathname)) {
-        throw new Error("NovelNeko returned a PDF outside its light-novel volume directory.");
+      const seriesPath = new URL(series).pathname.replace(/\/?$/, "/");
+      if (!pathname.startsWith(seriesPath) || !/\.pdf$/i.test(pathname)) {
+        throw new Error("NovelNeko returned a PDF outside its light-novel series directory.");
       }
       const url = parsed.toString();
       if (seen.has(url)) continue;

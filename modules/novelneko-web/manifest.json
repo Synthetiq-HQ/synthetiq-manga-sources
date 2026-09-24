@@ -19,7 +19,7 @@
   "contractVersion": 1,
   "entry": {
     "path": "modules/novelneko-web/index.js",
-    "sha256": "f198ff6f262ba423134bd2cfc07278cddb0ce1329c5d9171b5991ac54cd2c92a"
+    "sha256": "0685507d08230293d023a880bdb426e88b2bc57f76dd22245a29794e059d1cb9"
   },
   "familyID": "novelneko-web",
   "icon": {
@@ -41,5 +41,5 @@
   "releaseTrack": "beta",
   "status": "active",
   "universalLink": "https://novelneko.fr/webnovels/",
-  "version": "0.1.1"
+  "version": "0.1.2"
 }

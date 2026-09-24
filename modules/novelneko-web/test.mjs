@@ -107,7 +107,7 @@ test("NovelNeko Web-Novels rejects off-host and malformed chapter identifiers", 
   );
 });
 
-test("NovelNeko Web-Novels rejects restricted metadata, wrong content types, and unsafe chapter text", async () => {
+test("NovelNeko Web-Novels handles restricted metadata, supported type variants, and unsafe chapter text", async () => {
   const fixtures = {
     catalog: await fixture("webnovel.json"),
     safe: await fixture("details-safe.html"),
@@ -115,6 +115,9 @@ test("NovelNeko Web-Novels rejects restricted metadata, wrong content types, and
     locked: await fixture("details-locked.html"),
     synopsisAdult: await fixture("details-synopsis-adult.html"),
     lightNovel: await fixture("details-light-novel.html"),
+    statusEnglish: await fixture("details-status-en.html"),
+    noType: await fixture("details-no-type.html"),
+    unsupportedType: await fixture("details-unsupported-type.html"),
     lecture: await fixture("lecture.html"),
     chapterPaid: await fixture("chapter-paid.txt"),
     chapterLocked: await fixture("chapter-locked.txt"),
@@ -125,6 +128,9 @@ test("NovelNeko Web-Novels rejects restricted metadata, wrong content types, and
     if (url.includes("fixture-locked/")) return response(fixtures.locked);
     if (url.includes("fixture-synopsis-adult/")) return response(fixtures.synopsisAdult);
     if (url.includes("fixture-light-novel/")) return response(fixtures.lightNovel);
+    if (url.includes("fixture-status-en/")) return response(fixtures.statusEnglish);
+    if (url.includes("fixture-no-type/")) return response(fixtures.noType);
+    if (url.includes("fixture-unsupported-type/")) return response(fixtures.unsupportedType);
     if (url.includes("fixture-text-paid/lecture.html")) return response(fixtures.lecture);
     if (url.includes("fixture-text-paid/chapters/chapitre_001")) return response(fixtures.chapterPaid, "text/plain");
     if (url.includes("fixture-text-locked/lecture.html")) return response(fixtures.lecture);
@@ -136,7 +142,13 @@ test("NovelNeko Web-Novels rejects restricted metadata, wrong content types, and
   await assert.rejects(() => module.extractDetails("https://novelneko.fr/webnovels/fixture-paid/"), /strict safety filter/i);
   await assert.rejects(() => module.extractDetails("https://novelneko.fr/webnovels/fixture-locked/"), /strict safety filter/i);
   await assert.rejects(() => module.extractDetails("https://novelneko.fr/webnovels/fixture-synopsis-adult/"), /strict safety filter/i);
-  await assert.rejects(() => module.extractDetails("https://novelneko.fr/webnovels/fixture-light-novel/"), /not Web Novel/i);
+  const lightNovelDetails = await module.extractDetails("https://novelneko.fr/webnovels/fixture-light-novel/");
+  assert.equal(lightNovelDetails.type, "Light Novel");
+  const statusEnglishDetails = await module.extractDetails("https://novelneko.fr/webnovels/fixture-status-en/");
+  assert.equal(statusEnglishDetails.status, "Terminé");
+  const noTypeDetails = await module.extractDetails("https://novelneko.fr/webnovels/fixture-no-type/");
+  assert.equal(noTypeDetails.type, "Web Novel");
+  await assert.rejects(() => module.extractDetails("https://novelneko.fr/webnovels/fixture-unsupported-type/"), /not a supported novel format/i);
   await assert.rejects(
     () => module.extractText("https://novelneko.fr/webnovels/fixture-text-paid/lecture.html?chapitre=1"),
     /strict safety filter|HTML instead of chapter text|paid, locked/i,
