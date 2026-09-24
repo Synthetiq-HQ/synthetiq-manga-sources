@@ -20,7 +20,11 @@
     "image": "https://onepiece-manga-online.net/fixture/one-piece-cover.jpg",
     "description": "Fixture listing for the One Piece source.",
     "status": "Ongoing",
-    "genres": ["Action", "Adventure", "Fantasy"]
+    "genres": [
+      "Action",
+      "Adventure",
+      "Fantasy"
+    ]
   },
   "chapters": [
     {
@@ -73,6 +77,13 @@
     },
     {
       "url": "https://cdn.mangagoa.xyz/fixture/one-piece-1000-003.jpg",
+      "headers": {
+        "Accept": "image/avif,image/webp,image/*,*/*",
+        "Referer": "https://w76.onepiece-manga-online.net/"
+      }
+    },
+    {
+      "url": "https://cdn.mangagoa.xyz/fixture/one-piece-1000-004.jpg",
       "headers": {
         "Accept": "image/avif,image/webp,image/*,*/*",
         "Referer": "https://w76.onepiece-manga-online.net/"

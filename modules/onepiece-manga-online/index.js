@@ -109,8 +109,9 @@
     if (typeof globalThis.fetchv2 !== "function") {
       throw new Error(`${SERIES_TITLE} requires the fetchv2 bridge.`);
     }
+    const maxAttempts = Math.max(1, Number(options.attempts) || MAX_ATTEMPTS);
     let lastError = null;
-    for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt += 1) {
+    for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
       if (attempt > 1) await sleep(1000 * attempt);
       try {
         const response = await globalThis.fetchv2(
@@ -267,7 +268,7 @@
       chapters = parseChapterList(home.body, home.finalUrl || BASE_URL);
     }
     if (!chapters.length) throw new Error(`${SERIES_TITLE} returned no owned chapter links.`);
-    return chapters;
+    return trimNotAvailableHead(chapters);
   }
 
   function parseImages(html, pageURL) {
@@ -276,7 +277,7 @@
     for (const match of String(html || "").matchAll(/<img\b[^>]*>/gi)) {
       const tag = match[0];
       const classes = attribute(tag, "class");
-      if (!/(^|\s)manga-image(?:\s|$)/i.test(classes)) continue;
+      if (!/(^|\s)(?:manga-image|wp-manga-chapter-img)(?:\s|$)/i.test(classes)) continue;
       const url = imageURL(
         attribute(tag, "src")
           || attribute(tag, "data-src")
@@ -295,6 +296,32 @@
       seen.add(url);
     }
     return pages;
+  }
+
+  async function probeChapterImages(url) {
+    // Single-attempt probe for edge trimming; a failed probe returns null and
+    // callers keep the chapter (fail-open) so transient errors never hide it.
+    try {
+      const page = await fetchHTML(url, { attempts: 1 });
+      return parseImages(page.body, page.finalUrl || url);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  async function trimNotAvailableHead(chapters) {
+    // The source pre-lists the upcoming release behind a "COMING SOON" gate
+    // page with no reader images. Hide such entries until they are readable,
+    // bounded, and never trim below a single chapter.
+    const MAX_EDGE_PROBES = 2;
+    let trimmed = chapters;
+    for (let probe = 0; probe < MAX_EDGE_PROBES && trimmed.length > 1; probe += 1) {
+      const head = trimmed[0];
+      const images = await probeChapterImages(head.id);
+      if (images === null || images.length) break;
+      trimmed = trimmed.slice(1);
+    }
+    return trimmed;
   }
 
   async function extractImages(id) {

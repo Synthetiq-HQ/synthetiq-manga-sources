@@ -62,8 +62,9 @@
     if (typeof globalThis.fetchv2 !== "function") {
       throw new Error(`${SERIES_TITLE} requires the fetchv2 bridge.`);
     }
+    const maxAttempts = Math.max(1, Number(options.attempts) || MAX_ATTEMPTS);
     let lastError = null;
-    for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt += 1) {
+    for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
       if (attempt > 1) await sleep(1200 * (attempt - 1));
       let response = null;
       try {
@@ -109,16 +110,23 @@
   }
 
   function chapterNumber(href, title) {
-    const fromHref = String(href || "").match(/chapter[- ]([0-9]+(?:\.[0-9]+)?)/i)
-      || String(href || "").match(/ch[-_]?([0-9]+(?:\.[0-9]+)?)/i);
-    if (fromHref) return Number(fromHref[1]);
-    const fromTitle = String(title || "").match(/(?:chapter|ch\.?)[\s#:-]*([0-9]+(?:\.[0-9]+)?)/i);
-    return fromTitle ? Number(fromTitle[1]) : null;
+    const fromHref = String(href || "").match(/chapter[-_ ]([0-9]+(?:[.-][0-9]+)?)/i)
+      || String(href || "").match(/ch[-_]?([0-9]+(?:[.-][0-9]+)?)/i);
+    if (fromHref) {
+      const value = Number(fromHref[1].replace(/([0-9])[-.]([0-9])/, "$1.$2"));
+      if (Number.isFinite(value)) return value;
+    }
+    const fromTitle = String(title || "").match(/(?:chapter|ch\.?)[\s#:-]*([0-9]+(?:[.-][0-9]+)?)/i);
+    if (fromTitle) {
+      const value = Number(fromTitle[1].replace(/([0-9])[-.]([0-9])/, "$1.$2"));
+      if (Number.isFinite(value)) return value;
+    }
+    return null;
   }
 
   function isChapterURL(url) {
     const value = String(url || "").toLowerCase().split("#")[0];
-    if (!value.includes("/manga/")) return false;
+    if (!/\/(?:manga|uncategorized)\//.test(value)) return false;
     if (!/(?:chapter|ch)[-_ ]?\d/i.test(value)) return false;
     if (/\/(?:tag|genre|author|page|wp-content|login|register)\//i.test(value)) return false;
     return true;
@@ -294,6 +302,32 @@
     };
   }
 
+  async function probeChapterImages(url) {
+    // Single-attempt probe for edge trimming; a failed probe returns null and
+    // callers keep the chapter (fail-open) so transient errors never hide it.
+    try {
+      const page = await fetchDirect(url, { attempts: 1, maxBytesHint: 4 * 1024 * 1024 });
+      return parseImagesHTML(page.body, page.finalUrl || url);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  async function trimUnreadableTail(chapters) {
+    // The source can leave the oldest release as a placeholder page with no
+    // reader images (observed on chapter 1). Drop such unreadable tail entries,
+    // bounded, and never trim below a single chapter.
+    const MAX_EDGE_PROBES = 3;
+    let trimmed = chapters;
+    for (let probe = 0; probe < MAX_EDGE_PROBES && trimmed.length > 1; probe += 1) {
+      const tail = trimmed[trimmed.length - 1];
+      const images = await probeChapterImages(tail.url);
+      if (images === null || images.length) break;
+      trimmed = trimmed.slice(0, -1);
+    }
+    return trimmed;
+  }
+
   async function extractChapters(id) {
     let chapters = [];
     // A burst-rate-limited or interstitial homepage can parse to zero links;
@@ -306,7 +340,7 @@
     if (!chapters.length) {
       throw new Error(`${SERIES_TITLE} homepage returned no chapter links.`);
     }
-    return chapters;
+    return trimUnreadableTail(chapters);
   }
 
   async function extractImages(id) {

@@ -964,6 +964,18 @@ test("One Piece preserves decimal chapters, excludes unrelated links, and reject
     /returned no owned chapter links/i,
   );
 
+  const gateTopModule = await loadModule("modules/onepiece-manga-online/index.js", {
+    fetchv2: async (url) => {
+      if (url.includes("one-piece-chapter-1192/")) return response(fixtures.emptyChapter);
+      if (/\/manga\//i.test(url)) return response(fixtures.chapter);
+      return response(fixtures.home);
+    },
+  });
+  const trimmedChapters = await gateTopModule.extractChapters(fixtures.expected.details.id);
+  assert.equal(trimmedChapters.some((chapter) => chapter.number === 1192), false);
+  assert.equal(trimmedChapters[0].number, 1054.5);
+  assert.equal(trimmedChapters.length, 3);
+
   const challengeModule = await loadModule("modules/onepiece-manga-online/index.js", {
     fetchv2: async () => response(fixtures.challenge),
   });
@@ -1272,6 +1284,30 @@ for (const slug of singleSeriesModules) {
     assert.deepEqual(JSON.parse(JSON.stringify(pages)), fixtures.expected.images);
   });
 }
+
+test("The Beginning After The End parses alternate slug shapes and trims unreadable chapters", async () => {
+  const fixtures = {
+    home: await text("modules/beginning-after-the-end/fixtures/home.html"),
+    chapter: await text("modules/beginning-after-the-end/fixtures/chapter.html"),
+    empty: await text("modules/beginning-after-the-end/fixtures/chapter-empty.html"),
+    expected: await json("modules/beginning-after-the-end/fixtures/expected.json"),
+  };
+  const module = await loadModule("modules/beginning-after-the-end/index.js", {
+    fetchv2: async (url) => {
+      assert.equal(typeof url, "string");
+      if (/beginning-after-the-end-chapter-1\/$/i.test(url)) return response(fixtures.empty);
+      if (/-chapter-\d/i.test(url)) return response(fixtures.chapter);
+      return response(fixtures.home);
+    },
+  });
+
+  const chapters = await module.extractChapters(fixtures.expected.details.id);
+  assert.equal(chapters.length, 4);
+  assert.equal(chapters.some((chapter) => chapter.number === 1), false, "unreadable chapter 1 is trimmed from the tail");
+  assert.equal(chapters[chapters.length - 1].number, 2);
+  assert.ok(chapters[0].id.includes("/uncategorized/"), "uncategorized chapter links are accepted");
+  assert.ok(chapters.some((chapter) => chapter.number === 2.5), "dash-decimal chapter slugs parse as decimals");
+});
 
 test("NovelFire parses search, details, complete chapters, and chapter text", async () => {
   const fixtures = {

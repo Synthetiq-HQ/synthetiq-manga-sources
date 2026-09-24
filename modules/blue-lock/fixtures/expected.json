@@ -17,10 +17,14 @@
     "href": "https://bluelockread.com/manga/blue-lock/",
     "url": "https://bluelockread.com/manga/blue-lock/",
     "title": "Blue Lock",
-        "image": "https://raw.githubusercontent.com/Synthetiq-HQ/synthetiq-manga-sources/main/modules/blue-lock/icon-v1.0.2.png",
+    "image": "https://raw.githubusercontent.com/Synthetiq-HQ/synthetiq-manga-sources/main/modules/blue-lock/icon-v1.0.2.png",
     "description": "Fixture listing for Blue Lock.",
     "status": "Ongoing",
-    "genres": ["Action", "Sports", "Shounen"]
+    "genres": [
+      "Action",
+      "Sports",
+      "Shounen"
+    ]
   },
   "chapters": [
     {
@@ -86,6 +90,13 @@
     },
     {
       "url": "https://cdn.bluelockread.com/file/mangap/fixture/blue-lock/3.jpeg?t=fixture",
+      "headers": {
+        "Accept": "image/avif,image/webp,image/*,*/*",
+        "Referer": "https://ww3.bluelockread.com/chapter/blue-lock-chapter-12/"
+      }
+    },
+    {
+      "url": "https://cdn.imgchest.com/files/fixture-blue-lock-page-4.jpg",
       "headers": {
         "Accept": "image/avif,image/webp,image/*,*/*",
         "Referer": "https://ww3.bluelockread.com/chapter/blue-lock-chapter-12/"

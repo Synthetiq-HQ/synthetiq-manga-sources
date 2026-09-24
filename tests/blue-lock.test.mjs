@@ -79,8 +79,15 @@ test("Blue Lock scopes chapters to the series, preserves decimal releases, and p
 
   const pages = await module.extractImages("https://ww3.bluelockread.com/chapter/blue-lock-chapter-12/?mode=swipereader");
   assert.deepEqual(JSON.parse(JSON.stringify(pages)), fixtures.expected.images);
-  assert.equal(new Set(pages.map((page) => page.url)).size, 3);
-  assert.ok(pages.every((page) => new URL(page.url).hostname === "cdn.bluelockread.com"));
+  assert.equal(new Set(pages.map((page) => page.url)).size, 4);
+  assert.ok(
+    pages.every((page) => ["cdn.bluelockread.com", "cdn.imgchest.com"].includes(new URL(page.url).hostname)),
+  );
+  assert.ok(pages.some((page) => new URL(page.url).hostname === "cdn.bluelockread.com"));
+  assert.ok(pages.some((page) => new URL(page.url).hostname === "cdn.imgchest.com"));
+  const manifest = await json("modules/blue-lock/manifest.json");
+  assert.equal(manifest.allowedHosts.includes("cdn.imgchest.com"), true);
+  assert.equal(manifest.allowedHosts.includes("cdn.bluelockread.com") || manifest.allowedHosts.includes("*.bluelockread.com"), true);
   assert.ok(pages.every((page) => page.headers.Referer.includes("/chapter/blue-lock-chapter-12/")));
   assert.equal(calls.some((call) => call.url.includes("evil.example")), false);
 

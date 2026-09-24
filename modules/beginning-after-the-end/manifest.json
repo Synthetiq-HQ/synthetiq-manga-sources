@@ -28,7 +28,7 @@
   "contractVersion": 1,
   "entry": {
     "path": "modules/beginning-after-the-end/index.js",
-    "sha256": "31fc69d281b7a367114b9f5a1bcb4d94c53ac505dfff7b76348c75a5378c6b41"
+    "sha256": "803f09c60eb791acbff66df00398df260b228ce59198f380aea07567e8c453a5"
   },
   "familyID": "beginning-after-the-end",
   "icon": {
@@ -50,5 +50,5 @@
   "releaseTrack": "beta",
   "status": "active",
   "universalLink": "https://synthetiq.uk/manga/modules/beginning-after-the-end",
-  "version": "1.0.2"
+  "version": "1.0.3"
 }

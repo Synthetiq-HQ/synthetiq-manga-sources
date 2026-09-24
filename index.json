@@ -208,12 +208,12 @@
       "language": "en",
       "manifest": {
         "path": "modules/beginning-after-the-end/manifest.json",
-        "sha256": "ac0c8eb5c8e51ee425d876886c5715217c8718af515c227d889cb3dee79ecc2b"
+        "sha256": "1dc0c14dc7ef67b12093cc40694947e6a1a905ee891a16469a79d62093fd694c"
       },
       "name": "The Beginning After The End",
       "releaseTrack": "beta",
       "status": "active",
-      "version": "1.0.2"
+      "version": "1.0.3"
     },
     {
       "contentRating": "suggestive",
@@ -507,7 +507,7 @@
       "id": "onepiece-manga-online",
       "familyID": "onepiece-manga-online",
       "name": "One Piece Manga Online",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "language": "en",
       "contentType": "pageImages",
       "contentRating": "suggestive",
@@ -516,7 +516,7 @@
       "sortPriority": 88,
       "manifest": {
         "path": "modules/onepiece-manga-online/manifest.json",
-        "sha256": "1843dc06972fcb9607d1c1d41be0707dd872e509116941f108cf5af982dbc315"
+        "sha256": "40b137a66311bd48e55408178589fdf7e408beef20f6d2592ed7fd5202d17b65"
       },
       "icon": {
         "path": "modules/onepiece-manga-online/icon.png",
@@ -627,7 +627,7 @@
       "id": "blue-lock",
       "familyID": "blue-lock",
       "name": "Blue Lock",
-      "version": "1.0.2",
+      "version": "1.0.3",
       "language": "en",
       "contentType": "pageImages",
       "contentRating": "suggestive",
@@ -636,7 +636,7 @@
       "sortPriority": 95,
       "manifest": {
         "path": "modules/blue-lock/manifest.json",
-        "sha256": "b8504f45141ff60f458503245801cd9ed06628719eb384284303ac5ce6184b32"
+        "sha256": "c949642ff827c2825a67b4973392804f381fbe81ba2e9a283fe0ea675e41a84c"
       },
       "icon": {
         "path": "modules/blue-lock/icon-v1.0.2.png",

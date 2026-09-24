@@ -28,7 +28,7 @@
   "contractVersion": 1,
   "entry": {
     "path": "modules/onepiece-manga-online/index.js",
-    "sha256": "43c92c020f5403da1dd228b8254c7524e657ce8edc159f3795ace85fded18ec7"
+    "sha256": "5d56521c110501f9ffa3751d1d50b9e2f3a738a4cc179eeed8efcdbce491ad0b"
   },
   "familyID": "onepiece-manga-online",
   "icon": {
@@ -50,5 +50,5 @@
   "releaseTrack": "beta",
   "status": "active",
   "universalLink": "https://synthetiq.uk/manga/modules/onepiece-manga-online",
-  "version": "1.0.0"
+  "version": "1.0.1"
 }

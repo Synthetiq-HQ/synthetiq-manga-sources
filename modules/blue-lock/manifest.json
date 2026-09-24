@@ -2,6 +2,7 @@
   "allowedHosts": [
     "bluelockread.com",
     "*.bluelockread.com",
+    "cdn.imgchest.com",
     "i.imgur.com",
     "raw.githubusercontent.com"
   ],
@@ -28,7 +29,7 @@
   "contractVersion": 1,
   "entry": {
     "path": "modules/blue-lock/index.js",
-    "sha256": "b076200d958cc0524533a590bdef1de23947c2e3291ce8420eacf675a7579377"
+    "sha256": "ae47f90698724128496ce16c6fb5d426a115ad0509b03897fd3af25847c8df26"
   },
   "familyID": "blue-lock",
   "icon": {
@@ -50,5 +51,5 @@
   "releaseTrack": "beta",
   "status": "active",
   "universalLink": "https://synthetiq.uk/manga/modules/blue-lock",
-  "version": "1.0.2"
+  "version": "1.0.3"
 }
