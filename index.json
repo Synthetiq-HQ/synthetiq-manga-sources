@@ -727,7 +727,7 @@
       "id": "novelneko-light",
       "familyID": "novelneko-light",
       "name": "NovelNeko Light-Novels",
-      "version": "0.1.2",
+      "version": "0.1.3",
       "language": "fr",
       "contentType": "publication",
       "contentRating": "unknown",
@@ -736,7 +736,7 @@
       "sortPriority": 100,
       "manifest": {
         "path": "modules/novelneko-light/manifest.json",
-        "sha256": "0a1cf15a18a315428bbdfc698b077e536f45b957e86ffe549c1998a1612bd5a6"
+        "sha256": "2cf6f0a812c07c4cf1901cc8714d53a81da6d788156e347648de853bfc0b6a2c"
       },
       "icon": {
         "path": "modules/novelneko-light/icon.png",

@@ -417,7 +417,7 @@
     const text = typeof query === "object" && query !== null
       ? (query.text ?? query.query ?? "")
       : query;
-    const normalizedQuery = normalizeForSearch(text);
+    const normalizedQuery = /^\s*__feed:/i.test(String(text ?? "")) ? "" : normalizeForSearch(text);
     const matched = normalizedQuery
       ? entries.filter((entry) => normalizeForSearch(entry.title).includes(normalizedQuery))
       : entries;
@@ -452,7 +452,18 @@
     }));
   }
 
-  const handlers = { searchResults, extractDetails, extractChapters, extractResources };
+  async function discoveryHome() {
+    const result = await searchResults("__feed:lightnovels", 1);
+    return { sections: [{ id: "lightnovels", title: "Light-Novels", items: result.items }] };
+  }
+
+  async function discoveryFeed(feedID, page = 1) {
+    const feed = String(feedID || "").toLowerCase();
+    if (feed !== "lightnovels" && feed !== "popular" && feed !== "latest") return { items: [], hasMore: false };
+    return searchResults(`__feed:${feed}`, page);
+  }
+
+  const handlers = { searchResults, extractDetails, extractChapters, extractResources, discoveryHome, discoveryFeed };
   globalThis.SynthetiqModule = handlers;
   Object.assign(globalThis, handlers);
 })();

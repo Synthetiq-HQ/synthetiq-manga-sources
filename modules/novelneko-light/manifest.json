@@ -12,14 +12,15 @@
     "search",
     "details",
     "chapters",
-    "resources"
+    "resources",
+    "discovery"
   ],
   "contentRating": "unknown",
   "contentType": "publication",
   "contractVersion": 1,
   "entry": {
     "path": "modules/novelneko-light/index.js",
-    "sha256": "0c3515adab7d6e0feb714aa93941b5dc54ef09fdc2fd64fdeccf7b46ff7d2a57"
+    "sha256": "0d6f9da38c59c59e00aed467650da7c97c7163dfecceae1c417df36d22c56f02"
   },
   "familyID": "novelneko-light",
   "icon": {
@@ -41,5 +42,5 @@
   "releaseTrack": "beta",
   "status": "active",
   "universalLink": "https://novelneko.fr/lightnovels/",
-  "version": "0.1.2"
+  "version": "0.1.3"
 }

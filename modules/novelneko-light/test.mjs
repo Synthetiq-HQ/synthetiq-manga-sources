@@ -80,6 +80,19 @@ assert.deepEqual(plain(resources.map((resource) => resource.number)), [1, 1.5, 2
 assert.deepEqual(plain(resources.map((resource) => resource.url)), plain(details.volumes.map((volume) => volume.url)));
 assert.ok(resources.every((resource) => resource.headers.Referer === details.url));
 
+const feed = await module.searchResults("__feed:popular", 1);
+assert.deepEqual(plain(feed.items.map((item) => item.title)), ["Safe French Light Novel"]);
+assert.equal(feed.hasMore, false);
+const feedNamed = await module.searchResults("__feed:lightnovels", 1);
+assert.deepEqual(plain(feedNamed), plain(feed));
+
+const home = await module.discoveryHome();
+assert.equal(home.sections.length, 1);
+assert.equal(home.sections[0].id, "lightnovels");
+assert.deepEqual(plain(home.sections[0].items.map((item) => item.title)), ["Safe French Light Novel"]);
+assert.deepEqual(plain(await module.discoveryFeed("lightnovels", 1)), plain(feedNamed));
+assert.deepEqual(plain(await module.discoveryFeed("bogus", 1)), { items: [], hasMore: false });
+
 assert.deepEqual(plain((await module.searchResults("harem", 1)).items), []);
 assert.deepEqual(plain((await module.searchResults("restricted", 1)).items), []);
 assert.deepEqual(plain((await module.searchResults("volume-missing", 1)).items), []);
