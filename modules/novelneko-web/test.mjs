@@ -118,6 +118,8 @@ test("NovelNeko Web-Novels handles restricted metadata, supported type variants,
     statusEnglish: await fixture("details-status-en.html"),
     noType: await fixture("details-no-type.html"),
     unsupportedType: await fixture("details-unsupported-type.html"),
+    ecchiSoft: await fixture("details-ecchi-soft.html"),
+    authorCredit: await fixture("details-author-credit.html"),
     lecture: await fixture("lecture.html"),
     chapterPaid: await fixture("chapter-paid.txt"),
     chapterLocked: await fixture("chapter-locked.txt"),
@@ -131,6 +133,8 @@ test("NovelNeko Web-Novels handles restricted metadata, supported type variants,
     if (url.includes("fixture-status-en/")) return response(fixtures.statusEnglish);
     if (url.includes("fixture-no-type/")) return response(fixtures.noType);
     if (url.includes("fixture-unsupported-type/")) return response(fixtures.unsupportedType);
+    if (url.includes("fixture-ecchi-soft/")) return response(fixtures.ecchiSoft);
+    if (url.includes("fixture-author-credit/")) return response(fixtures.authorCredit);
     if (url.includes("fixture-text-paid/lecture.html")) return response(fixtures.lecture);
     if (url.includes("fixture-text-paid/chapters/chapitre_001")) return response(fixtures.chapterPaid, "text/plain");
     if (url.includes("fixture-text-locked/lecture.html")) return response(fixtures.lecture);
@@ -149,6 +153,10 @@ test("NovelNeko Web-Novels handles restricted metadata, supported type variants,
   const noTypeDetails = await module.extractDetails("https://novelneko.fr/webnovels/fixture-no-type/");
   assert.equal(noTypeDetails.type, "Web Novel");
   await assert.rejects(() => module.extractDetails("https://novelneko.fr/webnovels/fixture-unsupported-type/"), /not a supported novel format/i);
+  const ecchiSoftDetails = await module.extractDetails("https://novelneko.fr/webnovels/fixture-ecchi-soft/");
+  assert.deepEqual(Array.from(ecchiSoftDetails.genres), ["Fantasy", "Ecchi"]);
+  const authorCreditDetails = await module.extractDetails("https://novelneko.fr/webnovels/fixture-author-credit/");
+  assert.equal(authorCreditDetails.author, "Kitayama Yuri");
   await assert.rejects(
     () => module.extractText("https://novelneko.fr/webnovels/fixture-text-paid/lecture.html?chapitre=1"),
     /strict safety filter|HTML instead of chapter text|paid, locked/i,

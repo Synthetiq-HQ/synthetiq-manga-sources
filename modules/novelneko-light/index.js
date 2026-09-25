@@ -12,7 +12,7 @@
     "Accept-Language": "fr-FR,fr;q=0.9,en;q=0.7",
     Referer: LIGHTNOVEL_ROOT,
   };
-  const UNSAFE_MARKER_RE = /(^|[^a-z0-9])(adult|adulte|adult-only|ecchi|erotica|erotic|explicit|fanservice|harem|hentai|mature|nsfw|porn|sexual|smut|yaoi|yuri)([^a-z0-9]|$)/i;
+  const UNSAFE_MARKER_RE = /(^|[^a-z0-9])(adult|adulte|adult-only|erotica|erotic|explicit|hentai|nsfw|porn|sexual|smut|yaoi|yuri)([^a-z0-9]|$)/i;
   const VOLUME_RESTRICTED_MARKER_RE = /(^|[^a-z0-9])(adult|adulte|adult-only|ecchi|erotica|erotique|erotic|explicit|fanservice|harem|hentai|mature|nsfw|porn|r18|sexual|smut|yaoi|yuri|paid|payant|premium|locked|verrouille|login-required|login required|requires-login|requires login|unavailable|indisponible|not-available|not available|non-disponible|non disponible)(?=$|[^a-z0-9])/i;
   const VOLUME_SAFETY_KEYS = new Set([
     "safety", "content-safety", "rating", "age-rating", "adult", "mature", "nsfw", "explicit",

@@ -39,6 +39,7 @@ const pages = {
   "volume-missing": await fixture("volume-missing.html"),
   herostome: await fixture("herostome.html"),
   outside: await fixture("outside.html"),
+  "ecchi-soft": await fixture("ecchi-soft.html"),
 };
 
 function bridge(url, headers, method, body, options) {
@@ -47,7 +48,7 @@ function bridge(url, headers, method, body, options) {
   assert.equal(headers.Referer, "https://novelneko.fr/lightnovels/");
   assert.equal(options.followRedirects, true);
   if (url.endsWith("/lightnovel.json")) return response(catalog, "application/json");
-  const match = url.match(/\/lightnovels\/(safe|unsafe|missing|restricted|volume-missing|herostome|outside)\/$/);
+  const match = url.match(/\/lightnovels\/(safe|unsafe|missing|restricted|volume-missing|herostome|outside|ecchi-soft)\/$/);
   if (match) return response(pages[match[1]]);
   throw new Error(`Unexpected URL: ${url}`);
 }
@@ -93,7 +94,7 @@ assert.deepEqual(plain(home.sections[0].items.map((item) => item.title)), ["Safe
 assert.deepEqual(plain(await module.discoveryFeed("lightnovels", 1)), plain(feedNamed));
 assert.deepEqual(plain(await module.discoveryFeed("bogus", 1)), { items: [], hasMore: false });
 
-assert.deepEqual(plain((await module.searchResults("harem", 1)).items), []);
+assert.deepEqual(plain((await module.searchResults("hentai", 1)).items), []);
 assert.deepEqual(plain((await module.searchResults("restricted", 1)).items), []);
 assert.deepEqual(plain((await module.searchResults("volume-missing", 1)).items), []);
 await assert.rejects(() => module.extractDetails("https://novelneko.fr/lightnovels/unsafe/"), /safety filter/i);
@@ -105,6 +106,10 @@ const subdirDetails = await module.extractDetails("https://novelneko.fr/lightnov
 assert.deepEqual(plain(subdirDetails.volumes.map((volume) => volume.number)), [1, 1.5, 2]);
 assert.ok(subdirDetails.volumes.every((volume) => volume.url.startsWith("https://novelneko.fr/lightnovels/herostome/herostome/")));
 await assert.rejects(() => module.extractDetails("https://novelneko.fr/lightnovels/outside/"), /outside its light-novel series directory/i);
+
+const ecchiSoft = await module.extractDetails("https://novelneko.fr/lightnovels/ecchi-soft/");
+assert.deepEqual(plain(ecchiSoft.genres), ["Fantasy", "Ecchi"]);
+assert.equal(ecchiSoft.volumes.length, 1);
 await assert.rejects(() => module.extractDetails("https://example.invalid/lightnovels/safe/"), /out-of-scope|invalid/i);
 
 const manifest = JSON.parse(await readFile(path.join(root, "manifest.json"), "utf8"));
