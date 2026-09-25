@@ -17,29 +17,10 @@
   const RETRYABLE_STATUS = new Set([408, 425, 429, 500, 502, 503, 504]);
   const REQUIRED_ENTRY_TYPE = "web novel";
   const ALTERNATE_ENTRY_TYPE = "light novel";
-  const UNSAFE_MARKERS = [
-    "adult",
-    "adulte",
-    "adult-only",
-    "erotica",
-    "erotique",
-    "explicit",
-    "hentai",
-    "paid",
-    "payant",
-    "premium",
-    "locked",
-    "lock",
-    "nsfw",
-    "porn",
-    "r18",
-    "smut",
-    "sexual",
-    "verrouille",
-    "verrouillage",
-    "yaoi",
-    "yuri",
-  ];
+  // Full-access policy (owner-directed 2026-09-25): label-based title blocks are
+  // disabled so users can reach everything the source lists. Re-add marker words
+  // here to re-tighten filtering.
+  const UNSAFE_MARKERS = [];
   const RESTRICTED_CHAPTER_TEXT_RE = /(?:^|\b)(?:this chapter|ce chapitre|chapitre)\b[\s\S]{0,180}\b(?:paid|payant|premium|locked|verrouille|verrouillage|login required|requires login|requires payment|necessite un paiement|unavailable|indisponible)\b|^\s*(?:paid|payant|premium|locked|verrouille|verrouillage|login required|requires login|requires payment|necessite un paiement|unavailable|indisponible)\b/i;
   const responseCache = new Map();
   const responseLoads = new Map();

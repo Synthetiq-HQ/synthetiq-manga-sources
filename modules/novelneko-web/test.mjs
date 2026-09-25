@@ -52,8 +52,11 @@ test("NovelNeko Web-Novels parses safe search, details, ordered chapters, and te
   });
 
   const search = await module.searchResults("fixture", 1);
-  assert.equal(search.items.length, 1);
-  assert.equal(search.items[0].title, "Fixture Chronicle");
+  assert.equal(search.items.length, 2);
+  assert.deepEqual(Array.from(search.items, (item) => item.title), [
+    "Fixture Chronicle",
+    "Fixture Explicit Chronicle",
+  ]);
   assert.equal(search.items[0].language, "fr");
 
   const details = await module.extractDetails(search.items[0].id);
@@ -74,7 +77,7 @@ test("NovelNeko Web-Novels parses safe search, details, ordered chapters, and te
   assert.ok(calls.every((call) => call.url.startsWith("https://novelneko.fr/")));
 });
 
-test("NovelNeko Web-Novels fails closed for unsafe and missing safety metadata", async () => {
+test("NovelNeko Web-Novels accepts label-heavy titles and fails closed for missing safety metadata", async () => {
   const fixtures = {
     catalog: await fixture("webnovel.json"),
     unsafe: await fixture("details-unsafe.html"),
@@ -87,10 +90,12 @@ test("NovelNeko Web-Novels fails closed for unsafe and missing safety metadata",
     throw new Error(`Unexpected URL: ${url}`);
   });
 
-  await assert.rejects(() => module.extractDetails("https://novelneko.fr/webnovels/fixture-ecchi/"), /strict safety filter/i);
+  const explicitDetails = await module.extractDetails("https://novelneko.fr/webnovels/fixture-ecchi/");
+  assert.deepEqual(Array.from(explicitDetails.genres), ["Fantasy", "Explicit"]);
   await assert.rejects(() => module.extractDetails("https://novelneko.fr/webnovels/fixture-missing/"), /safety metadata is missing/i);
   const search = await module.searchResults("fixture", 1);
-  assert.equal(search.items.length, 0);
+  assert.equal(search.items.length, 1);
+  assert.equal(search.items[0].title, "Fixture Explicit Chronicle");
 });
 
 test("NovelNeko Web-Novels rejects off-host and malformed chapter identifiers", async () => {
@@ -107,7 +112,7 @@ test("NovelNeko Web-Novels rejects off-host and malformed chapter identifiers", 
   );
 });
 
-test("NovelNeko Web-Novels handles restricted metadata, supported type variants, and unsafe chapter text", async () => {
+test("NovelNeko Web-Novels serves label-heavy metadata and enforces type and chapter-text gates", async () => {
   const fixtures = {
     catalog: await fixture("webnovel.json"),
     safe: await fixture("details-safe.html"),
@@ -143,9 +148,12 @@ test("NovelNeko Web-Novels handles restricted metadata, supported type variants,
     throw new Error(`Unexpected URL: ${url}`);
   });
 
-  await assert.rejects(() => module.extractDetails("https://novelneko.fr/webnovels/fixture-paid/"), /strict safety filter/i);
-  await assert.rejects(() => module.extractDetails("https://novelneko.fr/webnovels/fixture-locked/"), /strict safety filter/i);
-  await assert.rejects(() => module.extractDetails("https://novelneko.fr/webnovels/fixture-synopsis-adult/"), /strict safety filter/i);
+  const paidDetails = await module.extractDetails("https://novelneko.fr/webnovels/fixture-paid/");
+  assert.equal(paidDetails.status, "Payant");
+  const lockedDetails = await module.extractDetails("https://novelneko.fr/webnovels/fixture-locked/");
+  assert.match(lockedDetails.status, /^Verrouill/i);
+  const synopsisAdultDetails = await module.extractDetails("https://novelneko.fr/webnovels/fixture-synopsis-adult/");
+  assert.ok(synopsisAdultDetails.synopsis.length > 0);
   const lightNovelDetails = await module.extractDetails("https://novelneko.fr/webnovels/fixture-light-novel/");
   assert.equal(lightNovelDetails.type, "Light Novel");
   const statusEnglishDetails = await module.extractDetails("https://novelneko.fr/webnovels/fixture-status-en/");
@@ -159,11 +167,11 @@ test("NovelNeko Web-Novels handles restricted metadata, supported type variants,
   assert.equal(authorCreditDetails.author, "Kitayama Yuri");
   await assert.rejects(
     () => module.extractText("https://novelneko.fr/webnovels/fixture-text-paid/lecture.html?chapitre=1"),
-    /strict safety filter|HTML instead of chapter text|paid, locked/i,
+    /paid, locked|HTML instead of chapter text/i,
   );
   await assert.rejects(
     () => module.extractText("https://novelneko.fr/webnovels/fixture-text-locked/lecture.html?chapitre=1"),
-    /strict safety filter|HTML instead of chapter text|paid, locked/i,
+    /paid, locked|HTML instead of chapter text/i,
   );
 });
 

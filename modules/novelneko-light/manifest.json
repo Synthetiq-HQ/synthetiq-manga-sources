@@ -20,7 +20,7 @@
   "contractVersion": 1,
   "entry": {
     "path": "modules/novelneko-light/index.js",
-    "sha256": "364dbf33b808426de0dcffbcc2395acd93ea2cf30920619c913b8199a807c812"
+    "sha256": "1722d33e78fbdc0771d9f85175064cdfdbd643dee22a3c2c2b662026641feaa5"
   },
   "familyID": "novelneko-light",
   "icon": {
@@ -42,5 +42,5 @@
   "releaseTrack": "beta",
   "status": "active",
   "universalLink": "https://novelneko.fr/lightnovels/",
-  "version": "0.1.4"
+  "version": "0.1.5"
 }

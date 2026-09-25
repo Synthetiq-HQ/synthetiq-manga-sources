@@ -60,29 +60,35 @@ assert.equal(typeof module.extractDetails, "function");
 assert.equal(typeof module.extractChapters, "function");
 assert.equal(typeof module.extractResources, "function");
 
+const expectedBrowsable = [
+  "Safe French Light Novel",
+  "Unsafe Hentai Light Novel",
+  "Restricted Volume Metadata",
+  "Missing Volume Safety Metadata",
+];
 const search = await module.searchResults("", 1);
-assert.deepEqual(plain(search.items.map((item) => item.title)), ["Safe French Light Novel"]);
+assert.deepEqual(plain(search.items.map((item) => item.title)), expectedBrowsable);
 assert.equal(search.hasMore, false);
-assert.equal(search.items[0].volumeCount, 3);
+assert.equal(search.items[0].volumeCount, 4);
 
 const details = await module.extractDetails("https://novelneko.fr/lightnovels/safe/");
 assert.equal(details.author, "Auteur Test");
 assert.deepEqual(plain(details.genres), ["Action", "Fantasy"]);
-assert.deepEqual(plain(details.volumes.map((volume) => volume.number)), [1, 1.5, 2]);
+assert.deepEqual(plain(details.volumes.map((volume) => volume.number)), [1, 1.5, 2, 100]);
 assert.ok(details.volumes.every((volume) => volume.url.startsWith("https://novelneko.fr/lightnovels/safe/volumes/")));
 
 const chapters = await module.extractChapters(details.id);
-assert.deepEqual(plain(chapters.map((chapter) => chapter.title)), ["Tome 1", "Tome 1.5", "Tome 2"]);
+assert.deepEqual(plain(chapters.map((chapter) => chapter.title)), ["Tome 1", "Tome 1.5", "Tome 2", "Tome 100"]);
 
 const resources = await module.extractResources(details.id);
-assert.deepEqual(plain(resources.map((resource) => resource.format)), ["pdf", "pdf", "pdf"]);
-assert.deepEqual(plain(resources.map((resource) => resource.fileName)), ["tome1.pdf", "tome1-5.pdf", "tome2.pdf"]);
-assert.deepEqual(plain(resources.map((resource) => resource.number)), [1, 1.5, 2]);
+assert.deepEqual(plain(resources.map((resource) => resource.format)), ["pdf", "pdf", "pdf", "pdf"]);
+assert.deepEqual(plain(resources.map((resource) => resource.fileName)), ["tome1.pdf", "tome1-5.pdf", "tome2.pdf", "tome100.pdf"]);
+assert.deepEqual(plain(resources.map((resource) => resource.number)), [1, 1.5, 2, 100]);
 assert.deepEqual(plain(resources.map((resource) => resource.url)), plain(details.volumes.map((volume) => volume.url)));
 assert.ok(resources.every((resource) => resource.headers.Referer === details.url));
 
 const feed = await module.searchResults("__feed:popular", 1);
-assert.deepEqual(plain(feed.items.map((item) => item.title)), ["Safe French Light Novel"]);
+assert.deepEqual(plain(feed.items.map((item) => item.title)), expectedBrowsable);
 assert.equal(feed.hasMore, false);
 const feedNamed = await module.searchResults("__feed:lightnovels", 1);
 assert.deepEqual(plain(feedNamed), plain(feed));
@@ -90,20 +96,24 @@ assert.deepEqual(plain(feedNamed), plain(feed));
 const home = await module.discoveryHome();
 assert.equal(home.sections.length, 1);
 assert.equal(home.sections[0].id, "lightnovels");
-assert.deepEqual(plain(home.sections[0].items.map((item) => item.title)), ["Safe French Light Novel"]);
+assert.deepEqual(plain(home.sections[0].items.map((item) => item.title)), expectedBrowsable);
 assert.deepEqual(plain(await module.discoveryFeed("lightnovels", 1)), plain(feedNamed));
 assert.deepEqual(plain(await module.discoveryFeed("bogus", 1)), { items: [], hasMore: false });
 
-assert.deepEqual(plain((await module.searchResults("hentai", 1)).items), []);
-assert.deepEqual(plain((await module.searchResults("restricted", 1)).items), []);
-assert.deepEqual(plain((await module.searchResults("volume-missing", 1)).items), []);
-await assert.rejects(() => module.extractDetails("https://novelneko.fr/lightnovels/unsafe/"), /safety filter/i);
+assert.deepEqual(plain((await module.searchResults("hentai", 1)).items.map((item) => item.title)), ["Unsafe Hentai Light Novel"]);
+assert.deepEqual(plain((await module.searchResults("restricted", 1)).items.map((item) => item.title)), ["Restricted Volume Metadata"]);
+assert.deepEqual(plain((await module.searchResults("missing", 1)).items.map((item) => item.title)), ["Missing Volume Safety Metadata"]);
+const unsafeDetails = await module.extractDetails("https://novelneko.fr/lightnovels/unsafe/");
+assert.deepEqual(plain(unsafeDetails.genres), ["Fantasy", "Hentai"]);
+assert.equal(unsafeDetails.volumes.length, 1);
 await assert.rejects(() => module.extractDetails("https://novelneko.fr/lightnovels/missing/"), /safety metadata is missing/i);
-await assert.rejects(() => module.extractDetails("https://novelneko.fr/lightnovels/restricted/"), /no public PDF volumes/i);
-await assert.rejects(() => module.extractDetails("https://novelneko.fr/lightnovels/volume-missing/"), /no public PDF volumes/i);
+const restrictedDetails = await module.extractDetails("https://novelneko.fr/lightnovels/restricted/");
+assert.deepEqual(plain(restrictedDetails.volumes.map((volume) => volume.number)), [1]);
+const volumeMissingDetails = await module.extractDetails("https://novelneko.fr/lightnovels/volume-missing/");
+assert.deepEqual(plain(volumeMissingDetails.volumes.map((volume) => volume.number)), [1, 2]);
 
 const subdirDetails = await module.extractDetails("https://novelneko.fr/lightnovels/herostome/");
-assert.deepEqual(plain(subdirDetails.volumes.map((volume) => volume.number)), [1, 1.5, 2]);
+assert.deepEqual(plain(subdirDetails.volumes.map((volume) => volume.number)), [1, 1.5, 2, 100]);
 assert.ok(subdirDetails.volumes.every((volume) => volume.url.startsWith("https://novelneko.fr/lightnovels/herostome/herostome/")));
 await assert.rejects(() => module.extractDetails("https://novelneko.fr/lightnovels/outside/"), /outside its light-novel series directory/i);
 

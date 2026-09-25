@@ -12,6 +12,7 @@
     "Accept-Language": "fr-FR,fr;q=0.9,en;q=0.7",
     Referer: LIGHTNOVEL_ROOT,
   };
+  // Retained for optional re-tightening; the full-access policy does not apply it.
   const UNSAFE_MARKER_RE = /(^|[^a-z0-9])(adult|adulte|adult-only|erotica|erotic|explicit|hentai|nsfw|porn|sexual|smut|yaoi|yuri)([^a-z0-9]|$)/i;
   const VOLUME_RESTRICTED_MARKER_RE = /(^|[^a-z0-9])(adult|adulte|adult-only|ecchi|erotica|erotique|erotic|explicit|fanservice|harem|hentai|mature|nsfw|porn|r18|sexual|smut|yaoi|yuri|paid|payant|premium|locked|verrouille|login-required|login required|requires-login|requires login|unavailable|indisponible|not-available|not available|non-disponible|non disponible)(?=$|[^a-z0-9])/i;
   const VOLUME_SAFETY_KEYS = new Set([
@@ -248,23 +249,16 @@
       if (/safety|rating/i.test(match[2])) safetyValues.push(value);
       if (/availability|access|status/i.test(match[2])) availabilityValues.push(value);
     }
-    const normalizedSafety = safetyValues.map(normalizeMetadata).filter(Boolean);
     const normalizedAvailability = availabilityValues.map(normalizeMetadata).filter(Boolean);
-    const safe = normalizedSafety.some((value) => SAFE_VOLUME_VALUES.test(value));
     const publicallyAvailable = normalizedAvailability.some((value) => PUBLIC_VOLUME_VALUES.test(value));
-    const restricted = hasRestrictedVolumeMetadata(markerValues);
-    const hasExplicitVolumeMetadata = safetyValues.length > 0 || availabilityValues.length > 0;
-    const hasCompletePublicMetadata = safetyValues.length > 0
-      && availabilityValues.length > 0
-      && safe
-      && publicallyAvailable;
-    return {
-      // NovelNeko's live pages use direct public PDF links without per-volume
-      // data attributes. Treat that ordinary public-link shape as available,
-      // while rejecting any partial or contradictory restriction metadata.
-      accepted: !restricted && (!hasExplicitVolumeMetadata || hasCompletePublicMetadata),
-      restricted,
-    };
+    // Full-access policy (owner-directed 2026-09-25): content-safety labels never
+    // exclude a volume; a volume is only withheld when its availability metadata
+    // explicitly says it is not public (paid, locked, login-required...). Live pages
+    // that use plain public PDF links (no attributes at all) stay accepted.
+    const restricted = availabilityValues.length > 0
+      && !publicallyAvailable
+      && hasRestrictedVolumeMetadata(availabilityValues);
+    return { accepted: !restricted, restricted };
   }
 
   function parseVolumes(html, series) {
@@ -311,13 +305,13 @@
     return volumes.map(({ sourceOrder, ...volume }) => volume);
   }
 
-  function safetyCheck({ title, genres, synopsis, type, status }) {
+  function safetyCheck({ genres }) {
     if (!Array.isArray(genres) || genres.length === 0) {
       throw new Error("NovelNeko safety filter rejected the title: safety metadata is missing.");
     }
-    if (hasUnsafeMarker([title, ...genres, synopsis, type, status])) {
-      throw new Error("NovelNeko safety filter rejected the title: adult or unsafe metadata marker.");
-    }
+    // Full-access policy (owner-directed 2026-09-25): label-based title blocks are
+    // disabled. Re-enable hasUnsafeMarker([title, ...genres, synopsis, type, status])
+    // here to re-tighten filtering.
   }
 
   function catalogEntry(entry) {
