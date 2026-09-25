@@ -788,70 +788,20 @@ test("MGRead (LikeManga) parses search, details, paginated chapters, and CDN pag
   assert.deepEqual(JSON.parse(JSON.stringify(pages)), fixtures.expected.images);
 });
 
-test("Poseidon Scans parses search, flight-data details, free-only chapters, and page images", async () => {
-  const fixtures = {
-    search: await text("modules/poseidon-scans/fixtures/search.json"),
-    details: await text("modules/poseidon-scans/fixtures/details.rsc"),
-    pages: await text("modules/poseidon-scans/fixtures/pages.rsc"),
-    expected: await json("modules/poseidon-scans/fixtures/expected.json"),
-  };
-  let chapterCalls = 0;
+test("Poseidon Scans is retired and fails closed with a clear message", async () => {
   const module = await loadModule("modules/poseidon-scans/index.js", {
-    fetchv2: async (url, headers, method, body, options) => {
-      assert.equal(typeof url, "string");
-      if (url.includes("/api/search")) return response(fixtures.search);
-      if (url.includes("/api/manga/lastchapters")) return response(fixtures.search);
-      if (url.includes("/chapter/")) {
-        chapterCalls += 1;
-        assert.equal(options.maxBytesHint, 16 * 1024 * 1024, "chapter page uses the manifest response ceiling");
-        return response(fixtures.pages);
-      }
-      if (url.includes("/serie/")) return response(fixtures.details);
-      if (url.endsWith("poseidon-scans.net/")) return response(fixtures.search);
-      throw new Error(`Unexpected URL: ${url}`);
+    fetchv2: async () => {
+      throw new Error("retired sources must not fetch the network");
     },
   });
 
-  const search = await module.searchResults("fixture", 1);
-  assert.deepEqual(JSON.parse(JSON.stringify(search)), fixtures.expected.search);
-
-  const details = await module.extractDetails(search.items[0].id);
-  assert.deepEqual(JSON.parse(JSON.stringify(details)), fixtures.expected.details);
-
-  const chapters = await module.extractChapters(search.items[0].id);
-  assert.deepEqual(JSON.parse(JSON.stringify(chapters)), fixtures.expected.chapters);
-
-  const pages = await module.extractImages(chapters[0].id);
-  assert.deepEqual(JSON.parse(JSON.stringify(pages)), fixtures.expected.images);
-  for (const page of pages) {
-    const imageURL = new URL(page.url);
-    assert.equal(imageURL.pathname, "/_next/image");
-    assert.equal(imageURL.searchParams.get("w"), "1200");
-    assert.equal(imageURL.searchParams.get("q"), "75");
-    assert.match(imageURL.searchParams.get("url") || "", /^https:\/\/poseidon-scans\.net\/api\/chapters\//);
-  }
-  assert.equal(chapterCalls, 1, "a successful chapter page must be fetched once");
-
-  const discovery = await module.discoveryHome();
-  assert.ok(discovery.sections.length > 0);
-  assert.equal(discovery.sections[0].items[0].title, "Fixture One");
-});
-
-test("Poseidon Scans does not retry a timed-out chapter handler", async () => {
-  let calls = 0;
-  const module = await loadModule("modules/poseidon-scans/index.js", {
-    fetchv2: async (url, headers, method, body, options) => {
-      calls += 1;
-      assert.match(url, /\/chapter\/44$/);
-      throw new Error("fixture timeout");
-    },
-  });
-
-  await assert.rejects(
-    module.extractImages("https://poseidon-scans.net/serie/fixture-one/chapter/44"),
-    /fixture timeout/,
-  );
-  assert.equal(calls, 1, "a chapter timeout must not fan out into nested retries");
+  const retired = /retired/i;
+  await assert.rejects(() => module.searchResults("fixture", 1), retired);
+  await assert.rejects(() => module.extractDetails("https://poseidon-scans.net/serie/fixture-one/"), retired);
+  await assert.rejects(() => module.extractChapters("https://poseidon-scans.net/serie/fixture-one/"), retired);
+  await assert.rejects(() => module.extractImages("https://poseidon-scans.net/serie/fixture-one/chapter/44"), retired);
+  await assert.rejects(() => module.discoveryHome(), retired);
+  await assert.rejects(() => module.discoveryFeed("popular", 1), retired);
 });
 
 test("xkcd serves the single series from the official JSON API", async () => {
@@ -1445,8 +1395,10 @@ test("YSK Comics parses JSON search, detail chapters, and CDN page images", asyn
     images: await text("modules/yskcomics/fixtures/images.json"),
     expected: await json("modules/yskcomics/fixtures/expected.json"),
   };
+  const calls = [];
   const module = await loadModule("modules/yskcomics/index.js", {
     fetchv2: async (url) => {
+      calls.push(url);
       assert.equal(typeof url, "string");
       if (url.includes("/search-comics-home")) return response(fixtures.search);
       if (url.includes("/chapters/") && url.includes("/images")) return response(fixtures.images);
@@ -1467,156 +1419,27 @@ test("YSK Comics parses JSON search, detail chapters, and CDN page images", asyn
 
   const pages = await module.extractImages(chapters[0].id);
   assert.deepEqual(JSON.parse(JSON.stringify(pages)), fixtures.expected.images);
+
+  const requestCount = calls.length;
+  const shortSearch = await module.searchResults("ab", 1);
+  assert.deepEqual(JSON.parse(JSON.stringify(shortSearch)), { items: [], hasMore: false });
+  assert.equal(calls.length, requestCount, "short search terms must not hit the network");
 });
 
-test("MangaBall deduplicates chapter translations and preserves reader image metadata", async () => {
-  const fixtures = {
-    home: await text("modules/mangaball/fixtures/home.html"),
-    search: await text("modules/mangaball/fixtures/search.json"),
-    details: await text("modules/mangaball/fixtures/details.html"),
-    chapters: await text("modules/mangaball/fixtures/chapters.json"),
-    chapter: await text("modules/mangaball/fixtures/chapter.html"),
-    discovery: JSON.parse(await text("modules/mangaball/fixtures/discovery.json")),
-    expected: await json("modules/mangaball/fixtures/expected.json"),
-  };
-  const calls = [];
+test("MangaBall is retired and fails closed with a clear message", async () => {
   const module = await loadModule("modules/mangaball/index.js", {
-    fetchv2: async (url, headers, method, body, options) => {
-      const parsed = new URL(url);
-      calls.push({ url, headers, method, body, options });
-      if (parsed.pathname === "/" && method === "GET") {
-        return response(fixtures.home, 200, { "Set-Cookie": "PHPSESSID=fixture-session; Path=/" });
-      }
-      if (parsed.pathname === "/api/v1/smart-search/search/" && method === "POST") {
-        assert.equal(headers["X-CSRF-TOKEN"], "fixture-csrf-token");
-        assert.equal(headers.Cookie, "PHPSESSID=fixture-session");
-        assert.match(body, /search_input=fixture/);
-        assert.equal(options.responseClass, "json");
-        return response(fixtures.search);
-      }
-      if (parsed.pathname === "/api/v1/chapter/chapter-listing-by-title-id/" && method === "POST") {
-        assert.equal(headers["X-CSRF-TOKEN"], "fixture-csrf-token");
-        assert.equal(headers.Cookie, "PHPSESSID=fixture-session");
-        assert.match(body, /title_id=aaaaaaaaaaaaaaaaaaaaaaaa/);
-        assert.match(body, /userSettingsEnabled=false/);
-        assert.equal(options.maxBytesHint, 16 * 1024 * 1024);
-        return response(fixtures.chapters);
-      }
-      if (parsed.pathname === "/api/v1/title/search/" && method === "POST") {
-        const params = new URLSearchParams(body);
-        const type = params.get("search_type");
-        assert.ok(["getRecommend", "getLatestTable"].includes(type));
-        assert.equal(params.get("search_limit"), "24");
-        assert.equal(headers["X-CSRF-TOKEN"], "fixture-csrf-token");
-        assert.equal(headers.Cookie, "PHPSESSID=fixture-session");
-        assert.match(headers["User-Agent"], /^Mozilla\/5\.0 /);
-        return response(JSON.stringify(fixtures.discovery[type === "getLatestTable" ? "latest" : "popular"]));
-      }
-      if (parsed.pathname.startsWith("/title-detail/")) return response(fixtures.details);
-      if (parsed.pathname.startsWith("/chapter-detail/")) return response(fixtures.chapter);
-      throw new Error(`Unexpected MangaBall fixture URL: ${url}`);
+    fetchv2: async () => {
+      throw new Error("retired sources must not fetch the network");
     },
   });
 
-  const search = await module.searchResults("fixture", 1);
-  assert.deepEqual(JSON.parse(JSON.stringify(search)), fixtures.expected.search);
-  assert.deepEqual(
-    JSON.parse(JSON.stringify(await module.searchResults("fixture", 2))),
-    { items: [], hasMore: false },
-  );
-
-  const details = await module.extractDetails(search.items[0].id);
-  assert.deepEqual(JSON.parse(JSON.stringify(details)), fixtures.expected.details);
-
-  const chapters = await module.extractChapters(details.id);
-  assert.deepEqual(JSON.parse(JSON.stringify(chapters)), fixtures.expected.chapters);
-  assert.equal(chapters[1].number, 9.5, "decimal chapter number is preserved");
-  assert.equal(chapters.length, 3, "one canonical translation is returned per numbered chapter");
-  assert.equal(chapters.some((chapter) => chapter.number === 0), false, "volume placeholders are not exposed as chapters");
-
-  const pages = await module.extractImages(chapters[0].id);
-  assert.deepEqual(JSON.parse(JSON.stringify(pages)), fixtures.expected.images);
-  assert.match(pages[0].url, /#scrambled_7$/, "supported image scramble metadata is preserved");
-  assert.ok(pages.every((page) => /(?:poke-black-and-white|red-and-blue)\.net\/storage\/|dmd-image-content-sng-1\.imggo\.net\/books\//.test(page.url)));
-  const discovery = await module.discoveryHome();
-  assert.deepEqual(JSON.parse(JSON.stringify(discovery)), fixtures.expected.discovery);
-  assert.deepEqual(
-    JSON.parse(JSON.stringify(await module.discoveryFeed("popular", 1))),
-    { items: fixtures.expected.discovery.sections[0].items, hasMore: false },
-  );
-  assert.deepEqual(
-    JSON.parse(JSON.stringify(await module.searchResults("__feed:latest", 1))),
-    { items: fixtures.expected.discovery.sections[1].items, hasMore: false },
-  );
-  assert.equal(calls.some((call) => call.url.includes("ads.example.invalid")), false);
-  await assert.rejects(
-    () => module.extractDetails("https://example.invalid/title-detail/not-a-source-aaaaaaaaaaaaaaaaaaaaaaaa/"),
-    /Invalid MangaBall title identifier/,
-  );
-});
-
-test("MangaBall removes decimal volume aliases and isolated numeric outliers", async () => {
-  const details = await text("modules/mangaball/fixtures/details.html");
-  const titleURL = "https://mangaball.net/title-detail/fixture-ball-aaaaaaaaaaaaaaaaaaaaaaaa/";
-  const chapterID = (number) => Number(number).toString(16).padStart(24, "0");
-  const translation = (number, suffix = "") => {
-    const id = chapterID(number) + suffix;
-    return {
-      id,
-      name: `Chapter ${number}`,
-      language: "en",
-      languageName: "English",
-      group: { _id: "fixture-group", name: "Fixture Group" },
-      pages: 20,
-      url: `/chapter-detail/${id}/`,
-    };
-  };
-  const chaptersPayload = {
-    ALL_CHAPTERS: [
-      ...Array.from({ length: 20 }, (_, index) => {
-        const number = index + 1;
-        return {
-          number: `Ch. ${number}`,
-          number_float: number,
-          translations: [translation(number)],
-        };
-      }),
-      {
-        number: "Ch. 1.1",
-        number_float: 1.1,
-        translations: [{ ...translation(1, "1"), name: "Volume 1 scan", pages: 375 }],
-      },
-      {
-        number: "Ch. 99",
-        number_float: 99,
-        translations: [translation(99)],
-      },
-      {
-        number: "Ch. 0",
-        number_float: 0,
-        translations: [translation(0, "1")],
-      },
-    ],
-  };
-  const module = await loadModule("modules/mangaball/index.js", {
-    fetchv2: async (url, headers, method) => {
-      const parsed = new URL(url);
-      if (parsed.pathname.startsWith("/title-detail/")) return response(details);
-      if (parsed.pathname === "/api/v1/chapter/chapter-listing-by-title-id/" && method === "POST") {
-        return response(JSON.stringify(chaptersPayload));
-      }
-      throw new Error(`Unexpected MangaBall outlier fixture URL: ${url}`);
-    },
-  });
-
-  const chapters = await module.extractChapters(titleURL);
-  assert.deepEqual(
-    JSON.parse(JSON.stringify(chapters.map((chapter) => chapter.number))),
-    Array.from({ length: 20 }, (_, index) => 20 - index),
-  );
-  assert.equal(chapters.some((chapter) => chapter.number === 1.1), false);
-  assert.equal(chapters.some((chapter) => chapter.number === 99), false);
-  assert.equal(chapters.some((chapter) => chapter.number === 0), false);
+  const retired = /retired/i;
+  await assert.rejects(() => module.searchResults("fixture", 1), retired);
+  await assert.rejects(() => module.extractDetails("https://mangaball.net/title-detail/fixture-ball-aaaaaaaaaaaaaaaaaaaaaaaa/"), retired);
+  await assert.rejects(() => module.extractChapters("https://mangaball.net/title-detail/fixture-ball-aaaaaaaaaaaaaaaaaaaaaaaa/"), retired);
+  await assert.rejects(() => module.extractImages("https://mangaball.net/chapter-detail/fixture/"), retired);
+  await assert.rejects(() => module.discoveryHome(), retired);
+  await assert.rejects(() => module.discoveryFeed("popular", 1), retired);
 });
 
 test("Comix uses browser-owned pagination and lazy reader evidence", async () => {

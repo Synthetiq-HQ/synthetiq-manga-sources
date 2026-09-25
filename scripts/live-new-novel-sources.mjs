@@ -39,25 +39,6 @@ async function loadModule(slug) {
   return context.SynthetiqModule;
 }
 
-async function proveNovelFrance() {
-  const module = await loadModule("novelfrance");
-  const search = await module.searchResults("harry", 1);
-  assert.ok(search.items.length > 0, "NovelFrance returned no safe live search results");
-  const item = search.items[0];
-  const details = await module.extractDetails(item.id);
-  const chapters = await module.extractChapters(details.id);
-  assert.ok(chapters.length > 0, "NovelFrance returned no live chapters");
-  const result = await module.extractText(chapters[0].id);
-  assert.ok(result.length > 100, "NovelFrance first live chapter was empty");
-  return {
-    source: "NovelFrance",
-    title: details.title,
-    searchItems: search.items.length,
-    chapters: chapters.length,
-    firstChapterBytes: Buffer.byteLength(result),
-  };
-}
-
 async function proveNovelNekoWeb() {
   const module = await loadModule("novelneko-web");
   const search = await module.searchResults("arifureta", 1);
@@ -83,7 +64,7 @@ async function proveNovelNekoWeb() {
 }
 
 const results = [];
-for (const prove of [proveNovelFrance, proveNovelNekoWeb]) {
+for (const prove of [proveNovelNekoWeb]) {
   try {
     results.push(await prove());
   } catch (error) {

@@ -30,7 +30,17 @@ const args = process.argv.slice(2);
 const flags = new Set();
 const positionals = [];
 let query = "a";
+let queryProvided = false;
 let itemLimit = 3;
+
+// A few sources reject or ignore the generic "a" probe (HTTP validation
+// errors or zero matches) which produced false health failures. Give them
+// verified queries so health runs exercise the module itself.
+const MODULE_DEFAULT_QUERIES = {
+  dbmultiverse: "dragon ball",
+  mangaworld: "one piece",
+  yskcomics: "one piece",
+};
 let paginationPages = 1;
 let includeTags = [];
 let excludeTags = [];
@@ -54,6 +64,7 @@ for (let i = 0; i < args.length; i += 1) {
   }
   if (arg === "--query") {
     query = args[i + 1] || "a";
+    queryProvided = true;
     i += 1;
     continue;
   }
@@ -590,7 +601,7 @@ async function timed(fn) {
   }
 }
 
-async function testModule(slug, mode, indexEntry) {
+async function testModule(slug, mode, indexEntry, activeQuery = query) {
   const started = Date.now();
   const manifest = await loadManifest(slug);
   const report = {
@@ -652,8 +663,8 @@ async function testModule(slug, mode, indexEntry) {
     }
 
     const effectiveQuery = includeTags.length || excludeTags.length || publicationStatus
-      ? { text: query === "*" ? "" : query, tags: includeTags, excludeTags, status: publicationStatus }
-      : query;
+      ? { text: activeQuery === "*" ? "" : activeQuery, tags: includeTags, excludeTags, status: publicationStatus }
+      : activeQuery;
     const searchResult = await timed(() => module.searchResults(effectiveQuery, 1));
     report.timingsMs.searchResults = searchResult.durationMs;
     if (!searchResult.ok) throw new Error(searchResult.error);
@@ -1143,7 +1154,8 @@ for (const slug of selected) {
     continue;
   }
   // eslint-disable-next-line no-await-in-loop
-  const report = await testModule(slug, mode, indexBySlug.get(slug));
+  const moduleQuery = queryProvided ? query : MODULE_DEFAULT_QUERIES[slug] || query;
+  const report = await testModule(slug, mode, indexBySlug.get(slug), moduleQuery);
   reports.push(report);
   process.stderr.write(
     `  ${report.passed ? "PASS" : "FAIL"} ${slug} in ${report.durationMs}ms`

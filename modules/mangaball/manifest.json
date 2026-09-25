@@ -26,10 +26,10 @@
   "contentRating": "suggestive",
   "contentType": "pageImages",
   "contractVersion": 1,
-  "description": "MangaBall catalogue with canonical numbered chapters and direct reader page images.",
+  "description": "Retired source - MangaBall requires a browser verification that the app cannot complete.",
   "entry": {
     "path": "modules/mangaball/index.js",
-    "sha256": "c22a4cd32e65f5a22db2f225ec0551a7381d6127c37d4441b5d3d5a3c5543366"
+    "sha256": "5425ea3687a63a501cf54ee0684651763a93ffb53e74d9524765ef2069ae3773"
   },
   "familyID": "mangaball",
   "icon": {
@@ -47,9 +47,9 @@
     "timeoutMilliseconds": 30000
   },
   "minimumAppVersion": "1.0.0",
-  "name": "MangaBall",
+  "name": "MangaBall (Retired)",
   "releaseTrack": "beta",
-  "status": "active",
+  "status": "retired",
   "universalLink": "https://synthetiq.uk/manga/modules/mangaball",
-  "version": "1.0.3"
+  "version": "1.0.4"
 }

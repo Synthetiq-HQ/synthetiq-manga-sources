@@ -95,11 +95,7 @@
    ]
   },
   "poseidon-scans": {
-   "chapterScope": "api",
-   "requiredCodeFragments": [
-    "function parseChapters(body, seriesUrl)",
-    "chapterIsFree"
-   ]
+   "chapterScope": "api"
   },
   "synthetiq-manga-v1": {
    "chapterScope": "api"

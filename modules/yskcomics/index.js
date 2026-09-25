@@ -124,6 +124,9 @@
     if (text.startsWith("__feed:")) {
       return discoveryFeed(text === "__feed:popular" ? "popular" : "latest", page);
     }
+    // The search API rejects terms shorter than three characters with an
+    // HTTP 422 validation error, so short queries resolve to an empty page.
+    if (text.length < 3) return { items: [], hasMore: false };
     const offset = (Math.max(1, Number(page) || 1) - 1) * 10;
     const payload = await requestJSON(`${API_URL}/search-comics-home?name=${encodeURIComponent(text)}&offset=${offset}`);
     return { items: parseSearch(payload), hasMore: false };

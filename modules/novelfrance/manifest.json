@@ -22,7 +22,7 @@
   "contractVersion": 1,
   "entry": {
     "path": "modules/novelfrance/index.js",
-    "sha256": "a51ea0ed9fc8df4d0049274b4e79585257e3a695e0a66e35d057ab029aed6dc5"
+    "sha256": "b6332282f45f063ce4578267cedcfb4286457a7d51f96867e5493908293d5b5d"
   },
   "familyID": "novelfrance",
   "icon": {
@@ -40,9 +40,9 @@
     "timeoutMilliseconds": 30000
   },
   "minimumAppVersion": "1.0.0",
-  "name": "NovelFrance",
+  "name": "NovelFrance (Retired)",
   "releaseTrack": "beta",
-  "status": "active",
+  "status": "retired",
   "universalLink": "https://novelfrance.fr",
-  "version": "0.4.1"
+  "version": "0.4.2"
 }
