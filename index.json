@@ -398,12 +398,12 @@
       "language": "en",
       "manifest": {
         "path": "modules/comicfury/manifest.json",
-        "sha256": "ac5adeece7a5b7c5f8e5fa5be4bb4c9a3be5c2cfac219d4fa8562a7a7a167e02"
+        "sha256": "3694bac2bf9a14459b1e52b7019fcbe33fbdf75667a029b9697aabffdd97827d"
       },
       "name": "Comic Fury",
       "releaseTrack": "beta",
       "status": "active",
-      "version": "1.0.1"
+      "version": "1.0.2"
     },
     {
       "contentRating": "unknown",

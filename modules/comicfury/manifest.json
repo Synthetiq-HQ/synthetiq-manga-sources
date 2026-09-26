@@ -26,7 +26,7 @@
   "contractVersion": 1,
   "entry": {
     "path": "modules/comicfury/index.js",
-    "sha256": "924aa0170bb69e5ed492849f177c0f51c4b4ef563d65c79c20786da8d7fa9ac6"
+    "sha256": "7247a8bd6ca33f6d4cd36c9bb3daed676f0f6ef1a767c78012ac3dde347f6b09"
   },
   "familyID": "comicfury",
   "icon": {
@@ -48,5 +48,5 @@
   "releaseTrack": "beta",
   "status": "active",
   "universalLink": "https://synthetiq.uk/manga/modules/comicfury",
-  "version": "1.0.1"
+  "version": "1.0.2"
 }

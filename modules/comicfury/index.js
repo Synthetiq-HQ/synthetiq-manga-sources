@@ -470,6 +470,117 @@
     return chapters;
   }
 
+  // Chaptered layout C (group tables): a <td class="chapter_title"> row holds
+  // the chapter heading (<h2>), followed by page rows linking to /comics/<N>/.
+  // Title and comment cells link to the same page, so rows dedupe by number.
+  function parseChapterTitleTableChapters(source, base) {
+    const chapters = [];
+    const chapterPattern = /<t[dh]\b[^>]*class="[^"]*chapter_title[^"]*"[^>]*>[\s\S]*?<h2[^>]*>([\s\S]*?)<\/h2>[\s\S]*?<\/tr>([\s\S]*?)(?=<t[dh]\b[^>]*class="[^"]*chapter_title[^"]*"|$)/gi;
+    let chapterMatch;
+    while ((chapterMatch = chapterPattern.exec(source)) !== null) {
+      const title = stripHTML(chapterMatch[1]) || "Untitled Chapter";
+      const pages = [];
+      const seen = new Set();
+      const rowPattern = /<tr\b[^>]*>([\s\S]*?)<\/tr>/gi;
+      let row;
+      while ((row = rowPattern.exec(chapterMatch[2])) !== null) {
+        const link = row[1].match(/<a\b[^>]*href=["']\/comics\/([0-9]+)\/["'][^>]*>([\s\S]*?)<\/a>/i);
+        if (!link) continue;
+        const number = Number(link[1]);
+        if (!Number.isFinite(number) || seen.has(number)) continue;
+        seen.add(number);
+        pages.push({
+          number,
+          title: stripHTML(link[2]) || `Page ${number}`,
+          url: `${base}/comics/${number}/`,
+        });
+      }
+      if (!pages.length) continue;
+      chapters.push({
+        kind: "flat",
+        title,
+        startPage: pages[0].number,
+        endPage: pages[pages.length - 1].number,
+        pages,
+      });
+    }
+    return chapters;
+  }
+
+  // Chaptered layout D (headed tables): <h2 class="chapterhead"> headings with
+  // page rows linking to /comics/pl/<id>/ and the visible number in the first
+  // cell. Tables without headings still parse as one flat chapter.
+  function parseChapterHeadTableChapters(source, base) {
+    const chapters = [];
+    const text = String(source || "");
+    const segments = text.split(/<h2\b[^>]*class="[^"]*chapterhead[^"]*"[^>]*>/i);
+    const groups = segments.length > 1 ? segments.slice(1) : [/archivecomictitle/i.test(text) ? text : ""];
+    for (let index = 0; index < groups.length; index += 1) {
+      const segment = groups[index];
+      let title = "All Pages";
+      if (segments.length > 1) {
+        const headingEnd = segment.indexOf("</h2>");
+        title = stripHTML(headingEnd === -1 ? segment.slice(0, 200) : segment.slice(0, headingEnd)) || "Untitled Chapter";
+      }
+      const pages = [];
+      const seen = new Set();
+      const rowPattern = /<tr\b[^>]*>([\s\S]*?)<\/tr>/gi;
+      let row;
+      while ((row = rowPattern.exec(segment)) !== null) {
+        const link = row[1].match(/<a\b[^>]*href=["']([^"']+)["'][^>]*class=["'][^"']*archivecomictitle[^"']*["'][^>]*>([\s\S]*?)<\/a>/i)
+          || row[1].match(/<a\b[^>]*class=["'][^"']*archivecomictitle[^"']*["'][^>]*href=["']([^"']+)["'][^>]*>([\s\S]*?)<\/a>/i);
+        if (!link) continue;
+        const url = absoluteURL(link[1], base);
+        if (!url || seen.has(url)) continue;
+        seen.add(url);
+        const numberMatch = row[1].match(/<td\b[^>]*>\s*([0-9]+)\.?\s*<\/td>/i);
+        const number = numberMatch ? Number(numberMatch[1]) : pages.length + 1;
+        pages.push({
+          number,
+          title: stripHTML(link[2]) || `Page ${number}`,
+          url,
+        });
+      }
+      if (!pages.length) continue;
+      chapters.push({
+        kind: "flat",
+        title,
+        startPage: pages[0].number,
+        endPage: pages[pages.length - 1].number,
+        pages,
+      });
+    }
+    return chapters;
+  }
+
+  // Sectioned listings (custom "Archive" pages behind /archive/comics): rows
+  // grouped by <div class="chapter-title"><h3>TITLE</h3></div> headings.
+  function parseChapterTitleSections(source, base) {
+    const chapters = [];
+    const segments = String(source || "").split(/<div\b[^>]*class="[^"]*chapter-title[^"]*"[^>]*>/i);
+    for (let index = 1; index < segments.length; index += 1) {
+      const segment = segments[index];
+      const headingEnd = segment.indexOf("</h3>");
+      if (headingEnd === -1) continue;
+      const title = stripHTML(segment.slice(0, headingEnd)) || "Untitled Chapter";
+      const rows = parseComicRows(segment, base);
+      if (!rows.length) continue;
+      const pages = rows.map((row) => ({
+        number: row.number,
+        title: row.title,
+        url: row.url,
+      }));
+      chapters.push({
+        kind: "flat",
+        title,
+        startPage: pages[0].number,
+        endPage: pages[pages.length - 1].number,
+        pages,
+      });
+    }
+    return chapters;
+  }
+
   // Determine how a comic structures its archive:
   //  - explicit chapters (layout A / B / legacy tables) -> chapters as the site
   //    groups them, pages resolved lazily per chapter,
@@ -517,6 +628,27 @@
       }
     }
 
+    if (!chapters.length) {
+      const grouped = parseChapterTitleTableChapters(source, base);
+      for (let index = 0; index < grouped.length; index += 1) {
+        chapters.push({ ...grouped[index], index: index + 1, base });
+      }
+    }
+
+    if (!chapters.length) {
+      const headed = parseChapterHeadTableChapters(source, base);
+      for (let index = 0; index < headed.length; index += 1) {
+        chapters.push({ ...headed[index], index: index + 1, base });
+      }
+    }
+
+    if (!chapters.length) {
+      const sectioned = parseChapterTitleSections(source, base);
+      for (let index = 0; index < sectioned.length; index += 1) {
+        chapters.push({ ...sectioned[index], index: index + 1, base });
+      }
+    }
+
     // Flat archive: no chapter groupings at all. Collect every listed comic
     // into a single chapter so the whole series reads top to bottom.
     if (!chapters.length) {
@@ -556,10 +688,21 @@
     if (archiveCache.key === key && archiveCache.value && Date.now() - archiveCache.at < PAGE_CACHE_TTL) {
       return archiveCache.value;
     }
-    const url = `https://${domain}/archive/`;
-    const body = await fetchDirect(url, { maxBytesHint: 4 * 1024 * 1024 });
-    const chapters = parseArchiveHTML(body, domain);
-    archiveCache = { key, at: Date.now(), value: chapters };
+    const body = await fetchDirect(`https://${domain}/archive/`, { maxBytesHint: 4 * 1024 * 1024 });
+    let chapters = parseArchiveHTML(body, domain);
+    if (!chapters.length) {
+      // Some templates hide the real listing behind the nav's "Archive" link
+      // at /archive/comics; their /archive/ page only carries navigation.
+      try {
+        const listing = await fetchDirect(`https://${domain}/archive/comics`, { maxBytesHint: 4 * 1024 * 1024 });
+        chapters = parseArchiveHTML(listing, domain);
+      } catch {
+        chapters = [];
+      }
+    }
+    if (chapters.length) {
+      archiveCache = { key, at: Date.now(), value: chapters };
+    }
     return chapters;
   }
 
@@ -659,8 +802,18 @@
   }
 
   async function extractChapters(id) {
-    const details = await extractDetails(id);
-    const domain = new URL(details.id).hostname;
+    const input = String(id || "").trim();
+    let domain = "";
+    // Details ids are already resolved domain roots; open them directly so any
+    // host a comic resolves to (custom domains included) works here, and skip
+    // a redundant profile round-trip. Other shapes still resolve via details.
+    const rootMatch = input.match(/^https:\/\/([^\/?#]+)\/?$/);
+    if (rootMatch && rootMatch[1].toLowerCase() !== "comicfury.com") {
+      domain = rootMatch[1];
+    } else {
+      const details = await extractDetails(input);
+      domain = new URL(details.id).hostname;
+    }
     const chapters = await fetchArchive(domain);
     if (!chapters.length) {
       throw new Error("Comic Fury returned no chapters for this series.");

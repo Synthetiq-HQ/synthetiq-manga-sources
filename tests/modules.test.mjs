@@ -1163,6 +1163,67 @@ test("Comic Fury parses search profiles, external archive chapters, and comic pa
   assert.ok(home.sections.some((s) => s.id === "popular" && s.items.length >= 1));
 });
 
+test("Comic Fury parses archive layout variants and the /archive/comics fallback", async () => {
+  const fixtures = {
+    chapterTable: await text("modules/comicfury/fixtures/archive-chapter-title-table.html"),
+    headTable: await text("modules/comicfury/fixtures/archive-chapterhead-table.html"),
+    listing: await text("modules/comicfury/fixtures/archive-comics-listing.html"),
+    landing: await text("modules/comicfury/fixtures/archive-landing.html"),
+    page1: await text("modules/comicfury/fixtures/page-1.html"),
+  };
+  const calls = [];
+  const module = await loadModule("modules/comicfury/index.js", {
+    fetchv2: async (url) => {
+      const u = String(url);
+      calls.push(u);
+      if (u.startsWith("https://chaptertitle.thecomicseries.com/")) {
+        if (u.endsWith("/archive/comics")) return response(fixtures.listing);
+        if (u.endsWith("/archive/")) return response(fixtures.chapterTable);
+      }
+      if (u.startsWith("https://headtable.thecomicseries.com/")) {
+        if (u.endsWith("/archive/")) return response(fixtures.headTable);
+        if (u.includes("/comics/pl/")) return response(fixtures.page1);
+      }
+      if (u.startsWith("https://landing.thecomicseries.com/")) {
+        if (u.endsWith("/archive/comics")) return response(fixtures.listing);
+        if (u.endsWith("/archive/")) return response(fixtures.landing);
+      }
+      if (u.startsWith("https://customfury.example/")) {
+        if (u.endsWith("/archive/")) return response(fixtures.chapterTable);
+      }
+      throw new Error(`Unexpected Comic Fury URL: ${u}`);
+    },
+  });
+
+  // Grouped chapter_title tables (pages link to /comics/<N>/).
+  const chapterTitle = await module.extractChapters("https://chaptertitle.thecomicseries.com/");
+  assert.equal(chapterTitle.length, 2);
+  assert.deepEqual(JSON.parse(JSON.stringify(chapterTitle.map((c) => c.title))), ["Prologue", "Chapter Three"]);
+  assert.deepEqual(JSON.parse(JSON.stringify(chapterTitle.map((c) => c.number))), [1, 2]);
+
+  // Headed archive tables (chapterhead h2 + /comics/pl/<id>/ rows).
+  const headTable = await module.extractChapters("https://headtable.thecomicseries.com/");
+  assert.equal(headTable.length, 2);
+  assert.deepEqual(JSON.parse(JSON.stringify(headTable.map((c) => c.title))), ["Part 1", "Part 2"]);
+  const headImages = await module.extractImages(headTable[0].id);
+  assert.ok(headImages.length >= 1, "headed-table pages must resolve to images");
+  assert.ok(calls.some((u) => u.includes("/comics/pl/2641725/")), "page URLs come from the pl/ rows");
+
+  // /archive/ landing pages fall back to the /archive/comics listing.
+  const fallback = await module.extractChapters("https://landing.thecomicseries.com/");
+  assert.equal(fallback.length, 2);
+  assert.deepEqual(JSON.parse(JSON.stringify(fallback.map((c) => c.title))), ["OFFICIAL I HOPE SO ETSY STORE", "Chapter 1 - Soul of a Survivor"]);
+  assert.ok(
+    calls.some((u) => u === "https://landing.thecomicseries.com/archive/comics"),
+    "expected the /archive/comics listing to be fetched as a fallback",
+  );
+
+  // Resolved domain roots outside the known host list (custom domains).
+  const custom = await module.extractChapters("https://customfury.example/");
+  assert.equal(custom.length, 2);
+  assert.equal(custom[0].id, "https://customfury.example/archive/#chapter-1");
+});
+
 test("Dragon Ball Multiverse single-series module parses accueil chapters and page images", async () => {
   const fixtures = {
     accueil: await text("modules/dbmultiverse/fixtures/accueil.html"),
