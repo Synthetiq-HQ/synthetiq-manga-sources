@@ -14,6 +14,7 @@
   const TRANSLATED_LANGUAGES = ["es-la", "es"];
   const CONTENT_RATINGS = ["safe", "suggestive", "erotica"];
   const TITLE_LANGUAGES = ["es-la", "es", "en", "ja-ro", "ja"];
+  const NO_SPANISH_CHAPTERS_NOTICE = "⚠️ Sin capítulos en español disponibles en MangaDex.";
   const FEED_SECTIONS = [
     { id: "popular", title: "Popular en español", feed: "__feed:popular" },
     { id: "latest", title: "Actualizaciones recientes", feed: "__feed:latest" },
@@ -321,6 +322,40 @@
     return { items, hasMore: offset + items.length < total };
   }
 
+  // Best-effort: does this title have at least one READABLE Spanish chapter?
+  // Only a complete feed page with zero readable chapters answers false
+  // (used to annotate stale "available in Spanish" titles); any error or
+  // truncated response answers true so the raw description stays untouched.
+  async function hasReadableSpanishChapters(uuid) {
+    try {
+      const pairs = [
+        ["limit", FEED_PAGE_SIZE],
+        ["offset", 0],
+        ["includeExternalUrl", 0],
+        ["order[volume]", "asc"],
+        ["order[chapter]", "asc"],
+      ].concat(chapterLanguageParams(), contentRatingParams());
+      const payload = await fetchJSON(`${API_URL}/manga/${uuid}/feed?${buildParams(pairs)}`, FEED_BYTE_HINT);
+      const data = Array.isArray(payload.data)
+        ? payload.data.filter((chapter) => chapter && chapter.type === "chapter")
+        : [];
+      const total = Number(payload.total || 0);
+      if (total > data.length) return true;
+      for (const chapter of data) {
+        const attributes = chapter.attributes || {};
+        if (attributes.externalUrl) continue;
+        if (attributes.isUnavailable === true) continue;
+        if (!(Number(attributes.pages) > 0)) continue;
+        const language = String(attributes.translatedLanguage || "").toLowerCase();
+        if (!TRANSLATED_LANGUAGES.includes(language)) continue;
+        return true;
+      }
+      return false;
+    } catch (error) {
+      return true;
+    }
+  }
+
   async function extractDetails(mangaID) {
     const uuid = mangaUUID(mangaID);
     const query = buildParams([
@@ -347,7 +382,7 @@
       authors.push(label);
     }
     const id = `${WEBSITE_URL}/title/${String(manga.id || uuid).toLowerCase()}`;
-    return {
+    const details = {
       id,
       href: id,
       url: id,
@@ -359,6 +394,15 @@
       genres: genreNames(attributes),
       status: statusLabel(attributes.status),
     };
+    if (!(await hasReadableSpanishChapters(uuid))) {
+      // Stale MangaDex metadata: this title's Spanish chapters were pulled
+      // (licensing). Make the empty chapter list read as intentional
+      // instead of an error.
+      details.description = details.description
+        ? `${NO_SPANISH_CHAPTERS_NOTICE}\n\n${details.description}`
+        : NO_SPANISH_CHAPTERS_NOTICE;
+    }
+    return details;
   }
 
   async function extractChapters(mangaID) {

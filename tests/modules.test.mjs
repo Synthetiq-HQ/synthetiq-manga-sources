@@ -1836,9 +1836,13 @@ test("MangaDex (Español) uses the public API with es/es-la scoping and deduplic
   assert.equal(calls.some((call) => call.url.includes("11aa22bb-33cc-44dd-8ee0-ff11aa22bb05")), false);
 
   // Titles whose Spanish chapters were pulled still resolve cleanly: the
-  // module mirrors MangaDex and returns an empty list instead of an error.
+  // module mirrors MangaDex and returns an empty list instead of an error,
+  // and opening them annotates the description so the empty chapter list
+  // reads as intentional.
   const ghostChapters = await module.extractChapters("https://mangadex.org/title/1a2b3c4d-5e6f-4a8b-9c0d-1e2f3a4b5c6d");
   assert.deepEqual(JSON.parse(JSON.stringify(ghostChapters)), []);
+  const ghostDetails = await module.extractDetails("https://mangadex.org/title/1a2b3c4d-5e6f-4a8b-9c0d-1e2f3a4b5c6d");
+  assert.ok(ghostDetails.description.startsWith("⚠️ Sin capítulos en español disponibles en MangaDex."));
 
   const images = await module.extractImages(chapters[0].id);
   assert.deepEqual(JSON.parse(JSON.stringify(images)), [
