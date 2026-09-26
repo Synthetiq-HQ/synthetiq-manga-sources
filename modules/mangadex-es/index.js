@@ -409,7 +409,10 @@
       });
     }
     if (!byChapter.size) {
-      throw new Error("MangaDex returned no readable chapters for this title.");
+      // MangaDex can keep stale "available in Spanish" metadata for titles
+      // whose chapters were pulled (licensing). Mirror the site and answer
+      // with an empty list instead of failing the whole request.
+      return [];
     }
 
     const chapters = [];

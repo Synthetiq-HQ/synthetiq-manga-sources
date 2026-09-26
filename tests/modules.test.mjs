@@ -1714,6 +1714,7 @@ test("MangaDex (Español) uses the public API with es/es-la scoping and deduplic
     search: await json("modules/mangadex-es/fixtures/search.json"),
     details: await json("modules/mangadex-es/fixtures/details.json"),
     chapters: await json("modules/mangadex-es/fixtures/chapters.json"),
+    chaptersEmpty: await json("modules/mangadex-es/fixtures/chapters-empty.json"),
     images: await json("modules/mangadex-es/fixtures/images.json"),
   };
   const calls = [];
@@ -1726,6 +1727,9 @@ test("MangaDex (Español) uses the public API with es/es-la scoping and deduplic
         return response('{"result":"error","errors":[{"status":404}]}', 404);
       }
       if (/\/at-home\/server\//.test(u)) return response(JSON.stringify(fixtures.images));
+      if (u.includes("1a2b3c4d-5e6f-4a8b-9c0d-1e2f3a4b5c6d") && /\/feed/.test(u)) {
+        return response(JSON.stringify(fixtures.chaptersEmpty));
+      }
       if (/\/manga\/[0-9a-f-]{36}\/feed/.test(u)) return response(JSON.stringify(fixtures.chapters));
       if (/\/manga\/[0-9a-f-]{36}\?/.test(u)) return response(JSON.stringify(fixtures.details));
       if (u.includes("/manga?")) return response(JSON.stringify(fixtures.search));
@@ -1830,6 +1834,11 @@ test("MangaDex (Español) uses the public API with es/es-la scoping and deduplic
   ]);
   assert.equal(calls.some((call) => call.url.includes("11aa22bb-33cc-44dd-8ee0-ff11aa22bb03")), false);
   assert.equal(calls.some((call) => call.url.includes("11aa22bb-33cc-44dd-8ee0-ff11aa22bb05")), false);
+
+  // Titles whose Spanish chapters were pulled still resolve cleanly: the
+  // module mirrors MangaDex and returns an empty list instead of an error.
+  const ghostChapters = await module.extractChapters("https://mangadex.org/title/1a2b3c4d-5e6f-4a8b-9c0d-1e2f3a4b5c6d");
+  assert.deepEqual(JSON.parse(JSON.stringify(ghostChapters)), []);
 
   const images = await module.extractImages(chapters[0].id);
   assert.deepEqual(JSON.parse(JSON.stringify(images)), [

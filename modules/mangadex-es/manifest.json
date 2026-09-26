@@ -24,7 +24,7 @@
   "contractVersion": 1,
   "entry": {
     "path": "modules/mangadex-es/index.js",
-    "sha256": "90f479fe281bb36c7d4b14eac3a2cb05dacb2c67680afc5581a8a6279b614517"
+    "sha256": "96b451c5a5a40defc9f4483382f791e90c4687b5474ba4486fa110f08e9ce345"
   },
   "familyID": "mangadex",
   "icon": {
@@ -46,5 +46,5 @@
   "releaseTrack": "beta",
   "status": "active",
   "universalLink": "https://synthetiq.uk/manga/modules/mangadex-es",
-  "version": "1.0.0"
+  "version": "1.0.1"
 }

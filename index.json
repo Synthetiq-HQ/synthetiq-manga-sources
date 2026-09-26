@@ -893,12 +893,12 @@
       "language": "es",
       "manifest": {
         "path": "modules/mangadex-es/manifest.json",
-        "sha256": "6ae924fb79c1351cf0e30982794802744ae6774a6e6af63971c1fd4b8b28b1cb"
+        "sha256": "a221c2e005e802067f279b2c3953b907d33aac641d9745a27758ef0a271a5359"
       },
       "name": "MangaDex (Español)",
       "releaseTrack": "beta",
       "status": "active",
-      "version": "1.0.0"
+      "version": "1.0.1"
     }
   ],
   "repository": {
