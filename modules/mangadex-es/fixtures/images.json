@@ -1,0 +1,17 @@
+{
+  "result": "ok",
+  "baseUrl": "https://fixture-node.mangadex.network",
+  "chapter": {
+    "hash": "0f0e0d0c0b0a0908070605040302010f",
+    "data": [
+      "1-fixture.png",
+      "2-fixture.png",
+      "3-fixture.png"
+    ],
+    "dataSaver": [
+      "1-fixture-saver.jpg",
+      "2-fixture-saver.jpg",
+      "3-fixture-saver.jpg"
+    ]
+  }
+}

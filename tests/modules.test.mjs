@@ -1708,3 +1708,165 @@ test("Asura Scans uses public API data, filters locked chapters, and preserves p
   assert.ok(calls.some((call) => call.url.includes("api.asurascans.com/api/search")));
   assert.ok(calls.some((call) => call.url.includes("api.asurascans.com/api/series?")));
 });
+
+test("MangaDex (Español) uses the public API with es/es-la scoping and deduplicated chapters", async () => {
+  const fixtures = {
+    search: await json("modules/mangadex-es/fixtures/search.json"),
+    details: await json("modules/mangadex-es/fixtures/details.json"),
+    chapters: await json("modules/mangadex-es/fixtures/chapters.json"),
+    images: await json("modules/mangadex-es/fixtures/images.json"),
+  };
+  const calls = [];
+  const module = await loadModule("modules/mangadex-es/index.js", {
+    fetchv2: async (url, headers, method, body, options) => {
+      assert.equal(typeof url, "string");
+      calls.push({ url, headers, method, body, options });
+      const u = String(url);
+      if (u.includes("/at-home/server/deadbeef-")) {
+        return response('{"result":"error","errors":[{"status":404}]}', 404);
+      }
+      if (/\/at-home\/server\//.test(u)) return response(JSON.stringify(fixtures.images));
+      if (/\/manga\/[0-9a-f-]{36}\/feed/.test(u)) return response(JSON.stringify(fixtures.chapters));
+      if (/\/manga\/[0-9a-f-]{36}\?/.test(u)) return response(JSON.stringify(fixtures.details));
+      if (u.includes("/manga?")) return response(JSON.stringify(fixtures.search));
+      throw new Error(`Unexpected MangaDex URL: ${u}`);
+    },
+  });
+
+  const search = await module.searchResults("sombra", 1);
+  const searchItems = [
+    {
+      id: "https://mangadex.org/title/7c9e1a2b-3d4f-4a5b-8c6d-7e8f9a0b1c2d",
+      href: "https://mangadex.org/title/7c9e1a2b-3d4f-4a5b-8c6d-7e8f9a0b1c2d",
+      url: "https://mangadex.org/title/7c9e1a2b-3d4f-4a5b-8c6d-7e8f9a0b1c2d",
+      title: "La Sombra del Fénix",
+      image: "https://uploads.mangadex.org/covers/7c9e1a2b-3d4f-4a5b-8c6d-7e8f9a0b1c2d/fixture-cover-phoenix.jpg.256.jpg",
+    },
+    {
+      id: "https://mangadex.org/title/1a2b3c4d-5e6f-4a8b-9c0d-1e2f3a4b5c6d",
+      href: "https://mangadex.org/title/1a2b3c4d-5e6f-4a8b-9c0d-1e2f3a4b5c6d",
+      url: "https://mangadex.org/title/1a2b3c4d-5e6f-4a8b-9c0d-1e2f3a4b5c6d",
+      title: "Rusty Lanterns",
+      image: "https://uploads.mangadex.org/covers/1a2b3c4d-5e6f-4a8b-9c0d-1e2f3a4b5c6d/fixture-cover-lanterns.jpg.256.jpg",
+    },
+  ];
+  assert.deepEqual(JSON.parse(JSON.stringify(search)), { items: searchItems, hasMore: false });
+  const searchURL = calls[0].url;
+  assert.ok(searchURL.includes("title=sombra"));
+  assert.ok(searchURL.includes("availableTranslatedLanguage[]=es-la"));
+  assert.ok(searchURL.includes("availableTranslatedLanguage[]=es"));
+  assert.ok(searchURL.includes("contentRating[]=safe"));
+  assert.ok(searchURL.includes("contentRating[]=suggestive"));
+  assert.ok(searchURL.includes("contentRating[]=erotica"));
+  assert.equal(searchURL.includes("contentRating[]=pornographic"), false);
+  assert.equal(searchURL.includes("translatedLanguage[]"), false);
+
+  // Details accept the canonical title URL, normalizing case, and prefer the
+  // es-la title/description while keeping author/artist/genre metadata.
+  const details = await module.extractDetails("https://mangadex.org/title/7C9E1A2B-3D4F-4A5B-8C6D-7E8F9A0B1C2D");
+  assert.deepEqual(JSON.parse(JSON.stringify(details)), {
+    id: "https://mangadex.org/title/7c9e1a2b-3d4f-4a5b-8c6d-7e8f9a0b1c2d",
+    href: "https://mangadex.org/title/7c9e1a2b-3d4f-4a5b-8c6d-7e8f9a0b1c2d",
+    url: "https://mangadex.org/title/7c9e1a2b-3d4f-4a5b-8c6d-7e8f9a0b1c2d",
+    title: "La Sombra del Fénix",
+    description: "Una historia de prueba sobre un fénix que nunca existió.\nSolo para fixtures.",
+    image: "https://uploads.mangadex.org/covers/7c9e1a2b-3d4f-4a5b-8c6d-7e8f9a0b1c2d/fixture-cover-phoenix.jpg",
+    authors: ["Fixture Author", "Fixture Artist"],
+    author: "Fixture Author",
+    genres: ["Action", "Reincarnation"],
+    status: "Ongoing",
+  });
+
+  // Duplicate scan groups collapse, es-la wins over es for the same chapter,
+  // external/unavailable/page-less chapters are skipped, and unnumbered
+  // specials keep their title without a number (newest chapter first).
+  const chapters = await module.extractChapters(details.id);
+  assert.equal(chapters.length, 5);
+  assert.deepEqual(JSON.parse(JSON.stringify(chapters)), [
+    {
+      id: "https://mangadex.org/chapter/11aa22bb-33cc-44dd-8ee0-ff11aa22bb06",
+      href: "https://mangadex.org/chapter/11aa22bb-33cc-44dd-8ee0-ff11aa22bb06",
+      url: "https://mangadex.org/chapter/11aa22bb-33cc-44dd-8ee0-ff11aa22bb06",
+      language: "es",
+      title: "Cap. 4 - La revelación",
+      number: 4,
+      releaseDate: "2023-01-22T12:00:00+00:00",
+    },
+    {
+      id: "https://mangadex.org/chapter/11aa22bb-33cc-44dd-8ee0-ff11aa22bb04",
+      href: "https://mangadex.org/chapter/11aa22bb-33cc-44dd-8ee0-ff11aa22bb04",
+      url: "https://mangadex.org/chapter/11aa22bb-33cc-44dd-8ee0-ff11aa22bb04",
+      language: "es",
+      title: "Cap. 3",
+      number: 3,
+      releaseDate: "2023-01-15T12:00:00+00:00",
+    },
+    {
+      id: "https://mangadex.org/chapter/11aa22bb-33cc-44dd-8ee0-ff11aa22bb02",
+      href: "https://mangadex.org/chapter/11aa22bb-33cc-44dd-8ee0-ff11aa22bb02",
+      url: "https://mangadex.org/chapter/11aa22bb-33cc-44dd-8ee0-ff11aa22bb02",
+      language: "es",
+      title: "Cap. 2 - El enfrentamiento",
+      number: 2,
+      releaseDate: "2023-01-08T12:00:00+00:00",
+    },
+    {
+      id: "https://mangadex.org/chapter/11aa22bb-33cc-44dd-8ee0-ff11aa22bb01",
+      href: "https://mangadex.org/chapter/11aa22bb-33cc-44dd-8ee0-ff11aa22bb01",
+      url: "https://mangadex.org/chapter/11aa22bb-33cc-44dd-8ee0-ff11aa22bb01",
+      language: "es",
+      title: "Cap. 1",
+      number: 1,
+      releaseDate: "2023-01-01T12:00:00+00:00",
+    },
+    {
+      id: "https://mangadex.org/chapter/11aa22bb-33cc-44dd-8ee0-ff11aa22bb09",
+      href: "https://mangadex.org/chapter/11aa22bb-33cc-44dd-8ee0-ff11aa22bb09",
+      url: "https://mangadex.org/chapter/11aa22bb-33cc-44dd-8ee0-ff11aa22bb09",
+      language: "es",
+      title: "Especial de Año Nuevo",
+      releaseDate: "2023-02-01T12:00:00+00:00",
+    },
+  ]);
+  assert.equal(calls.some((call) => call.url.includes("11aa22bb-33cc-44dd-8ee0-ff11aa22bb03")), false);
+  assert.equal(calls.some((call) => call.url.includes("11aa22bb-33cc-44dd-8ee0-ff11aa22bb05")), false);
+
+  const images = await module.extractImages(chapters[0].id);
+  assert.deepEqual(JSON.parse(JSON.stringify(images)), [
+    {
+      url: "https://fixture-node.mangadex.network/data/0f0e0d0c0b0a0908070605040302010f/1-fixture.png",
+      headers: { Accept: "image/avif,image/webp,image/*,*/*", Referer: "https://mangadex.org/" },
+    },
+    {
+      url: "https://fixture-node.mangadex.network/data/0f0e0d0c0b0a0908070605040302010f/2-fixture.png",
+      headers: { Accept: "image/avif,image/webp,image/*,*/*", Referer: "https://mangadex.org/" },
+    },
+    {
+      url: "https://fixture-node.mangadex.network/data/0f0e0d0c0b0a0908070605040302010f/3-fixture.png",
+      headers: { Accept: "image/avif,image/webp,image/*,*/*", Referer: "https://mangadex.org/" },
+    },
+  ]);
+
+  const discovery = await module.discoveryHome();
+  assert.deepEqual(JSON.parse(JSON.stringify(discovery)), {
+    sections: [
+      { id: "popular", title: "Popular en español", items: searchItems },
+      { id: "latest", title: "Actualizaciones recientes", items: searchItems },
+    ],
+  });
+  assert.ok(calls.some((call) => call.url.includes("order[followedCount]=desc")));
+  assert.ok(calls.some((call) => call.url.includes("order[latestUploadedChapter]=desc")));
+
+  const unknownFeed = await module.discoveryFeed("nope");
+  assert.deepEqual(JSON.parse(JSON.stringify(unknownFeed)), { items: [], hasMore: false });
+
+  await assert.rejects(
+    () => module.extractDetails("https://evil.example/title/7c9e1a2b-3d4f-4a5b-8c6d-7e8f9a0b1c2d"),
+    /Invalid MangaDex manga identifier/,
+  );
+  await assert.rejects(() => module.extractChapters("not-a-uuid"), /Invalid MangaDex manga identifier/);
+  await assert.rejects(
+    () => module.extractImages("https://mangadex.org/title/7c9e1a2b-3d4f-4a5b-8c6d-7e8f9a0b1c2d"),
+    /Invalid MangaDex chapter identifier/,
+  );
+});

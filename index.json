@@ -880,6 +880,25 @@
         "path": "modules/colorizedmanga/icon.png",
         "sha256": "dfde692ffd5a4cfc2c6450ff8b751e040177612b1e3c7488c3c3f1e468c48b30"
       }
+    },
+    {
+      "contentRating": "suggestive",
+      "contentType": "pageImages",
+      "familyID": "mangadex",
+      "icon": {
+        "path": "modules/mangadex-es/icon.png",
+        "sha256": "9d515be247e76ea1dddf8a60ecba7428d75091a9fb7a0fbb9a3f90a99b85b202"
+      },
+      "id": "mangadex-es",
+      "language": "es",
+      "manifest": {
+        "path": "modules/mangadex-es/manifest.json",
+        "sha256": "6ae924fb79c1351cf0e30982794802744ae6774a6e6af63971c1fd4b8b28b1cb"
+      },
+      "name": "MangaDex (Español)",
+      "releaseTrack": "beta",
+      "status": "active",
+      "version": "1.0.0"
     }
   ],
   "repository": {

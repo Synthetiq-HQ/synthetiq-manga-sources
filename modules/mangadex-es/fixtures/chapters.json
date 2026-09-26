@@ -1,0 +1,185 @@
+{
+  "result": "ok",
+  "response": "collection",
+  "data": [
+    {
+      "id": "11aa22bb-33cc-44dd-8ee0-ff11aa22bb01",
+      "type": "chapter",
+      "attributes": {
+        "volume": "1",
+        "chapter": "1",
+        "title": null,
+        "translatedLanguage": "es-la",
+        "externalUrl": null,
+        "isUnavailable": false,
+        "publishAt": "2023-01-01T12:00:00+00:00",
+        "readableAt": "2023-01-01T12:00:00+00:00",
+        "pages": 30
+      },
+      "relationships": [
+        {
+          "id": "f0000000-0000-4000-8000-000000000001",
+          "type": "scanlation_group",
+          "attributes": {
+            "name": "Fixture Group A"
+          }
+        }
+      ]
+    },
+    {
+      "id": "11aa22bb-33cc-44dd-8ee0-ff11aa22bb02",
+      "type": "chapter",
+      "attributes": {
+        "volume": "1",
+        "chapter": "2",
+        "title": "El enfrentamiento",
+        "translatedLanguage": "es-la",
+        "externalUrl": null,
+        "isUnavailable": false,
+        "publishAt": "2023-01-08T12:00:00+00:00",
+        "readableAt": "2023-01-08T12:00:00+00:00",
+        "pages": 20
+      },
+      "relationships": [
+        {
+          "id": "f0000000-0000-4000-8000-000000000001",
+          "type": "scanlation_group",
+          "attributes": {
+            "name": "Fixture Group A"
+          }
+        }
+      ]
+    },
+    {
+      "id": "11aa22bb-33cc-44dd-8ee0-ff11aa22bb03",
+      "type": "chapter",
+      "attributes": {
+        "volume": "1",
+        "chapter": "2",
+        "title": null,
+        "translatedLanguage": "es-la",
+        "externalUrl": null,
+        "isUnavailable": false,
+        "publishAt": "2023-01-09T12:00:00+00:00",
+        "readableAt": "2023-01-09T12:00:00+00:00",
+        "pages": 22
+      },
+      "relationships": [
+        {
+          "id": "f0000000-0000-4000-8000-000000000002",
+          "type": "scanlation_group",
+          "attributes": {
+            "name": "Fixture Group B"
+          }
+        }
+      ]
+    },
+    {
+      "id": "11aa22bb-33cc-44dd-8ee0-ff11aa22bb04",
+      "type": "chapter",
+      "attributes": {
+        "volume": "1",
+        "chapter": "3",
+        "title": null,
+        "translatedLanguage": "es",
+        "externalUrl": null,
+        "isUnavailable": false,
+        "publishAt": "2023-01-15T12:00:00+00:00",
+        "readableAt": "2023-01-15T12:00:00+00:00",
+        "pages": 18
+      },
+      "relationships": []
+    },
+    {
+      "id": "11aa22bb-33cc-44dd-8ee0-ff11aa22bb05",
+      "type": "chapter",
+      "attributes": {
+        "volume": "1",
+        "chapter": "4",
+        "title": null,
+        "translatedLanguage": "es",
+        "externalUrl": null,
+        "isUnavailable": false,
+        "publishAt": "2023-01-20T12:00:00+00:00",
+        "readableAt": "2023-01-20T12:00:00+00:00",
+        "pages": 15
+      },
+      "relationships": []
+    },
+    {
+      "id": "11aa22bb-33cc-44dd-8ee0-ff11aa22bb06",
+      "type": "chapter",
+      "attributes": {
+        "volume": "1",
+        "chapter": "4",
+        "title": "La revelación",
+        "translatedLanguage": "es-la",
+        "externalUrl": null,
+        "isUnavailable": false,
+        "publishAt": "2023-01-22T12:00:00+00:00",
+        "readableAt": "2023-01-22T12:00:00+00:00",
+        "pages": 16
+      },
+      "relationships": [
+        {
+          "id": "f0000000-0000-4000-8000-000000000003",
+          "type": "scanlation_group",
+          "attributes": {
+            "name": "Fixture Group C"
+          }
+        }
+      ]
+    },
+    {
+      "id": "11aa22bb-33cc-44dd-8ee0-ff11aa22bb07",
+      "type": "chapter",
+      "attributes": {
+        "volume": "1",
+        "chapter": "5",
+        "title": null,
+        "translatedLanguage": "es-la",
+        "externalUrl": "https://example.invalid/read/5",
+        "isUnavailable": false,
+        "publishAt": "2023-01-25T12:00:00+00:00",
+        "readableAt": "2023-01-25T12:00:00+00:00",
+        "pages": 0
+      },
+      "relationships": []
+    },
+    {
+      "id": "11aa22bb-33cc-44dd-8ee0-ff11aa22bb08",
+      "type": "chapter",
+      "attributes": {
+        "volume": "1",
+        "chapter": "6",
+        "title": null,
+        "translatedLanguage": "es-la",
+        "externalUrl": null,
+        "isUnavailable": true,
+        "publishAt": "2023-01-28T12:00:00+00:00",
+        "readableAt": "2023-01-28T12:00:00+00:00",
+        "pages": 12
+      },
+      "relationships": []
+    },
+    {
+      "id": "11aa22bb-33cc-44dd-8ee0-ff11aa22bb09",
+      "type": "chapter",
+      "attributes": {
+        "volume": null,
+        "chapter": null,
+        "title": "Especial de Año Nuevo",
+        "translatedLanguage": "es-la",
+        "externalUrl": null,
+        "isUnavailable": false,
+        "publishAt": "2023-02-01T12:00:00+00:00",
+        "readableAt": "2023-02-01T12:00:00+00:00",
+        "pages": 8
+      },
+      "relationships": []
+    }
+  ],
+  "limit": 500,
+  "offset": 0,
+  "total": 9
+}

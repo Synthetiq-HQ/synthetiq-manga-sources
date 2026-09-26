@@ -40,6 +40,7 @@ const MODULE_DEFAULT_QUERIES = {
   dbmultiverse: "dragon ball",
   mangaworld: "one piece",
   yskcomics: "one piece",
+  "mangadex-es": "berserk",
 };
 let paginationPages = 1;
 let includeTags = [];
@@ -437,6 +438,16 @@ if (slug === "novelfire") {
           // LibriVox fetchBook hits api/feed/audiobooks/?...&id=<n>; the
           // catalogue/search calls use limit/offset/title instead.
           if (/[?&]id=\d+/.test(u) && details) return fixtureResponse(details);
+          if (search) return fixtureResponse(search);
+        }
+        if (slug === "mangadex-es") {
+          // MangaDex is a JSON API source: /manga for search and discovery,
+          // /manga/<uuid> for details, /manga/<uuid>/feed for chapters and
+          // /at-home/server/<uuid> for page images.
+          if (/\/manga\/[0-9a-f-]{36}\/feed/i.test(u) && chapterList) return fixtureResponse(chapterList);
+          if (/\/manga\/[0-9a-f-]{36}(?:\?|$)/i.test(u) && details) return fixtureResponse(details);
+          if (/\/manga\?/i.test(u) && search) return fixtureResponse(search);
+          if (/\/at-home\/server\//i.test(u) && special.imagesJSON) return fixtureResponse(special.imagesJSON);
           if (search) return fixtureResponse(search);
         }
         // WeebCentral uses /series/<id> for details and

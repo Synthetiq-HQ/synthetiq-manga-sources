@@ -1,0 +1,75 @@
+{
+  "result": "ok",
+  "response": "entity",
+  "data": {
+    "id": "7c9e1a2b-3d4f-4a5b-8c6d-7e8f9a0b1c2d",
+    "type": "manga",
+    "attributes": {
+      "title": {
+        "es-la": "La Sombra del Fénix",
+        "ja-ro": "Fixturesombā"
+      },
+      "altTitles": [
+        {
+          "en": "The Phoenix Shadow"
+        }
+      ],
+      "description": {
+        "es-la": "Una historia de prueba sobre un fénix que nunca existió.\r\nSolo para fixtures.",
+        "en": "A fixture-only tale about a phoenix that never was."
+      },
+      "status": "ongoing",
+      "year": 2021,
+      "contentRating": "safe",
+      "tags": [
+        {
+          "id": "aaa00000-0000-4000-8000-000000000001",
+          "type": "tag",
+          "attributes": {
+            "name": {
+              "en": "Action"
+            },
+            "description": {},
+            "group": "genre",
+            "version": 1
+          }
+        },
+        {
+          "id": "aaa00000-0000-4000-8000-000000000002",
+          "type": "tag",
+          "attributes": {
+            "name": {
+              "en": "Reincarnation"
+            },
+            "description": {},
+            "group": "theme",
+            "version": 1
+          }
+        }
+      ]
+    },
+    "relationships": [
+      {
+        "id": "cc000000-0000-4000-8000-000000000001",
+        "type": "cover_art",
+        "attributes": {
+          "fileName": "fixture-cover-phoenix.jpg"
+        }
+      },
+      {
+        "id": "aa000000-0000-4000-8000-000000000001",
+        "type": "author",
+        "attributes": {
+          "name": "Fixture Author"
+        }
+      },
+      {
+        "id": "ab000000-0000-4000-8000-000000000002",
+        "type": "artist",
+        "attributes": {
+          "name": "Fixture Artist"
+        }
+      }
+    ]
+  }
+}
