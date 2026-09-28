@@ -35,6 +35,25 @@
     return `${BASE_URL}/static/${raw.replace(/^static\//, "")}`;
   }
 
+  // Reader page images live on the CDN host: atsu.moe/static/pages/* returns
+  // HTTP 410, while the site's own reader loads them via cdn.atsu.moe.
+  const CDN_BASE_URL = "https://cdn.atsu.moe";
+
+  function pageImageURL(value) {
+    const raw = nonEmpty(value);
+    if (!raw) return "";
+    try {
+      const url = new URL(raw, `${BASE_URL}/`);
+      if (url.protocol !== "https:") return "";
+      const host = url.hostname.toLowerCase();
+      if (host !== "atsu.moe" && host !== "cdn.atsu.moe") return "";
+      if (!url.pathname.startsWith("/static/")) return "";
+      return `${CDN_BASE_URL}${url.pathname}${url.search}`;
+    } catch (_) {
+      return "";
+    }
+  }
+
   function mangaID(value) {
     const raw = nonEmpty(value);
     const match = raw.match(/(?:atsu\.moe\/manga\/)?([A-Za-z0-9_-]{3,})\/?(?:[?#].*)?$/i);
@@ -425,8 +444,8 @@
     const output = pages
       .slice()
       .sort((left, right) => Number(left?.number || 0) - Number(right?.number || 0))
-      .map((page) => assetURL(page?.image))
-      .filter((url) => url.startsWith(`${BASE_URL}/static/`))
+      .map((page) => pageImageURL(page?.image))
+      .filter(Boolean)
       .map((url) => ({
         url,
         headers: {

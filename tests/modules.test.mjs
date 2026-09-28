@@ -150,6 +150,8 @@ test("Atsu uses direct APIs, keeps complete chapters, and filters source-marked 
 
   const images = await module.extractImages(chapters[0].id);
   assert.deepEqual(JSON.parse(JSON.stringify(images)), fixtures.expected.images);
+  assert.ok(images.every((image) => image.url.startsWith("https://cdn.atsu.moe/static/pages/")));
+  assert.ok(images.every((image) => !image.url.startsWith("https://atsu.moe/")));
 
   const discovery = await module.discoveryHome();
   assert.ok(discovery.sections.every((section) => section.items.every((item) => item.id !== "fixture-adult")));

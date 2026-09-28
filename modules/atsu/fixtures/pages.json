@@ -1,1 +1,1 @@
-{"readChapter":{"pages":[{"number":1,"image":"/static/pages/fixture-safe/fixture-chapter-1/1.webp"},{"number":0,"image":"/static/pages/fixture-safe/fixture-chapter-1/0.webp"}]}}
+{"readChapter":{"pages":[{"number":1,"image":"/static/pages/fixture-safe/fixture-chapter-1/1.webp"},{"number":0,"image":"/static/pages/fixture-safe/fixture-chapter-1/0.webp"},{"number":2,"image":"https://atsu.moe/static/pages/fixture-safe/fixture-chapter-1/2.webp"},{"number":3,"image":"https://not-allowed.example/static/pages/fixture-safe/fixture-chapter-1/3.webp"}]}}

@@ -7,7 +7,8 @@
     {"id":"atsu|fixture-safe|fixture-special","href":"atsu|fixture-safe|fixture-special","url":"atsu|fixture-safe|fixture-special","title":"Fixture Special","number":null,"language":"en"}
   ],
   "images": [
-    {"url":"https://atsu.moe/static/pages/fixture-safe/fixture-chapter-1/0.webp","headers":{"Accept":"image/avif,image/webp,image/*,*/*;q=0.8","Referer":"https://atsu.moe/"}},
-    {"url":"https://atsu.moe/static/pages/fixture-safe/fixture-chapter-1/1.webp","headers":{"Accept":"image/avif,image/webp,image/*,*/*;q=0.8","Referer":"https://atsu.moe/"}}
+    {"url":"https://cdn.atsu.moe/static/pages/fixture-safe/fixture-chapter-1/0.webp","headers":{"Accept":"image/avif,image/webp,image/*,*/*;q=0.8","Referer":"https://atsu.moe/"}},
+    {"url":"https://cdn.atsu.moe/static/pages/fixture-safe/fixture-chapter-1/1.webp","headers":{"Accept":"image/avif,image/webp,image/*,*/*;q=0.8","Referer":"https://atsu.moe/"}},
+    {"url":"https://cdn.atsu.moe/static/pages/fixture-safe/fixture-chapter-1/2.webp","headers":{"Accept":"image/avif,image/webp,image/*,*/*;q=0.8","Referer":"https://atsu.moe/"}}
   ]
 }
