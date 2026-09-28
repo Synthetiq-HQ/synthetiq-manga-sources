@@ -587,7 +587,7 @@
       "id": "ichi-the-witch",
       "familyID": "ichi-the-witch",
       "name": "Ichi the Witch",
-      "version": "1.0.2",
+      "version": "1.0.3",
       "language": "en",
       "contentType": "pageImages",
       "contentRating": "suggestive",
@@ -596,7 +596,7 @@
       "sortPriority": 93,
       "manifest": {
         "path": "modules/ichi-the-witch/manifest.json",
-        "sha256": "73128c2d11b3e403d7837b559ef8581d2178c852c729d2517644b87ecd1f4c0d"
+        "sha256": "88658c448ce2e67ce61dd827042d8d479d23668d75a6c6c88ed1b1235b6c3e99"
       },
       "icon": {
         "path": "modules/ichi-the-witch/icon-v1.0.2.png",
@@ -607,7 +607,7 @@
       "id": "sakamoto-days",
       "familyID": "sakamoto-days",
       "name": "Sakamoto Days",
-      "version": "1.0.2",
+      "version": "1.0.3",
       "language": "en",
       "contentType": "pageImages",
       "contentRating": "suggestive",
@@ -616,7 +616,7 @@
       "sortPriority": 94,
       "manifest": {
         "path": "modules/sakamoto-days/manifest.json",
-        "sha256": "c85f0cc10360d7c63e6059dbd499b6bb4e38952f3c343410e995916ef6c7c9f4"
+        "sha256": "5048b030acf8e0481764152d7f712daec8eef2efee062b5c866df086c9f4aedf"
       },
       "icon": {
         "path": "modules/sakamoto-days/icon-v1.0.2.png",

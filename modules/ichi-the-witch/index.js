@@ -13,7 +13,10 @@
     CANONICAL_HOST,
   ]);
   const COVER_HOSTS = new Set(["i.imgur.com"]);
-  const READER_IMAGE_HOST = "cdn.readichithewitch.com";
+  const READER_IMAGE_HOSTS = new Map([
+    ["cdn.readichithewitch.com", /^\/file\/mangap\//i],
+    ["cdn.imgchest.com", /^\/files\//i],
+  ]);
   const DEFAULT_HEADERS = {
     Accept: "text/html,application/xhtml+xml",
     Referer: `${BASE_URL}/`,
@@ -116,8 +119,8 @@
     if (!input || /^data:/i.test(input)) return "";
     try {
       const url = new URL(input, base);
-      if (url.protocol !== "https:" || url.hostname.toLowerCase() !== READER_IMAGE_HOST) return "";
-      if (!/^\/file\/mangap\//i.test(url.pathname)) return "";
+      const pathPattern = READER_IMAGE_HOSTS.get(url.hostname.toLowerCase());
+      if (url.protocol !== "https:" || !pathPattern || !pathPattern.test(url.pathname)) return "";
       if (!/\.(?:jpe?g|png|webp|avif)$/i.test(url.pathname)) return "";
       return url.toString().split("#")[0];
     } catch (_) {

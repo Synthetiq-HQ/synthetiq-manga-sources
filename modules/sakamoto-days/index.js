@@ -13,7 +13,10 @@
     "ww1.readsakadays.com",
     "ww2.readsakadays.com",
   ]);
-  const IMAGE_HOST = "cdn.readsakadays.com";
+  const IMAGE_HOSTS = new Map([
+    ["cdn.readsakadays.com", /^\/file\/mangap\//i],
+    ["cdn.imgchest.com", /^\/files\//i],
+  ]);
   const COVER_HOST = "i.imgur.com";
   const DEFAULT_HEADERS = {
     Accept: "text/html,application/xhtml+xml",
@@ -104,8 +107,8 @@
     if (!input) return "";
     try {
       const url = new URL(input, base);
-      if (url.protocol !== "https:" || url.hostname.toLowerCase() !== IMAGE_HOST) return "";
-      if (!/^\/file\/mangap\//i.test(url.pathname)) return "";
+      const pathPattern = IMAGE_HOSTS.get(url.hostname.toLowerCase());
+      if (url.protocol !== "https:" || !pathPattern || !pathPattern.test(url.pathname)) return "";
       if (!/\.(?:jpg|jpeg|png|webp|avif)(?:$|\?)/i.test(url.pathname)) return "";
       return url.toString().split("#")[0];
     } catch (_) {

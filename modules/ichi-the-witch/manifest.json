@@ -4,6 +4,7 @@
     "www.readichithewitch.com",
     "ww2.readichithewitch.com",
     "cdn.readichithewitch.com",
+    "cdn.imgchest.com",
     "i.imgur.com",
     "raw.githubusercontent.com"
   ],
@@ -30,7 +31,7 @@
   "contractVersion": 1,
   "entry": {
     "path": "modules/ichi-the-witch/index.js",
-    "sha256": "ec4b953c5b305bc7d1d02da2a913278997263bab0e2ac3b068ca9d03da45dd5d"
+    "sha256": "97adc86e87e8e4625b6c55cb5503618b7585beff4bcc7cbe1c2e8922b1bc17ab"
   },
   "familyID": "ichi-the-witch",
   "icon": {
@@ -52,5 +53,5 @@
   "releaseTrack": "beta",
   "status": "active",
   "universalLink": "https://synthetiq.uk/manga/modules/ichi-the-witch",
-  "version": "1.0.2"
+  "version": "1.0.3"
 }

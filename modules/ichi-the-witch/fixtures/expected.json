@@ -115,6 +115,13 @@
         "Accept": "image/avif,image/webp,image/*,*/*",
         "Referer": "https://ww2.readichithewitch.com/chapter/ichi-the-witch-chapter-96/"
       }
+    },
+    {
+      "url": "https://cdn.imgchest.com/files/fixture-ichi-page-4.jpg",
+      "headers": {
+        "Accept": "image/avif,image/webp,image/*,*/*",
+        "Referer": "https://ww2.readichithewitch.com/chapter/ichi-the-witch-chapter-96/"
+      }
     }
   ]
 }

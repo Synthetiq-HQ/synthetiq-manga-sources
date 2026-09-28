@@ -59,7 +59,15 @@ test("Sakamoto Days filters the home catalogue, deduplicates chapters, and prese
 
   const images = await module.extractImages(chapters[1].id);
   assert.deepEqual(JSON.parse(JSON.stringify(images)), JSON.parse(await read("fixtures/expected.json")).images);
-  assert.equal(images.every((item) => item.url.startsWith("https://cdn.readsakadays.com/file/mangap/")), true);
+  assert.equal(
+    images.every(
+      (item) =>
+        item.url.startsWith("https://cdn.readsakadays.com/file/mangap/") ||
+        item.url.startsWith("https://cdn.imgchest.com/files/"),
+    ),
+    true,
+  );
+  assert.equal(images.some((item) => item.url.startsWith("https://cdn.imgchest.com/files/")), true);
   assert.equal(images[1].url.includes("token=fixture"), true);
   assert.equal(calls.filter((call) => call.url.includes("/manga/sakamoto-days/")).length, 1);
 });

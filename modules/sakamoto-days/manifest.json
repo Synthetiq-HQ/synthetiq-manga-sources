@@ -5,6 +5,7 @@
     "ww1.readsakadays.com",
     "ww2.readsakadays.com",
     "cdn.readsakadays.com",
+    "cdn.imgchest.com",
     "i.imgur.com",
     "raw.githubusercontent.com"
   ],
@@ -31,7 +32,7 @@
   "contractVersion": 1,
   "entry": {
     "path": "modules/sakamoto-days/index.js",
-    "sha256": "c6005bc84326f70c9c0ab5517bf0dd0ee28bd409a37c4c355acf66eb6194d4e1"
+    "sha256": "b907c80b8278c75bd90c5ee09d42e24b4a3edc579d55d5f48e87dbda5f967f05"
   },
   "familyID": "sakamoto-days",
   "icon": {
@@ -53,5 +54,5 @@
   "releaseTrack": "beta",
   "status": "active",
   "universalLink": "https://synthetiq.uk/manga/modules/sakamoto-days",
-  "version": "1.0.2"
+  "version": "1.0.3"
 }

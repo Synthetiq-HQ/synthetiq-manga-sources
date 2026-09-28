@@ -87,6 +87,13 @@
         "Accept": "image/avif,image/webp,image/*,*/*",
         "Referer": "https://ww2.readsakadays.com/chapter/sakamoto-days-chapter-137/"
       }
+    },
+    {
+      "url": "https://cdn.imgchest.com/files/fixture-sakamoto-page-4.jpg",
+      "headers": {
+        "Accept": "image/avif,image/webp,image/*,*/*",
+        "Referer": "https://ww2.readsakadays.com/chapter/sakamoto-days-chapter-137/"
+      }
     }
   ]
 }
