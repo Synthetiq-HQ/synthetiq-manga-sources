@@ -41,6 +41,7 @@ const MODULE_DEFAULT_QUERIES = {
   mangaworld: "one piece",
   yskcomics: "one piece",
   "mangadex-es": "berserk",
+  librivox: "sherlock",
 };
 let paginationPages = 1;
 let includeTags = [];

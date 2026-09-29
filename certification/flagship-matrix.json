@@ -27,6 +27,15 @@
       "requiresIOSReason": "This module requires the app's real WKWebView pagev2 bridge."
     },
     {
+      "id": "oceanofpdf",
+      "slug": "oceanofpdf",
+      "nodeLive": false,
+      "queries": ["Pride and Prejudice"],
+      "niche": null,
+      "paginationPages": 2,
+      "requiresIOSReason": "OceanofPDF serves Cloudflare browser verification to non-browser clients; live checks need the app's real WKWebView pagev2 bridge."
+    },
+    {
       "id": "mangakatana",
       "slug": "mangakatana",
       "nodeLive": true,

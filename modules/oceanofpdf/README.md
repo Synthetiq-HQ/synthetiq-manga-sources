@@ -101,3 +101,12 @@ Observed on 2026-09-09:
 Remaining gates: actual iPhone/iPad WKWebView verification, native PDF/EPUB open,
 offline downloads and signed-link renewal after expiry. Browser and fixture
 results do not substitute for those checks. No device-ready certification yet.
+
+## Sweep note (2026-09-29)
+
+A repository-wide live sweep in Node cannot verify this module: `pagev2` requests
+to `oceanofpdf.com` land on the site's Cloudflare browser verification, which only
+the app's real WKWebView bridge can clear. OceanofPDF is therefore classified
+`nodeLive: false` in `certification/flagship-matrix.json`, and live sweeps skip it
+the same way they skip MangaFire. Fixture tests continue to run. This changes no
+module code and does not close the pending device gates above.
