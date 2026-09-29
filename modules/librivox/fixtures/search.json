@@ -1,24 +1,6 @@
 {
-  "books": [
-    {
-      "id": "9001",
-      "title": "Fixture Audio Book",
-      "description": "A deterministic audio fixture.",
-      "language": "English",
-      "authors": ["Fixture Author"],
-      "genres": ["Adventure", "Public domain"],
-      "url_librivox": "https://librivox.org/fixture-audio-book/",
-      "coverart_thumbnail": "https://archive.org/download/fixture-audio-book/cover-thumb.jpg"
-    },
-    {
-      "id": "9002",
-      "title": "Second Fixture Audio Book",
-      "description": "A second deterministic audio fixture.",
-      "language": "English",
-      "authors": ["Second Author"],
-      "genres": ["History"],
-      "url_librivox": "https://librivox.org/second-fixture-audio-book/",
-      "coverart_thumbnail": "https://archive.org/download/second-fixture-audio-book/cover-thumb.jpg"
-    }
-  ]
+  "status": "SUCCESS",
+  "results": "<li class=\"catalog-result\">\n\t<div class=\"catalog-type\"><span class=\"title-icon\"></span>Title</div>\n\t<a href=\"https://librivox.org/fixture-audio-book/\" class=\"book-cover\"><img src=\"https://archive.org/download/fixture-audio-book/cover-thumb.jpg\" alt=\"book-cover-65x65\" width=\"65\" height=\"65\" /></a>\n\t<div class=\"result-data\">\n\t\t<h3><a href=\"https://librivox.org/fixture-audio-book/\">Fixture Audio Book</a></h3>\n\t\t<p class=\"book-author\"> <a href=\"https://librivox.org/author/9001\">Fixture Author <span class=\"dod-dob\">(1900 - 1990)</span></a> </p>\n\t\t<p class=\"book-meta\"> Complete | Solo | English</p>\n\t</div>\n</li>\n<li class=\"catalog-result\">\n\t<div class=\"catalog-type\"><span class=\"title-icon\"></span>Title</div>\n\t<a href=\"https://librivox.org/second-fixture-audio-book/\" class=\"book-cover\"><img src=\"https://archive.org/download/second-fixture-audio-book/cover-thumb.jpg\" alt=\"book-cover-65x65\" width=\"65\" height=\"65\" /></a>\n\t<div class=\"result-data\">\n\t\t<h3><a href=\"https://librivox.org/second-fixture-audio-book/\">Second Fixture Audio Book</a></h3>\n\t\t<p class=\"book-author\"> <a href=\"https://librivox.org/author/9002\">Second Author <span class=\"dod-dob\">(1910 - 2000)</span></a> </p>\n\t\t<p class=\"book-meta\"> Complete | Collaborative | English</p>\n\t</div>\n</li>",
+  "pagination": "<a class=\"page-number active\" data-page_number=\"1\" href=\"#\" data-call_function=\"get_advanced_results\">1</a>",
+  "search_page": 1
 }

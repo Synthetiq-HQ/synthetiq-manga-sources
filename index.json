@@ -774,12 +774,12 @@
       "language": "multi",
       "manifest": {
         "path": "modules/librivox/manifest.json",
-        "sha256": "51e42430b7e82bc0493bf3f2b945499dee1e4b43f8321c5be5ecdbe1ff30cdb0"
+        "sha256": "f97db2ee5d0d8a13c06edb2a56a0209ad50c429cff46484c30acb3bcc72da126"
       },
       "name": "LibriVox Audiobooks",
       "releaseTrack": "beta",
       "status": "active",
-      "version": "1.0.1",
+      "version": "1.0.2",
       "sortPriority": 6
     },
     {

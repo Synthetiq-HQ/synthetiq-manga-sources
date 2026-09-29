@@ -24,7 +24,7 @@
   "contractVersion": 1,
   "entry": {
     "path": "modules/librivox/index.js",
-    "sha256": "3ae36577e67a65cd75d5d4e15162667276691416934699431a78e4b128b7bf8e"
+    "sha256": "9ddd8320322a8cfe190f9ade8d54f85a5302a577ffa0d378c98766c443e41dd5"
   },
   "familyID": "librivox",
   "icon": {
@@ -46,5 +46,5 @@
   "releaseTrack": "beta",
   "status": "active",
   "universalLink": "https://synthetiq.uk/manga/modules/librivox",
-  "version": "1.0.1"
+  "version": "1.0.2"
 }

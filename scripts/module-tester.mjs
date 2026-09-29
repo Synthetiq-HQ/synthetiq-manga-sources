@@ -281,6 +281,7 @@ async function createRuntime(slug, mode) {
     const home =
       (await readFile(path.join(root, "modules", slug, "fixtures", "home.html"), "utf8").catch(() => null))
       || (await readFile(path.join(root, "modules", slug, "fixtures", "search.html"), "utf8").catch(() => null))
+      || (await readFile(path.join(root, "modules", slug, "fixtures", "home.json"), "utf8").catch(() => null))
       || (await readFile(path.join(root, "modules", slug, "fixtures", "search.json"), "utf8").catch(() => null));
     const chapter =
       (await readFile(path.join(root, "modules", slug, "fixtures", "chapter.html"), "utf8").catch(() => null))
@@ -436,9 +437,15 @@ if (slug === "novelfire") {
         }
         if (slug === "librivox") {
           // LibriVox fetchBook hits api/feed/audiobooks/?...&id=<n>; the
-          // catalogue/search calls use limit/offset/title instead.
+          // catalogue calls use limit/offset, searches use /advanced_search,
+          // and slug book pages resolve their /rss/<id> link first.
+          const bookPage = await fixture("page.html");
+          const bookPage2 = await fixture("page-2.html");
+          if (/\/fixture-audio-book\/?$/.test(u) && bookPage) return fixtureResponse(bookPage);
+          if (/\/second-fixture-audio-book\/?$/.test(u) && bookPage2) return fixtureResponse(bookPage2);
+          if (/advanced_search/i.test(u) && search) return fixtureResponse(search);
           if (/[?&]id=\d+/.test(u) && details) return fixtureResponse(details);
-          if (search) return fixtureResponse(search);
+          if (home) return fixtureResponse(home);
         }
         if (slug === "mangadex-es") {
           // MangaDex is a JSON API source: /manga for search and discovery,

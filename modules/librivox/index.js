@@ -2,9 +2,13 @@
 
 (() => {
   // LibriVox exposes a documented JSON catalogue. Each audiobook section is
-  // one stable chapter and one independently streamable MP3 track.
+  // one stable chapter and one independently streamable MP3 track. Title
+  // search runs through the catalogue's own /advanced_search endpoint (the
+  // public API's title filter now matches complete titles only), and slug
+  // book pages resolve their /rss/<id> link before any catalogue lookup.
   const BASE_URL = "https://librivox.org";
   const API_URL = `${BASE_URL}/api/feed/audiobooks/`;
+  const SITE_SEARCH_URL = `${BASE_URL}/advanced_search`;
   const PAGE_SIZE = 24;
   const API_LIMIT = PAGE_SIZE + 1;
   const MAX_RESPONSE_BYTES = 16 * 1024 * 1024;
@@ -17,6 +21,7 @@
   };
   const bookCache = new Map();
   const bookLoads = new Map();
+  const slugIDs = new Map();
   const MAX_CACHED_BOOKS = 8;
 
   function sleep(milliseconds) {
@@ -165,6 +170,7 @@
             followRedirects: true,
             maxBytesHint: MAX_RESPONSE_BYTES,
             responseClass: "json",
+            timeoutMilliseconds: 30000,
           },
         );
         const status = Number(response && response.status);
@@ -174,6 +180,45 @@
           continue;
         }
         return await responseJSON(response);
+      } catch (error) {
+        lastError = error instanceof Error ? error : new Error(String(error));
+      }
+    }
+    throw lastError || new Error("LibriVox request failed.");
+  }
+
+  async function requestPage(url, extraHeaders = {}) {
+    if (typeof globalThis.fetchv2 !== "function") throw new Error("LibriVox requires the fetchv2 bridge.");
+    let lastError = null;
+    for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt += 1) {
+      if (attempt > 1) await sleep(800 * (attempt - 1));
+      try {
+        const response = await globalThis.fetchv2(
+          url,
+          { ...DEFAULT_HEADERS, Accept: "text/html,application/xhtml+xml", ...extraHeaders },
+          "GET",
+          null,
+          {
+            followRedirects: true,
+            maxBytesHint: MAX_RESPONSE_BYTES,
+            responseClass: "html",
+            timeoutMilliseconds: 30000,
+          },
+        );
+        const status = Number(response && response.status);
+        if (!response || response.ok === false || (status && (status < 200 || status >= 300))) {
+          lastError = new Error(`LibriVox request failed with HTTP ${status || "error"}.`);
+          if (!RETRYABLE_STATUS.has(status)) break;
+          continue;
+        }
+        const body = typeof response.body === "string"
+          ? response.body
+          : (typeof response.text === "function" ? await response.text() : "");
+        if (!body) {
+          lastError = new Error("LibriVox returned an empty response.");
+          continue;
+        }
+        return body;
       } catch (error) {
         lastError = error instanceof Error ? error : new Error(String(error));
       }
@@ -222,19 +267,107 @@
     return requestJSON(url.toString());
   }
 
+  function safeBookPage(value) {
+    const input = text(value);
+    if (!input) return null;
+    try {
+      const url = new URL(input, BASE_URL);
+      if (url.protocol !== "https:" || url.hostname.toLowerCase() !== "librivox.org") return null;
+      if (!/^\/[a-z0-9][a-z0-9-]*\/?$/i.test(url.pathname)) return null;
+      url.search = "";
+      url.hash = "";
+      if (!url.pathname.endsWith("/")) url.pathname += "/";
+      return url.toString();
+    } catch (_) {
+      return null;
+    }
+  }
+
+  function parseSearchPage(html) {
+    const items = [];
+    if (typeof html !== "string" || !html) return items;
+    const seen = new Set();
+    const blocks = html.match(/<li class="catalog-result">[\s\S]*?<\/li>/gi) || [];
+    for (const block of blocks) {
+      const anchor = block.match(/<h3>\s*<a href="([^"]+)"[^>]*>([\s\S]*?)<\/a>\s*<\/h3>/i);
+      if (!anchor) continue;
+      const href = safeBookPage(anchor[1]);
+      if (!href || seen.has(href)) continue;
+      const title = stripHTML(anchor[2]);
+      if (!title) continue;
+      seen.add(href);
+      const cover = block.match(/class="book-cover"[^>]*>\s*<img[^>]*src="([^"]+)"/i);
+      const authorBlock = block.match(/<p class="book-author">([\s\S]*?)<\/p>/i);
+      const author = authorBlock
+        ? stripHTML(authorBlock[1].replace(/<span class="dod-dob">[\s\S]*?<\/span>/gi, ""))
+        : "";
+      items.push({
+        id: href,
+        href,
+        url: href,
+        title,
+        image: cover ? safeURL(cover[1], "media") : null,
+        description: "",
+        author,
+        genres: [],
+      });
+    }
+    return items;
+  }
+
+  function searchHasMore(pagination, page) {
+    const numbers = [...String(pagination || "").matchAll(/data-page_number="(\d+)"/g)].map((match) => Number(match[1]));
+    return numbers.length > 0 && Math.max(...numbers) > page;
+  }
+
   async function searchResults(query, page = 1) {
     const requestedPage = Math.max(1, Number(page) || 1);
     const raw = typeof query === "string" ? query : String((query && (query.text || query.query)) || "");
     const value = raw.trim();
-    const params = {
-      offset: (requestedPage - 1) * PAGE_SIZE,
-      title: value && !value.startsWith("__feed:") ? value.slice(0, 160) : "",
+    if (!value || value.startsWith("__feed:")) {
+      return pageResult(await fetchCatalogue({ offset: (requestedPage - 1) * PAGE_SIZE }), requestedPage);
+    }
+    const url = new URL(SITE_SEARCH_URL);
+    url.searchParams.set("title", value.slice(0, 160));
+    url.searchParams.set("q", value.slice(0, 160));
+    url.searchParams.set("search_form", "advanced");
+    url.searchParams.set("search_page", String(requestedPage));
+    const body = await requestPage(url.toString(), {
+      Accept: "application/json",
+      "X-Requested-With": "XMLHttpRequest",
+    });
+    let payload = null;
+    try {
+      payload = JSON.parse(body);
+    } catch (_) {
+      throw new Error("LibriVox returned an invalid search response.");
+    }
+    const results = payload && typeof payload.results === "string" ? payload.results : "";
+    return {
+      items: parseSearchPage(results),
+      hasMore: searchHasMore(payload && payload.pagination, requestedPage),
     };
-    return pageResult(await fetchCatalogue(params), requestedPage);
+  }
+
+  async function resolveBookID(value) {
+    const input = text(value);
+    const direct = input.match(/[?&]id=(\d+)/i) || input.match(/(?:^|:)book:(\d+)(?::|$)/i);
+    if (direct) return normalizedBookID(direct[1]);
+    if (/^\d{1,10}$/.test(input)) return normalizedBookID(input);
+    const page = safeBookPage(input);
+    if (!page) throw new Error("Invalid LibriVox audiobook identifier.");
+    if (!slugIDs.has(page)) {
+      const body = await requestPage(page);
+      const match = body.match(/\/rss\/(\d{1,10})/i);
+      if (!match) throw new Error("LibriVox audiobook was not found.");
+      if (slugIDs.size >= 64) slugIDs.delete(slugIDs.keys().next().value);
+      slugIDs.set(page, normalizedBookID(match[1]));
+    }
+    return slugIDs.get(page);
   }
 
   async function fetchBook(bookID) {
-    const id = normalizedBookID(bookID);
+    const id = await resolveBookID(bookID);
     if (bookCache.has(id)) {
       const cached = bookCache.get(id);
       bookCache.delete(id);
