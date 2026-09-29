@@ -1,0 +1,72 @@
+{
+ "currentPage": 1,
+ "hasNextPage": false,
+ "totalResults": 9,
+ "totalPages": 1,
+ "results": [
+  {
+   "id": "al-105398",
+   "title": "Solo Leveling",
+   "image": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx105398-b673Vt5ZSuz3.jpg",
+   "type": "Manhwa",
+   "rating": 8.616833333333329,
+   "ratingCount": 34353,
+   "latestChapter": 268,
+   "views": 285839,
+   "updatedAt": null,
+   "genres": [
+    "action",
+    "adventure",
+    "fantasy",
+    "drama",
+    "shounen",
+    "Action",
+    "Adventure",
+    "Drama",
+    "Fantasy",
+    "Shounen"
+   ],
+   "status": "completed"
+  },
+  {
+   "id": "al-179445",
+   "title": "Solo Leveling: Ragnarok",
+   "image": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx179445-ho0nb7baJ1a5.jpg",
+   "type": "Manhwa",
+   "rating": 7.69883333333333,
+   "ratingCount": 1276,
+   "latestChapter": 201,
+   "views": 33178,
+   "updatedAt": null,
+   "genres": [
+    "action",
+    "adventure",
+    "fantasy",
+    "comedy",
+    "drama",
+    "school_life",
+    "shounen"
+   ],
+   "status": "hiatus"
+  },
+  {
+   "id": "al-201652",
+   "title": "The Privilege of the Second Life is Power Leveling",
+   "image": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx201652-Y5UtAmjHjAQL.jpg",
+   "type": "Manhua",
+   "rating": 6.13333333333333,
+   "ratingCount": 2,
+   "latestChapter": 200,
+   "views": 236,
+   "updatedAt": null,
+   "genres": [
+    "action",
+    "drama",
+    "fantasy",
+    "shounen"
+   ],
+   "status": "ongoing"
+  }
+ ],
+ "source": "catalog"
+}

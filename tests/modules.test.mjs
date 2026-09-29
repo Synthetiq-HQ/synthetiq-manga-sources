@@ -1885,3 +1885,235 @@ test("MangaDex (Español) uses the public API with es/es-la scoping and deduplic
     /Invalid MangaDex chapter identifier/,
   );
 });
+
+test("Inkora uses the public spacely.tech JSON API with site chapter ids and proxied page images", async () => {
+  const fixtures = {
+    search: await json("modules/inkora/fixtures/search.json"),
+    home: await json("modules/inkora/fixtures/home.json"),
+    details: await json("modules/inkora/fixtures/details.json"),
+    images: await json("modules/inkora/fixtures/images.json"),
+  };
+  const calls = [];
+  const module = await loadModule("modules/inkora/index.js", {
+    fetchv2: async (url, headers, method, body, options) => {
+      assert.equal(typeof url, "string");
+      calls.push({ url, headers, method, body, options });
+      const u = String(url);
+      if (/\/manhwa\/index\/read\//.test(u)) {
+        if (u.includes("mk-evil-fixture")) {
+          return response(JSON.stringify({
+            chapterId: "mk-evil-fixture",
+            pages: [{ page: 1, img: "https://evil.example/pages/1.webp" }],
+          }));
+        }
+        return response(JSON.stringify(fixtures.images));
+      }
+      if (/\/manhwa\/index\/info\//.test(u)) return response(JSON.stringify(fixtures.details));
+      if (/\/advanced-search\?/.test(u)) return response(JSON.stringify(fixtures.home));
+      if (/\/manhwa\/inkora\/search\?/.test(u)) return response(JSON.stringify(fixtures.search));
+      throw new Error(`Unexpected Inkora URL: ${u}`);
+    },
+  });
+
+  const search = await module.searchResults("solo leveling", 1);
+  const searchItems = [
+    {
+      id: "al-105398",
+      href: "https://inkora.spacely.tech/manhwa/al-105398",
+      url: "https://inkora.spacely.tech/manhwa/al-105398",
+      title: "Solo Leveling",
+      image: "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx105398-b673Vt5ZSuz3.jpg",
+    },
+    {
+      id: "al-179445",
+      href: "https://inkora.spacely.tech/manhwa/al-179445",
+      url: "https://inkora.spacely.tech/manhwa/al-179445",
+      title: "Solo Leveling: Ragnarok",
+      image: "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx179445-ho0nb7baJ1a5.jpg",
+    },
+    {
+      id: "al-201652",
+      href: "https://inkora.spacely.tech/manhwa/al-201652",
+      url: "https://inkora.spacely.tech/manhwa/al-201652",
+      title: "The Privilege of the Second Life is Power Leveling",
+      image: "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx201652-Y5UtAmjHjAQL.jpg",
+    },
+  ];
+  assert.deepEqual(JSON.parse(JSON.stringify(search)), { items: searchItems, hasMore: false });
+  assert.ok(calls[0].url.includes("q=solo%20leveling"));
+  assert.ok(calls[0].url.includes("per_page=30"));
+
+  // The platform answers sub-3-character queries with an empty envelope;
+  // resolve them locally instead of spending a network call.
+  const callsBeforeShort = calls.length;
+  const short = await module.searchResults("ab", 1);
+  assert.deepEqual(JSON.parse(JSON.stringify(short)), { items: [], hasMore: false });
+  assert.equal(calls.length, callsBeforeShort);
+
+  // Browse + discovery feeds ride the platform's advanced-search endpoint.
+  const homeItems = [
+    {
+      id: "al-105398",
+      href: "https://inkora.spacely.tech/manhwa/al-105398",
+      url: "https://inkora.spacely.tech/manhwa/al-105398",
+      title: "Solo Leveling",
+      image: "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx105398-b673Vt5ZSuz3.jpg",
+    },
+    {
+      id: "al-119257",
+      href: "https://inkora.spacely.tech/manhwa/al-119257",
+      url: "https://inkora.spacely.tech/manhwa/al-119257",
+      title: "Omniscient Reader",
+      image: "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx119257-Pi21aq3ey9GG.jpg",
+    },
+    {
+      id: "al-85143",
+      href: "https://inkora.spacely.tech/manhwa/al-85143",
+      url: "https://inkora.spacely.tech/manhwa/al-85143",
+      title: "Tower of God",
+      image: "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx85143-23oup3ETbFJk.jpg",
+    },
+  ];
+  const popular = await module.searchResults("__feed:popular", 1);
+  assert.deepEqual(JSON.parse(JSON.stringify(popular)), { items: homeItems, hasMore: true });
+  assert.ok(calls.at(-1).url.includes("/advanced-search?"));
+  assert.ok(calls.at(-1).url.includes("sort=views_7d"));
+
+  const browse = await module.searchResults("", 1);
+  assert.deepEqual(JSON.parse(JSON.stringify(browse)), { items: homeItems, hasMore: true });
+
+  // Details accept the canonical series URL and normalize to the plain id.
+  const details = await module.extractDetails("https://inkora.spacely.tech/manhwa/al-105398");
+  assert.equal(details.id, "al-105398");
+  assert.equal(details.href, "https://inkora.spacely.tech/manhwa/al-105398");
+  assert.equal(details.url, "https://inkora.spacely.tech/manhwa/al-105398");
+  assert.equal(details.title, "Solo Leveling");
+  assert.ok(details.description.startsWith("In a world where awakened beings"));
+  assert.equal(
+    details.image,
+    "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx105398-b673Vt5ZSuz3.jpg",
+  );
+  assert.deepEqual(JSON.parse(JSON.stringify(details.authors)), ["Chu-Gong", "Seong-Rak Jang"]);
+  assert.equal(details.author, "Chu-Gong");
+  assert.deepEqual(JSON.parse(JSON.stringify(details.genres)), ["Action", "Adventure", "Fantasy", "Drama", "Shounen"]);
+  assert.equal(details.status, "Completed");
+
+  // Chapter ids are the platform's own reader ids (mb-/mk-/ks- prefixes),
+  // sorted newest-first with decimal chapters lifted into their true spot.
+  const chapters = await module.extractChapters("al-105398");
+  assert.deepEqual(JSON.parse(JSON.stringify(chapters)), [
+    {
+      id: "mk-VYPXzEYz-w80N9aaD",
+      href: "https://inkora.spacely.tech/manhwa/al-105398/read/mk-VYPXzEYz-w80N9aaD",
+      url: "https://inkora.spacely.tech/manhwa/al-105398/read/mk-VYPXzEYz-w80N9aaD",
+      title: "Chapter 268",
+      number: 268,
+      releaseDate: "2023-01-26T19:39:15.000Z",
+      language: "en",
+    },
+    {
+      id: "mk-VYPXzEYz-6YlRNnk2",
+      href: "https://inkora.spacely.tech/manhwa/al-105398/read/mk-VYPXzEYz-6YlRNnk2",
+      url: "https://inkora.spacely.tech/manhwa/al-105398/read/mk-VYPXzEYz-6YlRNnk2",
+      title: "Chapter side-story-1",
+      number: 267,
+      releaseDate: "2023-01-20T14:11:21.000Z",
+      language: "en",
+    },
+    {
+      id: "mk-VYPXzEYz-z8NybZm2",
+      href: "https://inkora.spacely.tech/manhwa/al-105398/read/mk-VYPXzEYz-z8NybZm2",
+      url: "https://inkora.spacely.tech/manhwa/al-105398/read/mk-VYPXzEYz-z8NybZm2",
+      title: "Chapter 266",
+      number: 266,
+      releaseDate: "2023-01-13T12:09:12.000Z",
+      language: "en",
+    },
+    {
+      id: "ks-22015-level-up-alone-2",
+      href: "https://inkora.spacely.tech/manhwa/al-105398/read/ks-22015-level-up-alone-2",
+      url: "https://inkora.spacely.tech/manhwa/al-105398/read/ks-22015-level-up-alone-2",
+      title: "Chapter 2",
+      number: 2,
+      releaseDate: null,
+      language: "en",
+    },
+    {
+      id: "mk-VYPXzEYz-DMG9v608",
+      href: "https://inkora.spacely.tech/manhwa/al-105398/read/mk-VYPXzEYz-DMG9v608",
+      url: "https://inkora.spacely.tech/manhwa/al-105398/read/mk-VYPXzEYz-DMG9v608",
+      title: "Chapter 1.1",
+      number: 1.1,
+      releaseDate: "2026-06-24T12:02:40.000Z",
+      language: "en",
+    },
+    {
+      id: "ks-22015-level-up-alone-1",
+      href: "https://inkora.spacely.tech/manhwa/al-105398/read/ks-22015-level-up-alone-1",
+      url: "https://inkora.spacely.tech/manhwa/al-105398/read/ks-22015-level-up-alone-1",
+      title: "Chapter 1",
+      number: 1,
+      releaseDate: null,
+      language: "en",
+    },
+    {
+      id: "mk-VYPXzEYz-DVM9kXwY",
+      href: "https://inkora.spacely.tech/manhwa/al-105398/read/mk-VYPXzEYz-DVM9kXwY",
+      url: "https://inkora.spacely.tech/manhwa/al-105398/read/mk-VYPXzEYz-DVM9kXwY",
+      title: "Chapter 0.1",
+      number: 0.1,
+      releaseDate: "2026-06-24T12:02:39.000Z",
+      language: "en",
+    },
+  ]);
+
+  // Page images come back in page order through the platform image proxy.
+  const images = await module.extractImages(chapters[0].id);
+  assert.equal(images.length, 6);
+  assert.equal(
+    images[0].url,
+    "https://api.spacely.tech/manhwa/inkora/image-proxy?ref=aHR0cHM6Ly9yeC5xdnpyZS5vcmcvci9wLzFmZTNkYjRhLzM3NzRiOTk1L2Q2MjVmMGE5NGM1NC53ZWJw",
+  );
+  assert.deepEqual(
+    JSON.parse(JSON.stringify(images[0].headers)),
+    { Accept: "image/avif,image/webp,image/*,*/*" },
+  );
+  assert.ok(images.every((page) => page.url.startsWith("https://api.spacely.tech/manhwa/")));
+  const imagesViaReaderURL = await module.extractImages(
+    "https://inkora.spacely.tech/manhwa/al-105398/read/mk-VYPXzEYz-DVM9kXwY",
+  );
+  assert.equal(imagesViaReaderURL.length, 6);
+  await assert.rejects(
+    () => module.extractImages("https://inkora.spacely.tech/manhwa/al-105398/read/"),
+    /Invalid Inkora chapter identifier/,
+  );
+  await assert.rejects(
+    () => module.extractImages("mk-evil-fixture"),
+    /unexpected chapter image host/,
+  );
+
+  const discovery = await module.discoveryHome();
+  assert.deepEqual(
+    JSON.parse(JSON.stringify(discovery.sections.map((section) => section.id))),
+    ["popular", "latest"],
+  );
+  assert.deepEqual(
+    JSON.parse(JSON.stringify(discovery.sections[0].items)),
+    homeItems,
+  );
+  assert.ok(calls.some((call) => call.url.includes("sort=views_7d")));
+  assert.ok(calls.some((call) => call.url.includes("sort=latest")));
+
+  const unknownFeed = await module.discoveryFeed("nope");
+  assert.deepEqual(JSON.parse(JSON.stringify(unknownFeed)), { items: [], hasMore: false });
+
+  await assert.rejects(
+    () => module.extractDetails("https://evil.example/manhwa/al-105398"),
+    /Invalid Inkora series identifier/,
+  );
+  await assert.rejects(() => module.extractChapters("not-an-id"), /Invalid Inkora series identifier/);
+  await assert.rejects(
+    () => module.extractImages("https://evil.example/manhwa/al-105398/read/mk-VYPXzEYz-DVM9kXwY"),
+    /Invalid Inkora chapter identifier/,
+  );
+});

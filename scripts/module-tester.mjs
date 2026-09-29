@@ -42,6 +42,7 @@ const MODULE_DEFAULT_QUERIES = {
   yskcomics: "one piece",
   "mangadex-es": "berserk",
   librivox: "sherlock",
+  inkora: "solo leveling",
 };
 let paginationPages = 1;
 let includeTags = [];
@@ -456,6 +457,17 @@ if (slug === "novelfire") {
           if (/\/manga\/[0-9a-f-]{36}(?:\?|$)/i.test(u) && details) return fixtureResponse(details);
           if (/\/manga\?/i.test(u) && search) return fixtureResponse(search);
           if (/\/at-home\/server\//i.test(u) && special.imagesJSON) return fixtureResponse(special.imagesJSON);
+          if (search) return fixtureResponse(search);
+        }
+        if (slug === "inkora") {
+          // Inkora serves its catalogue from the spacely.tech JSON API:
+          // /manhwa/inkora/search + /advanced-search for lists, /manhwa/index/
+          // info/<id> for details + the site's chapter list, /manhwa/index/
+          // read/<chapterId> for page images.
+          if (/\/manhwa\/index\/read\//i.test(u) && special.imagesJSON) return fixtureResponse(special.imagesJSON);
+          if (/\/manhwa\/index\/info\//i.test(u) && details) return fixtureResponse(details);
+          if (/\/advanced-search\?/i.test(u) && home) return fixtureResponse(home);
+          if (/\/manhwa\/inkora\/search\?/i.test(u) && search) return fixtureResponse(search);
           if (search) return fixtureResponse(search);
         }
         // WeebCentral uses /series/<id> for details and

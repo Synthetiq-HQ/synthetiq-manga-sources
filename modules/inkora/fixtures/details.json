@@ -1,0 +1,221 @@
+{
+ "id": "al-105398",
+ "source": "index",
+ "sourceId": "105398",
+ "title": "Solo Leveling",
+ "altTitles": [
+  "Na Honjaman Level Up",
+  "Solo Leveling"
+ ],
+ "image": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx105398-b673Vt5ZSuz3.jpg",
+ "coverImage": "https://s4.anilist.co/file/anilistcdn/media/manga/banner/105398-4UrEhdqZukrg.jpg",
+ "description": "In a world where awakened beings called “Hunters” must battle deadly monsters to protect humanity, Sung Jinwoo, nicknamed “the weakest hunter of all mankind,” finds himself in a constant struggle for survival. One day, after a brutal encounter in an overpowered dungeon wipes out his party and threatens to end his life, a mysterious System chooses him as its sole player: Jinwoo has been granted the rare opportunity to level up his abilities, possibly beyond any known limits. Follow Jinwoo’s journey as he takes on ever-stronger enemies, both human and monster, to discover the secrets deep within the dungeons and the ultimate extent of his powers. *Source: Tappytoon* --- Known as the Weakest Hunter of All Mankind, E-rank hunter Jinwoo Sung’s contribution to raids amounts to trying not to get killed. Unfortunately, between his mother’s hospital bills, his sister’s tuition, and his own lack of job prospects, he has no choice but to continue to put his life on the line. So when an opportunity arises for a bigger payout, he takes it…only to come face-to-face with a being whose power outranks anything he’s ever seen! With the party leader missing an arm and the only healer a quivering mess, can Jinwoo some­how find them a way out? *Source: Yen Press, Vol. 1*",
+ "genres": [
+  "action",
+  "adventure",
+  "fantasy",
+  "drama",
+  "shounen"
+ ],
+ "status": "completed",
+ "type": "Manhwa",
+ "rating": 8.616833333333329,
+ "ratingCount": 33500,
+ "follows": 284806,
+ "year": 2018,
+ "totalChapters": 264,
+ "authors": [
+  "Chu-Gong"
+ ],
+ "artists": [
+  "Seong-Rak Jang"
+ ],
+ "chapters": [
+  {
+   "id": "mk-VYPXzEYz-w80N9aaD",
+   "title": "Chapter 268",
+   "versions": [
+    {
+     "id": "mk-VYPXzEYz-w80N9aaD",
+     "title": "Chapter 268",
+     "scanGroup": {
+      "id": 5,
+      "name": "Source E",
+      "slug": "source-e"
+     },
+     "releaseDate": "2023-01-26T19:39:15.000Z",
+     "chapterNumber": 268
+    }
+   ],
+   "scanGroup": {
+    "id": 5,
+    "name": "Source E",
+    "slug": "source-e"
+   },
+   "releaseDate": "2023-01-26T19:39:15.000Z",
+   "chapterNumber": 268,
+   "hasMultipleVersions": false
+  },
+  {
+   "id": "mk-VYPXzEYz-6YlRNnk2",
+   "title": "Chapter side-story-1",
+   "versions": [
+    {
+     "id": "mk-VYPXzEYz-6YlRNnk2",
+     "title": "Chapter side-story-1",
+     "scanGroup": {
+      "id": 5,
+      "name": "Source E",
+      "slug": "source-e"
+     },
+     "releaseDate": "2023-01-20T14:11:21.000Z",
+     "chapterNumber": 267
+    }
+   ],
+   "scanGroup": {
+    "id": 5,
+    "name": "Source E",
+    "slug": "source-e"
+   },
+   "releaseDate": "2023-01-20T14:11:21.000Z",
+   "chapterNumber": 267,
+   "hasMultipleVersions": false
+  },
+  {
+   "id": "mk-VYPXzEYz-z8NybZm2",
+   "title": "Chapter 266",
+   "versions": [
+    {
+     "id": "mk-VYPXzEYz-z8NybZm2",
+     "title": "Chapter 266",
+     "scanGroup": {
+      "id": 5,
+      "name": "Source E",
+      "slug": "source-e"
+     },
+     "releaseDate": "2023-01-13T12:09:12.000Z",
+     "chapterNumber": 266
+    }
+   ],
+   "scanGroup": {
+    "id": 5,
+    "name": "Source E",
+    "slug": "source-e"
+   },
+   "releaseDate": "2023-01-13T12:09:12.000Z",
+   "chapterNumber": 266,
+   "hasMultipleVersions": false
+  },
+  {
+   "id": "ks-22015-level-up-alone-2",
+   "title": "Chapter 2",
+   "versions": [
+    {
+     "id": "ks-22015-level-up-alone-2",
+     "title": "Chapter 2",
+     "scanGroup": {
+      "id": 1,
+      "name": "Source A",
+      "slug": "source-a"
+     },
+     "chapterNumber": 2
+    }
+   ],
+   "scanGroup": {
+    "id": 1,
+    "name": "Source A",
+    "slug": "source-a"
+   },
+   "chapterNumber": 2,
+   "hasMultipleVersions": true
+  },
+  {
+   "id": "mk-VYPXzEYz-DMG9v608",
+   "title": "Chapter 1.1",
+   "versions": [
+    {
+     "id": "mk-VYPXzEYz-DMG9v608",
+     "title": "Chapter 1.1",
+     "scanGroup": {
+      "id": 5,
+      "name": "Source E",
+      "slug": "source-e"
+     },
+     "releaseDate": "2026-06-24T12:02:40.000Z",
+     "chapterNumber": 1.1
+    }
+   ],
+   "scanGroup": {
+    "id": 5,
+    "name": "Source E",
+    "slug": "source-e"
+   },
+   "releaseDate": "2026-06-24T12:02:40.000Z",
+   "chapterNumber": 1.1,
+   "hasMultipleVersions": false
+  },
+  {
+   "id": "ks-22015-level-up-alone-1",
+   "title": "Chapter 1",
+   "versions": [
+    {
+     "id": "ks-22015-level-up-alone-1",
+     "title": "Chapter 1",
+     "scanGroup": {
+      "id": 1,
+      "name": "Source A",
+      "slug": "source-a"
+     },
+     "chapterNumber": 1
+    }
+   ],
+   "scanGroup": {
+    "id": 1,
+    "name": "Source A",
+    "slug": "source-a"
+   },
+   "chapterNumber": 1,
+   "hasMultipleVersions": true
+  },
+  {
+   "id": "mk-VYPXzEYz-DVM9kXwY",
+   "title": "Chapter 0.1",
+   "versions": [
+    {
+     "id": "mk-VYPXzEYz-DVM9kXwY",
+     "title": "Chapter 0.1",
+     "scanGroup": {
+      "id": 5,
+      "name": "Source E",
+      "slug": "source-e"
+     },
+     "releaseDate": "2026-06-24T12:02:39.000Z",
+     "chapterNumber": 0.1
+    }
+   ],
+   "scanGroup": {
+    "id": 5,
+    "name": "Source E",
+    "slug": "source-e"
+   },
+   "releaseDate": "2026-06-24T12:02:39.000Z",
+   "chapterNumber": 0.1,
+   "hasMultipleVersions": false
+  }
+ ],
+ "scanGroups": [
+  {
+   "id": 1,
+   "name": "Source E"
+  },
+  {
+   "id": 2,
+   "name": "Asura Scans"
+  },
+  {
+   "id": 3,
+   "name": "Source A"
+  }
+ ],
+ "provider": "index"
+}

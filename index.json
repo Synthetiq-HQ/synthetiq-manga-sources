@@ -899,6 +899,25 @@
       "releaseTrack": "beta",
       "status": "active",
       "version": "1.0.2"
+    },
+    {
+      "contentRating": "suggestive",
+      "contentType": "pageImages",
+      "familyID": "inkora",
+      "icon": {
+        "path": "modules/inkora/icon.png",
+        "sha256": "2f3465dd0a74e77212b52fcda09f8a609b6a552cc890745d6ea4163996cdc007"
+      },
+      "id": "inkora",
+      "language": "en",
+      "manifest": {
+        "path": "modules/inkora/manifest.json",
+        "sha256": "371a031d6815a6610ef5d2496a20685cca5bc56b0d72cda14188fe489e8a565a"
+      },
+      "name": "Inkora",
+      "releaseTrack": "beta",
+      "status": "active",
+      "version": "1.0.0"
     }
   ],
   "repository": {

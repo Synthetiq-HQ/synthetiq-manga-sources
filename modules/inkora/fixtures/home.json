@@ -1,0 +1,70 @@
+{
+ "currentPage": 1,
+ "hasNextPage": true,
+ "totalResults": 46408,
+ "totalPages": 1934,
+ "results": [
+  {
+   "id": "al-105398",
+   "title": "Solo Leveling",
+   "image": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx105398-b673Vt5ZSuz3.jpg",
+   "type": "Manhwa",
+   "rating": 8.616833333333329,
+   "ratingCount": 34353,
+   "latestChapter": 201,
+   "views": 285839,
+   "updatedAt": null,
+   "genres": [
+    "action",
+    "adventure",
+    "fantasy",
+    "drama",
+    "shounen"
+   ],
+   "status": "completed"
+  },
+  {
+   "id": "al-119257",
+   "title": "Omniscient Reader",
+   "image": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx119257-Pi21aq3ey9GG.jpg",
+   "type": "Manhwa",
+   "rating": 8.68333333333333,
+   "ratingCount": 13848,
+   "latestChapter": 320,
+   "views": 132363,
+   "updatedAt": null,
+   "genres": [
+    "action",
+    "adventure",
+    "fantasy",
+    "drama",
+    "mystery",
+    "psychological",
+    "supernatural"
+   ],
+   "status": "hiatus"
+  },
+  {
+   "id": "al-85143",
+   "title": "Tower of God",
+   "image": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx85143-23oup3ETbFJk.jpg",
+   "type": "Manhwa",
+   "rating": 8.35883333333333,
+   "ratingCount": 8191,
+   "latestChapter": 729,
+   "views": 100249,
+   "updatedAt": null,
+   "genres": [
+    "action",
+    "adventure",
+    "drama",
+    "fantasy",
+    "mystery",
+    "shounen",
+    "supernatural"
+   ],
+   "status": "hiatus"
+  }
+ ],
+ "source": "catalog"
+}

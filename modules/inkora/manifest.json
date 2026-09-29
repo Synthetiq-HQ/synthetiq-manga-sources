@@ -1,0 +1,50 @@
+{
+  "allowedHosts": [
+    "api.spacely.tech",
+    "inkora.spacely.tech",
+    "s4.anilist.co"
+  ],
+  "attribution": {
+    "author": "Synthetiq-HQ",
+    "website": "https://inkora.spacely.tech"
+  },
+  "baseURL": "https://api.spacely.tech",
+  "capabilities": [
+    "popular",
+    "latest",
+    "search",
+    "details",
+    "chapters",
+    "images",
+    "imageRequest",
+    "discovery"
+  ],
+  "contentRating": "suggestive",
+  "contentType": "pageImages",
+  "contractVersion": 1,
+  "entry": {
+    "path": "modules/inkora/index.js",
+    "sha256": "aa9aaef3042de0c879e985e764e535b8a831175fd9817ef35e0b43daa2891ea7"
+  },
+  "familyID": "inkora",
+  "icon": {
+    "path": "modules/inkora/icon.png",
+    "sha256": "2f3465dd0a74e77212b52fcda09f8a609b6a552cc890745d6ea4163996cdc007"
+  },
+  "id": "inkora",
+  "language": "en",
+  "legacyIDs": [],
+  "limits": {
+    "cacheTTLSeconds": 900,
+    "maxConcurrentRequests": 2,
+    "maxResponseBytes": 16777216,
+    "maxScriptBytes": 524288,
+    "timeoutMilliseconds": 30000
+  },
+  "minimumAppVersion": "1.0.0",
+  "name": "Inkora",
+  "releaseTrack": "beta",
+  "status": "active",
+  "universalLink": "https://synthetiq.uk/manga/modules/inkora",
+  "version": "1.0.0"
+}

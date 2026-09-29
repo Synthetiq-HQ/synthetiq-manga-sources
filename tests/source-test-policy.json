@@ -205,6 +205,9 @@
   },
   "mangadex-es": {
    "chapterScope": "api"
+  },
+  "inkora": {
+   "chapterScope": "api"
   }
  }
 }
